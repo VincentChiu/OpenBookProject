@@ -1,0 +1,632 @@
+'''Python Standard Library'''
+
+''翻译: Python 江湖群''
+
+2008-03-28 13:33:34
+
+[[TableOfContents]]
+
+----
+
+[index.html 返回首页]
+
+----
+
+= 1. 邮件和新闻消息处理 =
+  "To be removed from our list of future commercial postings by [SOME] PUBLISHING COMPANY an Annual Charge of Ninety Five dollars is required. Just send $95.00 with your Name, Address and Name of the Newsgroup to be removed from our list."
+
+  - Newsgroup spammer, July 1996
+
+  "想要退出 '某' 宣传公司的未来商业广告列表吗, 您需要付 95 美元. 只要您支付95美元, 并且告诉我们您的姓名, 地址, 和需要退出的新闻组, 我们就会把您从列表中移除."
+
+  - 新闻组垃圾发送者, 1996 年 7 月
+
+----
+
+== 1.1. 概览 ==
+Python 有大量用于处理邮件和新闻组的模块, 其中包括了许多常见的邮件格式.
+
+----
+
+== 1.2. rfc822 模块 ==
+{{{rfc822}}} 模块包括了一个邮件和新闻组的解析器 (也可用于其它符合 RFC 822 标准的消息, 比如 HTTP 头).
+
+通常, RFC 822 格式的消息包含一些标头字段, 后面至少有一个空行, 然后是信息主体.
+
+For example, here's a short mail message. The first five lines make up the message header, and the actual message (a single line, in this case) follows after an empty line:
+
+例如这里的邮件信息. 前五行组成了消息标头, 隔一个空行后是消息主体.
+
+{{{
+Message-Id: <20001114144603.00abb310@oreilly.com>
+Date: Tue, 14 Nov 2000 14:55:07 -0500
+To: "Fredrik Lundh" <fredrik@effbot.org>
+From: Frank
+Subject: Re: python library book!
+
+Where is it?
+}}}
+
+消息解析器读取标头字段后会返回一个以消息标头为键的类字典对象, 如 [#eg-6-1 Example 6-1] 所示.
+
+==== 1.2.0.1. Example 6-1. 使用 rfc822 模块 ====
+{{{
+File: rfc822-example-1.py
+
+import rfc822
+
+file = open("samples/sample.eml")
+
+message = rfc822.Message(file)
+
+for k, v in message.items():
+    print k, "=", v
+
+print len(file.read()), "bytes in body"
+
+*B*subject = Re: python library book!
+from = "Frank" <your@editor>
+message-id = <20001114144603.00abb310@oreilly.com>
+to = "Fredrik Lundh" <fredrik@effbot.org>
+date = Tue, 14 Nov 2000 14:55:07 -0500
+25 bytes in body*b*
+}}}
+
+消息对象( message object )还提供了一些用于解析地址字段和数据的, 如 [#eg-6-2 Example 6-2] 所示.
+
+==== 1.2.0.2. Example 6-2. 使用 rfc822 模块解析标头字段 ====
+{{{
+File: rfc822-example-2.py
+
+import rfc822
+
+file = open("samples/sample.eml")
+
+message = rfc822.Message(file)
+
+print message.getdate("date")
+print message.getaddr("from")
+print message.getaddrlist("to")
+
+*B*(2000, 11, 14, 14, 55, 7, 0, 0, 0)
+('Frank', 'your@editor')
+[('Fredrik Lundh', 'fredrik@effbot.org')]*b*
+}}}
+
+地址字段被解析为 (实际名称, 邮件地址) 这样的元组. 数据字段被解析为 9 元时间元组, 
+可以使用 {{{time}}} 模块处理.
+
+----
+
+== 1.3. mimetools 模块 ==
+多用途因特网邮件扩展 ( Multipurpose Internet Mail Extensions, MIME ) 
+标准定义了如何在 RFC 822 格式的消息中储存非 ASCII 文本, 图像以及其它数据.
+
+{{{mimetools}}} 模块包含一些读写 MIME 信息的工具. 它还提供了一个类似 {{{rfc822}}} 模块中 ''Message'' 的类, 
+用于处理 MIME 编码的信息. 如 [#eg-6-3 Example 6-3] 所示.
+
+==== 1.3.0.1. Example 6-3. 使用 mimetools 模块 ====
+{{{
+File: mimetools-example-1.py
+
+import mimetools
+
+file = open("samples/sample.msg")
+
+msg = mimetools.Message(file)
+
+print "type", "=>", msg.gettype()
+print "encoding", "=>", msg.getencoding()
+print "plist", "=>", msg.getplist()
+
+print "header", "=>"
+for k, v in msg.items():
+    print "  ", k, "=", v
+
+*B*type => text/plain
+encoding => 7bit
+plist => ['charset="iso-8859-1"']
+header =>
+   mime-version = 1.0
+   content-type = text/plain;
+ charset="iso-8859-1"
+   to = effbot@spam.egg
+   date = Fri, 15 Oct 1999 03:21:15 -0400
+   content-transfer-encoding = 7bit
+   from = "Fredrik Lundh" <fredrik@pythonware.com>
+   subject = By the way...
+...*b*
+}}}
+
+----
+
+== 1.4. MimeWriter 模块 ==
+{{{MimeWriter}}} 模块用于生成符合 MIME 邮件标准的 "多部分" 的信息, 如 [#eg-6-4 Example 6-4] 所示.
+
+==== 1.4.0.1. Example 6-4. 使用 MimeWriter 模块 ====
+{{{
+File: mimewriter-example-1.py
+
+import MimeWriter
+
+# data encoders
+# 数据编码
+import quopri
+import base64
+import StringIO
+
+import sys
+
+TEXT = """
+here comes the image you asked for.  hope
+it's what you expected.
+
+</F>"""
+
+FILE = "samples/sample.jpg"
+
+file = sys.stdout
+
+#
+# create a mime multipart writer instance
+
+mime = MimeWriter.MimeWriter(file)
+mime.addheader("Mime-Version", "1.0")
+
+mime.startmultipartbody("mixed")
+
+# add a text message
+# 加入文字信息
+
+part = mime.nextpart()
+part.addheader("Content-Transfer-Encoding", "quoted-printable")
+part.startbody("text/plain")
+
+quopri.encode(StringIO.StringIO(TEXT), file, 0)
+
+# add an image
+# 加入图片
+
+part = mime.nextpart()
+part.addheader("Content-Transfer-Encoding", "base64")
+part.startbody("image/jpeg")
+
+base64.encode(open(FILE, "rb"), file)
+
+mime.lastpart()
+}}}
+
+输出结果如下:
+
+{{{
+Content-Type: multipart/mixed;
+    boundary='host.1.-852461.936831373.130.24813'
+
+--host.1.-852461.936831373.130.24813
+Content-Type: text/plain
+Context-Transfer-Encoding: quoted-printable
+
+here comes the image you asked for.  hope
+it's what you expected.
+
+</F>
+
+--host.1.-852461.936831373.130.24813
+Content-Type: image/jpeg
+Context-Transfer-Encoding: base64
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRof
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIy
+...
+1e5vLrSYbJnEVpEgjCLx5mPU0qsVK0UaxjdNlS+1U6pfzTR8IzEhj2HrVG6m8m18xc8cIKSC
+tCuFyC746j/Cq2pTia4WztfmKjGBXTCmo6IUpt==
+
+--host.1.-852461.936831373.130.24813--
+}}}
+
+[Example 6-5  #eg-6-5 ] 使用辅助类储存每个子部分.
+
+==== 1.4.0.2. Example 6-5. MimeWriter 模块的辅助类 ====
+{{{
+File: mimewriter-example-2.py
+
+import MimeWriter
+import string, StringIO, sys
+import re, quopri, base64
+
+# check if string contains non-ascii characters
+must_quote = re.compile("[\177-\377]").search
+
+
+#
+# encoders
+
+def encode_quoted_printable(infile, outfile):
+    quopri.encode(infile, outfile, 0)
+
+class Writer:
+
+    def _ _init_ _(self, file=None, blurb=None):
+        if file is None:
+            file = sys.stdout
+        self.file = file
+        self.mime = MimeWriter.MimeWriter(file)
+        self.mime.addheader("Mime-Version", "1.0")
+
+        file = self.mime.startmultipartbody("mixed")
+        if blurb:
+            file.write(blurb)
+
+    def close(self):
+        "End of message"
+        self.mime.lastpart()
+        self.mime = self.file = None
+
+    def write(self, data, mimetype="text/plain"):
+        "Write data from string or file to message"
+
+        # data is either an opened file or a string
+        if type(data) is type(""):
+            file = StringIO.StringIO(data)
+        else:
+            file = data
+            data = None
+
+        part = self.mime.nextpart()
+
+        typ, subtyp = string.split(mimetype, "/", 1)
+
+        if typ == "text":
+
+            # text data
+            encoding = "quoted-printable"
+            encoder = lambda i, o: quopri.encode(i, o, 0)
+
+            if data and not must_quote(data):
+                # copy, don't encode
+                encoding = "7bit"
+                encoder = None
+
+        else:
+
+            # binary data (image, audio, application, ...)
+            encoding = "base64"
+            encoder = base64.encode
+
+        #
+        # write part headers
+
+        if encoding:
+            part.addheader("Content-Transfer-Encoding", encoding)
+
+        part.startbody(mimetype)
+
+        #
+        # write part body
+
+        if encoder:
+            encoder(file, self.file)
+        elif data:
+            self.file.write(data)
+        else:
+            while 1:
+                data = infile.read(16384)
+                if not data:
+                    break
+                outfile.write(data)
+
+#
+# try it out
+
+BLURB = "if you can read this, your mailer is not MIME-aware\n"
+
+mime = Writer(sys.stdout, BLURB)
+
+# add a text message
+mime.write("""\
+here comes the image you asked for.  hope
+it's what you expected.
+""", "text/plain")
+
+# add an image
+mime.write(open("samples/sample.jpg", "rb"), "image/jpeg")
+
+mime.close()
+}}}
+
+----
+
+== 1.5. mailbox 模块 ==
+{{{mailbox}}} 模块用来处理各种不同类型的邮箱格式, 如 [#eg-6-6 Example 6-6] 所示. 
+大部分邮箱格式使用文本文件储存纯 RFC 822 信息, 用分割行区别不同的信息. 
+
+==== 1.5.0.1. Example 6-6. 使用 mailbox 模块 ====
+{{{
+File: mailbox-example-1.py
+
+import mailbox
+
+mb = mailbox.UnixMailbox(open("/var/spool/mail/effbot"))
+
+while 1:
+    msg = mb.next()
+    if not msg:
+        break
+    for k, v in msg.items():
+        print k, "=", v
+    body = msg.fp.read()
+    print len(body), "bytes in body"
+
+*B*subject = for he's a ...
+message-id = <199910150027.CAA03202@spam.egg>
+received = (from fredrik@pythonware.com)
+ by spam.egg (8.8.7/8.8.5) id CAA03202
+ for effbot; Fri, 15 Oct 1999 02:27:36 +0200
+from = Fredrik Lundh <fredrik@pythonware.com>
+date = Fri, 15 Oct 1999 12:35:36 +0200
+to = effbot@spam.egg
+1295 bytes in body*b*
+}}}
+
+----
+
+== 1.6. mailcap 模块 ==
+{{{mailcap}}} 模块用于处理 ''mailcap'' 文件, 该文件指定了不同的文档格式的处理方法( Unix 系统下). 
+如 [#eg-6-7 Example 6-7] 所示.
+
+==== 1.6.0.1. Example 6-7. 使用 mailcap 模块获得 Capability 字典 ====
+{{{
+File: mailcap-example-1.py
+
+import mailcap
+
+caps = mailcap.getcaps()
+
+for k, v in caps.items():
+    print k, "=", v
+
+*B*image/* = [{'view': 'pilview'}]
+application/postscript = [{'view': 'ghostview'}]*b*
+}}}
+
+[#eg-6-7 Example 6-7] 中, 系统使用 {{{pilview}}} 来预览( view )所有类型的图片, 
+使用 ghostscript viewer 预览 PostScript 文档.
+[#eg-6-8 Example 6-8] 展示了如何使用 {{{mailcap}}} 获得特定操作的命令.
+
+==== 1.6.0.2. Example 6-8. 使用 mailcap 模块获得打开 ====
+{{{
+File: mailcap-example-2.py
+
+import mailcap
+
+caps = mailcap.getcaps()
+
+command, info = mailcap.findmatch(
+    caps, "image/jpeg", "view", "samples/sample.jpg"
+    )
+
+print command
+
+pilview samples/sample.jpg
+}}}
+
+----
+
+== 1.7. mimetypes 模块 ==
+{{{mimetypes}}} 模块可以判断给定 url ( uniform resource locator , 统一资源定位符) 的 MIME 类型. 
+它基于一个内建的表, 还可能搜索 Apache 和 Netscape 的配置文件. 如 [#eg-6-9 Example 6-9] 所示.
+
+==== 1.7.0.1. Example 6-9. 使用 mimetypes 模块 ====
+{{{
+File: mimetypes-example-1.py
+
+import mimetypes
+import glob, urllib
+
+for file in glob.glob("samples/*"):
+    url = urllib.pathname2url(file)
+    print file, mimetypes.guess_type(url)
+
+*B*samples\sample.au ('audio/basic', None)
+samples\sample.ini (None, None)
+samples\sample.jpg ('image/jpeg', None)
+samples\sample.msg (None, None)
+samples\sample.tar ('application/x-tar', None)
+samples\sample.tgz ('application/x-tar', 'gzip')
+samples\sample.txt ('text/plain', None)
+samples\sample.wav ('audio/x-wav', None)
+samples\sample.zip ('application/zip', None)*b*
+}}}
+
+----
+
+== 1.8. packmail 模块 ==
+(已废弃) {{{packmail}}} 模块可以用来创建 Unix shell 档案. 如果安装了合适的工具, 
+那么你就可以直接通过运行来解开这样的档案. [#eg-6-10 Example 6-10] 展示了如何打包单个文件, 
+[#eg-6-11 Example 6-11] 则打包了整个目录树.
+
+==== 1.8.0.1. Example 6-10. 使用 packmail 打包单个文件 ====
+{{{
+File: packmail-example-1.py
+
+import packmail
+import sys
+
+packmail.pack(sys.stdout, "samples/sample.txt", "sample.txt")
+
+*B*echo sample.txt
+sed "s/^X//" >sample.txt <<"!"
+XWe will perhaps eventually be writing only small
+Xmodules, which are identified by name as they are
+Xused to build larger ones, so that devices like
+Xindentation, rather than delimiters, might become
+Xfeasible for expressing local structure in the
+Xsource language.
+X    -- Donald E. Knuth, December 1974
+!*b*
+}}}
+
+====Example 6-11. 使用 packmail 打包整个目录树===[eg-6-11]
+
+{{{
+File: packmail-example-2.py
+
+import packmail
+import sys
+
+packmail.packtree(sys.stdout, "samples")
+}}}
+
+注意, 这个模块不能处理二进制文件, 例如声音或者图像文件.
+
+----
+
+== 1.9. mimify 模块 ==
+{{{mimify}}} 模块用于在 MIME 编码的文本信息和普通文本信息(例如 ISO Latin 1 文本)间相互转换. 它可以用作命令行工具, 或是特定邮件代理的转换过滤器:
+
+{{{
+$ mimify.py -e raw-message mime-message
+$ mimify.py -d mime-message raw-message
+}}}
+
+作为模块使用, 如 [#eg-6-12 Example 6-12] 所示.
+
+==== 1.9.0.1. Example 6-12. 使用 mimify 模块解码信息 ====
+{{{
+File: mimify-example-1.py
+
+import mimify
+import sys
+
+mimify.unmimify("samples/sample.msg", sys.stdout, 1)
+}}}
+
+这里是一个包含两部分的 MIME 信息, 一个是引用的可打印信息, 另个是 base64 编码信息. 
+unmimify 的第三个参数决定是否自动解码 base64 编码的部分:
+
+{{{
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary='boundary'
+
+this is a multipart sample file.  the two
+parts both contain ISO Latin 1 text, with
+different encoding techniques.
+
+--boundary
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+sillmj=F6lke! blindstyre! medisterkorv!
+
+--boundary
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+
+a29tIG5lciBiYXJhLCBvbSBkdSB09nJzIQ==
+
+--boundary--
+}}}
+
+解码结果如下 (可读性相对来说更好些):
+
+{{{
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary= 'boundary'
+
+this is a multipart sample file.  the two
+parts both contain ISO Latin 1 text, with
+different encoding techniques.
+
+--boundary
+Content-Type: text/plain
+
+sillmjölke! blindstyre! medisterkorv!
+
+--boundary
+Content-Type: text/plain
+
+kom ner bara, om du törs!
+}}}
+
+[#eg-6-13 Example 6-13] 展示了如何编码信息.
+
+==== 1.9.0.2. Example 6-13. 使用 mimify 模块编码信息 ====
+{{{
+File: mimify-example-2.py
+
+import mimify
+import StringIO, sys
+
+#
+# decode message into a string buffer
+
+file = StringIO.StringIO()
+
+mimify.unmimify("samples/sample.msg", file, 1)
+
+#
+# encode message from string buffer
+
+file.seek(0) # rewind
+
+mimify.mimify(file, sys.stdout)
+}}}
+
+----
+
+== 1.10. multifile 模块 ==
+{{{multifile}}} 模块允许你将一个多部分的 MIME 信息的每部分作为单独的文件处理. 
+如 [#eg-6-14 Example 6-14] 所示.
+
+==== 1.10.0.1. Example 6-14. 使用 multifile 模块 ====
+{{{
+File: multifile-example-1.py
+
+import multifile
+import cgi, rfc822
+
+infile = open("samples/sample.msg")
+
+message = rfc822.Message(infile)
+
+# print parsed header
+for k, v in message.items():
+    print k, "=", v
+
+# use cgi support function to parse content-type header
+type, params = cgi.parse_header(message["content-type"])
+
+if type[:10] == "multipart/":
+
+    # multipart message
+    boundary = params["boundary"]
+
+    file = multifile.MultiFile(infile)
+
+    file.push(boundary)
+
+    while file.next():
+
+        submessage = rfc822.Message(file)
+
+        # print submessage
+        print "-" * 68
+        for k, v in submessage.items():
+            print k, "=", v
+        print
+        print file.read()
+
+    file.pop()
+
+else:
+
+    # plain message
+    print infile.read()
+}}}
+
+----
+
+
+## moin code generated by txt2tags 2.4 (http://txt2tags.sf.net)
+## cmdline: txt2tags -t moin -o moin/chapter6.moin chapter6.t2t
+

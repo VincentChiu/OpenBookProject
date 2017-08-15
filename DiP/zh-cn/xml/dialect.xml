@@ -1,0 +1,857 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chapter id="dialect">
+<?dbhtml filename="html_processing/index.html"?>
+<title>&html; 处理</title>
+<titleabbrev id="dialect.numberonly">第 8 章</titleabbrev>
+<section id="dialect.divein">
+<title>概览</title>
+<abstract>
+<title/>
+<para>
+我经常在 &clp; 上看到关于如下的问题： <quote> 怎么才能从我的 &html; 文档中列出所有的 [头|图像|链接] 呢？</quote> <quote>怎么才能 [分析|解释|munge] 我的 &html; 文档的文本，但是又要保留标记呢？</quote>  <quote>怎么才能一次给我所有的 &html; 标记 [增加|删除|加引号] 属性呢？</quote> 本章将回答所有这些问题。</para>
+</abstract>
+<para>下面给出一个完整的，可工作的 &python; 程序，它分为两部分。第一部分，&basehtml_filename; 是一个通用工具，它可以通过扫描标记和文本块来帮助您处理 &html; 文件。第二部分，&dialect_filename; 是一个例子，演示了如何使用 &basehtml_filename; 来转化 &html; 文档，保留文本但是去掉了标记。阅读文档字符串 (&docstring;) 和注释来了解将要发生事情的概况。大部分内容看上去像巫术，因为任一个这些类的方法是如何调用的不是很清楚。不要紧，所有内容都会按进度被逐步地展示出来。</para>
+<example id="dialect.basehtml.listing">
+<title>&basehtml_filename;</title>
+&para_download;
+<programlisting>
+&basehtml_code;</programlisting>
+</example>
+<example>
+<title>&dialect_filename;</title>
+<programlisting>
+&dialect_code;</programlisting>
+</example>
+<example>
+<title>&dialect_filename; 的输出结果</title>
+<para>运行这个脚本会将 <xref linkend="odbchelper.list"/> 转换成<ulink url="../native_data_types/chef.html">模仿瑞典厨师用语 (mock Swedish Chef-speak)</ulink> (来自 The Muppets)、<ulink url="../native_data_types/fudd.html">模仿埃尔默唠叨者用语 (mock Elmer Fudd-speak)</ulink> (来自 Bugs Bunny 卡通画) 和<ulink url="../native_data_types/olde.html">模仿中世纪英语 (mock Middle English)</ulink> (零散地来源于乔叟的<citetitle>《坎特伯雷故事集》</citetitle>)。如果您查看输出页面的 &html; 源代码，您会发现所有的 &html; 标记和属性没有改动，但是在标记之间的文本被转换成模仿语言了。如果您观查得更仔细些，您会发现，实际上，仅有标题和段落被转换了；代码列表和屏幕例子没有改动。</para>
+<programlisting>
+&lt;div class="abstract">
+&lt;p>Lists awe &lt;span class="application">Pydon&lt;/span>'s wowkhowse datatype.
+If youw onwy expewience wif wists is awways in
+&lt;span class="application">Visuaw Basic&lt;/span> ow (God fowbid) de datastowe
+in &lt;span class="application">Powewbuiwdew&lt;/span>, bwace youwsewf fow
+&lt;span class="application">Pydon&lt;/span> wists.&lt;/p>
+&lt;/div>
+</programlisting>
+</example>
+</section>
+<section id="dialect.sgmllib">
+<?dbhtml filename="html_processing/introducing_sgmllib.html"?>
+<title>&sgmllib_filename; 介绍</title>
+<abstract>
+<title/>
+<para>&html; 处理分成三步：将 &html; 分解成它的组成片段，对片段进行加工，接着将片段再重新合成 HTML。第一步是通过 &sgmllib_filename; 来完成的，它是标准 &python; 库的一部分。</para>
+</abstract>
+<para>理解本章的关键是要知道 &html; 不只是文本，更是结构化文本。这种结构来源于开始与结束标记的或多或少分级序列。通常您并不以这种方式处理 &html; ，而是以<emphasis>文本方式</emphasis> 在一个文本编辑中对其进行处理，或以<emphasis>可视的方式</emphasis> 在一个浏览器中进行浏览或页面编辑工具中进行编辑。&sgmllib_filename; 表现出了 &html; 的<emphasis>结构</emphasis>。</para>
+<para>&sgmllib_filename; 包含一个重要的类：&sgmlparser;。&sgmlparser;  将 &html; 分解成有用的片段，比如开始标记和结束标记。在它成功地分解出某个数据为一个有用的片段后，它会根据所发现的数据，调用一个自身内部的方法。为了使用这个分析器，您需要子类化 &sgmlparser;  类，并且覆盖这些方法。这就是当我说它表示了 &html; <emphasis>结构</emphasis> 的意思：&html; 的结构决定了方法调用的次序和传给每个方法的参数。</para>
+<para>&sgmlparser; 将 &html; 分析成 8 类数据，然后对每一类调用单独的方法：</para>
+<variablelist>
+<varlistentry>
+<term>开始标记 (Start tag)</term>
+<listitem><para>是开始一个块的 &html; 标记，像 <sgmltag>&lt;html></sgmltag>、<sgmltag>&lt;head></sgmltag>、<sgmltag>&lt;body></sgmltag> 或 <sgmltag>&lt;pre></sgmltag> 等，或是一个独一的标记，像 <sgmltag>&lt;br></sgmltag> 或 <sgmltag>&lt;img></sgmltag> 等。当它找到一个开始标记 <replaceable>tagname</replaceable>，&sgmlparser;  将查找名为 <function>start_<replaceable>tagname</replaceable></function> 或 <function>do_<replaceable>tagname</replaceable></function> 的方法。例如，当它找到一个 <sgmltag>&lt;pre></sgmltag> 标记，它将查找一个 <function>start_pre</function> 或 <function>do_pre</function> 的方法。如果找到了，&sgmlparser; 会使用这个标记的属性列表来调用这个方法；否则，它用这个标记的名字和属性列表来调用 &unknown_starttag; 方法。</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>结束标记 (End tag)</term>
+<listitem><para>是结束一个块的 &html; 标记，像 <sgmltag>&lt;/html></sgmltag>、<sgmltag>&lt;/head></sgmltag>、<sgmltag>&lt;/body></sgmltag> 或 <sgmltag>&lt;/pre></sgmltag> 等。当找到一个结束标记时，&sgmlparser; 将查找名为 <function>end_<replaceable>tagname</replaceable></function> 的方法。如果找到，&sgmlparser;  调用这个方法，否则它使用标记的名字来调用 &unknown_endtag; 。</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>字符引用 (Character reference)</term>
+<listitem><para>用字符的十进制或等同的十六进制来表示的转义字符，像 <literal>&amp;#160;</literal>。当找到，&sgmlparser; 使用十进制或等同的十六进制字符文本来调用 &handle_charref; 。</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>实体引用 (Entity reference)</term>
+<listitem><para>&html; 实体，像 <literal>&amp;copy;</literal>。当找到，&sgmlparser; 使用 &html; 实体的名字来调用 &handle_entityref; 。</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>注释 (Comment)</term>
+<listitem><para>&html; 注释，包括在 <literal>&lt;!-- ... --></literal>之间。当找到，&sgmlparser; 用注释内容来调用 &handle_comment;。</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>处理指令 (Processing instruction)</term>
+<listitem><para>&html; 处理指令，包括在 <literal>&lt;? ... ></literal> 之间。当找到，&sgmlparser;  用处理指令内容来调用 &handle_pi;。</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>声明 (Declaration)</term>
+<listitem><para>&html; 声明，如 &doctype;，包括在 <literal>&lt;! ... ></literal>之间。当找到，&sgmlparser; 用声明内容来调用 &handle_decl;。</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>文本数据 (Text data)</term>
+<listitem><para>文本块。不满足其它 7 种类别的任何东西。当找到，&sgmlparser; 用文本来调用 &handle_data;。</para></listitem>
+</varlistentry>
+</variablelist>
+<important>
+<title>语言演变：&doctype;</title>
+<para>&python; 2.0 存在一个 bug，即 &sgmlparser; 完全不能识别声明 (&handle_decl; 永远不会调用)，这就意味着 &doctype; 被静静地忽略掉了。这个错误在 &python; 2.1 中改正了。</para>
+</important>
+<para>&sgmllib_filename; 所附带的一个测试套件举例说明了这一点。您可以运行  &sgmllib_filename;，在命令行下传入一个 &html; 文件的名字，然后它会在分析标记和其它元素的同时将它们打印出来。它的实现是通过子类化 &sgmlparser; 类，然后定义 &unknown_starttag;，&unknown_endtag;，&handle_data; 和其它方法来实现的。这些方法简单地打印出它们的参数。</para>
+<tip id="tip.commandline.windows">
+<title>在 &windows; 下指定命令行参数</title>
+<para>在 &windows; 下的 &activepython; &ide; 中，您可以在 <quote>Run script</quote> 对话框中指定命令行参数。用空格将多个参数分开。</para>
+</tip>
+<example>
+<title>&sgmllib_filename; 的样例测试</title>
+<para>下面是一个片段，来自本书的 &html; 版本的目录，toc.html。当然，您的存储路径可能与我的有所不同。
+(如果您还没有下载本书的 &html; 版本，可以从 <ulink url="&url_diveintopython;"/> 下载。</para>
+<screen>
+<prompt>c:\python23\lib></prompt> <userinput>type "c:\downloads\diveintopython\html\toc\index.html"</userinput>
+<literal>
+&lt;!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+&lt;html lang="en">
+   &lt;head>
+      &lt;meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      &lt;title>Dive Into Python&lt;/title>
+      &lt;link rel="stylesheet" href="diveintopython.css" type="text/css">
+
+... 略 ...
+</literal></screen>
+<para>通过 &sgmllib_filename; 的测试套件来运行它，会得到如下的输出结果:</para>
+<screen>
+<prompt>c:\python23\lib></prompt> <userinput>python sgmllib.py "c:\downloads\diveintopython\html\toc\index.html"</userinput>
+<computeroutput>data: '\n\n'
+start tag: &lt;html lang="en" >
+data: '\n   '
+start tag: &lt;head>
+data: '\n      '
+start tag: &lt;meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" >
+data: '\n   \n      '
+start tag: &lt;title>
+data: 'Dive Into Python'
+end tag: &lt;/title>
+data: '\n      '
+start tag: &lt;link rel="stylesheet" href="diveintopython.css" type="text/css" >
+data: '\n      '
+
+... 略 ...
+</computeroutput></screen>
+</example>
+<para>下面是本章其它部分的路标：</para>
+<itemizedlist>
+<listitem><para>子类化 &sgmlparser; 来创建从 &html; 文档中抽取感兴趣的数据的类。</para></listitem>
+<listitem><para>子类化 &sgmlparser; 来创建 &basehtml_classname;，它覆盖了所有8个处理方法，然后使用它们从片段中重建原始的 &html;。</para></listitem>
+<listitem><para>子类化 &basehtml_classname; 来创建 &dialect_classname;，它增加了一些方法，专门用来处理指定的 &html; 标记，然后覆盖了 &handle_data; 方法，提供了用来处理 &html; 标记之间文本块的框架。</para></listitem>
+<listitem><para>子类化 &dialect_classname; 来创建定义了文本处理规则的类。这些规则被 <function>&dialect_name;.handle_data</function> 使用。</para></listitem>
+<listitem><para>编写一个测试套件，它可以从 &diveintopythonorg; 处抓取一个真正的 web 页面，然后处理它。</para></listitem>
+</itemizedlist>
+<para>继续阅读本章，您还可以学习到有关 &locals;、&globals; 和基于 dictionary 的字符串格式化的内容。</para>
+</section>
+<section id="dialect.extract">
+<?dbhtml filename="html_processing/extracting_data.html"?>
+<title>从 &html; 文档中提取数据</title>
+<abstract>
+<title/>
+<para>为了从 &html; 文档中提取数据，将 &sgmlparser; 类进行子类化，然后对想要捕捉的标记或实体定义方法。</para>
+</abstract>
+<para>从 &html; 文档中提取数据的第一步是得到某个 &html; 文件。如果在您的硬盘里存放着 &html; 文件，您可以使用<link linkend="fileinfo.files">处理文件的函数</link>将它读出来，但是真正有意思的是从实际的网页得到 &html;。</para>
+<example id="dialect.extract.urllib">
+<title>&urllib; 介绍</title>
+<screen>
+&prompt;<userinput>import urllib</userinput>                                       <co id="dialect.extract.1.1"/>
+&prompt;<userinput>sock = urllib.urlopen("http://diveintopython.org/")</userinput> <co id="dialect.extract.1.2"/>
+&prompt;<userinput>htmlSource = sock.read()</userinput>                            <co id="dialect.extract.1.3"/>
+&prompt;<userinput>sock.close()</userinput>                                        <co id="dialect.extract.1.4"/>
+&prompt;<userinput>print htmlSource</userinput>                                    <co id="dialect.extract.1.5"/>
+<computeroutput>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;&lt;html&gt;&lt;head&gt;
+      &lt;meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1'&gt;
+   &lt;title&gt;Dive Into Python&lt;/title&gt;
+&lt;link rel='stylesheet' href='diveintopython.css' type='text/css'&gt;
+&lt;link rev='made' href='mailto:mark@diveintopython.org'&gt;
+&lt;meta name='keywords' content='Python, Dive Into Python, tutorial, object-oriented, programming, documentation, book, free'&gt;
+&lt;meta name='description' content='a free Python tutorial for experienced programmers'&gt;
+&lt;/head&gt;
+&lt;body bgcolor='white' text='black' link='#0000FF' vlink='#840084' alink='#0000FF'&gt;
+&lt;table cellpadding='0' cellspacing='0' border='0' width='100%'&gt;
+&lt;tr&gt;&lt;td class='header' width='1%' valign='top'&gt;diveintopython.org&lt;/td&gt;
+&lt;td width='99%' align='right'&gt;&lt;hr size='1' noshade&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td class='tagline' colspan='2'&gt;Python&amp;nbsp;for&amp;nbsp;experienced&amp;nbsp;programmers&lt;/td&gt;&lt;/tr&gt;</computeroutput>
+
+[...略...]</screen>
+<calloutlist>
+<callout arearefs="dialect.extract.1.1">
+<para>&urllib; 模块是标准 &python; 库的一部分。它包含了一些函数，可以从基于互联网的 &url; (主要指网页) 来获取信息并且真正取回数据。</para>
+</callout>
+<callout arearefs="dialect.extract.1.2">
+<para>&urllib; 模块最简单的使用是提取用 &urlopen; 函数取回的网页的整个文本。打开一个 &url; 同<link linkend="fileinfo.files">打开一个文件</link>相似。&urlopen; 的返回值是像文件一样的对象，它具有一个文件对象一样的方法。</para>
+</callout>
+<callout arearefs="dialect.extract.1.3">
+<para>使用由 &urlopen; 所返回的类文件对象所能做的最简单的事情就是 &read;，它可以将网页的整个 &html; 读到一个字符串中。这个对象也支持 &readlines; 方法，这个方法可以将文本按行放入一个列表中。</para>
+</callout>
+<callout arearefs="dialect.extract.1.4">
+<para>当用完这个对象，要确保将它 &close;，就如同一个普通的文件对象。</para>
+</callout>
+<callout arearefs="dialect.extract.1.5">
+<para>现在我们将 &diveintopythonorg; 主页的完整的 &html; 保存在一个字符串中了，接着我们将分析它。</para>
+</callout>
+</calloutlist>
+</example>
+<example id="dialect.extract.links">
+<title>&urllister_filename; 介绍</title>
+&para_download;
+<programlisting>
+from sgmllib import SGMLParser
+
+class URLLister(SGMLParser):
+    def reset(self):                              <co id="dialect.extract.2.1"/>
+        SGMLParser.reset(self)
+        self.urls = []
+
+    def start_a(self, attrs):                     <co id="dialect.extract.2.2"/>
+        href = [v for k, v in attrs if k=='href'] <co id="dialect.extract.2.3"/> <co id="dialect.extract.2.4"/>
+        if href:
+            self.urls.extend(href)</programlisting>
+<calloutlist>
+<callout arearefs="dialect.extract.2.1">
+<para><function>reset</function> 由 &sgmlparser; 的 &init; 方法来调用，也可以在创建一个分析器实例后手工调用。所以如果您需要做初始化，在 &reset; 中去做，而不要在 &init; 中做。这样当某人重用一个分析器实例时，可以正确地重新初始化。</para>
+</callout>
+<callout arearefs="dialect.extract.2.2">
+<para>只要找到一个 <sgmltag>&lt;a&gt;</sgmltag> 标记，<function>start_a</function> 就会由 &sgmlparser; 进行调用。这个标记可以包含一个 <literal>href</literal> 属性，或者包含其它的属性，如 <literal>name</literal> 或 <literal>title</literal>。<varname>attrs</varname> 参数是一个 tuple 的 list，<literal>[(<replaceable>attribute</replaceable>, <replaceable>value</replaceable>), (<replaceable>attribute</replaceable>, <replaceable>value</replaceable>), ...]</literal>。或者它可以只是一个有效的 &html; 标记 <sgmltag>&lt;a&gt;</sgmltag> (尽管无用)，这时 <varname>attrs</varname> 将是个空 list。</para>
+</callout>
+<callout arearefs="dialect.extract.2.3">
+<para>我们可以通过一个简单的<link linkend="odbchelper.multiassign">多变量</link> <link linkend="odbchelper.map">list 映射</link>来查找这个 <sgmltag>&lt;a&gt;</sgmltag> 标记是否拥有一个 <literal>href</literal> 属性。</para>
+</callout>
+<callout arearefs="dialect.extract.2.4">
+<para>像 <literal>k=='href'</literal> 的字符串比较是区分大小写的，但是这里是安全的。因为 &sgmlparser; 会在创建 <varname>attrs</varname> 时将属性名转化为小写。</para>
+</callout>
+</calloutlist>
+</example>
+<example id="dialect.feed.example">
+<title>使用 &urllister_filename;</title>
+<screen>
+&prompt;<userinput>import urllib, urllister</userinput>
+&prompt;<userinput>usock = urllib.urlopen("http://diveintopython.org/")</userinput>
+&prompt;<userinput>parser = urllister.URLLister()</userinput>
+&prompt;<userinput>parser.feed(usock.read())</userinput>         <co id="dialect.extract.3.1"/>
+&prompt;<userinput>usock.close()</userinput>                     <co id="dialect.extract.3.2"/>
+&prompt;<userinput>parser.close()</userinput>                    <co id="dialect.extract.3.3"/>
+&prompt;<userinput>for url in parser.urls: print url</userinput> <co id="dialect.extract.3.4"/>
+<computeroutput>toc/index.html
+#download
+#languages
+toc/index.html
+appendix/history.html
+download/diveintopython-html-5.0.zip
+download/diveintopython-pdf-5.0.zip
+download/diveintopython-word-5.0.zip
+download/diveintopython-text-5.0.zip
+download/diveintopython-html-flat-5.0.zip
+download/diveintopython-xml-5.0.zip
+download/diveintopython-common-5.0.zip
+</computeroutput>
+
+...略...</screen>
+<calloutlist>
+<callout arearefs="dialect.extract.3.1">
+<para>调用定义在 &sgmlparser; 中的 <function>feed</function> 方法，将 &html; 内容放入分析器中。
+<footnote><para>像 &sgmlparser; 这样的分析器，技术术语叫做<emphasis>消费者 (consumer)</emphasis>。它消费 &html;，并且拆分它。也许因此就选择了 <function>feed</function> 这个名字，以便同<emphasis>消费者 </emphasis> 这个主题相适应。就个人来说，它让我想象在动物园看展览。里面有一个黑漆漆的兽穴，没有树，没有植物，没有任何生命的迹象。但只要您非常安静地站着，尽可能靠近着瞧，您会看到在远处的角落里有两只明眸在盯着您。但是您会安慰自已那不过是心理作用。唯一知道兽穴里并不是空无一物的方法，就是在栅栏上有一个不明显的标记，上面写着 <quote>禁止给分析器喂食</quote>。但也许只有我这么想，不管怎么样，这种心理想象很有意思。</para></footnote>
+这个方法接收一个字符串，这个字符串就是 <function>usock.read()</function> 所返回的。</para>
+</callout>
+<callout arearefs="dialect.extract.3.2">
+<para>像处理文件一样，一旦处理完毕，您应该 &close; 您的 &url; 对象。</para>
+</callout>
+<callout arearefs="dialect.extract.3.3">
+<para>您也应该 &close; 您的分析器对象，但出于不同的原因。<function>feed</function> 方法不保证对传给它的全部 &html; 进行处理，它可能会对其进行缓冲处理，等待接收更多的内容。只要没有更多的内容，就应调用 &close; 来刷新缓冲区，并且强制所有内容被完全处理。</para>
+</callout>
+<callout arearefs="dialect.extract.3.4">
+<para>一旦分析器被 &close;，分析过程也就结束了。<varname>parser.urls</varname> 中包含了在 &html; 文档中所有的链接 &url;。(如果当您读到此处发现输出结果不一样，那是因为下载了本书的更新版本。)</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section id="dialect.basehtml">
+<?dbhtml filename="html_processing/basehtmlprocessor.html"?>
+<title>&basehtml_filename; 介绍</title>
+<abstract>
+<title/>
+<para>&sgmlparser; 自身不会产生任何结果。它只是分析，分析，再分析，对于它找到的有趣的东西会调用相应的一个方法，但是这些方法什么都不做。&sgmlparser; 是一个 &html; <emphasis>消费者 (consumer)</emphasis>：它接收 &html;，将其分解成小的、结构化的小块。正如您所看到的，在<link linkend="dialect.extract">前一节</link>中，您可以定义 &sgmlparser; 的子类，它可以捕捉特别标记和生成有用的东西，如一个网页中所有链接的一个列表。现在我们将沿着这条路更深一步。我们要定义一个可以捕捉 &sgmlparser; 所丢出来的所有东西的一个类，接着重建整个 &html; 文档。用技术术语来说，这个类将是一个 &html; <emphasis>生产者 (producer)</emphasis>。</para>
+</abstract>
+<para>&basehtml_classname; 子类化 &sgmlparser;，并且提供了全部的 8 个处理方法：&unknown_starttag;、&unknown_endtag;、&handle_charref;、&handle_entityref;、&handle_comment;、&handle_pi;、&handle_decl; 和 &handle_data;。</para>
+<example id="dialect.basehtml.intro">
+<title>&basehtml_classname; 介绍</title>
+<programlisting>
+&basehtml_classdef;
+&basehtml_resetdef; <co id="dialect.basehtml.1.1"/>
+&basehtml_resetcode;
+&basehtml_resetcallsuper;
+
+&basehtml_starttagdef; <co id="dialect.basehtml.1.2"/>
+&basehtml_starttagjoin;
+&basehtml_starttagcode;
+
+&basehtml_endtagdef; <co id="dialect.basehtml.1.3"/>
+&basehtml_endtagcode;
+
+&basehtml_charrefdef; <co id="dialect.basehtml.1.4"/>
+&basehtml_charrefcode;
+
+&basehtml_entityrefdef; <co id="dialect.basehtml.1.5"/>
+&basehtml_entityrefcode;
+&basehtml_entityrefif;
+&basehtml_entityrefsemicolon;
+
+&basehtml_dataref; <co id="dialect.basehtml.1.6"/>
+&basehtml_datacode;
+
+&basehtml_commentdef; <co id="dialect.basehtml.1.7"/>
+&basehtml_commentcode;
+
+&basehtml_pidef; <co id="dialect.basehtml.1.8"/>
+&basehtml_picode;
+
+&basehtml_decldef;
+&basehtml_declcode;</programlisting>
+<calloutlist>
+<callout arearefs="dialect.basehtml.1.1">
+<para>&reset; 由 <function>SGMLParser.__init__</function> 来调用。在<link linkend="fileinfo.init.code.example">调用父类方法</link>之前将 &selfpieces; 初始化为空列表。&selfpieces; 是一个<link linkend="fileinfo.userdict.init.example">数据属性</link>，将用来保存将要构造的 &html; 文档的片段。每个处理器方法都将重构 &sgmlparser; 所分析出来的 &html;，并且每个方法将生成的字符串追加到 &selfpieces; 之后。注意，&selfpieces; 是一个 list。也许您想将它定义为一个字符串，然后不停地将每个片段追加到它的后面。这样做是可以的，但是 &python; 在处理 list 方面效率更高一些。
+
+<footnote><para>&python; 处理 list 比字符串快的原因是：list 是可变的，但字符串是不可变的。这就是说向 list 进行追加只是增加元素和修改索引。因为字符串在创建之后不能被修改，像 <literal>s = s + newpiece</literal> 这样的代码将会从原值和新片段的连接结果中创建一个全新的字符串，然后丢弃原来的字符串。这样就需要大量昂贵的内存管理，并且随着字符串变长，所需要的开销也在增长。所以在一个循环中执行 <literal>s = s + newpiece</literal> 非常不好。用技术术语来说，向一个 list 追加 <varname>n</varname> 个项的代价为 <literal>O(n)</literal>，而向一个字符串追加 <varname>n</varname> 个项的代价是 <literal>O(n<superscript>2</superscript>)</literal>。</para></footnote></para>
+</callout>
+<callout arearefs="dialect.basehtml.1.2">
+<para>因为 &basehtml_classname; 没有为特别标记定义方法 (如在 <link linkend="dialect.extract.links">&urllister_classname;</link> 中的<function>start_a</function> 方法)，
+&sgmlparser; 将对每一个开始标记调用 &unknown_starttag; 方法。这个方法接收标记 (<varname>tag</varname>) 和属性的名字/值对的 list(<varname>attrs</varname>) 两参数，重新构造初始的 &html;，接着将结果追加到 &selfpieces; 后。<!--<footnote><para>Technically, what &basehtml_classname; constructs is not guaranteed to be character-for-character identical to the original &html;, but it is <emphasis>equivalent</emphasis> to the original &html;.  &sgmlparser; converts the tag and the attribute names (but not the attribute values) to lowercase, so the string that &unknown_starttag; constructs may not be identical to the original tag, but that shouldn't make any difference because &html; specifies that tags and attribute names are case-insensitive.</para></footnote>--> 这里的<link linkend="odbchelper.stringformatting">字符串格式化</link>有些陌生，我们将留到下一节再说明。</para>
+</callout>
+<callout arearefs="dialect.basehtml.1.3">
+<para>重构结束标记要简单得多，只是使用标记名字，把它包在 <literal>&lt;/...&gt;</literal> 括号中。</para>
+</callout>
+<callout arearefs="dialect.basehtml.1.4">
+<para>当 &sgmlparser; 找到一个字符引用时，会用原始的引用来调用 &handle_charref;。如果 &html; 文档包含 <literal>&amp;&hash;160;</literal> 这个引用，<varname>ref</varname> 将为 <literal>160</literal>。重构原始的完整的字符引用只要将 <varname>ref</varname> 包装在 <literal>&amp;&hash;...;</literal> 字符中间。</para>
+</callout>
+<callout arearefs="dialect.basehtml.1.5">
+<para>实体引用同字符引用相似，但是没有#号。重建原始的实体引用只要将 <varname>ref</varname> 包装在 <literal>&amp;...;</literal> 字符串中间。(实际上，一位博学的读者曾经向我指出，除些之外还稍微有些复杂。仅有某种标准的 &html; 实体以一个分号结束；其它看上去差不多的实体并不如此。幸运的是，标准 &html; 实体集已经定义在 &python; 的一个叫做 &htmlentitydefs; 的模块中了。从而引出额外的 &if; 语句。) </para>
+</callout>
+<callout arearefs="dialect.basehtml.1.6">
+<para>文本块则简单地不经修改地追加到 &selfpieces; 后。</para>
+</callout>
+<callout arearefs="dialect.basehtml.1.7">
+<para>&html; 注释包装在 <literal>&lt;!--...--&gt;</literal> 字符中。</para>
+</callout>
+<callout arearefs="dialect.basehtml.1.8">
+<para>处理指令包装在 <literal>&lt;?...&gt;</literal> 字符中。</para>
+</callout>
+</calloutlist>
+</example>
+<important>
+<title>包含植入脚本的 &html; 处理</title>
+<para>&html; 规范要求所有非 &html; (像客户端的 &javascript;) 必须包括在 &html; 注释中，但不是所有的页面都是这么做的 (而且所有的最新的浏览器也都容许不这样做) 。&basehtml_classname; 不允许这样，如果脚本嵌入得不正确，它将被当作 &html; 一样进行分析。例如，如果脚本包含了小于和等于号，&sgmlparser; 可能会错误地认为找到了标记和属性。&sgmlparser; 总是把标记名和属性名转换成小写，这样可能破坏了脚本，并且 &basehtml_classname; 总是用双引号来将属性封闭起来 (尽管原始的 &html; 文档可能使用单引号或没有引号) ，这样必然会破坏脚本。应该总是将您的客户端脚本放在 &html; 注释中进行保护。</para>
+</important>
+<example id="dialect.output.example">
+<title>&basehtml_classname; 输出结果</title>
+<programlisting>
+&basehtml_outputdef; <co id="dialect.basehtml.2.1"/>
+&basehtml_outputdoc;
+&basehtml_outputcode; <co id="dialect.basehtml.2.2"/></programlisting>
+<calloutlist>
+<callout arearefs="dialect.basehtml.2.1">
+<para>这是在 &basehtml_classname; 中的一个方法，它永远不会被父类 &sgmlparser; 所调用。因为其它的处理器方法将它们重构的 &html; 保存在 &selfpieces; 中，这个函数需要将所有这些片段连接成一个字符串。正如前面提到的，&python; 在处理列表方面非常出色，但对于字符串处理就逊色了。所以我们只有在某人确实需要它时才创建完整的字符串。</para>
+</callout>
+<callout arearefs="dialect.basehtml.2.2">
+<para>如果您愿意，也可以换成使用 &string; 模块的 &join; 方法：<literal>string.join(self.pieces, "")</literal>。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&w3c; 讨论了<ulink url="&url_w3c;TR/REC-html40/charset.html#entities">字符和实体引用</ulink>。</para></listitem>
+<listitem><para>&pythonlibraryreference; 解答了您的怀疑，即 <ulink url="&url_pythonlibraryreference;module-htmlentitydefs.html">&htmlentitydefs; 模块</ulink>的确名符其实。</para></listitem>
+</itemizedlist>
+</section>
+<section id="dialect.locals">
+<?dbhtml filename="html_processing/locals_and_globals.html"?>
+<title>&locals; 和 &globals;</title>
+<abstract>
+<title/>
+<para>我们先偏离一下 <acronym>HTML</acronym> 处理的主题，讨论一下 &python; 如何处理变量。&python; 有两个内置的函数，&locals; 和 &globals;，它们提供了基于 dictionary 的访问局部和全局变量的方式。</para>
+</abstract>
+<para>还记得 &locals; 吗？您第一次是在这里看到的：</para>
+<informalexample>
+<programlisting>
+&basehtml_starttagdef;
+&basehtml_starttagjoin;
+&basehtml_starttagcode;
+</programlisting>
+</informalexample>
+<para>不，等等，此时您还不能理解 &locals; 。首先，您需要学习关于命名空间的知识。这很枯燥，但是很重要，因此要要耐心些。</para>
+<para>&python; 使用叫做名字空间的东西来记录变量的轨迹。名字空间只是一个 dictionary ，它的键字就是变量名，它的值就是那些变量的值。实际上，名字空间可以像 &python; 的 dictionary 一样进行访问，一会儿我们就会看到。</para>
+<para>在一个 &python; 程序中的任何一个地方，都存在几个可用的名字空间。每个函数都有着自已的名字空间，叫做局部名字空间，它记录了函数的变量，包括函数的参数和局部定义的变量。每个模块拥有它自已的名字空间，叫做全局名字空间，它记录了模块的变量，包括函数、类、其它导入的模块、模块级的变量和常量。还有就是内置名字空间，任何模块均可访问它，它存放着内置的函数和异常。</para>
+<para>当一行代码要使用变量 <varname>x</varname> 的值时，&python; 会到所有可用的名字空间去查找变量，按照如下顺序：</para>
+<orderedlist>
+<listitem><para>局部名字空间――特指当前函数或类的方法。如果函数定义了一个局部变量 <varname>x</varname>，或一个参数 <varname>x</varname>，&python; 将使用它，然后停止搜索。</para></listitem>
+<listitem><para>全局名字空间――特指当前的模块。如果模块定义了一个名为 <varname>x</varname> 的变量，函数或类，&python; 将使用它然后停止搜索。</para></listitem>
+<listitem><para>内置名字空间――对每个模块都是全局的。作为最后的尝试，&python; 将假设 <varname>x</varname> 是内置函数或变量。</para></listitem>
+</orderedlist>
+<para>如果 &python; 在这些名字空间找不到 <varname>x</varname>，它将放弃查找并引发一个 <errorcode>NameError</errorcode> 异常，同时传递 <errorname>There is no variable named 'x'</errorname> 这样一条信息，回到 <xref linkend="odbchelper.unboundvariable"/>，您会看到一路上都有这样的信息。但是您并没有体会到 &python; 在给出这样的错误之前做了多少的努力。</para>
+<important>
+<title>语言演变：嵌套的作用域</title>
+<para>&python; 2.2 引入了一种略有不同但重要的改变，它会影响名字空间的搜索顺序：嵌套的作用域。
+
+在 &python; 2.2 版本之前，当您在一个<link linkend="fileinfo.nested">嵌套函数</link>或 <link linkend="apihelper.lambda">&lambdafunction; 函数</link>中引用一个变量时，&python; 会在当前 (嵌套的或 &lambdafunction;) 函数的名字空间中搜索，然后在模块的名字空间。&python; 2.2 将只在当前 (嵌套的或 &lambdafunction;) 函数的名字空间中搜索，<emphasis>然后是在父函数的名字空间</emphasis> 中搜索，接着是模块的名字空间中搜索。&python; 2.1 可 以两种方式工作，缺省地，按 &python; 2.0 的方式工作。但是您可以把下面一行代码增加到您的模块头部，使您的模块工作起来像 &python; 2.2 的方式：</para>
+<programlisting>
+from __future__ import nested_scopes</programlisting>
+</important>
+<para>您是否为此而感到困惑？不要灰心！我敢说这一点非常酷。像 &python; 中的许多事情一样，名字空间<emphasis>在运行时直接可以访问</emphasis>。怎么样？不错吧，局部名字空间可以通过内置的 &locals; 函数来访问。全局 (模块级别) 名字空间可以通过内置的 &globals; 函数来访问。</para>
+<example>
+<title>&locals; 介绍</title>
+<screen>&prompt;<userinput>def foo(arg):</userinput> <co id="dialect.locals.1.1"/>
+&continuationprompt;<userinput>x = 1</userinput>
+&continuationprompt;<userinput>print locals()</userinput>
+&continuationprompt;
+&prompt;<userinput>foo(7)</userinput>        <co id="dialect.locals.1.2"/>
+<computeroutput>{'arg': 7, 'x': 1}</computeroutput>
+&prompt;<userinput>foo('bar')</userinput>    <co id="dialect.locals.1.3"/>
+<computeroutput>{'arg': 'bar', 'x': 1}</computeroutput></screen>
+<calloutlist>
+<callout arearefs="dialect.locals.1.1">
+<para>函数 <function>foo</function> 在它的局部名字空间中有两个变量：<varname>arg</varname> (它的值是被传入函数的) 和 <varname>x</varname> (它是在函数里定义的)。</para>
+</callout>
+<callout arearefs="dialect.locals.1.2">
+<para>&locals; 返回一个名字/值对的 dictionary。这个 dictionary 的键字是字符串形式的变量名字，dictionary 的值是变量的实际值。所以用 <literal>7</literal> 来调用 <function>foo</function>，会打印出包含函数两个局部变量的 dictionary：<varname>arg</varname> (<literal>7</literal>) 和 <varname>x</varname> (&one;)。</para>
+</callout>
+<callout arearefs="dialect.locals.1.3">
+<para>回想一下，&python; 有动态数据类型，所以您可以非常容易地传递给 <varname>arg</varname> 一个字符串，这个函数 (和对 &locals; 的调用) 将仍然很好的工作。&locals; 可以用于所有类型的变量。</para>
+</callout>
+</calloutlist>
+</example>
+<para>&locals; 对局部 (函数) 名字空间做了些什么，&globals; 就对全局 (模块) 名字空间做了什么。然而 &globals; 更令人兴奋，因为一个模块的名字空间是更令人兴奋的。<footnote><para>我没有说得太多吧。</para></footnote> 模块的名字空间不仅仅包含了模块级的变量和常量，还包括了所有在模块中定义的函数和类。除此以外，它还包括了任何被导入到模块中的东西。</para>
+<para>回想一下 <link linkend="fileinfo.fromimport">&frommoduleimport;</link> 和 <link linkend="odbchelper.import">&importmodule;</link> 之间的不同。使用 &importmodule;，模块自身被导入，但是它保持着自已的名字空间，这就是为什么您需要使用模块名来访问它的函数或属性：<literal><replaceable>module</replaceable>.<replaceable>function</replaceable></literal> 的原因。但是使用 &frommoduleimport;，实际上是从另一个模块中将指定的函数和属性导入到您自己的名字空间，这就是为什么您可以直接访问它们却不需要引用它们所来源的模块。使用 &globals; 函数，您会真切地看到这一切的发生。</para>
+<example id="dialect.globals.example">
+<title>&globals; 介绍</title>
+<para>看看下面列出的在文件 &basehtml_filename; 尾部的代码块：</para>
+<programlisting>
+if __name__ == "__main__":
+    for k, v in globals().items():             <co id="dialect.locals.2.1"/>
+        print k, "=", v</programlisting>
+<calloutlist>
+<callout arearefs="dialect.locals.2.1">
+<para>不要被吓坏了，想想以前您已经全部都看到过了。&globals; 函数返回一个 dictionary，我们使用 &items; 方法和<link linkend="odbchelper.multiassign">多变量赋值</link>来<link linkend="dictionaryiter.example">遍历 dictionary</link>。在这里唯一的新东西就是 &globals;  函数。</para>
+</callout>
+</calloutlist>
+<para>现在从命令行运行这个脚本，会得到下面的输出 (注意您的输出可能有略微的不同，这依赖于您的系统平台和所安装的 &python; 版本)：</para>
+<screen><prompt>c:\docbook\dip\py></prompt> <userinput>python BaseHTMLProcessor.py</userinput></screen>
+<programlisting>
+SGMLParser = sgmllib.SGMLParser                <co id="dialect.locals.3.1"/>
+htmlentitydefs = &lt;module 'htmlentitydefs' from 'C:\Python23\lib\htmlentitydefs.py'&gt; <co id="dialect.locals.3.2"/>
+BaseHTMLProcessor = __main__.BaseHTMLProcessor <co id="dialect.locals.3.3"/>
+__name__ = __main__                            <co id="dialect.locals.3.4"/>
+... rest of output omitted for brevity...</programlisting>
+<calloutlist>
+<callout arearefs="dialect.locals.3.1">
+<para>我们使用了 &frommoduleimport; 把 &sgmlparser; 从 &sgmllib_modulename; 中导入。也就是说它被直接导入到我们的模块名字空间了，就是这样。</para>
+</callout>
+<callout arearefs="dialect.locals.3.2">
+<para>把上面的例子和 &htmlentitydefs; 对比一下，它是用 &import; 被导入的。也就是说 &htmlentitydefs; 模块本身被导入了名字空间，但是定义在 &htmlentitydefs; 之中的 <varname>entitydefs</varname> 变量却没有。</para>
+</callout>
+<callout arearefs="dialect.locals.3.3">
+<para>这个模块只定义一个类，&basehtml_classname;，不错。注意这儿的值就是<link linkend="fileinfo.classattributes.intro">类本身</link>，不是一个特别的类实例。</para>
+</callout>
+<callout arearefs="dialect.locals.3.4">
+<para>记得 <link linkend="odbchelper.ifnametrick"><literal>if &name;</literal> 技巧</link>吗？当运行一个模块时 (相对于从另外一个模块中导入而言)，内置的 &name; 是一个特殊值 &main;。因为我们是把这个模块当作脚本从命令来运行的，故 &name; 值为 &main;，这就是为什么我们这段简单地打印 &globals; 的代码可以执行的原因。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="tip.localsbyname">
+<title>变量的动态访问</title>
+<para>使用 &locals; 和 &globals; 函数，通过提供变量的字符串名字您可以动态地得到任何变量的值。这种方法提供了这样的功能：<link linkend="apihelper.getattr">&getattr;</link> 函数允许您通过提供函数的字符串名来动态地访问任意的函数。</para>
+</note>
+<para>在 &locals; 与 &globals; 之间有另外一个重要的区别，您应该在它困扰您之前就了解它。它无论如何都会困扰您的，但至少您还会记得曾经学习过它。</para>
+<example id="dialect.locals.readonly.example">
+<title>&locals; 是只读的，&globals; 不是</title>
+<programlisting>
+def foo(arg):
+    x = 1
+    print locals()    <co id="dialect.locals.4.1"/>
+    locals()["x"] = 2 <co id="dialect.locals.4.2"/>
+    print "x=",x      <co id="dialect.locals.4.3"/>
+
+z = 7
+print "z=",z
+foo(3)
+globals()["z"] = 8    <co id="dialect.locals.4.4"/>
+print "z=",z          <co id="dialect.locals.4.5"/>
+</programlisting>
+<calloutlist>
+<callout arearefs="dialect.locals.4.1">
+<para>因为使用 <literal>3</literal> 来调用 <function>foo</function>，会打印出 <literal>{'arg': 3, 'x': 1}</literal>。这个应该没什么奇怪的。</para>
+</callout>
+<callout arearefs="dialect.locals.4.2">
+<para>&locals; 是一个返回 dictionary 的函数，这里您在 dictionary 中设置了一个值。您可能认为这样会改变局部变量 <varname>x</varname> 的值为 <literal>2</literal>，但并不会。&locals; 实际上没有返回局部名字空间，它返回的是一个拷贝。所以对它进行改变对局部名字空间中的变量值并无影响。</para>
+</callout>
+<callout arearefs="dialect.locals.4.3">
+<para>这样会打印出 <literal>x= 1</literal>，而不是 <literal>x= 2</literal>。</para>
+</callout>
+<callout arearefs="dialect.locals.4.4">
+<para>在有了对 &locals; 的经验之后，您可能认为这样<emphasis>不会</emphasis> 改变 <varname>z</varname> 的值，但是可以。由于 &python; 在实现过程中内部有所区别 (关于这些区别我宁可不去研究，因为我自已还没有完全理解) ，&globals; 返回实际的全局名字空间，而不是一个拷贝：与 &locals; 的行为完全相反。所以对 &globals; 所返回的 dictionary 的任何的改动都会直接影响到全局变量。</para>
+</callout>
+<callout arearefs="dialect.locals.4.5">
+<para>这样会打印出 <literal>z= 8</literal>，而不是 <literal>z= 7</literal>。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section id="dialect.dictsub">
+<?dbhtml filename="html_processing/dictionary_based_string_formatting.html"?>
+<title>基于 dictionary 的字符串格式化</title>
+<para>为什么学习 &locals; 和 &globals;？因为接下来就可以学习关于基于 dictionary 的字符串格式化。或许您还能记起，<link linkend="odbchelper.stringformatting">字符串格式化</link>提供了一种将值插入字符串中的一种便捷的方法。值被列在一个 tuple 中，按照顺序插入到字符串中每个格式化标记所在的位置上。尽管这种做法效率高，但还不是最容易阅读的代码，特别是当插入多个值的时候。仅用眼看一遍字符串，您不能马上就明白结果是什么；您需要经常地在字符串和值的 tuple 之间进行反复查看。</para>
+<abstract>
+<title/>
+<para>有另外一种字符串格式化的形式，它使用 dictionary 而不是值的 tuple。</para>
+</abstract>
+<example>
+<title>基于 dictionary 的字符串格式化介绍</title>
+<screen>
+&prompt;<userinput>params = {"server":"mpilgrim", "database":"master", "uid":"sa", "pwd":"secret"}</userinput>
+&prompt;<userinput>"%(pwd)s" % params</userinput>                                    <co id="dialect.dictsub.1.1"/>
+<computeroutput>'secret'</computeroutput>
+&prompt;<userinput>"%(pwd)s is not a good password for %(uid)s" % params</userinput> <co id="dialect.dictsub.1.2"/>
+<computeroutput>'secret is not a good password for sa'</computeroutput>
+&prompt;<userinput>"%(database)s of mind, %(database)s of body" % params</userinput> <co id="dialect.dictsub.1.3"/>
+<computeroutput>'master of mind, master of body'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="dialect.dictsub.1.1">
+<para>这种字符串格式化形式不用显式的值的 tuple，而是使用一个 dictionary，<varname>params</varname>。并且标记也不是在字符串中的一个简单 <literal>&pct;s</literal>，而是包含了一个用括号包围起来的名字。这个名字是 <varname>params</varname> dictionary 中的一个键字，所以 <literal>&pct;(pwd)s</literal> 标记被替换成相应的值 <literal>secret</literal>。</para>
+</callout>
+<callout arearefs="dialect.dictsub.1.2">
+<para>基于 dictionary 的字符串格式化可用于任意数量的有名的键字。每个键字必须在一个给定的 dictionary 中存在，否则这个格式化操作将失败并引发一个 <errorcode>KeyError</errorcode> 的异常。</para>
+</callout>
+<callout arearefs="dialect.dictsub.1.3">
+<para>您甚至可以两次指定同一键字，每个键字出现之处将被同一个值所替换。</para>
+</callout>
+</calloutlist>
+</example>
+<para>那么为什么您偏要使用基于 dictionary 的字符串格式化呢？的确，仅为了进行字符串格式化，就事先创建一个有键字和值的 dictionary 看上去的确有些小题大作。它的真正最大用处是当您碰巧已经有了像 <link linkend="dialect.locals">&locals;</link> 一样的有意义的键字和值的 dictionary 的时候。</para>
+<example id="dialect.unknownstarttag">
+<title>&basehtml_filename; 中的基于 dictionary 的字符串格式化</title>
+<programlisting>
+&basehtml_commentdef;
+&basehtml_commentcode; <co id="dialect.dictsub.2.1"/>
+</programlisting>
+<calloutlist>
+<callout arearefs="dialect.dictsub.2.1">
+<para>使用内置的 &locals; 函数是最普通的基于 dictionary 的字符串格式化的应用。这就是说您可以在您的字符串 (本例中是 <varname>text</varname>，它作为一个参数传递给类方法) 中使用局部变量的名字，并且每个命名的变量将会被它的值替换。如果 <varname>text</varname> 是 <literal>'Begin page footer'</literal>，字符串格式化 <literal>"&lt;!--&pct;(text)s-->" &pct; locals()</literal> 将得到字符串 <literal>'&lt;!--Begin page footer-->'</literal>。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>基于 dictionary 的字符串格式化的更多内容</title>
+<programlisting>
+&basehtml_starttagdef;
+&basehtml_starttagjoin; <co id="dialect.dictsub.3.1"/>
+&basehtml_starttagcode;                       <co id="dialect.dictsub.3.2"/>
+</programlisting>
+<calloutlist>
+<callout arearefs="dialect.dictsub.3.1">
+<para>当这个模块被调用时，<varname>attrs</varname> 是一个键/值 tuple 的 list，就像一个 <link linkend="odbchelper.items">dictionary 的 &items;</link>。这就意味着我们可以使用<link linkend="odbchelper.multiassign">多变量赋值</link>来遍历它。到现在这将是一种熟悉的模式，但是这里有很多东西，让我们分开来看：</para>
+<orderedlist numeration="loweralpha">
+<listitem><para>假设 <varname>attrs</varname> 是 <literal>[('href', 'index.html'), ('title', 'Go to home page')]</literal>。</para></listitem>
+<listitem><para>在这个列表解析的第一轮循环中，<varname>key</varname> 将为 <literal>'href'</literal>，<varname>value</varname> 将为 <literal>'index.html'</literal>。</para></listitem>
+<listitem><para>字符串格式化 <literal>'&nbsp;&pct;s="&pct;s"' &pct; (key, value)</literal> 将生成 <literal>'&nbsp;href="index.html"'</literal>。这个字符串就作为这个列表解析返回值的第一个元素。</para></listitem>
+<listitem><para>在第二轮中，<varname>key</varname> 将为 <literal>'title'</literal>，<varname>value</varname> 将为 <literal>'Go to home page'</literal>。</para></listitem>
+<listitem><para>字符串格式化将生成 <literal>' title="Go to home page"'</literal>。</para></listitem>
+<listitem><para>这个 list 理解返回两个生成的字符串 list，并且 <varname>strattrs</varname> 将把这个 list 的两个元素连接在一起形成 <literal>'&nbsp;href="index.html" title="Go to home page"'</literal>。</para></listitem>
+</orderedlist>
+</callout>
+<callout arearefs="dialect.dictsub.3.2">
+<para>现在，使用基于 dictionary 的字符串格式化，我们将 <varname>tag</varname> 和 <varname>strattrs</varname> 的值插入到一个字符串中。所以，如果 <varname>tag</varname> 是 <literal>'a'</literal>，最终的结果会是 <literal>'&lt;a href="index.html" title="Go to home page">'</literal>，并且这就是追加到 &selfpieces; 后面的东西。</para>
+</callout>
+</calloutlist>
+</example>
+<important>
+<title>使用 &locals; 的性能问题</title>
+<para>使用 &locals; 来应用基于 dictionary 的字符串格式化是一种方便的作法，它可以使复杂的字符串格式化表达式更易读。但它需要花费一定的代价。在调用 &locals; 方面有一点性能上的问题，这是由于 <link linkend="dialect.locals.readonly.example"> &locals; 创建了局部名字空间的一个拷贝</link>引起的。</para>
+</important>
+</section>
+<section id="dialect.quoting">
+<?dbhtml filename="html_processing/quoting_attribute_values.html"?>
+<title>给属性值加引号</title>
+<abstract>
+<para>在 &clp; 上的一个常见问题是 <quote>我有一些 &html; 文档，属性值没有用引号括起来，并且我想将它们全部括起来，我怎么才能实现它呢？</quote>
+<footnote><para>好吧，其实并不是那么普通的一个问题。在那不都是问 <quote>我应该用何种编辑器来写 &python; 代码？</quote> (回答：&emacs;) 或 <quote>&python; 比 &perl; 是好还是坏？</quote> (回答：<quote>&perl; 比 &python; 差，因为人们想让它差的。</quote> ――Larry Wall，1998 年 10 月 14 日) 但是关于 &html;  处理的问题，或者这种提法或者另一种提法，大约一个月就要出现一次，在这些问题之中，这个问题是最常见的一个。</para></footnote>  (一般这种事情的出现是由于一个项目经理加入到一个大的项目中来，而他又抱着 &html; 是一种标记语言的教条，要求所有的页面必须能够通过 &html; 校验器的验证。而属性值没有被引号括起来是一种常见的对 &html; 规范的违反。) 不管什么原因，未括起来的属性值通过将 &html; 送进 &basehtml_classname; 可以容易地修复。
+</para>
+</abstract>
+<para>&basehtml_classname; 消费 (consume) &html;  (因为它是从 &sgmlparser; 派生来的) 并生成等价的 &html;。但是这个 &html; 输出与输入的并不一样。标记和属性名最终会转化为小写字母，即使它们可能以大写字母开始或是大小写的混合形式。属性值将被双引号引起来，即使它们原来可能是用单引号括起来的或根本没有括起来。这就是最后我们可以受益的边际效应。</para>
+<example id="dialect.quoting.example">
+<title>给属性值加引号</title>
+<screen>
+&prompt;<userinput>htmlSource = """</userinput>        <co id="dialect.basehtml.3.1"/>
+&continuationprompt;&lt;html>
+&continuationprompt;&lt;head>
+&continuationprompt;&lt;title>Test page&lt;/title>
+&continuationprompt;&lt;/head>
+&continuationprompt;&lt;body>
+&continuationprompt;&lt;ul>
+&continuationprompt;&lt;li>&lt;a href=index.html>Home&lt;/a>&lt;/li>
+&continuationprompt;&lt;li>&lt;a href=toc.html>Table of contents&lt;/a>&lt;/li>
+&continuationprompt;&lt;li>&lt;a href=history.html>Revision history&lt;/a>&lt;/li>
+&continuationprompt;&lt;/body>
+&continuationprompt;&lt;/html>
+&continuationprompt;<userinput>"""</userinput>
+&prompt;<userinput>from BaseHTMLProcessor import BaseHTMLProcessor</userinput>
+&prompt;<userinput>parser = BaseHTMLProcessor()</userinput>
+&prompt;<userinput>parser.feed(htmlSource)</userinput> <co id="dialect.basehtml.3.2"/>
+&prompt;<userinput>print parser.output()</userinput>   <co id="dialect.basehtml.3.3"/>
+<computeroutput>&lt;html>
+&lt;head>
+&lt;title>Test page&lt;/title>
+&lt;/head>
+&lt;body>
+&lt;ul>
+&lt;li>&lt;a href="index.html">Home&lt;/a>&lt;/li>
+&lt;li>&lt;a href="toc.html">Table of contents&lt;/a>&lt;/li>
+&lt;li>&lt;a href="history.html">Revision history&lt;/a>&lt;/li>
+&lt;/body>
+&lt;/html></computeroutput></screen>
+<calloutlist>
+<callout arearefs="dialect.basehtml.3.1">
+<para>请注意，在 <sgmltag>&lt;a&gt;</sgmltag> 标记中的 <literal>href</literal> 属性值没有被适当地括起来 (还要注意，除了文档字符串之外，我们还将<link linkend="odbchelper.triplequotes">三重引号</link>用到了 &docstring; 之外的其它地方，并且是不会少于直接在 &ide; 中的使用。它们非常有用。) </para>
+</callout>
+<callout arearefs="dialect.basehtml.3.2">
+<para>装填分析器。</para>
+</callout>
+<callout arearefs="dialect.basehtml.3.3">
+<para>使用定义在 &basehtml_classname; 中的 <function>output</function> 函数，我们得到单个字符串的输出，并且属性值被完全括起来了。让我们想一下这里实际上发生了多少事：&sgmlparser; 分析整个 &html; 文档，将其分解为一片片的标记、引用、数据等等。&basehtml_classname; 使用这些元素来重新构造 &html; 的片段 (如果您想查看的话它们仍然保存在 <varname>parser.pieces</varname> 中) 。最后，我们调用 <function>parser.output</function>，它将所有的 &html; 片段连接成一个字符串。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section id="dialect.dialectizer">
+<?dbhtml filename="html_processing/dialect.html"?>
+<title>&dialect_filename; 介绍</title>
+<abstract>
+<title/>
+<para>&dialect_classname; 是 &basehtml_classname; 的简单 (和拙劣) 的派生类。它通过一系列的替换对文本块进行了处理，但是它确保在 <literal>&pre_starttag;...&pre_endtag;</literal> 块之间的任何东西不被修改地通过。</para>
+</abstract>
+<para>为了处理 &pre_starttag; 块，我们在 &dialect_classname; 中定义了两个方法：<function>start_pre</function> 和 <function>end_pre</function>。</para>
+<example id="dialect.specifictags.example">
+<title>处理特别标记</title>
+<programlisting>
+&dialect_startpredef; <co id="dialect.dialectizer.1.1"/>
+&dialect_startprecode; <co id="dialect.dialectizer.1.2"/>
+&dialect_startprecall; <co id="dialect.dialectizer.1.3"/>
+
+&dialect_endpredef; <co id="dialect.dialectizer.1.4"/>
+&dialect_endprecall; <co id="dialect.dialectizer.1.5"/>
+&dialect_endprecode; <co id="dialect.dialectizer.1.6"/></programlisting>
+<calloutlist>
+<callout arearefs="dialect.dialectizer.1.1">
+<para>每当 &sgmlparser; 在 &html; 源代码中发现一个 &pre_starttag; 时，都会调用 <function>start_pre</function>。(马上我们就会确切地看到它是如何发生的。) 这个方法使用单个参数：<varname>attrs</varname>，这个参数会包含标记的属性 (如果存在的话) 。<varname>attrs</varname> 是一个键/值 tuple 的 list，就像 <link linkend="dialect.unknownstarttag">&unknown_starttag;</link> 中所使用的。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.1.2">
+<para>在 <function>reset</function> 方法中，我们初始化了一个数据属性，它作为 &pre_starttag; 标记的一个计数器。每当我们找到一个 &pre_starttag; 标记，我们增加计数器的值；每当我们找到一个 &pre_endtag; 标记，我们将减少计数器的值。(我们本可以把它实现为一个标志，即或把它设为 &one;，或重置为 &zero;，但这样做只是为了方便，并且这样做可以处理古怪 (但有可能) 的 &pre_starttag; 标记嵌套的情况。) 马上我们将会看到这个计数器是多么的好用。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.1.3">
+<para>不错，这就是我们对 &pre_starttag; 标记所做的唯一的特殊处理。现在我们将属性列表传给 &unknown_starttag;，由它来进行缺省的处理。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.1.4">
+<para>每当 &sgmlparser; 找到一个 &pre_endtag; 标记时，会调用 <function>end_pre</function>。因为结束标记不能包含属性，因此这个方法没有参数。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.1.5">
+<para>首先我们要进行缺省处理，就像其它结束标记做的一样。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.1.6">
+<para>其次我们将计数器减少，标记这个 &pre_starttag; 块已经被关闭了。</para>
+</callout>
+</calloutlist>
+</example>
+<para>到了这个地方，有必要对 &sgmlparser; 更深入一层。我已经多次声明 (到目前为止您应已经把它做为信条了) ，就是 &sgmlparser; 查找每一个标记并且如果存在特定的方法就调用它们。例如：我们刚刚看到处理 &pre_starttag; 和 &pre_endtag; 的 <function>start_pre</function> 和 <function>end_pre</function> 的定义。但这是如何发生的呢？嗯，也没什么神奇的，只不过是出色的 &python; 编码。</para>
+<example id="dialect.dialectizer.example">
+<title>&sgmlparser;</title>
+<programlisting>
+&sgmlparser_starttagdef; <co id="dialect.dialectizer.2.1"/>
+&sgmlparser_starttry;
+&sgmlparser_startgetattr; <co id="dialect.dialectizer.2.2"/>
+&sgmlparser_startexcept; <co id="dialect.dialectizer.2.3"/>
+&sgmlparser_starttry2;
+&sgmlparser_startgetattr2; <co id="dialect.dialectizer.2.4"/>
+&sgmlparser_startexcept2;
+&sgmlparser_startcall; <co id="dialect.dialectizer.2.5"/>
+&sgmlparser_startreturn;
+&sgmlparser_startelse;
+&sgmlparser_starthandle; <co id="dialect.dialectizer.2.6"/>
+&sgmlparser_startreturn2;
+&sgmlparser_startelse2;
+&sgmlparser_startstack;
+&sgmlparser_starthandle2;
+&sgmlparser_startreturn3; <co id="dialect.dialectizer.2.7"/>
+
+&sgmlparser_handledef;
+&sgmlparser_handlecode; <co id="dialect.dialectizer.2.8"/></programlisting>
+<calloutlist>
+<callout arearefs="dialect.dialectizer.2.1">
+<para>此处，&sgmlparser; 已经找到了一个开始标记，并且分析出属性列表。唯一要做的事情就是检查对于这个标记是否存在一个特别的处理方法，否则我们就应该求助于缺省方法 (&unknown_starttag;) 。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.2.2">
+<para>&sgmlparser; 的 <quote>神奇</quote> 之处除了我们的老朋友 <link linkend="apihelper.getattr">&getattr;</link> 之外就没有什么了。您以前可能没注意到，&getattr; 将查找定义在一个对象的继承者中或对象自身的方法。这里对象是 &self;，即当前实例。所以，如果 <varname>tag</varname> 是 <literal>'pre'</literal>，这里对 &getattr; 的调用将会在当前实例 (它是 &dialect_classname; 类的一个实例) 中查找一个名为 <function>start_pre</function> 的方法。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.2.3">
+<para>如果 &getattr; 所查找的方法在对象或它的任何继承者中不存在的话，它会引发一个 &attributeerror; 的异常。但没有关系，因为我们把对 &getattr; 的调用包装到一个 <link linkend="fileinfo.exception">&tryexcept;</link> 块中了，并且显式地捕捉 &attributeerror; 异常。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.2.4">
+<para>因为我们没有找到一个 <function>start_xxx</function> 方法，在放弃之前，我们将还要查找一个 <function>do_xxx</function> 方法。这个可替换的命名模式一般用于单独的标记，如 <sgmltag>&lt;br></sgmltag>，这些标记没有相应的结束标记。但是您可以使用任何一种模式，正如您看到的，&sgmlparser; 对每个标记尝试两次。(您不应该对相同的标记同时定义 <function>start_xxx</function> 和 <function>do_xxx</function> 处理方法，因为这样的话只有 <function>start_xxx</function> 方法会被调用。) </para>
+</callout>
+<callout arearefs="dialect.dialectizer.2.5">
+<para>另一个 &attributeerror; 异常，它是说用 <function>do_xxx</function> 来调用 &getattr; 失败了。因为对同一个标记我们既没有找到 <function>start_xxx</function> 也没有找到 <function>do_xxx</function> 处理方法，这样我们捕捉到了异常并且求助于缺省方法：&unknown_starttag;。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.2.6">
+<para>记得吗？&tryexcept; 块可以有一个 &else; 子句，当在 &tryexcept; 块中<link linkend="crossplatform.example">没有异常被引发</link>时，它将被调用。逻辑上，意味着我们<emphasis>确实</emphasis> 找到了这个标记的 <function>do_xxx</function> 方法，所以我们将要调用它。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.2.7">
+<para>顺便说，不要为这些不同的返回值而担心；理论上他们有意义，但实际上它们没有任何用处。也不要担心   <literal>self.stack.append(tag)</literal> ; &sgmlparser; 内部会知晓您的开始标记是否有合适的结束标记与之匹配，但是它不会对这些信息做任何操作。理论上，您能使用这个模块校验您的标记是否完全匹配，但是这或许没有多大价值，并且这样的内容已经超出了本章所要讨论的范畴。现在有您更需要担心的问题。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.2.8">
+<para><function>start_xxx</function> 和 <function>do_xxx</function> 方法并不被直接调用；标记名、方法和属性被传给 <function>handle_starttag</function> 这个方法，以便继承者可以覆盖它，并改变<emphasis>全部</emphasis> 开始标记分发的方式。我们不需要控制这个层面，所以我们只让这个方法做它自已的事，就是用属性 list 来调用方法 (<function>start_xxx</function> 或 <function>do_xxx</function>) 。记住 <varname>method</varname> 是一个从 &getattr; 返回的函数，而函数是对象。(我知道您已经听腻了，我发誓，一旦我们停止寻找新的使用方法来为我们服务时，我就决不再提它了。) 这时，函数对象作为一个参数传入这个分发方法，这个方法反过来再调用这个函数。在这里，我们不需要知道函数是什么，叫什么名字，或是在哪时定义的；我们只需要知道用一个参数 <varname>attrs</varname> 调用它。</para>
+</callout>
+</calloutlist>
+</example>
+<para>现在回到我们已经计划好的程序：&dialect_classname;。当我们跑题时，我们定义了特别的处理方法来处理 &pre_starttag; 和 &pre_endtag; 标记。还有一件事没有做，那就是用我们预定义的替换处理来处理文本块。为了实现它，我们需要覆盖 &handle_data; 方法。</para>
+<example>
+<title>覆盖 &handle_data; 方法</title>
+<programlisting>
+&dialect_datadef; <co id="dialect.dialectizer.3.1"/>
+&dialect_datacode; <co id="dialect.dialectizer.3.2"/></programlisting>
+<calloutlist>
+<callout arearefs="dialect.dialectizer.3.1">
+<para>&handle_data; 在调用时只使用一个参数：要处理的文本。</para>
+</callout>
+<callout arearefs="dialect.dialectizer.3.2">
+<para>在祖先类 <link linkend="dialect.basehtml.intro">&basehtml_classname;</link> 中，&handle_data; 方法只是将文本追加到输出缓冲区 &selfpieces; 之后。这里的逻辑稍微有点复杂。如果我们处于 <literal>&pre_starttag;...&pre_endtag;</literal> 块的中间，<varname>self.verbatim</varname> 将是大于 &zero; 的某个值，接着我们想要将文本不作改动地传入输出缓冲区。否则，我们将调用另一个单独的方法来进行替换处理，然后将处理结果放入输出缓冲区中。在 &python; 中，这是一个一行代码，它使用了<link linkend="apihelper.andortrick.intro">&andor; 技巧</link>。</para>
+</callout>
+</calloutlist>
+</example>
+<para>我们已经接近了对 &dialect_classname; 的全面理解。唯一缺少的一个环节是文本替换的特性。如果您知道点 &perl;，您就会知道当需要复杂的文本替换时，唯一有效的解决方法就是正则表达式。在 &dialect_filename; 文件后面的几个类中定义了一连串的正则表达式来操作 &html; 标记中的文本。我们已经学习过了<link linkend="re">正则表达式中的所有字符</link>。我们不必重复学习正则表达式的艰难历程了，不是吗？上帝知道我反正不需要。我想现在这章您已经学得差不多了。</para></section>
+<section id="dialect.alltogether">
+<?dbhtml filename="html_processing/all_together.html"?>
+<title>全部放在一起</title>
+<abstract>
+<title/>
+<para>到了将迄今为止我们已经学过并用得不错的东西放在一起的时候了。我希望您专心些。</para>
+</abstract>
+<example>
+<title>&translate; 函数，第 1 部分</title>
+<programlisting>
+&dialect_translatedef; <co id="dialect.alltogether.1.1"/>
+&dialect_translateimport; <co id="dialect.alltogether.1.2"/>
+&dialect_translateopen; <co id="dialect.alltogether.1.3"/>
+&dialect_translateread;
+&dialect_translateclose;
+</programlisting>
+<calloutlist>
+<callout arearefs="dialect.alltogether.1.1">
+<para>这个 &translate; 函数有一个<link linkend="apihelper.optional">可选参数</link> <varname>dialectName</varname>，它是一个字符串，指出我们将使用的方言。一会我们就会看到它是如何使用的。</para>
+</callout>
+<callout arearefs="dialect.alltogether.1.2">
+<para>嘿，等一下，在这个函数中有一个 <link linkend="odbchelper.import">&import;</link> 语句！它在 &python; 中完全合法。您已经习惯了在一个程序的前面看到 &import; 语句，它意味着导入的模块在程序的任何地方都是可用的。但您也可以在一个函数中导入模块，这意味着导入的模块只能在函数中使用。如果您有一个只能用在一个函数中的模块，这是一个简便的方法，使您的代码更模块化。(当发现您周末的加班已经变成了一个 800 行的艺术作品，并且决定将其分割成一打可重用的模块时，您会感谢它的。) </para>
+</callout>
+<callout arearefs="dialect.alltogether.1.3">
+<para>现在我们<link linkend="dialect.extract.urllib">得到了给定的 URL 源文件</link>。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>&translate; 函数，第 2 部分：奇妙而又奇妙</title>
+<programlisting>
+&dialect_translateparsername; <co id="dialect.alltogether.2.1"/>
+&dialect_translateparserclass; <co id="dialect.alltogether.2.2"/>
+&dialect_translateinstantiate; <co id="dialect.alltogether.2.3"/>
+</programlisting>
+<calloutlist>
+<callout arearefs="dialect.alltogether.2.1">
+<para>&capitalize; 是一个我们以前未曾见过的字符串方法；它只是将一个字符串的第一个字母变成大写，将其它的字母强制变成小写。再使用<link linkend="odbchelper.stringformatting">字符串格式化</link>，我们就得到了一种方言的名字，并将它转化为了相应的方言变换器类的名字。如果 <varname>dialectName</varname> 是字符串 <literal>'chef'</literal>，<varname>parserName</varname> 将是字符串 <literal>'ChefDialectizer'</literal>。</para>
+</callout>
+<callout arearefs="dialect.alltogether.2.2">
+<para>我们有了一个字符串形式 (<varname>parserName</varname>) 的类名称，还有一个 dictionary (&globals;()) 形式的全局名字空间。合起来后，我们可以得到以前者命名的类的引用。(回想一下，<link linkend="fileinfo.classattributes">类是对象</link>，并且它们可以像其它对象一样赋值给一个变量。) 如果 <varname>parserName</varname> 是字符串 <literal>'ChefDialectizer'</literal>，<varname>parserClass</varname> 将是类 <literal>ChefDialectizer</literal>。</para>
+</callout>
+<callout arearefs="dialect.alltogether.2.3">
+<para>最后，我们拥有了一个类对象 (<varname>parserClass</varname>)，接着我们想要生成这个类的一个实例。好，我们已经知道如何去做了：<link linkend="fileinfo.create">像函数一样调用类</link>。这个类保存在一个局部变量中，但这个事实完全不会有什么影响；我们只是像函数一样调用这个局部变量，取出这个类的一个实例。如果 <varname>parserClass</varname> 是类 <literal>ChefDialectizer</literal>，<varname>parser</varname> 将是类 <literal>ChefDialectizer</literal> 的一个实例。</para>
+</callout>
+</calloutlist>
+</example>
+<para>何必这么麻烦？毕竟只有三个 <classname>Dialectizer</classname> 类；为什么不只使用一个 <function>case</function> 语句？ (噢，在 &python; 中不存在 <function>case</function> 语句，但为什么不只使用一组 &if; 语句呢？) 理由之一是：可扩展性。这个 &translate; 函数完全不用关心我们定义了多少个方言变换器类。设想一下，如果我们明天定义了一个新的 <classname>FooDialectizer</classname> 类，把 <literal>'foo'</literal> 作为 <varname>dialectName</varname> 传给 &translate; ，&translate; 也能工作。</para>
+<para>甚至会更好。设想将 <classname>FooDialectizer</classname> 放进一个独立的模块中，使用 &frommoduleimport; 将其导入。我们已经知道了，这样会将它<link linkend="dialect.globals.example">包含在 &globals;()</link> 中 ，所以不用修改 &translate; ，它仍然可以正确运行，尽管 <classname>FooDialectizer</classname> 位于一个独立的文件中。</para>
+<para>现在设想一下方言的名字是从程序外面的某个地方来的，也许是从一个数据库中，或从一个表格中的用户输入的值中。您可以使用任意多的服务端 &python; 脚本架构来动态地生成网页；这个函数将接收在页面请求的查询字符串中的一个 &url; 和一个方言名字 (两个都是字符串) ，接着输出 <quote>翻译</quote> 后的网页。</para>
+<para>最后，设想一下，使用了一种插件架构的 <classname>Dialectizer</classname> 框架。您可以将每个 <classname>Dialectizer</classname> 类放在分别放在独立的文件中，在 &dialect_filename; 中只留下 &translate; 函数。假定一种统一的命名模式，这个 &translate; 函数能够动态地从合适的文件中导入合适的类，除了方言名字外什么都不用给出。(虽然您还没有看过动态导入，但我保证在后面的一章中会涉及到它。) 如果要加入一种新的方言，您只要在插件目录下加入一个以合适的名字命名的文件 (像 <filename>foodialect.py</filename>，它包含了 <classname>FooDialectizer</classname> 类) 。使用方言名 <literal>'foo'</literal> 来调用这个 &translate; 函数，将会查找 <filename>foodialect.py</filename> 模块，导入 <classname>FooDialectizer</classname> 类，这样就行了。</para>
+<example>
+<title>&translate; 函数，第 3 部分</title>
+<programlisting>
+&dialect_translatefeed; <co id="dialect.alltogether.3.1"/>
+&dialect_translateclose2; <co id="dialect.alltogether.3.2"/>
+&dialect_translatereturn; <co id="dialect.alltogether.3.3"/>
+</programlisting>
+<calloutlist>
+<callout arearefs="dialect.alltogether.3.1">
+<para>剩下的工作似乎会非常无聊，但实际上，<function>feed</function> 函数<link linkend="dialect.feed.example">执行了全部的转换工作</link>。我们拥有存在于单个字符串中的全部 &html; 源代码，所以我们只需要调用 <function>feed</function> 一次。然而，您可以按您的需要经常调用 <function>feed</function>，分析器将不停地进行分析。所以如果我们担心内存的使用 (或者我们已经知道了将要处理非常巨大的 &html; 页面) ，我们可以在一个循环中调用它，即我们读出一点 &html; 字节，就将其送进分析器。结果会是一样的。</para>
+</callout>
+<callout arearefs="dialect.alltogether.3.2">
+<para>因为 <function>feed</function> 维护着一个内部缓冲区，当您完成时，应该总是调用分析器的 &close; 方法 (那怕您像我们做的一样，一次就全部送出) 。否则您可能会发现，输出丢掉了最后几个字节。</para>
+</callout>
+<callout arearefs="dialect.alltogether.3.3">
+<para>回想一下，<function>output</function> 是我们在 &basehtml_classname; 上定义的函数，用来<link linkend="dialect.output.example">将所有缓冲的输出片段连接起来</link>并且以单个字符串返回。</para>
+</callout>
+</calloutlist>
+</example>
+<para>像这样，我们已经 <quote>翻译</quote> 了一个网页，除了给出一个 &url; 和一种方言的名字外，什么都没有给出。</para>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>您可能会认为我的服务端脚本编程的想法是开玩笑。在我发现这个<ulink url="http://rinkworks.com/dialect/">基于 web 的方言转换器</ulink>之前，的确是这样想的。不幸的是，看不到它的源代码。</para></listitem>
+</itemizedlist>
+</section>
+<section id="dialect.summary">
+<?dbhtml filename="html_processing/summary.html"?>
+<title>小结</title>
+<abstract>
+<title/>
+<para>&python; 向您提供了一个强大工具，&sgmllib_filename;，可以通过将 &html; 结构转变为一种对象模型来进行处理。可以以许多不同的方式来使用这个工具。</para>
+</abstract>
+<itemizedlist>
+<listitem><para>对 &html; 进行分析，搜索特别的东西</para></listitem>
+<listitem><para>摘录结果，如 <link linkend="dialect.extract.links">&url; lister</link></para></listitem>
+<listitem><para>在处理过程中顺便调整结构，如<link linkend="dialect.quoting.example">给属性值加引号</link></para></listitem>
+<listitem><para>将 &html; 转换为其它的东西，通过对文本进行处理，同时保留标记，如 <link linkend="dialect.dialectizer"><classname>Dialectizer</classname></link></para></listitem>
+</itemizedlist>
+<para>学过了这些例子之后，您应该无障碍地完成下面的事情：</para>
+<itemizedlist>
+<listitem><para>使用 <link linkend="dialect.locals">&locals;() 和 &globals;()</link> 来访问名字空间</para></listitem>
+<listitem><para>使用基于 dictionary 替换的<link linkend="dialect.dictsub">字符串格式化</link></para></listitem>
+</itemizedlist>
+</section>
+</chapter>
+<!--
+* sgmllib
+  * SGMLParser: a class that consumes HTML
+  * identifies tags and attributes, entities, and raw data
+  * run test suite against toc.html and show output
+  * 7 things it finds in HTML: start tag, end tag, character reference, entity reference, comment, processing instruction, and raw data
+    * for each start tag "tagname", tries to call "start_tagname" or "do_tagname" method, defaults to calling "unknown_starttag"
+    * for each end tag "tagname", tries to call "end_tagname", defaults to calling "unknown_endtag"
+    * calls "handle_charref", "handle_entityref", "handle_comment", "handle_pi", and "handle_data" for the other 5 things
+  * segue into BaseHTMLProcessor
+* BaseHTMLProcessor
+  * single purpose: turn HTML consumer into HTML producer
+  * effect is that feeding well-formed HTML into BaseHTMLProcessor will produce equivalent (though probably not identical) HTML
+  * works by defining unknown_starttag, unknown_endtag, handle_* to collect individual pieces of HTML in a list (self.pieces)
+  * output() function joins all the separate pieces into a single string
+  * example: turning unquoted attributes into quoted ones
+* locals() and globals(
+  * screen example for locals()
+  * how to show globals() effectively?  maybe just mention it?  show example in IDE?  create test script?
+* dictionary-based string formatting
+  * works with any dictionary (give screen example)
+  * locals(): dictionary of local variables
+  X even works within a list comprehension (unknown_starttag)
+* Dialectizer (1 section)
+  * reset
+  * start_pre/end_pre
+  * handle_data
+* regular expressions (1 section)
+  * brief intro, screen example
+  * re module
+  * point to Regular Expression HOWTO
+* putting it all together (1 section)
+  * translate()
+    * (review) getting live web page with urllib
+    * constructing class name, then accessing through globals, then constructing instance of said class
+    * feed parser and output
+  X test()
+    - test suite
+    - webbrowser module
+* summary (1 section)
+-->

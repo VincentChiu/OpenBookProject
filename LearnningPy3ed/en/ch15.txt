@@ -1,0 +1,145 @@
+Chapter 15
+Chapter 15
+15Function Basics
+In Part III, we looked at basic procedural statements in Python. Here, we'll move on to explore a set of additional statements that we can use to create functions of our own.
+In simple terms, a function is a device that groups a set of statements so they can be run more than once in a program. Functions also can compute a result value and let us specify parameters that serve as function inputs, which may differ each time the code is run. Coding an operation as a function makes it a generally useful tool, which we can use in a variety of contexts. 
+More fundamentally, functions are the alternative to programming by cutting and pasting-rather than having multiple redundant copies of an operation's code, we can factor it into a single function. In so doing, we reduce our future work radically: if the operation must be changed later, we only have one copy to update, not many. 
+Functions are the most basic program structure Python provides for maximizing code reuse and minimizing code redundancy. As we'll see, functions are also a design tool that lets us split complex systems into manageable parts. Table 15-1 summarizes the primary function-related tools we'll study in this part of the book.
+
+Table 15-1
+Function-related statements and expressions 
+Statement	Examples
+Calls	myfunc("spam", "eggs", meat=ham)
+def, return, yield	def adder(a, b=1, *c): 
+    return a+b+c[0]
+global	def changer(  ): 
+    global x; x = 'new'
+lambda	Funcs = [lambda x: x**2, lambda x: x*3]
+
+Why Use Functions?
+Before we get into the details, let's establish a clear picture of what functions are all about. Functions are a nearly universal program-structuring device. You may have come across them before in other languages, where they may have been called subroutines or procedures. As a brief introduction, functions serve two primary development roles:
+Maximizing code reuse and minimizing redundancy
+As in most programming languages, Python functions are the simplest way to package logic you may wish to use in more than one place and more than one time. Up until now, all the code we've been writing has run immediately. Functions allow us to group and generalize code to be used arbitrarily many times later. Because they allow us to code an operation in a single place, and use it in many places, Python functions are the most basic factoring tool in the language: they allow us to reduce code redundancy in our programs, and thereby reduce maintenance effort.
+Procedural decomposition
+Functions also provide a tool for splitting systems into pieces that have well-defined roles. For instance, to make a pizza from scratch, you would start by mixing the dough, rolling it out, adding toppings, baking it, and so on. If you were programming a pizza-making robot, functions would help you divide the overall "make pizza" task into chunks-one function for each subtask in the process. It's easier to implement the smaller tasks in isolation than it is to implement the entire process at once. In general, functions are about procedure-how to do something, rather than what you're doing it to. We'll see why this distinction matters in Part VI.
+In this part of the book, we'll explore the tools used to code functions in Python: function basics, scope rules, and argument passing, along with a few related concepts such as generators and functional tools. Because its importance begins to become more apparent at this level of coding, we'll also revisit the notion of polymorphism introduced earlier in the book. As you'll see, functions don't imply much new syntax, but they do lead us to some bigger programming ideas.
+Coding Functions
+Although it wasn't made very formal, we've already used some functions in earlier chapters. For instance, to make a file object, we called the built-in open function; similarly, we used the len built-in function to ask for the number of items in a collection object.
+In this chapter, we will explore how to write new functions in Python. Functions we write behave the same way as the built-ins we've already seen: they are called in expressions, are passed values, and return results. But writing new functions requires the application of a few additional ideas that haven't yet been introduced. Moreover, functions behave very differently in Python than they do in compiled languages like C. Here is a brief introduction to the main concepts behind Python functions, all of which we will study in this part of the book:
+	*	def is executable code. Python functions are written with a new statement, the def. Unlike functions in compiled languages such as C, def is an executable statement-your function does not exist until Python reaches and runs the def. In fact, it's legal (and even occasionally useful) to nest def statements inside if statements, while loops, and even other defs. In typical operation, def statements are coded in module files, and are naturally run to generate functions when a module file is first imported.
+	*	def creates an object and assigns it to a name. When Python reaches and runs a def statement, it generates a new function object, and assigns it to the function's name. As with all assignments, the function name becomes a reference to the function object. There's nothing magic about the name of a function-as you'll see, the function object can be assigned to other names, stored in a list, and so on. Functions may also be created with the lambda expression (a more advanced concept deferred until a later chapter).
+	*	return sends a result object back to the caller. When a function is called, the caller stops until the function finishes its work, and returns control to the caller. Functions that compute a value send it back to the caller with a return statement; the returned value becomes the result of the function call. Functions known as generators may also use the yield statement to send back a value and suspend their state such that they may be resumed later; this is another advanced topic covered later in this part of the book.
+	*	Arguments are passed by assignment (object reference). In Python, arguments are passed to functions by assignment (which, as we've learned, means by object reference). As you'll see, Python's model isn't really equivalent to C's passing rules or C++'s reference parameters-the caller and function share objects by references, but there is no name aliasing. Changing an argument name does not also change a name in the caller, but changing passed-in mutable objects can change objects shared by the caller.
+	*	global declares module-level variables that are to be assigned. By default, all names assigned in a function, are local to that function and exist only while the function runs. To assign a name in the enclosing module, functions need to list it in a  global statement. More generally, names are always looked up in scopes-places where variables are stored-and assignments bind names to scopes.
+	*	Arguments, return values, and variables are not declared. As with everything in Python, there are no type constraints on functions. In fact, nothing about a function needs to be declared ahead of time: you can pass in arguments of any type, return any kind of object, and so on. As one consequence, a single function can often be applied to a variety of object types-any objects that sport a compatible interface (methods and expressions) will do, regardless of their specific type.
+If some of the preceding words didn't sink in, don't worry-we'll explore all of these concepts with real code in this part of the book. Let's get started by expanding on some of these ideas and looking at a few examples.
+def Statements
+The def statement creates a function object and assigns it to a name. Its general format is as follows:
+def <name>(arg1, arg2,... argN):
+    <statements>
+As with all compound Python statements, def consists of a header line followed by a block of statements, usually indented (or a simple statement after the colon). The statement block becomes the function's body-that is, the code Python executes each time the function is called. 
+The def header line specifies a function name that is assigned the function object, along with a list of zero or more arguments (sometimes called parameters) in parentheses. The argument names in the header are assigned to the objects passed in parentheses at the point of call.
+Function bodies often contain a return statement:
+def <name>(arg1, arg2,... argN):
+    ...
+    return <value>
+The Python return statement can show up anywhere in a function body; it ends the function call, and sends a result back to the caller. The return statement consists of an object expression that gives the function's result. The return statement is optional; if it's not present, the function exits when the control flow falls off the end of the function body. Technically, a function without a return statement returns the None object automatically, but this return value is usually ignored. 
+Functions may also contain yield statements, which are designed to produce a series of values over time, but we'll defer discussion of these until we survey advanced function topics in Chapter 17.
+def Executes at Runtime
+The Python def is a true executable statement: when it runs, it creates and assigns a new function object to a name. (Remember, all we have in Python is runtime; there is no such thing as a separate compile time.) Because it's a statement, a def can appear anywhere a statement can-even nested in other statements. For instance, although defs normally are run when the module enclosing them is imported, it's also completely legal to nest a function def inside an if statement to select between alternative definitions:
+if test:
+    def func(  ):          # Define func this way
+        ... 
+else:
+    def func(  ):          # Or else this way
+        ...
+...
+func(  )                   # Call the version selected and built
+One way to understand this code is to realize that the def is much like an = statement: it simply assigns a name at runtime. Unlike in compiled languages such as C, Python functions do not need to be fully defined before the program runs. More generally, defs are not evaluated until they are reached and run, and the code inside defs is not evaluated until the functions are later called.
+Because function definition happens at runtime, there's nothing special about the function name. What's important is the object to which it refers:
+othername = func           # Assign function object
+othername(  )              # Call func again
+Here, the function was assigned to a different name and called through the new name. Like everything else in Python, functions are just objects; they are recorded explicitly in memory at program execution time.
+A First Example: Definitions and Calls
+Apart from such runtime concepts (which tend to seem most unique to programmers with backgrounds in traditional compiled languages), Python functions are straightforward to use. Let's code a first real example to demonstrate the basics. As you'll see, there are two sides to the function picture: a definition (the def that creates a function), and a call (an expression that tells Python to run the function's body).
+Definition
+Here's a definition typed interactively that defines a function called times, which returns the product of its two arguments:
+>>> def times(x, y):           # Create and assign function
+...     return x * y           # Body executed when called
+...
+When Python reaches and runs this def, it creates a new function object that packages the function's code and assigns the object to the name times. Typically, such a statement is coded in a module file, and runs when the enclosing file is imported; for something this small, though, the interactive prompt suffices.
+Calls
+After the def has run, you can call (run) the function in your program by adding parentheses after the function's name. The parentheses may optionally contain one or more object arguments, to be passed (assigned) to the names in the function's header:
+>>> times(2, 4)                # Arguments in parentheses
+8
+This expression passes two arguments to times. As mentioned previously, arguments are passed by assignment, so, in this case, the name x in the function header is assigned the value 2, y is assigned the value 4, and the function's body is run. For this function, the body is just a return statement that sends back the result as the value of the call expression. The returned object was printed here interactively (as in most languages, 2 * 4 is 8 in Python), but, if we needed to use it later, we could instead assign it to a variable. For example:
+>>> x = times(3.14, 4)         # Save the result object
+>>> x
+12.56
+Now, watch what happens when the function is called a third time, with very different kinds of objects passed in:
+>>> times('Ni', 4)             # Functions are "typeless"
+'NiNiNiNi'
+This time, our function means something completely different (Monty Python reference again intended). In this third call, a string and an integer are passed to x and y, instead of two numbers. Recall that * works on both numbers and sequences; because we never declare the types of variables, arguments, or return values in Python, we can use times to either multiply numbers or repeat sequences. 
+In other words, what our times function means and does depends on what we pass into it. This is a core idea in Python (and perhaps the key to using the language well), which we'll explore in the next section.
+Polymorphism in Python
+As we just saw, the very meaning of the expression x * y in our simple times function depends completely upon the kinds of objects that x and y are-thus, the same function can perform multiplication in one instance, and repetition in another. Python leaves it up to the objects to do something reasonable for the syntax. Really, * is just a dispatch to the objects being processed.
+This sort of type-dependent behavior is known as polymorphism, a term we first met in Chapter 4 that essentially means that the meaning of an operation depends on the objects being operated upon. Because it's a dynamically typed language, polymorphism runs rampant in Python. In fact, every operation is a polymorphic operation in Python: printing, indexing, the * operator, and much more.
+This is deliberate, and it accounts for much of the language's conciseness and flexibility. A single function, for instance, can generally be applied to a whole category of object types automatically. As long as those objects support the expected interface (a.k.a. protocol), the function can process them. That is, if the objects passed into a function have the expected methods and expression operators, they are plug-and-play compatible with the function's logic.
+Even in our simple times function, this means that any two objects that support a * will work, no matter what they may be, and no matter when they are coded. This function will work on numbers (performing multiplication), two strings or a string and a number (performing repetition), or any other combination of objects supporting the expected interface-even class-based objects we have not even coded yet.
+Moreover, if the objects passed in do not support this expected interface, Python will detect the error when the * expression is run, and raise an exception automatically. It's therefore pointless to code error checking ourselves. In fact, doing so would limit our function's utility, as it would be restricted to work only on objects whose types we test for.
+This turns out to be a crucial philosophical difference between Python and statically typed languages like C++ and Java: in Python, your code is not supposed to care about specific data types. If it does, it will be limited to working on just the types you anticipated when you wrote it, and it will not support other compatible object types that may be coded in the future. Although it is possible to test for types with tools like the type built-in function, doing so breaks your code's flexibility. By and large, we code to object interfaces in Python, not data types.
+Of course, this polymorphic model of programming means we have to test our code to detect errors, rather than providing type declarations a compiler can use to detect some types of errors for us ahead of time. In exchange for an initial bit of testing, though, we radically reduce the amount of code we have to write, and radically increase our code's flexibility. As you'll learn, it's a net win in practice. 
+A Second Example: Intersecting Sequences
+Let's look at a second function example that does something a bit more useful than multiplying arguments and further illustrates function basics.
+In Chapter 13, we coded a for loop that collected items held in common in two strings. We noted there that the code wasn't as useful as it could be because it was set up to work only on specific variables and could not be rerun later. Of course, we could copy the code and paste it into each place where it needs to be run, but this solution is neither good nor general-we'd still have to edit each copy to support different sequence names, and changing the algorithm would then require changing multiple copies.
+Definition
+By now, you can probably guess that the solution to this dilemma is to package the for loop inside a function. Doing so offers a number of advantages:
+	*	Putting the code in a function makes it a tool that you can run as many times as you like.
+	*	Because callers can pass in arbitrary arguments, functions are general enough to work on any two sequences (or other iterables) you wish to intersect.
+	*	When the logic is packaged in a function, you only have to change code in one place if you ever need to change the way the intersection works.
+	*	Coding the function in a module file means it can be imported and reused by any program run on your machine.
+In effect, wrapping the code in a function makes it a general intersection utility:
+def intersect(seq1, seq2):
+    res = []                     # Start empty
+    for x in seq1:               # Scan seq1
+        if x in seq2:            # Common item?
+            res.append(x)        # Add to end
+    return res
+The transformation from the simple code of Chapter 13 to this function is straightforward; we've just nested the original logic under a def header, and made the objects on which it operates passed-in parameter names. Because this function computes a result, we've also added a return statement to send a result object back to the caller.
+Calls
+Before you can call a function, you have to make it. To do this, run its def statement, either by typing it interactively, or by coding it in a module file and importing the file. Once you've run the def, you can call the function by passing any two sequence objects in parentheses:
+>>> s1 = "SPAM"
+>>> s2 = "SCAM"
+
+>>> intersect(s1, s2)                   # Strings
+['S', 'A', 'M']
+Here, we've passed in two strings, and we get back a list containing the characters in common. The algorithm the function uses is simple: "for every item in the first argument, if that item is also in the second argument, append the item to the result." It's a little shorter to say that in Python than in English, but it works out the same.
+Polymorphism Revisited
+Like all functions in Python, intersect is polymorphic. That is, it works on arbitrary types, as long as they support the expected object interface:
+>>> x = intersect([1, 2, 3], (1, 4))    # Mixed types
+>>> x                                   # Saved result object
+[1]
+This time, we passed in different types of objects to our function-a list and a tuple (mixed types)-and it still picked out the common items. Because you don't have to specify the types of arguments ahead of time, the intersect function happily iterates through any kind of sequence objects you send it, as long as they support the expected interfaces.
+For intersect, this means that the first argument has to support the for loop, and the second has to support the in membership test. Any two such objects will work, regardless of their specific types-that includes physically stored sequences like strings and lists; all the iterable objects we met in Chapter 13, including files and dictionaries; and even any class-based objects we code that apply operator overloading techniques (we'll discuss these later, in Part VI of this text).
+Here again, if we pass in objects that do not support these interfaces (e.g., numbers), Python will automatically detect the mismatch, and raise an exception for us-which is exactly what we want, and the best we could do on our own if we coded explicit type tests. By not coding type tests, and allowing Python to detect the mismatches for us, we both reduce the amount of code we need to write, and increase our code's flexibility.
+Local Variables
+The variable res inside intersect is what in Python is called a local variable-a name that is visible only to code inside the function def, and exists only while the function runs. In fact, because all names assigned in any way inside a function are classified as local variables by default, nearly all the names in intersect are local variables:
+	*	res is obviously assigned, so it is a local variable.
+	*	Arguments are passed by assignment, so seq1 and seq2 are, too.
+	*	The for loop assigns items to a variable, so the name x is also local.
+All these local variables appear when the function is called, and disappear when the function exits-the return statement at the end of intersect sends back the result object, but the name res goes away. To fully explore the notion of locals, though, we need to move on to Chapter 16.
+Chapter Summary
+This chapter introduced the core ideas behind function definition-the syntax and operation of the def and return statements, the behavior of function call expressions, and the notion and benefits of polymorphism in Python functions. As we saw, a def statement is executable code that creates a function object at runtime; when the function is later called, objects are passed into it by assignment (recall that assignment means object reference in Python, which, as we learned in Chapter 6, really means pointer internally), and computed values are sent back by return. We also began exploring the concepts of local variables and scopes in this chapter, but we'll save all the details on those topics for Chapter 16. First, though, a quick quiz.
+Brain Builder
+Chapter Quiz
+	1.	What is the point of coding functions?
+	2.	At what time does Python create a function?
+	3.	What does a function return if it has no return statement in it?
+	4.	When does the code nested inside the function definition statement run?
+	5.	What's wrong with checking the types of objects passed into a function?
+Quiz Answers
+	1.	Functions are the most basic way of avoiding code redundancy in Python-factoring code into functions means that we have only one copy of an operation's code to update in the future. Functions are also the basic unit of code reuse in Python-wrapping code in functions makes it a reusable tool, callable in a variety of programs. Finally, functions allow us to divide a complex system into manageable parts, each of which may be developed individually.
+	2.	A function is created when Python reaches and runs the def statement; this statement creates a function object, and assigns it the function's name. This normally happens when the enclosing module file is imported by another module (recall that imports run the code in a file from top to bottom, including any defs), but it can also occur when a def is typed interactively or nested in other statements, such as ifs.
+	3.	A function returns the None object by default if the control flow falls off the end of the function body without running into a return statement. Such functions are usually called with expression statements, as assigning their None results to variables is generally pointless.
+	4.	The function body (the code nested inside the function definition statement) is run when the function is later called with a call expression. The body runs anew each time the function is called.
+	5.	Checking the types of objects passed into a function effectively breaks the function's flexibility, constraining the function to work on specific types only. Without such checks, the function would likely be able to process an entire range of object types-any objects that support the interface expected by the function will work. (The term interface means the set of methods and expression operators the function runs.)

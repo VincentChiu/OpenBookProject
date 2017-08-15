@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<title>深入 &python; :Dive Into &python; 中文版</title>
+<subtitle>&python; 从新手到专家 [Dip_5.4b_CPyUG_Release]</subtitle>
+
+<authorgroup>
+<author>
+<firstname>Mark</firstname>
+<surname>Pilgrim</surname>
+</author>
+</authorgroup>
+<copyright>
+<year>2000</year>
+<year>2001</year>
+<year>2002</year>
+<year>2003</year>
+<year>2004</year>
+<holder><ulink url="mailto:mark@diveintopython.org">Mark Pilgrim</ulink></holder>
+</copyright>
+
+<authorgroup>
+<author>
+<firstname>华蟒用户组</firstname>
+<surname>Chinese Python User Group, CPyUG</surname>
+</author>
+</authorgroup>
+<copyright>
+<year>2001</year>
+<year>2002</year>
+<year>2003</year>
+<year>2004</year>
+<year>2005</year>
+<year>2006</year>
+<year>2007</year>
+<holder><ulink url="mailto:python-cn@googlegroups.com">CPyUG (邮件列表)</ulink></holder>
+</copyright>
+
+<pubdate>审校 (5.4b)：2007 年 6 月—9 月</pubdate>
+<pubdate>译文版 (5.4)：2005 年 12 月—2006 年 4 月 (update-060425)</pubdate>
+<pubdate>英文原版 (5.4)：2004 年 5 月 20 日</pubdate>
+
+<abstract>
+<title/>
+<para>本书存放在 <ulink url="&url_diveintopython;"/> (英文原版) 和 <ulink url="http://www.woodpecker.org.cn/diveintopython"/>(中文版)。如果你是从别的地方看到它的，可能看到的不是最新版本。</para>
+</abstract>
+<keywordset>
+<keyword>Python</keyword>
+<keyword>Dive Into Python</keyword>
+<keyword>tutorial</keyword>
+<keyword>object-oriented</keyword>
+<keyword>programming</keyword>
+<keyword>documentation</keyword>
+<keyword>book</keyword>
+<keyword>free</keyword>
+</keywordset>

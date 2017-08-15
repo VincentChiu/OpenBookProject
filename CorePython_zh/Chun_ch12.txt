@@ -1,0 +1,663 @@
+﻿Modules
+模块
+
+
+
+
+
+
+
+
+Chapter Topics本章主题
+•  What Are Modules? 什么是模块?
+•  Modules and Files模块和文件
+•  Namespaces命名空间
+•  Importing Modules导入模块
+•  Importing Module Attributes 	导入模块属性
+•  Module Built-in Functions Packages模块内建函数包
+•  Other Features of Modules模块的其他特性
+
+
+
+
+ 
+This chapter focuses on Python modules and how data are imported from modules into your programming environment. We will also take a look at packages. Modules are a means to organize Python code, and packages help you organize modules. We conclude this chapter with a look at other related aspects of modules.
+本章将集中介绍 Python 模块和如何把数据从模块中导入到编程环境中。同时也会涉及包的相关概念。模块是用来组织 Python 代码的方法, 而包则是用来组织模块的。本章最后还会讨论一些与模块有关的其他方面的问题。
+
+12.1  What Are Modules?什么是模块
+A module allows you to logically organize your Python code. When code gets to be large enough, the tendency is to break it up into organized pieces that can still interact with one another at a functioning level. These pieces generally have attributes that have some relation to one another, perhaps a single class with its member data variables and methods, or maybe a group of related, yet independently operating functions. These pieces should be shared, so Python allows a module the ability to “bring in” and use attributes from other modules to take advantage of work that has been done, maximizing code reusability. This process of associating attributes from other modules with your module is called importing. In a nutshell, modules are self-contained and organized pieces of Python code that can be shared.
+模块支持从逻辑上组织 Python 代码。 当代码量变得相当大的时候, 我们最好把代码分成一些有组织的代码段，前提是保证它们的彼此交互。 这些代码片段相互间有一定的联系, 可能是一个包含数据成员和方法的类, 也可能是一组相关但彼此独立的操作函数。 这些代码段是共享的，所以 Python 允许 "调入" 一个模块, 允许使用其他模块的属性来利用之前的工作成果, 实现代码重用. 这个把其他模块中属性附加到你的模块中的操作叫做导入(import) 。那些自我包含并且有组织的代码片断就是模块( module )。
+
+12.2 Modules and Files模块和文件
+If modules represent a logical way to organize your Python code, then files are a way to physically organize modules. To that end, each file is considered an individual module, and vice versa. The filename of a module is the module name  appended  with  the.py file  extension.  There  are  several  aspects  we need  to  discuss  with  regard  to  what  the  file  structure  means  to  modules. Unlike other languages in which you import classes, in Python you import modules or module attributes.
+如果说模块是按照逻辑来组织 Python 代码的方法, 那么文件便是物理层上组织模块的方法。 因此, 一个文件被看作是一个独立模块, 一个模块也可以被看作是一个文件。 模块的文件名就是模块的名字加上扩展名 .py 。这里我们需要讨论一些关于模块文件结构的问题。 与其它可以导入类(class)的语言不同,在 Python 中你导入的是模块或模块属性。
+
+12.2.1 Module Namespaces模块名称空间
+We will discuss namespaces in detail later in this chapter, but the basic con- cept of a namespace is an individual set of mappings from names to objects. As you are no doubt aware, module names play an important part in the nam- ing of their attributes. The name of the attribute is always prepended with the module name. For example, the atoi() function in the string module =is called string.atoi(). Because only one module with a given name can= be loaded into the Python interpreter, there is no intersection of names from different modules; hence, each module defines its own unique namespace. If I created a function called atoi() in my own module, perhaps mymodule, its name would be mymodule.atoi(). So even if there is a name conflict for an attribute, the fully qualified name—referring to an object via dotted attribute notation—prevents an exact and conflicting match.
+本章的后面会详细的讨论名称空间, 但从基本概念来说, 一个名称空间就是一个从名称到对象的关系映射集合。 我们已经明确地知道, 模块名称是它们的属性名称中的一个重要部分。 例如 string 模块中的 atoi() 函数就是 string.atoi() 。给定一个模块名之后, 只可能有一个模块被导入到 Python 解释器中, 所以在不同模块间不会出现名称交叉现象; 所以每个模块都定义了它自己的唯一的名称空间。 如果我在我自己的模块 mymodule 里创建了一个 atoi() 函数, 那么它的名字应该是 mymodule.atoi() 。 所以即使属性之间有名称冲突, 但它们的完整授权名称(fully qualified name)——通过句点属性标识指定了各自的名称空间 - 防止了名称冲突的发生。
+
+12.2.2 Search Path and Path Search搜索路径和路径搜索
+The process of importing a module requires a process called a path search. This is the procedure of checking “predefined areas” of the file system to look for your  mymodule.py file in order to load the  mymodule module. These predefined areas are no more than a set of directories that are part of your Python search path. To avoid the confusion between the two, think of a path search as the pursuit of a file through a set of directories, the search path. There may be times where importing a module fails:
+模块的导入需要一个叫做"路径搜索"的过程。 即在文件系统"预定义区域"中查找 mymodule.py 文件(如果你导入 mymodule 的话)。 这些预定义区域只不过是你的 Python 搜索路径的集合。路径搜索和搜索路径是两个不同的概念, 前者是指查找某个文件的操作, 后者是去查找一组目录。 有时候导入模块操作会失败:
+```
+>>> import xxx
+Traceback (innermost last):
+File "<interactive input>", line 1, in ? ImportError: No module named xxx
+```
+When this error occurs, the interpreter is telling you it cannot access the requested module, and the likely reason is that the module you desire is not in the search path, leading to a path search failure.
+发生这样的错误时, 解释器会告诉你它无法访问请求的模块, 可能的原因是模块不在搜索路径里, 从而导致了路径搜索的失败。
+A default search path is automatically defined either in the compilation or installation process. This search path may be modified in one of two places.
+默认搜索路径是在编译或是安装时指定的。 它可以在一个或两个地方修改。
+One is the PYTHONPATH environment variable set in the shell or command- line interpreter that invokes Python. The contents of this variable consist of a colon-delimited set of directory paths. If you want the interpreter to use the contents of this variable, make sure you set or update it before you start the interpreter or run a Python script.
+    一个是启动 Python 的 shell 或命令行的 PYTHONPATH 环境变量。 该变量的内容是一组用冒号分割的目录路径。 如果你想让解释器使用这个变量, 那么请确保在启动解释器或执行 Python 脚本前设置或修改了该变量。
+Once the interpreter has started, you can access the path itself, which is stored  in  the  sys module  as  the  sys.path variable.  Rather  than  a  single string that is colon-delimited, the path has been “split” into a list of individual directory strings. Below is an example search path for a Unix machine. Your mileage will definitely vary as you go from system to system.
+解释器启动之后, 也可以访问这个搜索路径, 它会被保存在 sys 模块的 sys.path 变量里。 不过它已经不是冒号分割的字符串, 而是包含每个独立路径的列表。下面是一个 Unix 机器搜索路径的样例。切记, 搜索路径在不同系统下一般是不同的。
+```
+>>> sys.path
+['', '/usr/local/lib/python2.x/', '/usr/local/lib/ python2.x/plat-sunos5', '/usr/local/lib/python2.x/ lib-tk', '/usr/local/lib/python2.x/lib-dynload', '/ usr/local/lib/Python2.x/site-packages',]
+```
+Bearing in mind that this is just a list, we can definitely take liberty with it and modify it at our leisure. If you know of a module you want to import, yet its directory is not in the search path, by all means use the list’s append() method to add it to the path, like so:
+这只是个列表, 所以我们可以随时随地对它进行修改。 如果你知道你需要导入的模块是什么, 而它的路径不在搜索路径里, 那么只需要调用列表的 append() 方法即可, 就像这样:
+sys.path.append('/home/wesc/py/lib')
+Once this is accomplished, you can then load your module. As long as one of the directories in the search path contains the file, then it will be imported. Of course, this adds the directory only to the end of your search path. If you want to add it elsewhere, such as in the beginning or middle, then you have to use the insert() list method for those. In our examples above, we are updating the sys.path attribute interactively, but it will work the same way if run as a script. Here is what it would look like if we ran into this problem interactively:
+修改完成后, 你就可以加载自己的模块了。 只要这个列表中的某个目录包含这个文件, 它就会被正确导入。 当然, 这个方法是把目录追加在搜索路径的尾部。 如果你有特殊需要, 那么应该使用列表的 insert() 方法操作 。 上面的例子里, 我们是在交互模式下修改 sys.path 的, 在脚本程序中也完全可以达到同样的目的。这里是使用交互模式执行时遇到的错误:
+```
+>>> import sys
+>>> import mymodule
+Traceback (innermost last): File "<stdin>", line 1, in ?
+ImportError: No module named mymodule
+>>>
+>>> sys.path.append('/home/wesc/py/lib')
+>>> sys.path
+['', '/usr/local/lib/python2.x/', '/usr/local/lib/
+python2.x/plat-sunos5', '/usr/local/lib/python2.x/
+lib-tk', '/usr/local/lib/python2.x/lib-dynload', '/usr/
+local/lib/python2.x/site-packages’,'/home/wesc/py/lib']
+>>>
+>>> import mymodule
+>>>
+```
+On the flip side, you may have too many copies of a module. In the case of duplicates, the interpreter will load the first module it finds with the given name while rummaging through the search path in sequential order.
+从另一方面看, 你可能有一个模块的很多拷贝。 这时, 解释器会使用沿搜索路径顺序找到的第一个模块。
+To find out what modules have been successfully imported (and loaded) as well as from where, take a look at sys.modules. Unlike sys.path, which is a list of modules, sys.modules is a dictionary where the keys are the module names with their physical location as the values.
+使用 sys.modules 可以找到当前导入了哪些模块和它们来自什么地方。 和 sys.path 不同, sys.modules 是一个字典, 使用模块名作为键（ key） , 对应物理地址作为值（ value ）。
+
+12.3  Namespaces名称空间
+A namespace is a mapping of names (identifiers) to objects. The process of add- ing a name to a namespace consists of binding the identifier to the object (and increasing the reference count to the object by one). The Python Language Reference also includes the following definitions: “changing the mapping of a name is called rebinding [, and] removing a name is unbinding.”
+名称空间是名称(标识符)到对象的映射。 向名称空间添加名称的操作过程涉及到绑定标识符到指定对象的操作(以及给该对象的引用计数加 1 )。 《Python语言参考》（Python Language Reference） 有如下的定义: 改变一个名字的绑定叫做重新绑定, 删除一个名字叫做解除绑定。
+As briefly introduced in Chapter 11, there are either two or three active namespaces at any given time during execution. These three namespaces are the local, global, and built-ins namespaces, but local name-spaces come and go during execution, hence the “two or three” we just alluded to. The names accessible from these namespaces are dependent on their loading order, or the order in which the namespaces are brought into the system.
+我们在第 11 章已经介绍过在执行期间有两个或三个活动的名称空间。 这三个名称空间分别是局部名称空间, 全局名称空间和内建名称空间, 但局部名称空间在执行期间是不断变化的, 所以我们说"两个或三个"。 从名称空间中访问这些名字依赖于它们的加载顺序, 或是系统加载这些名称空间的顺序。
+The Python interpreter loads the built-ins namespace first. This consists of the names in the __builtins__ module. Then the global namespace for the executing module is loaded, which then becomes the active namespace when the module begins execution. Thus we have our two active namespaces.
+Python 解释器首先加载内建名称空间。 它由 __builtins__ 模块中的名字构成。 随后加载执行模块的全局名称空间, 它会在模块开始执行后变为活动名称空间。 这样我们就有了两个活动的名称空间。
+ CORE NOTE:  __builtins__ versus __builtin__
+核心笔记:   __builtins__ 和 __builtin__
+The __builtins__ module should not be confused with the __builtin__ module. The names, of course, are so similar that it tends to lead to some confusion among new Python programmers who have gotten this far. The __builtins__ module consists of a set of built-in names for the built-ins namespace. Most, if not all, of these names come from the __builtin__ module, which is a module of the built-in functions, exceptions, and other attributes. In standard Python execution, __builtins__ contains all the names from __builtin__. Python used to have a restricted execution model that allowed modification of __builtins__ where key pieces from  __builtin__ were left out to create a sandbox environment. However, due its security flaws and the difficulty involved with repairing it, restricted execution is no longer supported in Python (as of 2.3).
+__builtins__ 模块和 __builtin__ 模块不能混淆。 虽然它们的名字相似——尤其对于新手来说。 __builtins__ 模块包含内建名称空间中内建名字的集合。 其中大多数(如果不是全部的话)来自 __builtin__ 模块, 该模块包含内建函数, 异常以及其他属性。 在标准 Python 执行环境下, __builtins__ 包含 __builtin__ 的所有名字。 Python 曾经有一个限制执行模式, 允许你修改 __builtins__ , 只保留来自 __builtin__ 的一部分, 创建一个沙盒（sandbox）环境。但是, 因为它有一定的安全缺陷, 而且修复它很困难, Python 已经不再支持限制执行模式。(如版本2.3 )
+=============核心笔记 ends============
+When a function call is made during execution, the third, a local, namespace is created. We can use the globals() and locals() built-in functions to tell us which names are in which namespaces. We will discuss both functions in more detail later on in this chapter.
+如果在执行期间调用了一个函数, 那么将创建出第三个名称空间, 即局部名称空间。 我们可以通过 globals() 和 locals() 内建函数判断出某一名字属于哪个名称空间。我们将在本章后面详细介绍这两个函数。
+
+12.3.1   Namespaces versus Variable Scope
+名称空间与变量作用域比较
+Okay, now that we know what namespaces are, how do they relate to variable scope again? They seem extremely similar. The truth is, you are quite correct. 
+好了, 我们已经知道了什么是名称空间, 那么它与变量作用域有什么关系呢? 它们看起来极其相似。 事实上也确实如此。
+
+Namespaces are purely mappings between names and objects, but scope dictates how, or rather where, one can access these names based on the physi- cal  location  from  within  your  code.  We  illustrate  the  relationship  between namespaces and variable scope in Figure 12–1.
+名称空间是纯粹意义上的名字和对象间的映射关系, 而作用域还指出了从用户代码的哪些物理位置可以访问到这些名字。 图 12 - 1 展示了名称空间和变量作用域的关系。
+Notice that each of the namespaces is a self-contained unit. But looking at the namespaces from the scoping point of view, things appear different. All names within the local namespace are within my local scope. Any name out- side my local scope is in my global scope.
+注意每个名称空间是一个自我包含的单元。但从作用域的观点来看, 事情是不同的. 所有局部名称空间的名称都在局部作用范围内。局部作用范围以外的所有名称都在全局作用范围内。
+Also  keep  in  mind  that  during  the  execution  of  the  program,  the  local namespaces and scope are transient because function calls come and go, but the global and built-ins namespaces remain.
+还要记得在程序执行过程中, 局部名称空间和作用域会随函数调用而不断变化, 而全局名称空间是不变的。
+ 
+Figure 12–1    Namespaces versus variable scope
+图 12 - 1    名称空间和变量作用域
+Our final thought to you in this section is, when it comes to namespaces, ask yourself the question, “Does it have it?” And for variable scope, ask, “Can I see it?”
+学完这一节后, 我们建议读者在遇到名称空间的时候想想"它存在吗?", 遇到变量作用域的时候想想"我能看见它吗?"
+
+12.3.2  Name Lookup, Scoping , and Overriding
+名称查找, 确定作用域, 覆盖 
+So how do scoping rules work in relationship to namespaces? It all has to do with name lookup. When accessing an attribute, the interpreter must find it in one of the three namespaces. The search begins with the local namespace. If the attribute is not found there, then the global namespace is searched. If that is also unsuccessful, the final frontier is the built-ins namespace. If the exhaustive search fails, you get the familiar:
+那么确定作用域的规则是如何联系到名称空间的呢? 它所要做的就是名称查询. 访问一个属性时, 解释器必须在三个名称空间中的一个找到它。 首先从局部名称空间开始, 如果没有找到, 解释器将继续查找全局名称空间. 如果这也失败了, 它将在内建名称空间里查找。 如果最后的尝试也失败了, 你会得到这样的错误:
+```
+>>> foo
+Traceback (innermost last): File "<stdin>", line 1, in ?
+NameError: foo
+```
+Notice   how   the   figure   features   the   foremost-searched   namespaces “shadowing”  namespaces,  which  are  searched  afterward.  This  is  to  try  to convey the effect of overriding. This shadowing effect is illustrated by the gray   boxes   in   Figure   12-1.   For   example,   names   found   in   the   local namespace will hide access to objects in the global or built-ins namespaces. This  is  the  process  whereby  names  may  be  taken  out  of  scope  because  a more local namespace contains a name. Take a look at the following piece
+of code that was introduced in the previous chapter:
+这个错误信息体现了先查找的名称空间是如何"遮蔽"其他后搜索的名称空间的。 这体现了名称覆盖的影响。 图 12 - 1 的灰盒子展示了遮蔽效应。 例如, 局部名称空间中找到的名字会隐藏全局或内建名称空间的对应对象。 这就相当于"覆盖"了那个全局变量。 请参阅前面章节引入的这几行代码:
+def foo():
+        print "\ncalling foo()..."
+        bar = 200
+        print "in foo(), bar is", bar
+bar = 100
+print "in __main__, bar is", bar
+foo()
+When we execute this code, we get the following output:
+执行代码, 我们将得到这样的输出:
+```
+in __main__, bar is 100
+calling foo()...
+in foo(), bar is 200
+```
+The bar variable in the local namespace of foo() overrode the global bar variable. Although bar exists in the global namespace, the lookup found the one in the local namespace first, hence “overriding” the global one. For more information regarding scope, see Section 11.8 of Chapter 11.
+foo() 函数局部名称空间里的 bar 变量覆盖了全局的 bar 变量。 虽然 bar 存在于全局名称空间里, 但程序首先找到的是局部名称空间里的那个, 所以"覆盖"了全局的那个。 关于作用域的更多内容请参阅第 11.8 节。
+
+12.3.3 Namespaces for Free!无限制的名称空间
+One of Python’s most useful features is the ability to get a namespace almost anywhere you need a place to put things. We have seen in the previous chapter how you can just add attributes to functions at whim (using the familiar dotted- attribute notation):
+Python 的一个有用的特性在于你可以在任何需要放置数据的地方获得一个名称空间。 我们已经在前一章见到了这一特性, 你可以在任何时候给函数添加属性(使用熟悉的句点属性标识)。 
+```
+def foo():
+        pass
+foo.__doc__ = 'Oops, forgot to add doc str above!'
+foo.version = 0.2
+```
+In this chapter, we have shown how modules themselves make namespaces and how you access them in the same way:
+在本章, 我们展示了模块是如何创建名称空间的, 你也可以使用相同的方法访问它们:
+```
+mymodule.foo()
+mymodule.version
+```
+Although we will discuss object-oriented programming (OOP) in Chapter 13, how about an example even simpler than a “Hello World!” to introduce you
+to Python classes?
+虽然我们还没介绍面向对象编程(OOP, 第 13 章), 但我们可以看看一个简单的 "Hello World!" 例子: 
+```
+class MyUltimatePythonStorageDevice(object):
+        pass
+bag = MyUltimatePythonStorageDevice()
+bag.x = 100
+bag.y = 200 
+bag.version = 0.1 
+bag.completed = False
+```
+You can throw just about anything you want in a namespace. This use of a class (instance) is perfectly fine, and you don’t even have to know much about OOP  to  be  able  to  use  a  class!  (Note:  These  guys  are  called  instance attributes.) Fancy names aside, the instance is just used as a namespace.
+你可以把任何想要的东西放入一个名称空间里。 像这样使用一个类(实例)是很好的, 你甚至不需要知道一些关于 OOP 的知识(注解: 类似这样的变量叫做实例属性。) 不管名字如何, 这个实例只是被用做一个名称空间。
+You will see just how useful they are as you delve deeper into OOP and dis- cover what a convenience it is during runtime just to be able to store temporary (but important) values! As stated in the final tenet of the Zen of Python: “Namespaces are one honking great idea—let’s do more of those!” (To see the complete Zen, just import the this module within the interac- tive interpreter.)
+随着学习的深入, 你会发现 OOP 是多么地有用, 比如在运行时临时(而且重要)变量的时候! 正如在《Python之禅》（Zen of Python）中陈述的最后一条, "名字空间是一个响亮的杰出创意——那就让我们多用用它们吧！"(在交互模式解释器下导入 this 模块就可以看到完整的 《Zen》 )。
+
+12.4  Importing Modules导入模块
+12.4.1 The import Statement import 语句
+Importing a module requires the use of the import statement, whose syntax is:
+使用 import 语句导入模块, 它的语法如下所示:
+```
+import module1
+import module2[
+        :
+import moduleN
+```
+It is also possible to import multiple modules on the same line like this . . .
+也可以在一行内导入多个模块, 像这样...
+import module1[, module2[,... moduleN]]
+. . . but the resulting code is not as readable as having multiple import statements. Also, there is no performance hit and no change in the way that the Python bytecode is generated, so by all means, use the first form, which is the preferred form.
+但是这样的代码可读性不如多行的导入语句。 而且在性能上和生成 Python 字节代码时这两种做法没有什么不同。 所以一般情况下, 我们使用第一种格式。
+ CORE STYLE:  Module ordering for import statements
+核心风格:  import 语句的模块顺序
+It is recommended that all module imports happen at the top of Python modules. Furthermore, imports should follow this ordering:
+我们推荐所有的模块在 Python 模块的开头部分导入。 而且最好按照这样的顺序:
+•	Python Standard Library modules  - Python 标准库模块
+•	Python third party modules        - Python 第三方模块
+•	Application-specific modules       - 应用程序自定义模块
+Separate these groups with an empty line between the imports of these three types of modules. This helps ensure that modules are imported in a consistent manner and helps minimize the number of import statements required in each of the modules. You can read more about this and other import tips in Python’s Style Guide, written up as PEP 8.
+然后使用一个空行分割这三类模块的导入语句。 这将确保模块使用固定的习惯导入, 有助于减少每个模块需要的 import 语句数目。 其他的提示请参考《 Python 风格指南》（Python’s Style Guide）, PEP8 。
+============核心样式 ends =======
+When  this  statement  is  encountered  by  the  interpreter,  the  module  is imported if found in the search path. Scoping rules apply, so if imported from the top level of a module, it has global scope; if imported from a function, it has local scope.
+解释器执行到这条语句, 如果在搜索路径中找到了指定的模块, 就会加载它。该过程遵循作用域原则, 如果在一个模块的顶层导入, 那么它的作用域就是全局的; 如果在函数中导入, 那么它的作用域是局部的。
+When a module is imported the first time, it is loaded and executed.
+如果模块是被第一次导入, 它将被加载并执行。
+
+12.4.2  The from-import Statement
+from-import 语句
+It is possible to import specific module elements into your own module. By this, we really mean importing specific names from the module into the cur- rent namespace. For this purpose, we can use the from-import statement, whose syntax is:
+你可以在你的模块里导入指定的模块属性。 也就是把指定名称导入到当前作用域。 使用 from-import 语句可以实现我们的目的, 它的语法是:
+```
+from module import name1[, name2[,... nameN]]
+```
+
+12.4.3  Multi-Line Import多行导入
+The multi-line import feature was added in Python 2.4 specifically for long from-import statements. When importing many attributes from the same module, import lines of code tend to get long and wrap, requiring a NEWLINE- escaping  backslash.  Here  is  the  example  imported  (pun  intended)  directly from PEP 328:
+多行导入特性是 Python 2.4 为较长的 from-import 提供的。从一个模块导入许多属性时, import 行会越来越长, 直到自动换行, 而且需要一个 \ 。下面是 PEP 328 提供的样例代码:
+```
+from Tkinter import Tk, Frame, Button, Entry, Canvas, \
+                Text, LEFT, DISABLED, NORMAL, RIDGE, END
+```
+Your other option is to have multiple from-import statements:
+你可以选择使用多行的 from-import 语句:
+```
+from Tkinter import Tk, Frame, Button, Entry, Canvas, Text
+from Tkinter import LEFT, DISABLED, NORMAL, RIDGE, END
+```
+We are also trying to stem usage on the unfavored from Tkinter import * (see the Core Style sidebar in Section 12.5.3). Instead, programmers should be free to use Python’s standard grouping mechanism (parentheses) to create a more reasonable multi-line import statement:
+我们不提倡使用不再流行的 from Tkinter import * 语句 (参考第 12.5.3 一节的“核心风格”)。 真正的 Python 程序员应该使用 Python 的标准分组机制(圆括号)来创建更合理的多行导入语句: 
+from Tkinter import (Tk, Frame, Button, Entry, Canvas, Text, LEFT, DISABLED, NORMAL, RIDGE, END)
+You can find out more about multi-line imports in the documentation or in PEP 328.
+你可以在 PEP 328 找到更多关于多行导入的内容。
+
+12.4.4 Extended Import Statement (as)扩展的 import 语句(as)
+There are times when you are importing either a module or module attribute with a name that you are already using in your application, or perhaps it is a name that you do not want to use. Maybe the name is too long to type every- where, or more subjectively, perhaps it is a name that you just plain do not like. This  had  been  a  fairly  common  request  from  Python  programmers:  the ability to import modules and module attributes into a program using names other than their original given names. One common workaround is to assign the module name to a variable:
+有时候你导入的模块或是模块属性名称已经在你的程序中使用了, 或者你不想使用导入的名字。 可能是它太长不便输入什么的, 总之你不喜欢它。 这已经成为 Python 程序员的一个普遍需求: 使用自己想要的名字替换模块的原始名称。一个普遍的解决方案是把模块赋值给一个变量:
+```
+>>> import longmodulename
+>>> short = longmodulename
+>>> del longmodulename
+```
+In  the  example  above,  rather  than  using  longmodulename.attribute, you would use the short.attribute to access the same object. (A similar analogy can be made with importing module attributes using from-import, see below.) However, to do this over and over again and in multiple modules can be annoying and seem wasteful. Using extended import, you can change the locally bound name for what you are importing. Statements like . . .
+上边的例子中, 我们没有使用 longmodulename.attribute , 而是使用 short.attribute 来访问相同的对象。 ( from-imoort 语句也可以解决类似的问题, 参见下面的例子。) 不过在程序里一遍又一遍做这样的操作是很无聊的。 使用扩展的 import , 你就可以在导入的同时指定局部绑定名称。 类似这样...
+```
+import Tkinter
+from cgi import FieldStorage
+. . . can be replaced by . . .
+. . . 可以替换为 . . .
+import Tkinter as tk
+from cgi import FieldStorage as form
+```
+This feature was added in Python 2.0. At that time, “as” was not imple- mented as a keyword; it finally became one in Python 2.6. For more informa- tion on extended import, see the Python Language Reference Manual and PEP 221.
+Python 2.0 加入了这个特性。 不过那时 "as" 还不是一个关键字; Python 2.6 正式把它列为一个关键字。 更多关于扩展导入语句的内容请参阅《 Python 语言参考》和 PEP 221。
+
+12.5  Features of Module Import模块导入的特性
+12.5.1  Module “Executed” When Loaded载入时执行模块
+One effect of loading a module is that the imported module is “executed,” that  is,  the  top-level  portion  of  the  imported  module  is  directly  executed. This usually includes setting up of global variables as well as performing the class and function declarations. If there is a check for __name__ to do more on direct script invocation, that is executed, too.
+加载模块会导致这个模块被"执行"。 也就是被导入模块的顶层代码将直接被执行。 这通常包括设定全局变量以及类和函数的声明。 如果有检查 __name__ 的操作, 那么它也会被执行。
+Of course, this type of execution may or may not be the desired effect. If not, you will have to put as much code as possible into functions. Suffice it to say that good module programming style dictates that only function and/or class definitions should be at the top level of a module.
+当然, 这样的执行可能不是我们想要的结果。 你应该把尽可能多的代码封装到函数。明确地说, 只把函数和模块定义放入模块的顶层是良好的模块编程习惯。
+For more information see Section 14.1.1 and the Core Note contained therein.
+更多信息请参阅第 14.1.1 节以及相应的“核心笔记”。 
+A new feature was added to Python which allows you to execute an installed module as a script.   (Sure, running your own script is easy [$ foo.py], but executing a module in the standard library or third party package is trickier.) You can read more about how to do this in Section 14.4.3.
+Python 加入的一个新特性允许你把一个已经安装的模块作为脚本执行。 (当然, 执行你自己的脚本很简单 [$ foo.py], 但执行一个标准库或是第三方包中的模块需要一定的技巧。) 你可以在第 14.4.3 一节了解更多。
+
+12.5.2  Importing versus Loading导入(import )和加载(load)
+A  module  is  loaded  only  once,  regardless  of  the  number  of  times  it  is imported.  This  prevents  the  module  “execution”  from  happening  over  and over again if multiple imports occur. If your module imports the sys module, and so do five of the other modules you import, it would not be wise to load sys (or any other module) each time! So rest assured, loading happens only once, on first import.
+
+一个模块只被加载一次, 无论它被导入多少次。 这可以阻止多重导入时代码被多次执行。 例如你的模块导入了 sys 模块, 而你要导入的其他 5 个模块也导入了它, 那么每次都加载 sys (或是其他模块)不是明智之举! 所以, 加载只在第一次导入时发生。
+
+12.5.3   Names Imported into Current Namespaces
+导入到当前名称空间的名称
+Calling from-import brings the name into the current namespace, meaning that you do not use the attribute/dotted notation to access the module identi- fier. For example, to access a variable named  var in module module that was imported with:
+调用 from-import 可以把名字导入当前的名称空间里去, 这意味着你不需要使用属性/句点属性标识来访问模块的标识符。 例如, 你需要访问模块 module 中的 var 名字是这样被导入的:
+from module import var
+we would use “var” by itself. There is no need to reference the module since you imported var into your namespace. It is also possible to import all the names  from  the  module  into  the  current  namespace  using  the  following from-import statement:
+我们使用单个的 var 就可以访问它自身。 把 var 导入到名称空间后就再没必要引用模块了。当然, 你也可以把指定模块的所有名称导入到当前名称空间里:
+from module import *
+ CORE STYLE:   Restrict your use of “from module import *”
+核心风格:     限制使用 "from module import *"
+In practice, using from module import * is considered poor style because it “pollutes” the current namespace and has the potential of overriding names in the current namespace; however, it is extremely convenient if a module has many variables that are often accessed, or if the module has a very long name.
+在实践中, 我们认为 "from module import *" 不是良好的编程风格, 因为它"污染"当前名称空间, 而且很可能覆盖当前名称空间中现有的名字; 但如果某个模块有很多要经常访问的变量或者模块的名字很长, 这也不失为一个方便的好办法。
+We recommend using this form in only two situations.The first is where the target module has many attributes that would make it inconvenient to type in the module name over and over again.Two prime examples of this are the Tkinter (Python/Tk) and NumPy (Numeric Python) modules, and perhaps the socket module.The other place where it is acceptable to use from module import * is within the interactive interpreter, to save on the amount of typing.
+我们只在两种场合下建议使用这样的方法, 一个场合是：目标模块中的属性非常多, 反复键入模块名很不方便, 例如 Tkinter (Python/Tk) 和 NumPy (Numeric Python) 模块, 可能还有 socket 模块。另一个场合是在交互解释器下, 因为这样可以减少输入次数。
+ 
+
+12.5.4      Names Imported into Importer’s Scope
+被导入到导入者作用域的名字
+Another  side  effect  of  importing  just  names  from  modules  is  that  those names are now part of the local namespace. A side effect is possibly hiding or overriding an existing object or built-in with the same name. Also, changes to the variable affect only the local copy and not the original in the imported module’s  namespace.  In  other  words,  the  binding  is  now  local  rather  than across namespaces.
+只从模块导入名字的另一个副作用是那些名字会成为局部名称空间的一部分。 这可能导致覆盖一个已经存在的具有相同名字的对象。 而且对这些变量的改变只影响它的局部拷贝而不是所导入模块的原始名称空间。 也就是说, 绑定只是局部的而不是整个名称空间。
+Here we present the code to two modules: an importer, impter.py, and an  importee,  imptee.py.  Currently,  imptr.py uses  the  from-import statement, which creates only local bindings.
+这里我们提供了两个模块的代码: 一个导入者, impter.py , 一个被导入者, imptee.py 。impter.py 使用 from-import 语句只创建了局部绑定。
+#############
+# imptee.py #
+############# 
+foo = 'abc' 
+def show():
+        print 'foo from imptee:', foo
+#############
+# impter.py #
+#############
+from imptee import foo, show 
+show()
+foo = 123
+print 'foo from impter:', foo 
+show()
+Upon running the importer, we discover that the importee’s view of its foo variable has not changed even though we modified it in the importer.
+运行这个导入者程序, 我们发现从被导入者的观点看, 它的 foo 变量没有改变, 即使 我们在 importer.py 里修改了它。
+foo from imptee: abc 
+foo from impter: 123 
+foo from imptee: abc
+The  only  solution  is  to  use  import  and  fully  qualified  identifier  names using the attribute/dotted notation.
+唯一的解决办法是使用 import 和完整的标识符名称(句点属性标识)。
+#############
+# impter.py #
+############# 
+import imptee 
+imptee.show() 
+imptee.foo = 123
+print 'foo from impter:', imptee.foo
+imptee.show()
+Once we make the update and change our references accordingly, we now have achieved the desired effect.
+完成相应修改后, 结果如我们所料:
+foo from imptee: abc 
+foo from impter: 123 
+foo from imptee: 123
+
+12.5.5  Back to the __future__ 关于 __future__
+Back in the days of Python 2.0, it was recognized that due to improvements, new features, and current feature enhancements, certain significant changes could not be implemented without affecting some existing functionality. To better prepare Python programmers for what was coming down the line, the __future__ directives were implemented.
+回首 Python 2.0 , 我们认识到了由于改进, 新特性, 以及当前特性增强, 某些变化会影响到当前功能。 所以为了让 Python 程序员为新事物做好准备, Python 实现了 __future__ 指令。
+By using the from-import statement and “importing” future functionality, users can get a taste of new features or feature changes enabling them to port their applications correctly by the time the feature becomes permanent. The syntax is:
+使用 from-import 语句"导入"新特性, 用户可以尝试一下新特性或特性变化, 以便在特性固定下来的时候修改程序。 它的语法是:
+from __future__ import new_feature
+It does not make sense to import __future__ so that is disallowed. (Actu- ally, it is allowed but does not do what you want it to do, which is enable all future features.) You have to import specific features explicitly. You can read more about __future__ directives in PEP 236.
+只 import __future__ 不会有任何变化，所以这是被禁止的。 (事实上这是允许的, 但它不会如你所想的那样启用所有特性。) 你必须显示地导入指定特性。 你可以在 PEP 236 找到更多关于 __future__ 的资料。
+
+12.5.6  Warning Framework警告框架
+Similar to the __future__ directive, it is also necessary to warn users when a feature  is  about  to  be  changed  or  deprecated  so  that  they  can  take  action based on the notice received. There are multiple pieces to this feature, so we will break it down into components.
+和 __future__ 指令类似, 有必要去警告用户不要使用一个即将改变或不支持的操作, 这样他们会在新功能正式发布前采取必要措施。 这个特性是很值得讨论的, 我们这里分步讲解一下。
+The first piece is the application programmer’s interface (API). Program- mers have the ability to issue warnings from both Python programs (via the warnings module) as well as from C [via a call to PyErr_Warn()].
+首先是应用程序(员)接口(Application programmers' interface , API)。 程序员应该有从 Python 程序(通过调用 warnings 模块)或是 C 中(通过 PyErr_Warn() 调用)发布警告的能力。
+Another part of the framework is a new set of warning exception classes. Warning is subclassed directly from Exception and serves as the root of all warnings:   UserWarning,   DeprecationWarning,   SyntaxWarning,   and RuntimeWarning. These are described in further detail in Chapter 10.
+这个框架的另个部分是一些警告异常类的集合。 Warning 直接从 Exception 继承, 作为所有警告的基类: UserWarning , DeprecationWarning , SyntaxWarning , 以及 RuntimeWarning 。 都在第 10 章中有详细介绍。
+The next component is the warnings filter. There are different warnings of different levels and severities, and somehow the number and type of warn- ings should be controllable. The warnings filter not only collects information about the warning, such as line number, cause of the warning, etc., but it also con- trols whether warnings are ignored, displayed—they can be custom-formatted— or turned into errors (generating an exception).
+另一个组件是警告过滤器, 由于过滤有多种级别和严重性, 所以警告的数量和类型应该是可控制的。 警告过滤器不仅仅收集关于警告的信息(例如行号, 警告原因等等), 而且还控制是否忽略警告, 是否显示——自定义的格式——或者转换为错误(生成一个异常)。
+Warnings have a default output to sys.stderr, but there are hooks to be able to change that, for example, to log it instead of displaying it to the end- user while running Python scripts subject to issued warnings. There is also an API to manipulate warning filters.
+警告会有一个默认的输出显示到 sys.stderr , 不过有钩子可以改变这个行为,  例如，当运行会引发警告的 Python 脚本时，可以记录它的输出记录到日志文件中，而不是直接显示给终端用户。Python 还提供了一个可以操作警告过滤器的 API 。
+Finally, there are the command-line arguments that control the warning filters.  These  come  in  the  form  of  options  to  the  Python  interpreter  upon startup via the -W option. See the Python documentation or PEP 230 for the specific  switches  for  your  version  of  Python.  The  warning  framework  first appeared in Python 2.1.
+最后, 命令行也可以控制警告过滤器。 你可以在启动 Python 解释器的时候使用 -W 选项。请参阅 PEP 230 的文档获得你的 Python 版本的对应开关选项。 Python 2.1 第一次引入警告框架。
+
+12.5.7   Importing Modules from ZIP Files
+从 ZIP 文件中导入模块
+In version 2.3, the feature that allows the import of modules contained inside ZIP archives was added to Python. If you add a .zip file containing Python modules (.py, .pyc, or .pyo files) to your search path, i.e., PYTHONPATH or sys.path, the importer will search that archive for the module as if the ZIP file was a directory.
+在 2.3 版中, Python 加入了从 ZIP 归档文件导入模块的功能。 如果你的搜索路径中存在一个包含 Python 模块(.py, .pyc, or .pyo 文件)的 .zip 文件, 导入时会把 ZIP 文件当作目录处理, 在文件中搜索模块。
+If a ZIP file contains just a .py for any imported module, Python will not attempt to modify the archive by adding the corresponding .pyc file, mean- ing that if a ZIP archive does not contain a matching .pyc file, import speed should be expected to be slower than if they were present.
+如果要导入的一个 ZIP 文件只包含 .py 文件, 那么 Python 不会为其添加对应的 .pyc 文件, 这意味着如果一个 ZIP 归档没有匹配的 .pyc 文件时, 导入速度会相对慢一点。
+You are also allowed to add specific (sub)directories “under” a .zip file, i.e., /tmp/yolk.zip/lib/ would only import from the lib/ subdirectory within the yolk archive. Although this feature is specified in PEP 273, the actual implementation uses the import hooks provided by PEP 302.
+同时你也可以为 .zip 文件加入特定的(子)目录, 例如 /tmp/yolk.zip/lib 只会从 yolk 归档的 lib/ 子目录下导入。 虽然 PEP 273 指定了这个特性, 但事实上使用了 PEP 302 提供的导入钩子来实现它。
+
+12.5.8  “New” Import Hooks "新的"导入钩子
+The import of modules inside ZIP archives was “the first customer” of the new import hooks specified by PEP 302. Although we use the word “new,” that is relative considering that it has been difficult to create custom import- ers  because  the  only  way  to  accomplish  this  before  was  to  use  the  other modules  that  were  either  really  old  or  didn’t  simplify  writing  importers. Another solution is to override __import__(), but that is not an easy thing to  do  because  you  have  to  pretty  much  (re)implement  the  entire  import mechanism.
+导入 ZIP 归档文件这一特性其实新导入钩子( import hook , PEP 302) 的 "第一个顾客"。我们使用了"新"这个字, 因为在这之前实现自定义导入器只能是使用一些很古老的模块, 它们并不会简化创建导入器。 另一个解决方法是覆盖 __import__() , 但这并不简单, 你需要(重新)实现整个导入机制。 
+The new import hooks, introduced in Python 2.3, simplify it down to writing callable import classes, and getting them “registered” (or rather, “installed”) with the Python interpreter via the sys module.
+Python 2.3 引入的新导入钩子，从而简化了这个操作。 你只需要编写可调用的 import 类, 然后通过 sys 模块"注册"(或者叫"安装")它。
+There are two classes that you need: a finder and a loader. An instance of these classes takes an argument—the full name of any module or package. A  finder instance will look for your module, and if it finds it, return a loader object. The finder can also take a path for finding subpackages. The loader is what eventually brings the module into memory, doing whatever it needs to do to make a real Python module object, which is eventually returned by the loader.
+你需要两个类: 一个查找器和一个载入器。 这些类的实例接受一个参数：模块或包的全名称。查找器实例负责查找你的模块, 如果它找到, 那么它将返回一个载入器对象。查找器可以接受一个路径用以查找子包(subpackages) 。载入器会把模块载入到内存。它负责完成创建一个 Python 模块所需要的一切操作, 然后返回模块。
+These   instances   are   added   to   sys.path_hooks.   The   sys.path_ importer_ cache just holds the instances so that path_hooks is traversed only once. Finally, sys.meta_path is a list of instances that should be tra- versed before looking at sys.path, for modules whose location you know and do not need to find. The meta-path already has the loader objects reader to execute for specific modules or packages.
+这些实例被加入到 sys.path_hooks 。 sys.path_importer_cache 只是用来保存这些实例, 这样就只需要访问 path_hooks 一次。 最后, sys.meta_path 用来保存一列需要在查询 sys.path 之前访问的实例, 这些是为那些已经知道位置而不需要查找的模块准备的。  meta-path 已经有了指定模块或包的载入器对象的读取器。
+
+12.6  Module Built-in Functions模块内建函数
+The importation of modules has some functional support from the system. We will look at those now.
+系统还为模块提供了一些功能上的支持. 现在我们将详细讨论他们.
+
+12.6.1  __import__() __import__()
+The __import__() function is new as of Python 1.5, and it is the function that actually does the importing, meaning that the import statement invokes the  __import__() function  to  do  its  work.  The  purpose  of  making  this  a function is to allow for overriding it if the user is inclined to develop his or her own importation algorithm.
+Python 1.5 加入了 __import__() 函数, 它作为实际上导入模块的函数, 这意味着 import 语句调用 __import__() 函数完成它的工作。提供这个函数是为了让有特殊需要的用户覆盖它, 实现自定义的导入算法。
+The syntax of __import__() is:
+__import__() 的语法是: 
+__import__(module_name[, globals[, locals[, fromlist]]])
+The module_name variable is the name of the module to import, globals is the dictionary of current names in the global symbol table, locals is the dictionary of current names in the local symbol table, and fromlist is a list of  symbols  to  import  the  way  they  would  be  imported  using  the  from- import statement.
+module_name 变量是要导入模块的名称, globals 是包含当前全局符号表的名字的字典, locals 是包含局部符号表的名字的字典,  fromlist 是一个使用 from-import 语句所导入符号的列表。
+The globals, locals, and fromlist arguments are optional, and if not provided, default to globals(), locals(), and [], respectively.
+globals , locals , 以及 fromlist 参数都是可选的, 默认分别为 globals() , locals() 和 [] 。
+Calling import sys can be accomplished with
+调用 import sys 语句可以使用下边的语句完成:
+sys = __import__('sys')
+
+12.6.2 globals() and locals() globals() 和 locals() 
+The globals() and locals() built-in functions return dictionaries of the global and local namespaces, respectively, of the caller. From within a func- tion, the local namespace represents all names defined for execution of that function,  which  is  what  locals() will  return.  globals(),  of  course,  will return those names globally accessible to that function.
+globals() 和 locals() 内建函数分别返回调用者全局和局部名称空间的字典。 在一个函数内部, 局部名称空间代表在函数执行时候定义的所有名字, locals() 函数返回的就是包含这些名字的字典。 globals() 会返回函数可访问的全局名字。
+From the global namespace, however, globals() and locals() return the same dictionary because the global namespace is as local as you can get while executing there. Here is a little snippet of code that calls both functions from both namespaces:
+在全局名称空间下, globals() 和 locals() 返回相同的字典, 因为这时的局部名称空间就是全局空间。 下边这段代码演示这两个函数的了使用:
+```
+def foo():
+        print '\ncalling foo()...'
+        aString = 'bar'
+        anInt = 42
+        print "foo()'s globals:", globals().keys()
+        print "foo()'s locals:", locals().keys()
+print "__main__'s globals:", globals().keys() 
+print "__main__'s locals:", locals().keys() foo()
+```
+We are going to ask for the dictionary keys only because the values are of no consequence here (plus they make the lines wrap even more in this text). Executing this script, we get the following output:
+我们只在这里访问了字典的键 , 因为它的值在这里没有影响(而且他们会让行变得更长更难懂)。
+执行这个脚本, 我们得到如下的输出:
+```
+$ namespaces.py
+__main__'s globals: ['__doc__', 'foo', '__name__', '__builtins__']
+__main__'s locals: ['__doc__', 'foo', '__name__', '__builtins__']
+calling foo()...
+foo()'s globals: ['__doc__', 'foo', '__name__', '__builtins__']
+foo()'s locals: ['anInt', 'aString']
+```
+
+12.6.3   reload()
+The  reload() built-in  function  performs  another  import  on  a  previously imported module. The syntax of reload() is:
+reload() 内建函数可以重新导入一个已经导入的模块。 它的语法如下:
+reload(module)
+module is the actual module you want to reload. There are some criteria for using the reload() module. The first is that the module must have been imported in full (not by using from-import), and it must have loaded suc- cessfully. The second rule follows from the first, and that is the argument to reload() the module itself and not a string containing the module name, i.e., it must be something like reload(sys) instead of reload('sys').
+module 是你想要重新导入的模块。使用 reload() 的时候有一些标准。 首先模块必须是全部导入(不是使用 from-import), 而且它必须被成功导入。另外 reload() 函数的参数必须是模块自身而不是包含模块名的字符串。 也就是说必须类似 reload(sys) 而不是 reload('sys')。
+Also, code in a module is executed when it is imported, but only once. A second import does not re-execute the code, it just binds the module name. Thus reload() makes sense, as it overrides this default behavior.
+模块中的代码在导入时被执行, 但只执行一次. 以后执行 import 语句不会再次执行这些代码, 只是绑定模块名称。 而 reload() 函数不同。
+
+12.7  Packages包
+A package is a hierarchical file directory structure that defines a single Python application environment that consists of modules and subpackages. Packages were added to Python 1.5 to aid with a variety of problems including:
+包是一个有层次的文件目录结构, 它定义了一个由模块和子包组成的 Python 应用程序执行环境。Python 1.5 加入了包, 用来帮助解决如下问题:
+•	 Adding hierarchical organization to flat namespace
+-   为平坦的名称空间加入有层次的组织结构
+•	Allowing developers to group related modules
+-   允许程序员把有联系的模块组合到一起
+•	Allowing distributors to ship directories vs. bunch of files
+-   允许分发者使用目录结构而不是一大堆混乱的文件
+•	Helping resolve conflicting module names
+-   帮助解决有冲突的模块名称
+Along with classes and modules, packages use the familiar attribute/dotted attribute notation to access their elements. Importing modules within pack- ages use the standard import and from-import statements.
+与类和模块相同, 包也使用句点属性标识来访问他们的元素。 使用标准的 import 和 from-import 语句导入包中的模块。
+
+12.7.1 Directory Structure目录结构
+For our package examples, we will assume the directory structure below:
+假定我们的包的例子有如下的目录结构:
+Phone/
+        __init__.py 
+        common_util.py 
+        Voicedta/
+                __init__.py 
+                Pots.py 
+                Isdn.py
+            Fax/
+                __init__.py
+                G3.py
+            Mobile/
+                __init__.py 
+                Analog.py 
+                igital.py
+            Pager/
+                __init__.py
+                Numeric.py
+Phone is a top-level package and Voicedta, etc., are subpackages. Import subpackages by using import like this:
+Phone 是最顶层的包, Voicedta 等是它的子包。 我们可以这样导入子包:
+import Phone.Mobile.Analog
+Phone.Mobile.Analog.dial()
+Alternatively, you can use from-import in a variety of ways:
+你也可使用 from-import 实现不同需求的导入。
+The first way is importing just the top-level subpackage and referencing down the subpackage tree using the attribute/dotted notation:
+第一种方法是只导入顶层的子包, 然后使用属性/点操作符向下引用子包树:
+from Phone import Mobile
+Mobile.Analog.dial('555-1212')
+Furthermore, we can go down one more subpackage for referencing:
+此外, 我们可以还引用更多的子包:
+from Phone.Mobile import Analog
+Analog.dial('555-1212')
+In fact, you can go all the way down in the subpackage tree structure:
+事实上, 你可以一直沿子包的树状结构导入:
+from Phone.Mobile.Analog import dial 
+dial('555-1212')
+In  our  above  directory  structure  hierarchy,  we  observe  a  number  of __init__.py files. These are initializer modules that are required when using from-import to import subpackages but they can be empty if not used. Quite often, developers forget to add _inti_.py files to their package directories, so starting in Python 2.5, this triggers an ImportWarning message.
+在我们上边的目录结构中, 我们可以发现很多的 __init__.py 文件。 这些是初始化模块, from-import 语句导入子包时需要用到它。 如果没有用到, 他们可以是空文件。 程序员经常忘记为它们的包目录加入 __init__.py 文件, 所以从 Python 2.5 开始, 这将会导致一个 ImportWarning 信息。
+However, it is silently ignored unless the -Wd option is given when launch- ing the interpreter.
+不过, 除非给解释器传递了 -Wd 选项, 否则它会被简单地忽略。
+
+12.7.2	Using from-import with Packages
+ 使用 from-import 导入包
+Packages also support the from-import all statement:
+包同样支持 from-import all 语句:
+from package.module import *
+However, such a statement is dependent on the operating system’s filesystem for Python to determine which files to import. Thus the __all__ variable in __init__.py is required. This variable contains all the module names that should be imported when the above statement is invoked if there is such a thing. It consists of a list of module names as strings.
+然而, 这样的语句会导入哪些文件取决于操作系统的文件系统. 所以我们在__init__.py 中加入 __all__ 变量. 该变量包含执行这样的语句时应该导入的模块的名字. 它由一个模块名字符串列表组成.。
+
+12.7.2 Absolute Import绝对导入
+As the use of packages becomes more pervasive, there have been more cases of  the  import  of  subpackages  that  end  up  clashing  with  (and  hiding  or shadowing) “real” or standard library modules (actually their names). Pack- age  modules  will  hide  any  equivalently-named  standard  library  module because it will look inside the package first to perform a relative import, thus hiding access to the standard library module.
+包的使用越来越广泛, 很多情况下导入子包会导致和真正的标准库模块发生(事实上是它们的名字)冲突。 包模块会把名字相同的标准库模块隐藏掉, 因为它首先在包内执行相对导入, 隐藏掉标准库模块。
+Because of this, all imports are now classified as  absolute, meaning that names   must   be   packages   or   modules   accessible   via   the   Python   path (sys.path or PYTHONPATH).
+为此, 所有的导入现在都被认为是绝对的, 也就是说这些名字必须通过 Python 路径(sys.path 或是 PYTHONPATH )来访问。
+The rationale behind this decision is that subpackages can still be accessed via sys.path, i.e., import Phone.Mobile.Analog. Prior to this change, it was legal to have just import Analog from modules inside the Mobile subpackage. As  a  compromise,  Python  allows  relative  importing  where  programmers can indicate the location of a subpackage to be imported by using leader dots in front of the module or package name. For more information, please see Section 12.7.4.
+这个决定的基本原理是子包也可以通过 sys.path 访问, 例如 import Phone.Mobile.Analog 。 在这个变化之前, 从 Mobile 子包内模块中导入 Analog 是合理的。作为一个折中方案, Python 允许通过在模块或包名称前置句点实现相对导入。 更多信息请参阅第 12.7.4 节。
+
+The absolute import feature is the default starting in Python 2.7. (This feature, absolute_import,  can  be  imported  from  __future__ starting  in  version 2.5.) You can read more about absolute import in PEP 328.
+从 Python 2.7开始, 绝对导入特性将成为默认功能。 ( 从 Python 2.5 开始, 你可以从 __future__ 导入 absolute_import , 体验这个功能。) 你可以参阅 PEP 328 了解更多相关内容。
+
+12.7.3 Relative Import相对导入
+As described previously, the absolute import feature takes away certain privileges of the module writer of packages. With this loss of freedom in import state- ments, something must be made available to proxy for that loss. This is where a relative import comes in. The relative import feature alters the import syntax slightly to let programmers tell the importer where to find a module in a sub- package. Because the import statements are always absolute, relative imports only apply to from-import statements.
+如前所述, 绝对导入特性限制了模块作者的一些特权。失去了 import 语句的自由, 必须有新的特性来满足程序员的需求。这时候, 我们有了相对导入。 相对导入特性稍微地改变了 import 语法, 让程序员告诉导入者在子包的哪里查找某个模块。因为 import 语句总是绝对导入的, 所以相对导入只应用于 from-import 语句。
+The  first  part  of  the  syntax  is  a  leader  dot  to  indicate  a  relative  import. From there, any additional dot represents a single level above the current from where to start looking for the modules being imported.
+语法的第一部分是一个句点, 指示一个相对的导入操作。 之后的其他附加句点代表当前 from 起始查找位置后的一个级别。
+Let us look at our example above again. From within Analog.Mobile. Digital,  i.e.,  the  Digital.py module,  we  cannot  simply  use  this  syntax anymore. The following will either still work in older versions of Python, gen- erate a warning, or will not work in more contemporary versions of Python:
+我们再来看看上边的例子。在 Analog.Mobile.Digital , 也就是 Digital.py 模块中, 我们不能简单地使用这样的语法。 下边的代码只能工作在旧版本的 Python 下, 在新的版本中它会导致一个警告, 或者干脆不能工作:
+import Analog
+from Analog import dial
+This is due to the absolute import limitation. You have to use either the absolute or relative imports. Below are some valid imports:
+这是绝对导入的限制造成的。你需要在使用绝对导入或是相对导入中做出选择。下边是一些可行的导入方法:
+from Phone.Mobile.Analog import dial
+from .Analog import dial
+from ..common_util import setup
+from ..Fax import G3.dial.
+Relative imports can be used starting in Python 2.5. In Python 2.6, a dep- recation warning will appear for all intra-package imports not using the rela- tive import syntax. You can read more about relative import in the Python documentation and in PEP 328.
+从 2.5版 开始, 相对导入被加入到了 Python中 。 在 Python 2.6 中, 在模块内部的导入如果没有使用相对导入, 那么会显示一个警告信息。 你可以在 PEP 328 的文档中获得更多相关信息。
+
+12.8  Other Features of Modules模块的其他特性
+12.8.1 Auto-Loaded Modules自动载入的模块
+When the Python interpreter starts up in standard mode, some modules are loaded by the interpreter for system use. The only one that affects you is the __builtin__ module, which normally gets loaded in as the __builtins__ module.
+当 Python 解释器在标准模式下启动时, 一些模块会被解释器自动导入, 用于系统相关操作。 唯一一个影响你的是 __builtin__ 模块, 它会正常地被载入, 这和 __builtins__ 模块相同。
+The  sys.modules variable  consists  of  a  dictionary  of  modules  that  the interpreter has currently loaded (in full and successfully) into the interpreter. The  module  names  are  the  keys,  and  the  location  from  which  they  were imported are the values.
+sys.modules 变量包含一个由当前载入(完整且成功导入)到解释器的模块组成的字典, 模块名作为键, 它们的位置作为值。
+For example, in Windows, the sys.modules variable contains a large num- ber of loaded modules, so we will shorten the list by requesting only the mod- ule names. This is accomplished by using the dictionary’s keys() method:
+例如在 Windows 下, sys.modules 变量包含大量载入的模块, 我们这里截短它, 只提供他们的模块名, 通过调用字典的 keys() 方法:
+>>> import sys
+>>> sys.modules.keys()
+['os.path', 'os', 'exceptions', '__main__', 'ntpath',
+'strop', 'nt', 'sys', '__builtin__', 'site',
+'signal', 'UserDict', 'string', 'stat']
+The loaded modules for Unix are quite similar:
+Unix 下载入的模块很类似:
+>>> import sys
+>>> sys.modules.keys()
+['os.path', 'os', 'readline', 'exceptions',
+'__main__', 'posix', 'sys', '__builtin__', 'site',
+'signal', 'UserDict', 'posixpath', 'stat']
+
+12.8.2  Preventing Attribute Import阻止属性导入
+If you do not want module attributes imported when a module is imported with  “from  module  import  *”,  prepend  an  underscore  (  _  )  to  those attribute names (you do not want imported). This minimal level of data hid- ing does not apply if the entire module is imported or if you explicitly import a “hidden” attribute, e.g., import foo._bar.
+如果你不想让某个模块属性被 "from module import *" 导入 , 那么你可以给你不想导入的属性名称加上一个下划线( _ )。 不过如果你导入了整个模块或是你显式地导入某个属性(例如 import foo._bar ), 这个隐藏数据的方法就不起作用了。
+
+12.8.3  Case-Insensitive Import不区分大小的导入
+There are various operating systems with case-insensitive file systems. Prior to  version  2.1,  Python  attempted  to  “do  the  right  thing”  when  importing modules on the various supported platforms, but with the growing popularity of the MacOS X and Cygwin platforms, certain deficiencies could no longer be ignored, and support needed to be cleaned up.
+有一些操作系统的文件系统是不区分大小写的。 Python 2.1 前, Python 尝试在不同平台下导入模块时候"做正确的事情", 但随着 MacOS X 和 Cygwin 平台的流行, 这样的不足已经不能再被忽视, 而需要被清除。
+The world was pretty clean-cut when it was just Unix (case-sensitive) and Win32 (case-insensitive), but these new case-insensitive systems coming online were not ported with the case-insensitive features. PEP 235, which specifies this feature, attempts to address this weakness as well as taking away some “hacks” that had existed for other systems to make importing modules more consistent. The bottom line is that for case-insensitive imports to work properly, an environment variable named  PYTHONCASEOK must be defined. Python will then import the first module name that is found (in a case-insensitive manner) that matches. Otherwise Python will perform its native case-sensitive module name matching and import the first matching one it finds.
+在 Unix(区分大小写)和 Win32(不区分大小写)下, 一切都很明了, 但那些新的不区分大小写的系统不会被加入区分大小写的特性。 PEP 235 指定了这个特性, 尝试解决这个问题, 并避免那些其他系统上"hack"式的解决方法。 底线就是为了让不区分大小写的导入正常工作, 必须指定一个叫做 PYTHONCASEOK 的环境变量。 Python 会导入第一个匹配模块名( 使用不区分大小写的习惯 )。否则 Python 会执行它的原生区分大小写的模块名称匹配, 导入第一个匹配的模块。 
+
+12.8.4 Source Code Encoding源代码编码
+Starting in Python 2.3, it is now possible to create your Python module file in a native encoding other than 7-bit ASCII. Of course ASCII is the default, but with an additional encoding directive at the top of your Python modules, it will enable the importer to parse your modules using the specified encoding and designate natively encoded Unicode strings correctly so you do not have to worry about editing your source files in a plain ASCII text editor and have to individually “Unicode-tag” each string literal. An example directive specifying a UTF-8 file can be declared like this:
+从 Python 2.3 开始, Python 的模块文件开始支持除 7 位 ASCII 之外的其他编码。 当然 ASCII 是默认的, 你只要在你的 Python 模块头部加入一个额外的编码指示说明就可以让导入者使用指定的编码解析你的模块, 编码对应的 Unicode 字符串。 所以你使用纯 ASCII 文本编辑器的时候不需要担心了(不需要把你的字符串放入 "Unicode 标签" 里) 。 
+一个 UTF-8 编码的文件可以这样指示:
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+If you execute or import modules that contain non-ASCII Unicode string literals and do not have an encoding directive at the top, this will result in a DeprecationWarning in Python 2.3 and a syntax error starting in 2.5. You can read more about source code encoding in PEP 263.
+如果你执行或导入了包含非 ASCII 的 Unicode 字符串而没有在文件头部说明, 那么你会在 Python 2.3 得到一个 DeprecationWarning , 而在 2.5 中这样做会导致语法错误。你可以在 PEP 263 中得到更多关于源文件编码的相关内容。
+
+12.8.5  Import Cycles导入循环
+Working with Python in real-life situations, you discover that it is possible to have import loops. If you have ever worked on any large Python project, you are likely to have run into this situation.
+实际上，在使用 Python 时, 你会发现是能够导入循环的。 如果你开发了大型的 Python 工程, 那么你很可能会陷入这样的境地。
+Let us take a look at an example. Assume we have a very large product with  a  very  complex  command-line  interface  (CLI).  There  are  a  million commands for your product, and as a result, you have an overly massive handler (OMH) set. Every time a new feature is added, from one to three new commands must be added to support the new feature. This will be our omh4cli.py script:
+我们来看一个例子。 假定我们的产品有一个很复杂的命令行接口( command-line interface ，CLI)。 其中将会有超过一百万的命令, 结果你就有了一个“超冗余处理器”(overly massive handler，OMH)子集。 每加入一个新特性, 将有一到三条的新命令加入, 用于支持新的特性。 下边是我们的 omh4cli.py 脚本:
+from cli4vof import cli4vof
+# command line interface utility function
+def cli_util():
+      pass
+# overly massive handlers for the command line interface
+def omh4cli():
+	  :
+      cli4vof()
+	  :
+    omh4cli()
+You can pretend that the (empty) utility function is a very popular piece of code that most handlers must use. The overly massive handlers for the command- line interface are all in the  omh4cli() function. If we have to add a new command, it would be called from here.
+假定大多控制器都要用到这里的(其实是空的)工具函数。命令行接口的 OMH 都被封装在 omh4cli() 函数里。 如果我们要添加一个新的命令, 那么它会被调用。
+Now, as this module grows in a boundless fashion, certain smarter engi- neers decide to split off their new commands into a separate module and just provide hooks in the original module to access the new stuff. Therefore, the code is easier to maintain, and if bugs were found in the new stuff, one would not have to search through a one-megabyte-plus-sized Python file.
+现在这个模块不断地增长, 一些聪明的工程师会决定把新命令放入到隔离的模块里, 在原始模块中只提供访问新东西的钩子。 这样, 管理代码会变得更简单, 如果在新加入内容中发现了 bug , 那么你就不必在一个几兆的 Python 文件里搜索。
+In our case, we have an excited product manager asking us to add a “very out- standing feature” (VOF). Instead of integrating our stuff into omh4cli.py, we create a new script, cli4vof.py:
+在我们的例子中, 有一个兴奋的经理要我们加入一个 "非常好的特性"。我们将创建一个新的 cli4vof.py 脚本, 而不是把新内容集成到 omh4cli.py 里:
+import omh4cli
+# command-line interface for a very outstanding feature
+def cli4vof():
+      omh4cli.cli_util()
+As mentioned before, the utility function is a must for every command, and because we do not want to cut and paste its code from the main handler, we import the main module and call it that way. To finish off our integra- tion,  we  add  a  call  to  our  handler  into  the  main  overly  massive  handler, omh4cli().
+前边已经提到, 工具函数是每个命令必须的, 而且由于不能把代码从主控制器复制出来, 所以我们导入了主模块, 在我们的控制器中添加对 omh , omh4cli() 的调用。
+The problem occurs when the main handler omh4cli imports our new little module cli4vof (to get the new command function) because cli4vof imports  omh4cli (to  get  the  utility  function).  Our  module  import  fails because  Python  is  trying  to  import  a  module  that  was  not  previously  fully imported the first time:
+问题在于主控制器 omh4cli 会导入我们的 cli4vof 模块(获得新命令的函数), 而 cli4vof 也会导入 omh4cli (用于获得工具函数)。模块导入会失败, 这是因为 Python 尝试导入一个先前没有完全导入的模块:
+$ python omh4cli.py
+Traceback (most recent call last): 
+File "omh4cli.py", line 3, in ? from cli4vof import cli4vof
+File "/usr/prod/cli4vof.py", line 3, in ?
+import omh4cli
+File "/usr/prod/omh4cli.py", line 3, in ?
+from cli4vof import cli4vof
+ImportError: cannot import name cli4vof
+Notice the circular import of cli4vof in the traceback. The problem is that in order to call the utility function, cli4vof has to import omh4cli. If it did not have to do that, then omh4cli would have completed its import of cli4vof successfully and there would be no problem. The issue is that when omh4cli is  attempting  to  import  cli4vof,  cli4vof is  trying  to  import omh4cli. No one finishes an import, hence the error. This is just one exam- ple of an import cycle. There are much more complicated ones out in the real world.
+注意跟踪返回消息中显示的对 cli4vof 的循环导入。 问题在于要想调用工具函数, cli4vof 必须导入 omh4cli 。 如果它不需要这样做, 那么 omh4cli 将会成功导入 cli4vof , 程序正常执行。但在这里, omh4cli 尝试导入 cli4vof , 而 cli4vof 也试着导入 omh4cli 。 最后谁也不会完成导入工作, 引发错误。 这只是一个导入循环的例子。 事实上实际应用中会出现更复杂的情况。
+The workaround for this problem is almost always to move one of the import statements,  e.g.,  the  offending  one.  You  will  commonly  see import statements at the bottom of modules. As a beginning Python pro- grammer, you are used to seeing them in the beginning, but if you ever run across import statements at the end of modules, you will now know why.  In  our  case,  we  cannot  move  the  import  of  omh4cli to  the  end, because  if  cli4vof() is  called,  it  will  not  have  the  omh4cli name loaded yet:
+解决这个问题几乎总是移除其中一个导入语句。 你经常会在模块的最后看到 import 语句。作为一个初学者, 你只需要试着习惯它们, 如果你以前遇到在模块底部的import语句,现在你知道是为什么了.。在我们的例子中, 我们不能把 import omh4cli 移到最后, 因为调用 cli4vof() 的时候 omh4cli() 名字还没有被载入。
+$ python omh4cli.py
+Traceback (most recent call last): File "omh4cli.py", line 3, in ? from cli4vof import cli4vof
+File "/usr/prod/cli4vof.py", line 7, in ?
+import omh4cli
+File "/usr/prod/omh4cli.py", line 13, in ?
+omh4cli()
+File "/usr/prod/omh4cli.py", line 11, in omh4cli cli4vof()
+File "/usr/prod/cli4vof.py", line 5, in cli4vof omh4cli.cli_util()
+NameError: global name 'omh4cli' is not defined
+No,  our  solution  here  is  to  just  move  the  import statement  into  the cli4vof() function declaration:
+我们的解决方法只是把 import 语句移到 cli4vof() 函数内部:
+def cli4vof():
+      import omh4cli 
+      omh4cli.cli_util()
+This way, the import of the  cli4vof module from  omh4cli completes successfully,  and  on  the  tail  end,  calling  the  utility  function  is  successful because the omh4cli name is imported before it is called. As far as execution goes,  the  only  difference  is  that  from  cli4vof,  the  import  of  omh4cli is performed when cli4vof.cli4vof() is called and not when the cli4vof module is imported.
+这样, 从 omh4cli() 导入 cli4vof() 模块会顺利完成, 在 omh4cli() 被调用之前它会被正确导入。 只有在执行到 cli4vof.cli4vof() 时候才会导入 omh4cli 模块。
+
+12.8.5 Module Execution模块执行
+There are many ways to execute a Python module: script invocation via the command-line or shell, execfile(), module import, interpreter -m option, etc. These are out of the scope of this chapter. We refer you to Chapter 14, “Execution Environment,” which covers all of these features in full detail.
+
+有很多方法可以执行一个 Python 模块: 通过命令行或 shell , execfile() , 模块导入, 解释器的 -m 选项, 等等。这已经超出了本章的范围。 你可以参考 第 14 章 "执行环境", 里边全面地介绍了这些特性。 
+
+12.9 Related Modules相关模块
+The following are auxiliary modules that you may use when dealing with the import of Python modules. Of these listed below, modulefinder, pkgutil, and zipimport are new as of Python 2.3, and the distutils package was introduced back in version 2.0.
+下边这些模块可能是你在处理 Python 模块导入时会用到的辅助模块。 在这之中, modulefinder , pkgutil , 以及 zipimport 是 Python 2.3 新增内容, distutils 包在 Python 2.0 被引入。
+•	imp — this module gives you access to some lower-level importer functionality.
++ imp - 这个模块提供了一些底层的导入者功能。
+•	modulefinder — this is a module that lets you find all the modules that are used by a Python script. You can either use the ModuleFinder class or just run it as a script giving it the filename of a(nother) Python module with which to do module analysis on.
++ modulefinder - 该模块允许你查找 Python 脚本所使用的所有模块。你可以使用其中的 ModuleFinder 类或是把它作为一个脚本执行, 提供你要分析的(另个) Python 模块的文件名。
+• 	pkgutil — this module gives those putting together Python packages for distribution a way to place package files in various places yet maintain the abstraction of a single “package” file hierarchy. It uses *.pkg files in a manner similar to the way the site module uses *.pth files to help define the package path.
++ pkgutil - 该模块提供了多种把 Python 包打包为一个"包"文件分发的方法。 类似 site 模块, 它使用 *.pkg 文件帮助定义包的路径, 类似 site 模块使用的 *.pth 文件。
+•	site — using this module along with *.pth files gives you the ability to specify the order in which packages are added to your Python path, i.e., sys.path, PYTHONPATH. You do not have to import it explicitly as the importer already uses it by default— you need to use the -S switch when starting up Python to turn it off. Also, you can perform further arbitrary site-specific customizations by adding a sitecustomize module whose import is attempted after the path manipulations have been completed.
++ site - 和 *.pth 文件配合使用, 指定包加入 Python 路径的顺序, 例如 sys.path , PYTHONPATH 。你不需要显式地导入它, 因为 Python 导入时默认已经使用该模块。你可能需要使用 -S 开关在 Python 启动时关闭它。你也可以完成一些 site 相关的自定义操作, 例如在路径导入完成后在另个地方尝试。
+•	zipimport — this module allows you to be able to import Python modules that are archived in ZIP files. Note that the functionality in this file is “automagically” called by the importer so there is no need to import this file for use in any application. We mention it here solely as a reference.
++ zipimport - 你可以使用该模块导入 ZIP 归档文件中的模块。 需要注意的是该功能已经"自动"开启, 所以你不需要在任何应用中使用它。在这里我们提出它只是作为参考。
+•	distutils — this package provides support for building, installing, and distributing Python modules and packages. It also aids in building Python extensions written in C/C++. More information on distutils can be found in the Python documentation available at these links:
++ distutils - 该模块提供了对建立、 安装、分发 Python 模块和包的支持。 它还可以帮助建立使用 C/C++ 完成的 Python 扩展。 更多关于 distutils 的信息可以在 Python 文档里找到, 参阅:
+http://docs.python.org/dist/dist.html 
+http://docs.python.org/inst/inst.html
+
+12.10  Exercises练习
+12–1.   PathSearch versus SearchPath. What is the difference between a path search and a search path?
+路径搜索和搜索路径。 路径搜索和搜索路径之间有什么不同?
+12–2.   Importing Attributes. Assume you have a function called foo() in your module mymodule. 
+导入属性。 假设你的模块 mymodule 里有一个 foo() 函数。
+(a) What are the two ways of importing this function into your namespace for invocation?
+(a) 把这个函数导入到你的名称空间有哪两种方法?
+(b) What are the namespace implications when choosing one over the other?
+(b) 这两种方法导入后的名称空间有什么不同?
+12–3.   Importing. What are the differences between using “import module” and “from module import *”?
+导入. "import module" 和 "fromn module import *" 有什么不同?
+12–4.   Namespaces versus Variable Scope. How are namespaces and variable scopes different from each other?
+名称空间和变量作用域。名称空间和变量作用域有什么不同?
+12–5.   Using__import__().
+        使用 __import__(). 
+(a) Use __import__() to import a module into your namespace. What is the correct syntax you finally used to get it working?
+(a) 使用 __import__ 把一个模块导入到你的名称空间。 你最后使用了什么样的语法?
+(b) Same as above, but use __import__() to import only specific names from modules.
+        (b) 和上边相同, 使用 __import__() 从指定模块导入特定的名字。
+12–6.   Extended Import. Create a new function called importAs(). This function will import a module into your namespace, but with a name you specify, not its original name. For example, calling newname=importAs ('mymodule') will import the module mymodule, but the module and all its elements are accessible only as newname or newname.attr. This is the exact functionality provided by the new extended import syntax introduced in Python 2.0.
+扩展导入。创建一个 importAs() 函数. 这个函数可以把一个模块导入到你的名称空间, 但使用你指定的名字, 而不是原始名字。 例如, 调用 newname=importAs('mymodule') 会导入 mymodule , 但模块和它的所有元素都通过新名称 newname 或 newname.attr 访问。 这是 Python 2.0 引入的扩展导入实现的功能。
+12–7.  Import Hooks. Study the import hooks mechanism provided for by the implementation of PEP 302. Implement your own import mechanism, which allows you to obfuscate your Python modules (encryption, bzip2, rot13, etc.) so that the interpreter can decode them properly and import them prop- erly. You may wish to look at how it works with importing zip files (see Section 12.5.7).
+导入钩子。 研究 PEP 302 的导入钩子机制. 实现你自己的导入机制, 允许编码你的模块(encryption, bzip2, rot13, 等), 这样解释器会自动解码它们并正确导入。你可以参看 zip 文件导入的实现 (参阅 第 12.5.7 节)。
+

@@ -1,0 +1,1097 @@
+PEP: 3108
+Title: Standard Library Reorganization
+Version: $Revision: 62747 $
+Last-Modified: $Date: 2008-05-06 07:22:05 +0800 (Tue, 06 May 2008) $
+Author: Brett Cannon <brett@python.org>
+Status: Accepted
+Type: Standards Track
+Content-Type: text/x-rst
+Created: 01-Jan-2007
+Python-Version: 3.0
+Post-History: 28-Apr-2008
+
+
+Abstract
+========
+
+Just like the language itself, Python's standard library (stdlib) has
+grown over the years to be very rich.  But over time some modules
+have lost their need to be included with Python.  There has also been
+an introduction of a naming convention for modules since Python's
+inception that not all modules follow.
+
+Python 3.0 has presents a chance to remove modules that do not have
+long term usefulness.  This chance also allows for the renaming of
+modules so that they follow the Python style guide [#pep-0008]_.  This
+PEP lists modules that should not be included in Python 3.0 or which
+need to be renamed.
+
+
+Modules to Remove
+=================
+
+Guido pronounced that "silly old stuff" is to be deleted from the
+stdlib for Py3K [#silly-old-stuff]_.  This is open-ended on purpose.
+Each module to be removed needs to have a justification as to why it
+should no longer be distributed with Python.  This can range from the
+module being deprecated in Python 2.x to being for a platform that is
+no longer widely used.
+
+This section of the PEP lists the various modules to be removed. Each
+subsection represents a different reason for modules to be
+removed.  Each module must have a specific justification on top of
+being listed in a specific subsection so as to make sure only modules
+that truly deserve to be removed are in fact removed.
+
+When a reason mentions how long it has been since a module has been
+"uniquely edited", it is in reference to how long it has been since a
+checkin was done specifically for the module and not for a change that
+applied universally across the entire stdlib.  If an edit time is not
+denoted as "unique" then it is the last time the file was edited,
+period.
+
+The procedure to thoroughly remove a module is:
+
+#. Remove the module.
+#. Remove the tests.
+#. Edit ``Modules/Setup.dist`` and ``setup.py`` if needed.
+#. Remove the docs (if applicable).
+#. Run the regression test suite (using ``-uall``); watch out for
+   tests that are skipped because an import failed for the removed
+   module.
+
+If a deprecation warning is added to 2.6, it would be better to make
+all the changes to 2.6, merge the changes into the 3k branch, then
+perform the procedure above.  This will avoid some merge conflicts.
+
+
+Previously deprecated
+---------------------
+
+PEP 4 lists all modules that have been deprecated in the stdlib
+[#pep-0004]_.  The specified motivations mirror those listed in
+PEP 4. All modules listed
+in the PEP at the time of the first alpha release of Python 3.0 will
+be removed.
+
+The entire contents of lib-old will also be removed.  These modules
+have already been removed from being imported but are kept in the
+distribution for Python for users that rely upon the code.
+
+* buildtools
+
+    + Documented as deprecated since Python 2.3 without an explicit
+      reason.
+
+* cfmfile
+
+    + Documented as deprecated since Python 2.4 without an explicit
+      reason.
+
+* cl
+
+    + Documented as obsolete since Python 2.0 or earlier.
+    + Interface to SGI hardware.
+
+* md5
+
+    + Supplanted by the ``hashlib`` module.
+
+* mimetools
+
+    + Documented as obsolete without an explicit reason.
+
+* MimeWriter
+
+    + Supplaned by the ``email`` package.
+
+* mimify
+
+    + Supplanted by the ``email`` package.
+
+* multifile
+
+    + Supplanted by the ``email`` package.
+
+* posixfile
+
+    + Locking is better done by ``fcntl.lockf()``.
+
+* rfc822
+
+    + Supplanted by the ``email`` package.
+
+* sha
+
+    + Supplanted by the ``hashlib`` package.
+
+* sv
+
+    + Documented as obsolete since Python 2.0 or earlier.
+    + Interface to obsolete SGI Indigo hardware.
+
+* timing
+
+    + Documented as obsolete since Python 2.0 or earlier.
+    + ``time.clock()`` gives better time resolution.
+
+
+Platform-specific with minimal use
+----------------------------------
+
+Python supports many platforms, some of which are not widely used or
+maintained.
+And on some of these platforms there are modules that have limited use
+to people on those platforms.  Because of their limited usefulness it
+would be better to no longer burden the Python development team with
+their maintenance.
+
+The modules mentioned below are documented. All undocumented modules
+for the specified platforms will also be removed.
+
+IRIX
+/////
+The IRIX operating system is no longer produced [#irix-retirement]_.
+Removing all modules from the plat-irix[56] directory has been deemed
+reasonable because of this fact.
+
+  + AL/al [done: 3.0]
+
+    - Provides sound support on Indy and Indigo workstations.
+    - Both workstations are no longer available.
+    - Code has not been uniquely edited in three years.
+
+  + cd [done: 3.0]
+
+    - CD drive control for SGI systems.
+    - SGI no longer sells machines with IRIX on them.
+    - Code has not been uniquely edited in 14 years.
+
+  + cddb [done: 3.0]
+
+    - Undocumented.
+
+  + cdplayer [done: 3.0]
+
+    - Undocumented.
+
+  + cl/CL/CL_old [done: 3.0]
+
+    - Compression library for SGI systems.
+    - SGI no longer sells machines with IRIX on them.
+    - Code has not been uniquely edited in 14 years.
+
+  + DEVICE/GL/gl/cgen/cgensuport [done: 3.0]
+
+    - GL access, which is the predecessor to OpenGL.
+    - Has not been edited in at least eight years.
+    - Third-party libraries provide better support (PyOpenGL [#pyopengl]_).
+
+  + ERRNO [done: 3.0]
+
+    - Undocumented.
+
+  + FILE [done: 3.0]
+
+    - Undocumented.
+
+  + FL/fl/flp [done: 3.0]
+
+    - Wrapper for the FORMS library [#irix-forms]_
+    - FORMS has not been edited in 12 years.
+    - Library is not widely used.
+    - First eight hits on Google are for Python docs for fl.
+
+  + fm [done: 3.0]
+
+    - Wrapper to the IRIS Font Manager library.
+    - Only available on SGI machines which no longer come with IRIX.
+
+  + GET [done: 3.0]
+
+    - Undocumented.
+
+  + GLWS [done: 3.0]
+
+    - Undocumented.
+
+  + imgfile [done: 3.0]
+
+    - Wrapper for SGI libimage library for imglib image files
+      (``.rgb`` files).
+    - Python Imaging Library provdes read-only support [#pil]_.
+    - Not uniquely edited in 13 years.
+
+  + IN [done: 3.0]
+
+    - Undocumented.
+
+  + IOCTL [done: 3.0]
+
+    - Undocumented.
+
+  + jpeg [done: 3.0]
+
+    - Wrapper for JPEG (de)compressor.
+    - Code not uniquely edited in nine years.
+    - Third-party libraries provide better support
+      (Python Imaging Library [#pil]_).
+
+  + panel [done: 3.0]
+
+    - Undocumented.
+
+  + panelparser [done: 3.0]
+
+    - Undocumented.
+
+  + readcd [done: 3.0]
+
+    - Undocumented.
+
+  + SV [done: 3.0]
+
+    - Undocumented.
+
+  + torgb [done: 3.0]
+
+    - Undocumented.
+
+  + WAIT [done: 3.0]
+
+    - Undocumented.
+
+
+Mac-specific modules
+////////////////////
+
+The Mac-specific modules are not well-maintained (e.g., the bgen
+tool used to auto-generate many of the modules has never been
+updated to support UCS-4). It is also not Python's place to maintain
+such a large amount of OS-specific modules. Thus all modules under
+plat-mac are to be removed.
+
+A stub module for proxy access will be provided for use by urllib.
+
+* _builtinSuites
+
+    - Undocumented.
+    - Package under lib-scriptpackages.
+
+* Audio_mac
+
+    - Undocumented.
+
+* aepack
+
+    - OSA support is better through third-party modules.
+
+        * Appscript [#appscript]_.
+
+    - Hard-coded endianness which breaks on Intel Macs.
+    - Might need to rename if Carbon package dependent.
+
+* aetools
+
+    - See aepack.
+
+* aetypes
+
+    - See aepack.
+
+* applesingle
+
+    - Undocumented.
+    - AppleSingle is a binary file format for A/UX.
+    - A/UX no longer distributed.
+
+* appletrawmain
+
+    - Undocumented.
+
+* appletrunner
+
+    - Undocumented.
+
+* argvemulator
+
+    - Undocumented.
+
+* autoGIL
+
+    - Very bad model for using Python with the CFRunLoop.
+
+* bgenlocations
+
+    - Undocumented.
+
+* bundlebuilder
+
+    - Undocumented.
+
+* Carbon
+
+    - Carbon development has stopped.
+    - Does not support 64-bit systems completely.
+    - Dependent on bgen which has never been updated to support UCS-4
+      Unicode builds of Python.
+
+* CodeWarrior
+
+    - Undocumented.
+    - Package under lib-scriptpackages.
+
+* ColorPicker
+
+    - Better to use Cocoa for GUIs.
+
+* EasyDialogs
+
+    - Better to use Cocoa for GUIs.
+
+* Explorer
+
+    - Undocumented.
+    - Package under lib-scriptpackages.
+
+* Finder
+
+    - Undocumented.
+    - Package under lib-scriptpackages.
+
+
+* findertools
+
+    - No longer useful.
+
+* FrameWork
+
+    - Poorly documented.
+    - Not updated to support Carbon Events.
+
+* gensuitemodule
+
+    - See aepack.
+
+* ic
+
+* icopen
+
+    - Not needed on OS X.
+    - Meant to replace 'open' which is usually a bad thing to do.
+
+* macerrors
+
+    - Undocumented.
+
+* MacOS
+
+    - Would also mean the removal of binhex.
+
+* macostools
+
+* macresource
+
+    - Undocumented.
+
+* MiniAEFrame
+
+    - See aepack.
+
+* Nav
+
+    - Undocumented.
+
+* Netscape
+
+    - Undocumented.
+    - Package under lib-scriptpackages.
+
+
+* pimp
+
+    - Undocumented.
+
+* PixMapWrapper
+
+    - Undocumented.
+
+* StdSuites
+
+    - Undocumented.
+    - Package under lib-scriptpackages.
+
+* SystemEvents
+
+    - Undocumented.
+    - Package under lib-scriptpackages.
+
+* Terminal
+
+    - Undocumented.
+    - Package under lib-scriptpackages.
+
+
+* terminalcommand
+
+    - Undocumented.
+
+* videoreader
+
+     - No longer used.
+
+* W
+
+     - No longer distributed with Python.
+
+
+.. _PyObjC: http://pyobjc.sourceforge.net/
+
+
+Solaris
+///////
+
+  + SUNAUDIODEV/sunaudiodev [done: 3.0]
+
+    - Access to the sound card on Sun machines.
+    - Code not uniquely edited in over eight years.
+
+
+Hardly used
+------------
+
+Some platform-independent modules are rarely used.  There are a number of
+possible explanations for this, including, ease of reimplementation, very
+small audience or lack of adherence to more modern standards.
+
+* audiodev [done: 3.0]
+
+  + Undocumented.
+  + Not edited in five years.
+  + If removed sunaudio should go as well (also undocumented; not
+    edited in over seven years).
+
+* imputil
+
+  + Undocumented.
+  + Never updated to support absolute imports.
+
+* mutex
+
+  + Easy to implement using a semaphore and a queue.
+  + Cannot block on a lock attempt.
+  + Not uniquely edited since its addition 15 years ago.
+  + Only useful with the 'sched' module.
+  + Not thread-safe.
+
+
+* stringold [done: 3.0]
+
+  + Function versions of the methods on string objects.
+  + Obsolete since Python 1.6.
+  + Any functionality not in the string object or module will be moved
+    to the string module (mostly constants).
+
+* symtable/_symtable
+
+  + Undocumented.
+
+* toaiff [done: 3.0, moved to Demo]
+
+  + Undocumented.
+  + Requires ``sox`` library to be installed on the system.
+
+* user
+
+  + Easily handled by allowing the application specify its own
+    module name, check for existence, and import if found.
+
+* new [done: 3.0]
+
+  + Just a rebinding of names from the 'types' module.
+  + Can also call ``type`` built-in to get most types easily.
+  + Docstring states the module is no longer useful as of revision
+    27241 (2002-06-15).
+
+* pure [done: 3.0]
+
+  + Written before Pure Atria was bought by Rational which was then
+    bought by IBM (in other words, very old).
+
+* test.testall [done: 3.0]
+
+  + From the days before regrtest.
+
+
+Obsolete
+--------
+
+Becoming obsolete signifies that either another module in the stdlib
+or a widely distributed third-party library provides a better solution
+for what the module is meant for.
+
+* Bastion/rexec [done: 3.0]
+
+  + Restricted execution / security.
+  + Turned off in Python 2.3.
+  + Modules deemed unsafe.
+
+* bsddb185 [done: 3.0]
+
+  + Superceded by bsddb3
+  + Not built by default.
+  + Documentation specifies that the "module should never be used
+    directly in new code".
+  + Available externally from PyPI_.
+
+* Canvas
+
+  + Marked as obsolete in a comment by Guido since 2000
+    (see http://bugs.python.org/issue210677).
+  + Better to use ``Tkinter.Canvas``.
+
+* commands
+
+  + subprocess module replaces it [#pep-0324]_.
+  + Remove getstatus(), move rest to subprocess.
+
+* compiler (need to add AST -> bytecode mechanism) [done: 3.0]
+
+  + Having to maintain both the built-in compiler and the stdlib
+    package is redundant [#ast-removal]_.
+  + The AST created by the compiler is available [#ast]_.
+  + Mechanism to compile from an AST needs to be added.
+
+* dircache
+
+  + Negligible use.
+  + Easily replicated.
+
+* dl [done: 3.0]
+
+  + ctypes provides better support for same functionality.
+
+* fpformat
+
+  + All functionality is supported by string interpolation.
+
+* htmllib
+
+  + Superceded by HTMLParser.
+
+* ihooks
+
+  + Undocumented.
+  + For use with rexec which has been turned off since Python 2.3.
+
+* imageop [done: 3.0]
+
+  + Better support by third-party libraries
+    (Python Imaging Library [#pil]_).
+  + Unit tests relied on rgbimg and imgfile.
+        - rgbimg was removed in Python 2.6.
+        - imgfile slated for removal in this PEP. [done: 3.0]
+
+* linuxaudiodev [done: 3.0]
+
+  + Replaced by ossaudiodev.
+
+* mhlib
+
+  + Should be removed as an individual module; use ``mailbox``
+    instead.
+
+* popen2 [done: 3.0]
+
+  + subprocess module replaces it [#pep-0324]_.
+
+* sgmllib
+
+  + Does not fully parse SGML.
+  + In the stdlib for support to htmllib which is slated for removal.
+
+* sre
+
+  + Previously deprecated; import ``re`` instead.
+
+* stat
+
+  + ``os.stat`` now returns a tuple with attributes.
+  + Functions in the module should be made into methods for the object
+    returned by os.stat.
+
+* statvfs
+
+  + ``os.statvfs`` now returns a tuple with attributes.
+
+* thread
+
+  + People should use 'threading' instead.
+
+    - Rename 'thread' to _thread.
+    - Deprecate dummy_thread and rename _dummy_thread.
+    - Move thread.get_ident over to threading.
+
+  + Guido has previously supported the deprecation
+    [#thread-deprecation]_.
+
+* urllib
+
+  + Superceded by urllib2.
+  + Functionality unique to urllib will be kept in the
+    `urllib package`_.
+
+* UserDict [done: 3.0]
+
+  + Not as useful since types can be a superclass.
+  + Useful bits moved to the 'collections' module.
+
+* UserList/UserString [done: 3.0]
+
+  + Not useful since types can be a superclass.
+  + Moved to the 'collections' module.
+
+
+Modules to Rename
+=================
+
+Many modules existed in
+the stdlib before PEP 8 came into existence [#pep-0008]_.  This has
+led to some naming inconsistencies and namespace bloat that should be
+addressed.
+
+
+PEP 8 violations
+----------------
+
+PEP 8 specifies that modules "should have short, all-lowercase names"
+where "underscores can be used ... if it improves readability"
+[#pep-0008]_.  The use of underscores is discouraged in package names.
+The following modules violate PEP 8 and are not somehow being renamed
+by being moved to a package.
+
+==================  ==================================================
+Current Name        Replacement Name
+==================  ==================================================
+_winreg             winreg (rename also because module has a public
+                    interface and thus should not have a leading
+                    underscore)
+ConfigParser        configparser
+copy_reg            copyreg
+PixMapWrapper       pixmapwrapper
+Queue               queue
+SocketServer        socketserver
+==================  ==================================================
+
+
+Merging C and Python implementations of the same interface
+----------------------------------------------------------
+
+Several interfaces have both a Python and C implementation.  While it
+is great to have a C implementation for speed with a Python
+implementation as fallback, there is no need to expose the two
+implementations independently in the stdlib.  For Python 3.0 all
+interfaces with two implementations will be merged into a single
+public interface.
+
+The C module is to be given a leading underscore to delineate the fact
+that it is not the reference implementation (the Python implementation
+is).  This means that any semantic difference between the C and Python
+versions must be dealt with before Python 3.0 or else the C
+implementation will be removed until it can be fixed.
+
+One interface that is not listed below is xml.etree.ElementTree.  This
+is an externally maintained module and thus is not under the direct
+control of the Python development team for renaming.  See `Open
+Issues`_ for a discussion on this.
+
+* pickle/cPickle
+
+  + Rename cPickle to _pickle.
+  + Semantic completeness of C implementation *not* verified.
+
+* profile/cProfile
+
+  + Rename cProfile to _profile.
+  + Semantic completeness of C implementation *not* verified.
+
+* StringIO/cStringIO [done: 3.0]
+
+  + Add the class to the 'io' module.
+
+
+No public, documented interface
+-------------------------------
+
+There are several modules in the stdlib that have no defined public
+interface.  These modules exist as support code for other modules that
+are exposed.  Because they are not meant to be used directly they
+should be renamed to reflect this fact.
+
+============  ===============================
+Current Name  Replacement Name
+============  ===============================
+markupbase    _markupbase [done: 3.0]
+dummy_thread  _dummy_thread [#]_
+============  ===============================
+
+.. [#] Assumes ``thread`` is renamed to ``_thread``.
+
+
+Poorly chosen names
+-------------------
+
+A few modules have names that were poorly chosen in hindsight.  They
+should be renamed so as to prevent their bad name from perpetuating
+beyond the 2.x series.
+
+=================  ===============================
+Current Name       Replacement Name
+=================  ===============================
+repr               reprlib
+test.test_support  test.support
+=================  ===============================
+
+
+Grouping of modules
+-------------------
+
+As the stdlib has grown, several areas within it have expanded to
+include multiple modules (e.g., support for database files). It
+thus makes sense to group related modules into packages.
+
+
+dbm package
+///////////
+
+=================  ===============================
+Current Name       Replacement Name
+=================  ===============================
+anydbm             dbm.__init__ [1]_
+dbhash             dbm.bsd
+dbm                dbm.ndbm
+dumbdm             dbm.dumb
+gdbm               dbm.gnu
+whichdb            dbm.__init__ [1]_
+=================  ===============================
+
+
+.. [1] ``dbm.__init__`` can combine ``anybdbm`` and ``whichdb`` since
+       the public API for both modules has no name conflict and the
+       two modules have closely related usage.
+
+
+
+html package
+////////////
+
+==================  ===============================
+Current Name        Replacement Name
+==================  ===============================
+HTMLParser          html.parser
+htmlentitydefs      html.entities
+==================  ===============================
+
+
+http package
+////////////
+
+=================  ===============================
+Current Name       Replacement Name
+=================  ===============================
+httplib            http.client
+BaseHTTPServer     http.server [2]_
+CGIHTTPServer      http.server [2]_
+SimpleHTTPServer   http.server [2]_
+Cookie             http.cookies
+cookielib          http.cookiejar
+=================  ===============================
+
+.. [2] The ``http.server`` module can combine the specified modules
+       safely as they have no naming conflicts.
+
+
+tkinter package
+///////////////
+
+==================  ===============================
+Current Name        Replacement Name
+==================  ===============================
+Dialog              tkinter.dialog
+FileDialog          tkinter.filedialog [4]_
+FixTk               tkinter._fix
+ScrolledText        tkinter.scrolledtext
+SimpleDialog        tkinter.simpledialog [5]_
+Tix                 tkinter.tix
+Tkconstants         tkinter.constants
+Tkdnd               tkinter.dnd
+Tkinter             tkinter.__init__
+tkColorChooser      tkinter.colorchooser
+tkCommonDialog      tkinter.commondialog
+tkFileDialog        tkinter.filedialog [4]_
+tkFont              tkinter.font
+tkMessageBox        tkinter.messagebox
+tkSimpleDialog      tkinter.simpledialog [5]_
+turtle              tkinter.turtle
+==================  ===============================
+
+.. [4] ``tkinter.filedialog`` can safely combine ``FileDialog`` and
+       ``tkFileDialog`` as there are no naming conflicts.
+
+.. [5] ``tkinter.simpledialog`` can safely combine ``SimpleDialog``
+       and ``tkSimpleDialog`` have no naming conflicts.
+
+
+urllib package
+//////////////
+
+Originally this new package was to be named ``url``, but because of
+the common use of the name as a variable, it has been deemed better
+to keep the name ``urllib`` and instead shift existing modules around
+into a new package.
+
+==================  ===============================
+Current Name        Replacement Name
+==================  ===============================
+urllib2             urllib.request
+urlparse            urllib.parse
+urllib              urllib.parse, urllib.request [6]_
+==================  ===============================
+
+.. [6] The quoting-related functions from ``urllib`` will be added
+       to ``urllib.parse``. ``urllib.URLOpener`` and
+       ``urllib.FancyUrlOpener`` will be added to ``urllib.request``
+       as long as the documentation for both modules is updated.
+
+
+xmlrpc package
+//////////////
+
+==================  ===============================
+Current Name        Replacement Name
+==================  ===============================
+xmlrpclib           xmlrpc.client
+SimpleXMLRPCServer  xmlrpc.server [3]_
+CGIXMLRPCServer     xmlrpc.server [3]_
+==================  ===============================
+
+.. [3] The modules being combined into ``xmlrpc.server`` have no
+       naming conflicts and thus can safely be merged.
+
+
+Transition Plan
+===============
+
+For modules to be removed
+-------------------------
+
+Use of modules which will not be deleted in the Python 2.x series
+will generate a ``DeprecationWarning`` using the
+``warnings.warn3k()`` function.
+
+
+Renaming of modules
+-------------------
+
+Stub modules will be created which have the original names.  They
+will reside in a stdlib directory similar to the defunct ``lib-old``
+directory.  This facility prevents naming conflicts on
+case-insensitive filesystems where only the case of a module's name
+changed.
+
+The stub modules will import the module code based on the new names::
+
+  from sys import modules
+  import new_name
+  modules[__name__] = new_name
+
+As with modules to be removed in 3.0 but not in 2.x,
+``DeprecationWarning`` will be raised using the ``warnings.warn3k()``
+function.
+
+Support in the 2to3 refactoring tool for renames will also be used
+[#2to3]_.  Import statements will be rewritten so that only the import
+statement and none of the rest of the code needs to be touched.  This
+will be accomplished by using the ``as`` keyword in import statements
+to bind in the module namespace to the old name while importing based
+on the new name (when the keyword is not already used, otherwise the
+re-assigned name should be left alone and only the module that is
+imported needs to be changed). The ``fix_imports`` fixer is an
+example of how to approach this.
+
+
+Open Issues
+===========
+
+Renaming of modules maintained outside of the stdlib
+----------------------------------------------------
+
+xml.etree.ElementTree not only does not meet PEP 8 naming standards
+but it also has an exposed C implementation [#pep-0008]_.  It is an
+externally maintained package, though [#pep-0360]_.  A request will be
+made for the maintainer to change the name so that it matches PEP 8
+and hides the C implementation.
+
+
+Rejected Ideas
+==============
+
+Modules that were originally suggested for removal
+--------------------------------------------------
+
+* asynchat/asyncore
+
+  + Josiah Carlson has said he will maintain the modules.
+
+* audioop/sunau/aifc
+
+   + Audio modules where the formats are still used.
+
+* base64/quopri/uu
+
+  + All still widely used.
+  + 'codecs' module does not provide as nice of an API for basic
+    usage.
+
+* fileinput
+
+  + Useful when having to work with stdin.
+
+* linecache
+
+   + Used internally in several places.
+
+* nis
+
+  + Testimonials from people that new installations of NIS are still
+    occurring
+
+* getopt
+
+  + Simpler than optparse.
+
+* repr
+
+  + Useful as a basis for overriding.
+  + Used internally.
+
+* sched
+
+  + Useful for simulations.
+
+* telnetlib
+
+  + Really handy for quick-and-dirty remote access.
+  + Some hardware supports using telnet for configuration and
+    querying.
+
+* Tkinter
+
+  + Would prevent IDLE from existing.
+  + No GUI toolkit would be available out of the box.
+
+
+Introducing a new top-level package
+-----------------------------------
+
+It has been suggested that the entire stdlib be placed within its own
+package.  This PEP will not address this issue as it has its own
+design issues (naming, does it deserve special consideration in import
+semantics, etc.).  Everything within this PEP can easily be handled if
+a new top-level package is introduced.
+
+
+Introducing new packages to contain theme-related modules
+---------------------------------------------------------
+
+During the writing of this PEP it was noticed that certain themes
+appeared in the stdlib.  In the past people have suggested introducing
+new packages to help collect modules that share a similar theme (e.g.,
+audio).  An Open Issue was created to suggest some new packages to
+introduce.
+
+In the end, though, not enough support could be pulled together to
+warrant moving forward with the idea.  Instead name simplification has
+been chosen as the guiding force for PEPs to create.
+
+
+References
+==========
+
+.. [#pep-0004] PEP 4: Deprecation of Standard Modules
+    (http://www.python.org/dev/peps/pep-0004/)
+
+.. [#pep-0008] PEP 8: Style Guide for Python Code
+    (http://www.python.org/dev/peps/pep-0008/)
+
+.. [#pep-0324] PEP 324: subprocess -- New process module
+    (http://www.python.org/dev/peps/pep-0324/)
+
+.. [#pep-0360] PEP 360: Externally Maintained Packages
+    (http://www.python.org/dev/peps/pep-0360/)
+
+.. [#module-index] Python Documentation: Global Module Index
+    (http://docs.python.org/modindex.html)
+
+.. [#timing-module] Python Library Reference: Obsolete
+    (http://docs.python.org/lib/obsolete-modules.html)
+
+.. [#silly-old-stuff] Python-Dev email: "Py3k release schedule worries"
+    (http://mail.python.org/pipermail/python-3000/2006-December/005130.html)
+
+.. [#thread-deprecation] Python-Dev email: Autoloading?
+    (http://mail.python.org/pipermail/python-dev/2005-October/057244.html)
+
+.. [#py-dev-summary-2004-11-01] Python-Dev Summary: 2004-11-01
+    (http://www.python.org/dev/summary/2004-11-01_2004-11-15/#id10)
+
+.. [#2to3] 2to3 refactoring tool
+    (http://svn.python.org/view/sandbox/trunk/2to3/)
+
+.. [#pyopengl] PyOpenGL
+    (http://pyopengl.sourceforge.net/)
+
+.. [#pil] Python Imaging Library (PIL)
+    (http://www.pythonware.com/products/pil/)
+
+.. [#twisted] Twisted
+    (http://twistedmatrix.com/trac/)
+
+.. [#irix-retirement] SGI Press Release:
+    End of General Availability for MIPS IRIX Products -- December 2006
+    (http://www.sgi.com/support/mips_irix.html)
+
+.. [#irix-forms] FORMS Library by Mark Overmars
+    (ftp://ftp.cs.ruu.nl/pub/SGI/FORMS)
+
+.. [#sun-au] Wikipedia: Au file format
+    (http://en.wikipedia.org/wiki/Au_file_format)
+
+.. [#appscript] appscript
+    (http://appscript.sourceforge.net/)
+
+.. [#ast] _ast module
+    (http://docs.python.org/lib/ast.html)
+
+.. [#ast-removal] python-dev email: getting compiler package failures
+    (http://mail.python.org/pipermail/python-3000/2007-May/007615.html)
+
+
+.. _PyPI: http://pypi.python.org/
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+
+
+..
+   Local Variables:
+   mode: indented-text
+   indent-tabs-mode: nil
+   sentence-end-double-space: t
+   fill-column: 70
+   coding: utf-8
+   End:

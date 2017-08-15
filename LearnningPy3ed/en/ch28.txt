@@ -1,0 +1,345 @@
+Chapter 28
+Chapter 28
+28Exception Objects
+So far, I've been deliberately vague about what an exception actually is. Python generalizes the notion of exceptions-as mentioned in the prior chapter, they may be identified by string objects or class instance objects; class instance objects are preferred today, and will be required soon. Both approaches have merits, but classes tend to provide a better solution when it comes to maintaining exception hierarchies. 
+In short, class-based exceptions allow us to build exceptions that are organized into categories, have attached state information, and support inheritance. In more detail, compared to the older string exception model, class exceptions:
+	*	Better support future changes by providing categories-adding new exceptions in the future won't generally require changes in try statements.
+	*	Provide a natural place for us to store context information for use in the try handler-they may have both attached state information and callable methods, accessible through instances.
+	*	Allow exceptions to participate in inheritance hierarchies to obtain common behavior-inherited display methods, for example, can provide a common look and feel for error messages.
+Because of these differences, class-based exceptions support program evolution and larger systems better than string-based exceptions. String exceptions may seem easier to use at first glance, when programs are small, but they can become more difficult when programs grow large. In fact, all built-in exceptions are identified by classes, and are organized into an inheritance tree, for the reasons just listed. You can do the same with user-defined exceptions. 
+In the interest of backward compatibility, I'll present both string and class-based exceptions here. Both currently work, but string exceptions generate deprecation warnings in the current release of Python (2.5), and will no longer be supported at all in Python 3.0. We'll cover them here because they are likely to appear in existing code you encounter, but new exceptions you define should be coded as classes today, partly because classes are better, but also because you probably won't want to change your exception code when Python 3.0 is rolled out.
+String-Based Exceptions
+In all the examples we've seen up to this point, user-defined exceptions have been coded as strings. This is the simpler way to code an exception. For example:
+>>> myexc = "My exception string"
+>>> try:
+...     raise myexc
+... except myexc:
+...     print 'caught'
+...
+caught
+Any string value can be used to identify an exception. Technically, the exception is identified by the string object, not the string value-you must use the same variable (i.e., reference) to raise and catch the exception (I'll expand on this idea in a gotcha at the conclusion of Part VII). Here, the exception name, myexc, is just a normal variable-it can be imported from a module, and so on. The text of the string is almost irrelevant, except that it is printed as the exception message:
+>>> raise myexc
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+My exception string
+
+If your string exceptions may print like this, you'll want to use more meaningful text than most of the examples shown in this book.
+
+String Exceptions Are Right Out!
+As mentioned earlier, string-based exceptions still work, but they generate warnings as of Python 2.5, and are scheduled to go away completely in Python 3.0, if not earlier. In fact, here is the real output of the preceding code when run in IDLE under Python 2.5: 
+>>> myexc = 'My exception string'
+>>> try:
+        raise myexc
+    except myexc:
+        print 'caught'
+
+Warning (from warnings module):
+  File "_  _main_  _", line 2
+DeprecationWarning: raising a string exception is deprecated
+caught
+You can disable such warnings, but they are generated to let you know that string exceptions will become errors in the future, and thus will be completely disallowed. This book's coverage of string exceptions is retained just to help you understand code written in the past; today, all built-in exceptions are class instances, and all user-defined exceptions you create should be class-based as well. The next section explains why.
+Class-Based Exceptions
+Strings are a simple way to define exceptions. As described earlier, however, classes have some added advantages that merit a quick look. Most prominently, they allow you to identify exception categories that are more flexible to use and maintain than simple strings. Moreover, classes naturally allow for attached exception details and support inheritance. Because they are the better approach, they will soon be the required approach.
+Coding details aside, the chief difference between string and class exceptions has to do with the way that exceptions raised are matched against except clauses in try statements:
+	*	String exceptions are matched by simple object identity: the raised exception is matched to except clauses by Python's is test (not ==).
+	*	Class exceptions are matched by superclass relationships: the raised exception matches an except clause if that except clause names the exception's class or any superclass of it.
+That is, when a try statement's except clause lists a superclass, it catches instances of that superclass, as well as instances of all its subclasses lower in the class tree. The net effect is that class exceptions support the construction of exception hierarchies: superclasses become category names, and subclasses become specific kinds of exceptions within a category. By naming a general exception superclass, an except clause can catch an entire category of exceptions-any more specific subclass will match. 
+In addition to this category idea, class-based exceptions better support exception state information (attached to instances), and allow exceptions to participate in inheritance hierarchies (to obtain common behaviors). They offer a more powerful alternative to string-based exceptions for a small amount of additional code.
+Class Exception Example
+Let's look at an example to see how class exceptions work in code. In the following file, classexc.py, we define a superclass called General and two subclasses called Specific1 and Specific2. This example illustrates the notion of exception categories-General is a category name, and its two subclasses are specific types of exceptions within the category. Handlers that catch General will also catch any subclasses of it, including Specific1 and Specific2:
+class General:            pass
+class Specific1(General): pass
+class Specific2(General): pass
+
+def raiser0(  ):
+    X = General(  )          # Raise superclass instance
+    raise X
+
+def raiser1(  ):
+    X = Specific1(  )        # Raise subclass instance
+    raise X
+
+def raiser2(  ):
+    X = Specific2(  )        # Raise different subclass instance
+    raise X
+
+for func in (raiser0, raiser1, raiser2):
+    try:
+        func(  )
+    except General:        # Match General or any subclass of it
+        import sys
+        print 'caught:', sys.exc_info(  )[0]
+
+C:\python> python classexc.py
+caught: _  _main_  _.General
+caught: _  _main_  _.Specific1
+caught: _  _main_  _.Specific2
+We'll revisit the sys.exc_info call used here in the next chapter-it's how we can grab hold of the most recently raised exception in a generic fashion. Briefly, for class-based exceptions, the first item in its result is the class of the exception raised, and the second is the actual instance raised. Apart from this method, there is no other way to determine exactly what happened in an empty except clause like this one that catches everything.
+Notice that we call classes to make instances in the raise statements here; as we'll see when we formalize raise statement forms later in this section, an instance is always present when raising a class-based exception. This code also includes functions that raise instances of all three of our classes as exceptions, as well as a top-level try that calls the functions, and catches General exceptions (the same try also catches the two specific exceptions, because they are subclasses of General).
+One more note: the current Python documentation states that it is preferred (though not required) that user-defined exception classes inherit from the built-in exception named Exception. To do this, we would rewrite the first line of our classexc.py file as follows:
+class General(Exception): pass
+class Specific1(General): pass
+class Specific2(General): pass
+Although this isn't required, and standalone exception classes work fine today, preferred things have a way of becoming requirements in Python over time. If you want to future-proof your code, inherit from Exception in your root superclass, as shown here. Doing so also provides your class with some useful interfaces and tools for free, by inheritance-for example, the Exception class comes with _  _init_  _ constructor logic, which automatically attaches constructor arguments to class instances. 
+Why Class Exceptions?
+Because there are only three possible exceptions in the prior section's example, it doesn't really do justice to the utility of class exceptions. In fact, we could achieve the same effects by coding a list of string exception names in parentheses within the except clause. The file stringexc.py shows how:
+General   = 'general'
+Specific1 = 'specific1'
+Specific2 = 'specific2'
+
+def raiser0(  ): raise General
+def raiser1(  ): raise Specific1
+def raiser2(  ): raise Specific2
+
+for func in (raiser0, raiser1, raiser2):
+    try:
+        func(  )
+    except (General, Specific1, Specific2):     # Catch any of these
+        import sys
+        print 'caught:', sys.exc_info(  )[0]
+
+C:\python> python stringexc.py
+caught: general
+caught: specific1
+caught: specific2
+For large or high exception hierarchies, however, it may be easier to catch categories using classes than to list every member of a category in a single except clause. Moreover, you can extend exception hierarchies by adding new subclasses without breaking existing code.
+Suppose you code a numeric programming library in Python, to be used by a large number of people. While you are writing your library, you identify two things that can go wrong with numbers in your code-division by zero, and numeric overflow. You document these as the two exceptions that your library may raise, and define them as simple strings in your code:
+# mathlib.py
+
+divzero = 'Division by zero error in library'
+oflow   = 'Numeric overflow error in library'
+...
+def func(  ):
+    ...
+    raise divzero
+Now, when people use your library, they will typically wrap calls to your functions or classes in try statements that catch your two exceptions (if they do not catch your exceptions, exceptions from the library kill their code):
+# client.py
+
+import mathlib
+...
+try:
+    mathlib.func(...)
+except (mathlib.divzero, mathlib.oflow):
+    ...report and recover...
+This works fine, and lots of people start using your library. Six months down the road, though, you revise it. Along the way, you identify a new thing that can go wrong-underflow-and add that as a new string exception:
+# mathlib.py
+
+divzero = 'Division by zero error in library'
+oflow   = 'Numeric overflow error in library'
+uflow   = 'Numeric underflow error in library'
+Unfortunately, when you rerelease your code, you create a maintenance problem for your users. If they've listed your exceptions explicitly, they now have to go back and change every place they call your library to include the newly added exception name:
+# client.py
+
+try:
+    mathlib.func(...)
+except (mathlib.divzero, mathlib.oflow, mathlib.uflow):
+    ...report and recover...
+This may not be the end of the world. If your library is used only in-house, you can make the changes yourself. You might also ship a Python script that tries to fix such code automatically (it would probably be only a few dozen lines, and it would guess right at least some of the time). If many people have to change their code each time you alter your exception set, though, this is not exactly the most polite of upgrade policies.
+Your users might try to avoid this pitfall by coding empty except clauses to catch all possible exceptions:
+# client.py
+
+try:
+    mathlib.func(...)
+except:                           # Catch everything here
+    ...report and recover...
+But this workaround might catch more than they bargained for-even things like variable name typos, memory errors, and system exits trigger exceptions, and you want such things to pass, not be caught and erroneously classified as library errors. As a rule of thumb, it's usually better to be specific than general in exception handlers (an idea we'll revisit in the gotchas section in the next chapter).
+So what to do, then? Class exceptions fix this dilemma completely. Rather than defining your library's exceptions as a simple set of strings, arrange them into a class tree with a common superclass to encompass the entire category:
+# mathlib.py
+
+class NumErr(Exception): pass
+class Divzero(NumErr): pass
+class Oflow(NumErr): pass
+...
+def func(  ):
+    ...
+    raise DivZero(  )
+This way, users of your library simply need to list the common superclass (i.e., category) to catch all of your library's exceptions, both now and in the future:
+# client.py
+
+import mathlib
+...
+try:
+    mathlib.func(...)
+except mathlib.NumErr:
+    ...report and recover...
+When you go back and hack your code again, new exceptions are added as new subclasses of the common superclass:
+# mathlib.py
+
+...
+class Uflow(NumErr): pass
+The end result is that user code that catches your library's exceptions will keep working, unchanged. In fact, you are free to add, delete, and change exceptions arbitrarily in the future-as long as clients name the superclass, they are insulated from changes in your exceptions set. In other words, class exceptions provide a better answer to maintenance issues than strings do. Moreover, class-based exceptions can support state retention and inheritance in ways that strings cannot-concepts we'll explore by example later in this chapter.
+Built-in Exception Classes
+I didn't really pull the prior section's examples out of thin air. Although user-defined exceptions may be identified by string or class objects, all built-in exceptions that Python itself may raise are predefined class objects instead of strings. Moreover, they are organized into a shallow hierarchy with general superclass categories and specific subclass types, much like the exceptions class tree we developed earlier.
+All the familiar exceptions you've seen (e.g., SyntaxError) are really just predefined classes, available both as built-in names (in the module _  _builtin_  _), and as attributes of the standard library module exceptions. In addition, Python organizes the built-in exceptions into a hierarchy, to support a variety of catching modes. For example:
+Exception
+The top-level root superclass of exceptions.
+StandardError
+The superclass of all built-in error exceptions.
+ArithmeticError
+The superclass of all numeric errors.
+OverflowError
+A subclass that identifies a specific numeric error.
+And so on-you can read further about this structure in either the Python library manual, or the help text of the exceptions module (see Chapters 4 and 14 for help on help):
+>>> import exceptions
+>>> help(exceptions)
+...lots of text omitted...
+The built-in class tree allows you to choose how specific or general your handlers will be. For example, the built-in exception ArithmeticError is a superclass for more specific exceptions such as OverflowError and ZeroDivisionError. By listing ArithmeticError in a try, you will catch any kind of numeric error raised; by listing just OverflowError, you will intercept just that specific type of error, and no others.
+Similarly, because StandardError is the superclass of all built-in error exceptions, you can generally use it to select between built-in errors and user-defined exceptions in a try:
+try:
+    action(  )
+except StandardError:
+    ...handle Python errors...
+except:
+    ...handle user exceptions...
+else:
+    ...handle no-exception case...
+You can also almost simulate an empty except clause (that catches everything) by catching the root class Exception. This doesn't quite work, however, because it won't catch string exceptions, and standalone user-defined exceptions are not currently required to be subclasses of the Exception root class. 
+Whether or not you will use categories in the built-in class tree, it serves as a good example; by using similar techniques for class exceptions in your own code, you can provide exception sets that are flexible and easily modified.
+Other than in the respects that we have covered here, built-in exceptions are largely indistinguishable from the original string-based model. In fact, you normally don't need to care that they are classes unless you assume built-in exceptions are strings and try to concatenate without converting (e.g., KeyError + "spam" fails, but str(KeyError) + "spam" works).
+Specifying Exception Text
+When we met string-based exceptions at the start of this chapter, we saw that the text of the string shows up in the standard error message when the exception is not caught (i.e., when it's propagated up to the top-level default exception handler). But what does this message contain for an uncaught class exception? By default, you get the class' name, and a not very pretty display of the instance object that was raised:
+>>> class MyBad: pass
+>>> raise MyBad(  )
+
+Traceback (most recent call last):
+  File "<pyshell#13>", line 1, in <module>
+    raise MyBad(  )
+MyBad: <_  _main_  _.MyBad instance at 0x00BB5468>
+To improve this display, define either the _  _repr_  _ or _  _str_  _ string-representation overloading method in your class to return the string you want to display for your exception if it reaches the default handler:
+>>> class MyBad:
+...     def _  _repr_  _(self):
+...         return "Sorry--my mistake!"
+... 
+>>> raise MyBad(  )
+
+Traceback (most recent call last):
+  File "<pyshell#28>", line 1, in <module>
+    raise MyBad(  )
+MyBad: Sorry--my mistake!
+As we learned earlier, the _  _repr_  _ operator overloading method used here is called for printing and for string conversion requests made to your class' instances; _  _str_  _ defines the user-friendly display preferred by print statements. (See "Operator Overloading" in Chapter 24 for more on display-string methods.)
+Note that if we inherit from built-in exception classes, as recommended earlier, the error test is modified slightly-constructor arguments are automatically saved and displayed in the message:
+>>> class MyBad(Exception): pass
+>>> raise MyBad(  )
+
+Traceback (most recent call last):
+  File "<pyshell#18>", line 1, in <module>
+    raise MyBad(  )
+MyBad
+
+>>> class MyBad(Exception): pass
+>>> raise MyBad('the', 'bright', 'side', 'of', 'life')
+
+Traceback (most recent call last):
+  File "<pyshell#22>", line 1, in <module>
+    raise MyBad('the', 'bright', 'side', 'of', 'life')
+MyBad: ('the', 'bright', 'side', 'of', 'life')
+If your end users might see exception error messages, you will probably want to define your own custom display format methods with operator overloading, as shown here. Being able to automatically attach state information to instances like this, though, is a generally useful feature, as the next section explores.
+Sending Extra Data and Behavior in Instances
+Besides supporting flexible hierarchies, class exceptions also provide storage for extra state information as instance attributes. When a class-based exception is raised, Python automatically passes the class instance object along with the exception as the extra data item. As for string exceptions, you can access the raised instance by listing an extra variable back in the try statement. This provides a natural hook for supplying data and behavior to the handler.
+Example: Extra data with classes and strings
+Let's explore the notion of passing extra data with an example, and compare the string- and class-based approaches along the way. A program that parses data files might signal a formatting error by raising an exception instance that is filled out with extra details about the error:
+>>> class FormatError:
+...     def _  _init_  _(self, line, file):
+...         self.line = line
+...         self.file = file
+...
+>>> def parser(  ):
+...     # when error found
+...     raise FormatError(42, file='spam.txt')
+... 
+>>> try:
+...     parser(  )
+... except FormatError, X:
+...     print 'Error at', X.file, X.line
+...
+Error at spam.txt 42
+In the except clause here, the variable X is assigned a reference to the instance that was generated when the exception was raised. In practice, though, this isn't noticeably more convenient than passing compound objects (e.g., tuples, lists, or dictionaries) as extra data with string exceptions, and may not by itself be a compelling enough reason to warrant class-based exceptions. Here's the string-based equivalent:
+>>> formatError = 'formatError'
+
+>>> def parser(  ):
+...     # when error found
+...     raise formatError, {'line':42, 'file':'spam.txt'}
+...
+>>> try:
+...     parser(  )
+... except formatError, X:
+...     print 'Error at', X['file'], X['line']
+...
+Error at spam.txt 42
+This time, the variable X in the except clause is assigned the dictionary of extra details listed in the raise statement. The net effect is similar, but we don't have to code a class along the way. The class approach might be more convenient, however, if the exception should also have behavior. The exception class can also define methods to be called in the handler:
+class FormatError:
+    def _  _init_  _(self, line, file):
+        self.line = line
+        self.file = file
+    def logerror(self):
+        log = open('formaterror.txt', 'a')
+        print >> log, 'Error at', self.file, self.line
+
+def parser(  ):
+    raise FormatError(40, 'spam.txt')
+
+try:
+    parser(  )
+except FormatError, exc:
+    exc.logerror(  )
+In such a class, methods (like logerror) may also be inherited from superclasses, and instance attributes (like line and file) provide a place to save state information that provides extra context for use in later method calls. We can mimic much of this effect by passing simple functions in the string-based approach, but the complexity of the code is substantially increased:
+formatError = "formatError"
+
+def logerror(line, file):
+    log = open('formaterror.txt', 'a')
+    print >> log, 'Error at', file, line
+
+def parser(  ):
+    raise formatError, (41, 'spam.txt', logerror)
+
+try:
+    parser(  )
+except formatError, data:
+    data[2](data[0], data[1])        # Or simply: logerror(  )
+Naturally, such functions would not participate in inheritance like class methods do, and would not be able to retain state in instance attributes (lambdas and global variables are usually the best we can do for stateful functions). We could, of course, pass a class instance in the extra data of the string-based exception to achieve the same effect, but if we went this far to mimic class-based exceptions, we might as well adopt them-we'd be coding a class anyhow.
+As mentioned previously, class exceptions will be required in a future version of Python. But, even if that were not the case, there are good reasons to use them today. In general, string-based exceptions are simpler tools for simpler tasks. Class-based exceptions, however, are useful for defining categories, and they are preferable for advanced applications that can benefit from state retention and attribute inheritance. Not every application requires the power of OOP, but the extra utility of class exceptions will become more apparent as your systems evolve and expand.
+General raise Statement Forms
+With the addition of class-based exceptions, the raise statement can take the following five forms. The first two raise string exceptions, the next two raise class exceptions, and the last reraises the current exception (useful if you need to propagate an arbitrary exception):
+raise string            # Matches except with same string object
+raise string, data      # Passes optional extra data (default=None)
+
+raise instance          # Same as: raise instance._  _class_  _, instance
+raise class, instance   # Matches except with this class or its superclass
+
+raise                   # Reraises the current exception
+The third of these is the most commonly used form today. For class-based exceptions, Python always requires an instance of the class. Raising an instance really raises the instance's class; the instance is passed along with the class as the extra data item (as we've seen, it's a good place to store information for the handler). For backward compatibility with Python versions in which built-in exceptions were strings, you can also use these forms of the raise statement:
+raise class                     # Same as: raise class(  )
+raise class, arg                # Same as: raise class(arg)
+raise class, (arg, arg, ...)    # Same as: raise class(arg, arg, ...)
+These are all the same as saying raise class(arg...), and therefore the same as the raise instance form above. Specifically, if you list a class instead of an instance, and the extra data item is not an instance of the class listed, Python automatically calls the class with the extra data items as constructor arguments to create and raise an instance for you.
+For example, you can raise an instance of the built-in KeyError exception by saying simply raise KeyError, even though KeyError is now a class; Python calls KeyError to make an instance along the way. In fact, you can raise a KeyError, and any other class-based exception, in a variety of ways:
+raise KeyError(  )              # Normal form: raise an instance
+raise KeyError, KeyError(  )    # Class, instance: use instance
+raise KeyError                  # Class: an instance will be generated
+raise KeyError, "bad spam"      # Class, arg: an instance will be generated
+For all of these raise forms, a try statement of the form:
+try:
+    ...
+except KeyError, X:
+    ...
+assigns X to the KeyError instance object raised.
+If that sounds confusing, just remember that exceptions may be identified by string or class instance objects. For strings, you may pass extra data with the exception or not. For classes, if there is no instance object in the raise statement, Python makes an instance for you.
+In Python 2.5, you can almost ignore the string forms of raise altogether because string-based exceptions generate warnings, and will be disallowed in a future release. But alas, backward compatibility still counts in books that teach a programming language being used by more than one million people today!
+Chapter Summary
+In this chapter, we tackled coding user-defined exceptions. As we learned, exceptions may be implemented as string objects or class instance objects; however, class instances are preferred today, and will be required in a future version of Python. Class exceptions are preferable because they support the concept of exception hierarchies (and are thus better for maintenance), allow data and behavior to be attached to exceptions as instance attributes and methods, and allow exceptions to inherit data and behavior from superclasses. 
+We saw that in a try statement, catching a superclass catches that class, as well as all subclasses below it in the class tree-superclasses become exception category names, and subclasses become more specific exception types within those categories. We also saw that the raise statement has been generalized to support a variety of formats, though most programs today simply generate and raise class instances.
+Although we explored both string and class-based alternatives in this chapter, exception objects are easier to remember if you limit your scope to the class-based model Python encourages today-code each exception as a class, and inherit from Exception at the top of your exception trees, and you can forget the older string-based alternative. 
+The next chapter wraps up this part of the book and the book at large by exploring some common use cases for exceptions, and surveying commonly used tools for Python programmers. Before we get there, though, here's this chapter's quiz.
+Brain Builder
+Chapter Quiz
+	1.	How are raised string-based exceptions matched to handlers?
+	2.	How are raised class-based exceptions matched to handlers?
+	3.	How can you attach context information to class-based exceptions, and use it in handlers?
+	4.	How can you specify the error message text in class-based exceptions?
+	5.	Why should you not use string-based exceptions anymore today?
+Quiz Answers
+	1.	String-based exceptions match by object identity (technically, via the is expression), not by object value (the == expression). Hence, naming the same string value might not work; you need to name the same object reference (usually a variable). Short strings are cached and reused in Python, so naming the same value might work occasionally, but you can't rely on this (more on this in a "gotcha" at the end of the next chapter).
+	2.	Class-based exceptions match by superclass relationships: naming a superclass in an exception handler will catch instances of that class, as well as instances of any of its subclasses lower in the class tree. Because of this, you can think of superclasses as general exception categories, and subclasses as more specific exception types within those categories. 
+	3.	You attach context information to class-based exceptions by filling out instance attributes in the instance object raised, often in class constructor methods. In exception handlers, you list a variable to be assigned to the raised instance, then go through this name to access attached state information, and call any inherited class methods.
+	4.	The error message text in class-based exceptions can be specified with the _  _repr_  _ or _  _str_  _ operator overloading methods. If you inherit from the built-in Exception class, anything you pass to the class constructor is displayed automatically.
+	5.	Because Guido said so-they are scheduled to go away in a future Python release. Really, there are good reasons for this: string-based exceptions do not support categories, state information, or behavior inheritance in the way class-based exceptions do. In practice, this makes string-based exceptions easier to use at first, when programs are small, but more complex to use as programs grow larger. 

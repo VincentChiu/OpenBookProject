@@ -1,0 +1,65 @@
+for...in循环
+===============
+在Python语言中，你可以通过使用循环来遍历对象：
+
+::
+
+	>>> a = [0, 1, 'hello', 'python']
+	>>> for i in a:
+		     print i
+	0
+	1
+	hello
+	python
+
+一个常用的快捷方式叫xrange，它可以遍历没有预先保存内容的列表。
+
+::
+
+	>>> for i in xrange(0, 4):
+			 print i
+	0
+	1
+	2
+	3
+
+这一用法相当于C/C++/C#/Java以下句法：
+
+::
+
+	for(int i=0; i<4; i=i+1) { print(i); }
+
+另一个很有用的命令是enumerate，在循环的同时能够计数：
+
+::
+
+	>>> a = [0, 1, 'hello', 'python']
+	>>> for i,j in enumerate(a):
+			 print i,j
+	0 0
+	1 1
+	2 hello
+	3 python
+
+还有一个关键字range(a, b, c)可以返回一列整数，从值a开始，递增c，结束值小于b，其中a的默认值是0，c的默认值是1。xrange虽然用法同之前的例子类似，但是并不会真正生成列表，只是生成一个列表的迭代器而已。因此对于循环来说这一方法更好。
+
+你可以通过break来跳出循环：
+
+::
+
+	>>> for i in[1, 2, 3]:
+			 print i
+			 break
+	1
+
+通过使用continue，你还可以不执行完全部循环体就进行下一次循环：
+
+::
+
+	>>> for i in[1, 2, 3]:
+			 print i
+			 continue
+			 print 'test'
+	1
+	2
+	3

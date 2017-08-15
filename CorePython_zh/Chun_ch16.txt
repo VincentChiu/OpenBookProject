@@ -1,0 +1,2203 @@
+﻿Network Programming
+网络编程
+
+Chapter Topics
+本章主题
+	Introduction: Client/Server Architecture
+	Sockets: Communication Endpoints
+	Socket Addresses
+	Connection-Oriented versus Connectionless Sockets
+	Network Programming in Python
+	socket Module
+	Socket Object Methods
+	TCP/IP Client and Server
+	UDP/IP Client and Server
+	SocketServer Module
+	Introduction to the Twisted Framework
+	Related Modules
+
+	引言：客户/服务器架构
+	套接字：通信终点
+	面向连接与无连接套接字
+	Python中的网络编程
+	Socket模块
+	套接字对象方法
+	TCP/IP客户端和服务器
+	UDP/IP客户端和服务器
+	SocketServer模块
+	Twisted框架介绍
+	相关模块
+
+16
+in this section, we will take a brief look at network programming using
+sockets. We will first present some background information on network
+programming, how sockets apply to Python, and then show you how to use some of
+Python’s modules to build networked applications.
+在本节中，我们将简要的介绍如何使用套接字进行网络编程。首先，我们将给出一些
+网络编程方面的背景资料和Python中使用套接字的方法，然后介绍如何使用Python
+的一些模块来创建网络化的应用程序。
+
+16.1  Introduction
+16.1 介绍
+
+16.1.1 What Is Client/Server Architecture?
+16.1.1 什么是客户／服务器架构？
+
+What is client/server architecture? It means different things to different
+people, depending on whom you ask as well as whether you are describing a
+software or a hardware system. In either case, the premise is simple: The
+server, a piece of hardware or software, is providing a “service” that is
+needed by one or more clients, users of the service. Its sole purpose of
+existence is to wait for (client) requests, service those clients, then wait
+for more requests.
+什么是客户／服务器架构？不同的人有不同的答案。这要看你问的是什么人，以及指的
+是软件系统还是硬件系统了。但是，有一点是共通的：服务器是一个软件或硬件，用于
+提供客户需要的“服务”。服务器存在的唯一目的就是等待客户的请求，给这些客户服务，
+然后再等待其它的请求。
+
+Clients, on the other hand, contact a (predetermined) server for a particular
+request, send over any necessary data, and wait for the server to reply, either
+completing the request or indicating the cause of failure. While the server
+runs indefinitely processing requests, clients make a one-time request for
+service, receive that service, and thus conclude their transaction. A client
+may make additional requests at some later time, but these are considered
+separate transactions.
+另一方面，客户连上一个（预先已知的）服务器，提出自己的请求，发送必要的数据，然后
+就等待服务器的完成请求或说明失败原因的反馈。服务器不停地处理外来的请求，而客户一
+次只能提出一个服务的请求，等待结果。然后结束这个事务。客户之后也可以再提出其
+它的请求，只是，这个请求会被视为另一个不同的事务了。
+
+
+The Internet
+Internet
+
+Client	Server
+客户／服务器
+
+Figure 16–1   Typical conception of a client/server system on the Internet
+图16-1 Internet上典型的客户／服务器概念。
+
+
+The most common notion of “client/server” today is illustrated in Figure 16–1.
+A user or client computer is retrieving information from a server across the
+Internet. Although such a system is indeed an example of a client/server
+architecture, it isn’t the only one. Furthermore, client/server architecture
+can be applied to computer hardware as well as software.
+图16-1展示了如今最常见的客户／服务器结构。一个用户或客户电脑通过Internet从
+服务器上取数据。这的确是一个客户／服务器架构的系统，但还有更多类似的系统
+满足客户／服务器架构。而且，客户／服务器架构也可以应用到电脑硬件上。
+
+Hardware Client/Server Architecture
+硬件的客户／服务器架构
+
+Print(er) servers are examples of hardware servers. They process incoming print
+jobs and send them to a printer (or some other printing device) attached to
+such a system. Such a computer is generally network-accessible and client
+machines would send print requests.
+打印（机）服务是一个硬件服务器的例子。它们处理打印任务，并把任务发给相连的打印机
+（或其它打印设备）。这样的电脑一般是可以通过网络访问并且客户机器可以远程发送打印
+请求给它。
+
+Another example of a hardware server is a file server. These are typically
+machines with large, generalized storage capacity, which is remotely accessible
+to clients. Client machines “mount” the disks from the server machine onto
+their local machine as if the disk itself were on the local machine. One of the
+most popular network operating systems that support file servers is Sun
+Microsystems’ Network File System (NFS). If you are accessing a networked disk
+drive and cannot tell whether it is local or on the network, then the client/
+server system has done its job. The goal is for the user experience to be
+exactly the same as a local disk—the “abstraction” is normal disk access. It is
+up to the programmed “implementation” to make it behave in such a manner.
+另一个硬件服务器的例子是文件服务器。它们一般拥有大量的存储空间，客户可以远程访问。
+客户机器可以把服务器的磁盘映射到自己本地，就像本地磁盘一样使用它们。其中，Sun
+Microsystems公司的Network File System(NFS)是使用最广泛的网络文件系统之一。如果你正在访问网络磁盘，并且区分不出是本地的还是网络上的，那客户／
+服务器系统就很好的完成了它们的工作。其目的就是要让用户使用起来感觉就像使用本地磁
+盘一样。“抽象”到一般的磁盘访问这一层上后，所有的操作都是一样的，而让所有操作都一
+样的“实现”则要依靠各自的程序了。
+
+Software Client/Server Architecture
+软件客户／服务器架构
+
+Software servers also run on a piece of hardware but do not have dedicated
+peripheral devices as hardware servers do, i.e., printers, disk drives, etc.
+The primary services provided by software servers include program execution,
+data transfer retrieval, aggregation, update, or other types of programmed or
+data manipulation.
+软件服务器也是运行在某个硬件上的。但不像硬件服务器那样，有专门的设备，如打印机，
+磁盘等。软件服务器提供的服务主要是程序的运行，数据的发送与接收，合并，升级或
+其它的程序或数据的操作。
+
+One of the more common software servers today is the Web server. A corporate
+machine is set up with Web pages and/or Web applications, then the Web server
+is started. The job of such a server is to accept client requests, send back
+Web pages to (Web) clients, i.e., browsers on users’ computers, and wait for
+the next client request. These servers are started with the expectation of
+“running forever.” Although they do not achieve that goal, they go for as long
+as possible unless stopped by some external force, i.e., explicitly shut down
+or catastrophically due to hardware failure.
+如今，最常用的软件服务器是Web服务器。一台机器里放一些网页或Web应用程序，然后启动
+服务。这样的服务器的任务就是接受客户的请求，把网页发给客户(如用户计算机上的浏览器)，
+然后等待下一个客户请求。这些服务启动后的目标就是“永远运行下去”。虽然它们不可能
+实现这样的目标，但只要没有关机或硬件出错等外力干扰，它们就能运行非常长的一段时间。
+
+Database servers are another kind of software server. They take
+client requests for either storage or retrieval, perform that service,
+then wait for more business. They are also designed to run “forever.”
+数据库服务器是另一种软件服务器。它们接受客户的保存或读取请求，完成请求，然后再等待
+其它的请求。它们也被设计为要能“永远”运行。
+
+The last type of software server we will discuss are windows servers. These
+servers can almost be considered hardware servers. They run on a machine with
+an attached display, such as a monitor of some sort. Windows clients are
+actually programs that require a windowing environment with which to execute.
+These are generally considered graphical user interface (GUI) applications. If
+they are executed without a window server, i.e., in a text-based environment
+such as a DOS window or a Unix shell, they are unable to start. Once a windows
+server is accessible, then things are fine.
+我们要讨论的最后一种软件服务器是窗口服务器。这些服务器几乎可以认为是硬件服
+务器。它们运行于一个有显示器的机器上。窗口的客户是那些在运行时需要窗口环境
+的程序，它们一般会被叫做图形界面(GUI)程序。在一个DOS窗口或Unix的shell中等没
+有窗口服务器的环境中，它们将无法启动。一旦窗口服务器可以使用时，那一切
+就正常了。
+
+Such an environment becomes even more interesting when networking comes into
+play. The usual display for a windows client is the server on the local
+machine, but it is possible in some networked windowing environments, such as
+the X Window system, to choose another machine’s window server as a display.
+In such situations, you can be running a GUI program on one machine, but have
+it displayed at another!
+当世界有了网络，那这样的环境就开始变得更有趣了。一般情况下，窗口客户的显示和
+窗口服务器的提供都在同一台电脑上。但在X Window之类的网络化的窗口环境中，你可以选
+择其它电脑的窗口服务器来做显示。即你可以在一台电脑上运行GUI程序，而在另一台电脑
+上显示它！
+
+
+Bank Tellers as Servers?
+银行出纳是服务器？
+
+One way to imagine how client/server architecture works is to create in your
+mind the image of a bank teller who neither eats, sleeps, nor rests, serving
+one customer after another in a line that never seems to end (see Figure 16–2).
+The line may be long or it may be empty on occasion, but at any given moment, a
+customer may show up. Of course, such a teller was fantasy years ago, but auto-
+mated teller machines (ATMs) seem to come close to such a model now.
+理解客户／服务器架构的一个方法是，想像一个不吃不喝，不睡觉的银行出纳，他依次向
+排成长龙的顾客们提供一个又一个的服务（图16-2）。有时，队伍可能很长，有时，也可
+能没人。但顾客随时都可能出现。当然，在以前，是不可能有这样的出纳的。但现在的ATM
+机与这个模型很像。
+
+The teller is, of course, the server that runs in an infinite loop. Each
+customer is a client with a need that requires servicing. Customers arrive and
+are serviced by the teller in a first-come-first-served manner. Once a
+transaction has been completed, the client goes away while the server either
+serves the next customer or sits and waits until one comes along.
+当然，出纳就是一个运行在无限循环里的服务器。每一个顾客就是一个想要得到服务的客户。
+顾客到了之后，就按先来先服务（FCFS）的原则得到服务。一个事务结束后，客户就离开
+了，而服务器则要么马上为下一个顾客服务，要么坐着等待下一个顾客的到来。
+
+Why is all this important? The reason is that this style of execution is how
+client/server architecture works in a general sense. Now that you have the
+basic idea, let us adapt it to network programming, which follows the software
+client/server architecture model.
+为什么这些概念那么重要？因为，这些执行的方式就是客户／服务器架构的特点。现在
+你对此已经有了大体的认识，我们就可以把客户／服务器架构模型应用到网络编程中。
+
+
+Figure 16–2  The bank teller in this diagram works “forever” serving client requests.
+图16-2 在此图中的银行出纳“永远不停歇”地为客户提供服务。
+
+The teller runs in an infinite loop receiving requests, servicing them, and
+going back to serve or wait for another client. There may be a long line of
+clients, or there may be none at all, but in either case, a server’s work is
+never done.
+出纳运行在一个接收请求，处理请求然后再处理其它请求或等待其它客户的无限循环中。
+客户有可能已经排起了长龙，也有可能根本就没有客户。但是，无论如何，服务器都
+不会结束。
+
+16.1.2 Client/Server Network Programming
+16.1.2 客户／服务器网络编程
+
+Before any servicing can be accomplished, a server must perform some pre-
+liminary setup procedures to prepare for the work that lies ahead. A commu-
+nication endpoint is created which allows a server to “listen” for requests.
+One can liken our server to a company receptionist or switchboard operator who
+answers calls on the main corporate line. Once the phone number and equipment
+are installed and the operator arrives, the service can begin.
+在完成服务之前，服务器必需要先完成一些设置动作。先要创建一个通讯端点，让服务器
+能“监听”请求。你可以把我们的服务器比做一个公司的接待员或回答公司总线电话的话务
+员，一旦电话和设备安装完成，话务员也到了之后，服务就可以开始了。
+
+This process is the same in the networked world—once a communication endpoint
+has been established, our listening server can now enter its infinite loop to
+wait for clients to connect and be serviced. Of course, we must not forget to
+put that phone number on company letterhead, in advertisements, or some sort of
+press release; otherwise, no one will ever call!
+在网络世界里，基本上也是这样——一旦通讯端点创建好之后，我们在“监听”的服务器就可
+以进入它那等待和处理客户请求的无限循环中了。当然，我们也不能忘记在信纸上，杂志
+里，广告中印上公司的电话号码。否则，就没有人会打电话进来了！
+
+On a related note, potential clients must be made aware that this server exists
+to handle their needs—otherwise, the server will never get a single request.
+Imagine creating a brand new Web site. It may be the most super-duper, awesome,
+amazing, useful, and coolest Web site of all, but if the Web address or Uniform
+Resource Locator (URL) is never broadcast or advertised in any way, no one will
+ever know about it, and it will never see the light of day. The same thing
+applies for the new telephone number of corporate headquarters. No calls will
+ever be received if the number is not made known to the public. 
+同样地，服务器在准备好之后，也要通知潜在的客户，让它们知道服务器已经准备好处理
+服务了。否则，没有人会提请求的。比方说，你建立了一个全新的网站。这个网站非常的
+出色，非常的吸引人，非常的有用，是所有网站中最酷的一个。但如果你不把网站的网址
+或者说统一资源定位符（URL）广而告之的话，没有人会知道这个网站的存在的。这个网站
+也就永远不见天日了。对于公司总部的新电话也是这样，你不把电话公之于众，那就没
+有人会打电话进来。
+
+Now you have a good idea as to how the server works. You have gotten past the
+difficult part.  The client side stuff is much more simple than on the server
+side. All the client has to do is to create its single communication endpoint,
+establish a connection to the server. The client can now make a request, which
+includes any necessary exchange of data. Once the request has been serviced and
+the client has received the result or some sort of acknowledgement,
+communication is terminated.
+现在，你对服务器如何工作已经有了一个很好的认识。你已经完成了最难的那一部分。客户
+端的编程相对服务器端来说就简单得多了。所有的客户只要创建一个通讯端点，建立到服务
+器的连接。然后客户就可以提出请求，请求中，也可以包含必要的数据交互。一旦请求处理
+完成，客户收到了结果，通讯就结束了。
+
+16.2  Sockets: Communication Endpoints
+16.2 套接字：通讯端点
+
+16.2.1 What Are Sockets?
+16.2.1 什么是套接字？
+
+Sockets are computer networking data structures that embody the concept of the
+“communication endpoint” described in the previous section. Networked
+applications must create sockets before any type of communication can commence.
+They can be likened to telephone jacks, without which engaging in communication
+is impossible.
+套接字是一种具有之前所说的“通讯端点”概念的计算机网络数据结构。网络化的应用程序
+在开始任何通讯之前都必需要创建套接字。就像电话的插口一样，没有它就完全没办法通讯。
+
+Sockets originated in the 1970s from the University of California, Berkeley
+version of Unix, known as BSD Unix. Therefore, you will sometimes hear these
+sockets referred to as “Berkeley sockets” or “BSD sockets.” Sockets were
+originally created for same-host applications where they would enable one
+running program (aka a process) to communicate with another running program.
+This is known as interprocess communication, or IPC. There are two types of
+sockets, file-based and network-oriented.
+套接字起源于20世纪70年代加利福尼亚大学伯克利分校版本的Unix，即人们所说的BSD 
+Unix。因此，有时人们也把套接字称为“伯克利套接字”或“BSD套接字”。一开始，套接字
+被设计用在同一台主机上多个应用程序之间的通讯。这也被称进程间通讯，或IPC。套接
+字有两种，分别是基于文件型的和基于网络型的。
+
+Unix sockets are the first family of sockets we are looking at and have a
+“family name” of AF_UNIX (aka AF_LOCAL, as specified in the POSIX1.g standard),
+which stands for “address family: UNIX.” Most popular platforms, including
+Python, use the term “address families” and “AF” abbreviation while other
+perhaps older systems may refer to address families as “domains” or “protocol
+families” and use “PF” rather than “AF.” Similarly, AF_LOCAL (standardized in
+2000–2001) is supposed to replace AF_UNIX, however, for backward-compatibility,
+many systems use both and just make them aliases to the same constant. Python
+itself still uses AF_UNIX.
+Unix套接字是我们要介绍的第一个套接字家族。其“家族名”为AF_UNIX(在POSIX1.g标准中
+也叫AF_LOCAL)，表示“地址家族：UNIX”。包括Python在内的大多数流行平台上都使用术
+语“地址家族”及其缩写“AF”。而老一点的系统中，地址家族被称为“域”或“协议家族”，
+并使用缩写“PF”而不是“AF”。同样的，AF_LOCAL(在2000-2001年被列为标准)将会代替
+AF_UNIX。不过，为了向后兼容，很多系统上，两者是等价的。Python自己则仍然使用
+AF_UNIX。
+
+Because both processes run on the same machine, these sockets are file-based,
+meaning that their underlying infrastructure is supported by the file system.
+This makes sense because the file system is a shared constant between processes
+running on the same host.
+由于两个进程都运行在同一台机器上，而且这些套接字是基于文件的。所以，它们的
+底层结构是由文件系统来支持的。这样做相当有道理，因为，同一台电脑上，文件系统
+的确是不同的进程都能访问的。
+
+The second type of socket is networked-based and has its own family name,
+AF_INET, or “address family: Internet.” Another address family, AF_INET6, is
+used for Internet Protocol version 6 (IPv6) addressing. There are other address
+families, all of which are either specialized, antiquated, seldom used, or
+remain unimplemented. Of all address families, AF_INET is now the most widely
+used. Support for a special type of Linux socket was introduced in Python 2.5.
+The AF_NETLINK family of (connectionless [see below]) sockets allow for IPC
+between user- and kernel-level code using the standard BSD socket interface and
+is seen as an elegant and less risky solution over previous and more cumbersome
+solutions such as adding new system calls, /proc support, or “IOCTL”s to an
+operating system.
+另一种套接字是基于网络的，它有自己的家族名字：AF_INET，或叫“地址家族：Internet”。
+还有一种地址家族AF_INET6被用于网际协议第6版（IPv6）寻址上。还有一些其它的地址
+家族，不过，它们要么是只用在某个平台上，要么就是已经被废弃，或是很少被使用，或
+是根本就还没有实现。所有地址家族中，AF_INET是使用最广泛的一个。Python 2.5中加入
+了一种Linux套接字的支持：AF_NETLINK(无连接[见下])套接字家族让用户代码与内核代码
+之间的IPC可以使用标准BSD套接字接口。而且，相对之前那些往操作系统中加入新的系统
+调用，proc文件系统支持或是“IOCTL”等笨重的方案来说，这种方法显得更为优美，更为安
+全。
+　
+?
+Python supports only the AF_UNIX, AF_NETLINK, and AF_INET families. Because of
+our focus on network programming, we will be using AF_INET for most of the
+remaining part of this chapter.
+Python只支持AF_UNIX，AF_NETLINK，和AF_INET家族。由于我们只关心网络编程，所以
+在本章的大部分时候，我们都只用AF_INET。
+
+
+16.2.2 Socket Addresses: Host-Port Pairs
+16.2.2 套接字地址：主机与端口
+
+If a socket is like a telephone jack, a piece of infrastructure that enables
+communication, then a hostname and port number are like an area code and
+telephone number combination. Having the hardware and ability to communicate
+doesn’t do any good unless you know whom and where to “dial.” An Internet
+address is comprised of a hostname and port number pair, and such an address is
+required for networked communication. It goes without saying that there should
+also be someone listening at the other end; otherwise, you get the familiar
+tones followed by “I’m sorry, that number is no longer in service. Please check
+the number and try your call again.” You have probably seen one networking
+analogy during Web surfing, for example, “Unable to contact server. Server is
+not responding or is unreachable.”
+如果把套接字比做电话的插口——即通讯的最底层结构，那主机与端口就像区号与电话号码
+的一对组合。有了能打电话的硬件还不够，你还要知道你要打给谁，往哪打。一个Internet
+地址由网络通讯所必需的主机与端口组成。而且不用说，另一端一定要有人在听才可以。
+否则，你就会听到熟悉的声音“对不起，您拨的是空号，请查对后再播”。你在上网的时候，
+可能也见过类似的情况，如“不能连接该服务器。服务器无响应或不可达”。
+
+
+Valid port numbers range from 0–65535, although those less than 1024 are
+reserved for the system. If you are using a Unix system, the list of reserved
+port numbers (along with servers/protocols and socket types) is found in the
+/etc/services file. A list of well-known port numbers is accessible at this
+Web site:
+合法的端口号范围为0到65535。其中，小于1024的端口号为系统保留端口。如果你所使用
+的是Unix操作系统，保留的端口号（及其对应的服务／协议和套接字类型）可以通过
+/etc/services文件获得。常用端口号列表可以从下面这个网站获得：
+
+http://www.iana.org/assignments/port-numbers
+
+16.2.3 Connection-Oriented versus Connectionless
+16.2.3 面向连接与无连接
+
+Connection-Oriented
+面向连接
+
+Regardless of which address family you are using, there are two different
+styles of socket connections. The first type is connection-oriented. What this
+basically means is that a connection must be established before communication
+can occur, such as calling a friend using the telephone system. This type of
+communication is also referred to as a “virtual circuit” or “stream socket.”
+Connection-oriented communication offers sequenced, reliable, and unduplicated
+delivery of data, and without record boundaries. That basically means that each
+message may be broken up into multiple pieces, which are all guaranteed to
+arrive (“exactly once” semantics means no loss or duplication of data) at their
+destination, to be put back together and in order, and delivered to the waiting
+application.
+无论你使用哪一种地址家族。套接字的类型只有两种。一种是面向连接的套接字，即在通讯
+之前一定要建立一条连接，就像跟朋友打电话时那样。这种通讯方式也被称为“虚电路”或
+“流套接字”。面向连接的通讯方式提供了顺序的，可靠的，不会重复的数据传输，而且也不
+会被加上数据边界。这也意味着，每一个要发送的信息，可能会被拆分成多份，每一份都会
+不多不少地正确到达目的地。然后被重新按顺序拼装起来，传给正在等待的应用程序。
+
+The primary protocol that implements such connection types is the Transmission
+Control Protocol (better known by its acronym TCP). To create TCP sockets, one
+must use SOCK_STREAM as the type of socket one wants to create. The SOCK_STREAM
+name for a TCP socket is based on one of its denotations as stream socket.
+Because these sockets use the Internet Protocol (IP) to find hosts in the
+network, the entire system generally goes by the combined names of both
+protocols (TCP and IP) or TCP/IP.
+实现这种连接的主要协议就是传输控制协议（即TCP）。要创建TCP套接字就得在创建的时候，
+指定套接字类型为SOCK_STREAM。TCP套接字采用SOCK_STREAM这个名字，表达了它做为流套
+接字的特点。由于这些套接字使用Internet协议（IP）来查找网络中的主机，这样形成的
+整个系统，一般会由这两个协议（TCP和IP）来提及，即TCP/IP。
+
+Connectionless
+无连接
+
+In stark contrast to virtual circuits is the datagram type of socket, which is
+connectionless. This means that no connection is necessary before communi-
+cation can begin. Here, there are no guarantees of sequencing, reliability, or
+non-duplication in the process of data delivery. Datagrams do preserve record
+boundaries, however, meaning that entire messages are sent rather than being
+broken into pieces first, like connection-oriented protocols.
+与虚电路完全相反的是数据报型的无连接套接字。这意味着，无需建立连接就可以进行通
+讯。但这时，数据到达的顺序，可靠性及数据不重复性就无法保证了。数据报会保留数据
+边界，这就表示，数据不会像面向连接的协议那样被拆分成小块。
+
+Message delivery using datagrams can be compared to the postal service. Letters
+and packages may not arrive in the order they were sent. In fact, they might
+not arrive at all! To add to the complication, in the land of networking,
+duplication of messages is even possible.
+使用数据报来传输数据就像邮政服务一样。邮件和包裹不一定会按它们发送的顺序到达。
+事实上，它们还有可能根本到不了！而且，由于网络的复杂性，数据还可能被重复传送。
+
+So with all this negativity, why use datagrams at all? (There must be some
+advantage over using stream sockets!) Because of the guarantees provided by
+connection-oriented sockets, a good amount of overhead is required for their
+setup as well as in maintaining the virtual circuit connection. Datagrams do
+not have this overhead and thus are “less expensive.” They usually provide
+better performance and may be suitable for some types of applications.
+既然数据报有这么多缺点，为什么还要使用它呢？（一定有什么方面能胜过流套接字的！）
+由于面向连接套接字要提供一些保证，以及要维持虚电路连接，这都是很重的额外负担。
+数据报没有这些负担，所以它更“便宜”。通常能提供更好的性能，更适合某些应用场合。
+
+The primary protocol that implements such connection types is the User Datagram
+Protocol (better known by its acronym UDP). To create UDP sockets, we must use
+SOCK_DGRAM as the type of socket we want to create. The SOCK_DGRAM name for a
+UDP socket, as you can probably tell, comes from the word “datagram.” Because
+these sockets also use the Internet Protocol to find hosts in the network, this
+system also has a more general name, going by the combined names of both of
+these protocols (UDP and IP), or UDP/IP.
+实现这种连接的主要协议就是用户数据报协议（即UDP）。要创建UDP套接字就得在创建的
+时候，指定套接字类型为SOCK_DGRAM。SOCK_DGRAM这个名字，也许你已经猜到了，来自于
+单词“datagram”（“数据报”）。由于这些套接字使用Internet协议来查找网络中的主
+机，这样形成的整个系统，一般会由这两个协议（UDP和IP）来提及，即UDP/IP。
+
+
+16.3 Network Programming in Python
+16.3 Python中的网络编程
+
+Now that you know all about client/server architecture, sockets, and
+networking, let us try to bring this concept to Python. The primary module we
+will be using in this section is the socket module. Found within this module is
+the socket() function, which is used to create socket objects. Sockets also
+have their own set of methods, which enable socket-based network communication.
+现在，你已经有了足够的客户／服务器，套接字和网络方面的知识。我们现在就开始把这
+些概念带到Python中来。本节中，我们将主要使用socket模块。模块中的socket()函数被
+用来创建套接字。套接字也有自己的一套函数来提供基于套接字的网络通讯。
+
+16.3.1 socket() Module Function
+16.3.1 socket()模块函数
+
+To create a socket, you must use the socket.socket() function, which has the
+general syntax:
+要使用socket.socket()函数来创建套接字。其语法如下：
+
+socket(socket_family, socket_type, protocol=0)
+
+The socket_family is either AF_UNIX or AF_INET, as explained earlier, and the
+socket_type is either SOCK_STREAM or SOCK_ DGRAM, also explained earlier. The
+protocol is usually left out, defaulting to 0.
+socket_family可以是AF_UNIX或AF_INET。socket_type可以是SOCK_STREAM或SOCK_DGRAM。
+这几个常量的意义可以参考之前的解释。protocol一般不填，默认值为0。
+
+So to create a TCP/IP socket, you call socket.socket() like this: 
+创建一个TCP/IP的套接字，你要这样调用socket.socket()：
+
+tcpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+
+Likewise, to create a UDP/IP socket you perform:
+同样地，创建一个UDP/IP的套接字，你要这样：
+
+udpSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+Since there are numerous socket module attributes, this is one of the
+exceptions where using “from module import *” is somewhat acceptable because
+of the number of module attributes. If we applied “from socket import *”, we
+bring the socket attributes into our namespace, but our code is shortened
+considerably, i.e.,
+由于socket模块中有太多的属性。我们在这里破例使用了'from module import *'语句。
+使用'from socket import *'，我们就把socket模块里的所有属性都带到我们的命名空
+间里了，这样能大幅减短我们的代码。
+
+tcpSock = socket(AF_INET, SOCK_STREAM)
+
+Once we have a socket object, all further interaction will occur using that
+socket object’s methods.
+当我们创建了套接字对象后，所有的交互都将通过对该套接字对象的方法调用进行。
+
+16.3.2 Socket Object (Built-in) Methods
+16.3.2 套接字对象（内建）方法
+
+In Table 16.1, we present a list of the most common socket methods. In the next
+subsection, we will create both TCP and UDP clients and servers, all of which
+use these methods. Although we are focusing on Internet sockets, these
+methods have similar meanings when using Unix sockets.
+表16.1中，我们列出了最常用的套接字对象的方法。在下一个小节中，我们将分别创建TCP
+和UDP的客户和服务器，它们都要用到这些方法。虽然我们只关心Internet套接字，但是这些
+方法在Unix套接字中的也有类似的意义。
+
+
+Table 16.1  Common Socket Object Methods
+表16.1 套接字对象的常用函数
+
+Method	Description
+函数	描述
+
+Server Socket Methods
+服务器端套接字函数
+
+s.bind()	Bind address (hostname, port number pair) to socket
+s.listen()	Set up and start TCP listener
+s.accept()	Passively accept TCP client connection, waiting until connection
+arrives (blocking)
+
+s.bind()	绑定地址（主机，端口号对）到套接字
+s.listen()	开始TCP监听
+s.accept()	被动接受TCP客户的连接，（阻塞式）等待连接的到来
+
+Client Socket Methods
+客户端套接字函数
+
+s.connect()	Actively initiate TCP server connection
+s.connect_ex() Extended version of connect() where problems are returned as
+error codes rather than an exception being thrown
+
+s.connect()	主动初始化TCP服务器连接
+s.connect_ex() connect()函数的扩展版本，出错时返回出错码，而不是抛异常
+
+General Socket Methods
+公共用途的套接字函数
+
+s.recv()	Receive TCP message
+s.send()	Transmit TCP message 
+s.sendall()	Transmit TCP message completely 
+s.recvfrom()	Receive UDP message 
+s.sendto()	Transmit UDP message
+
+s.recv()	接收TCP数据
+s.send()	发送TCP数据
+s.sendall()	完整发送TCP数据
+s.recvfrom()	接收UDP数据
+s.sendto()	发送UDP数据
+
+s.getpeername()
+s.getsockname()
+s.getsockopt()
+s.setsockopt()
+Remote address connected to socket (TCP)
+连接到当前套接字的远端的地址
+
+
+Address of current socket
+当前套接字的地址
+
+
+Return value of given socket option
+返回指定套接字的参数
+
+
+Set value for given socket option
+设置指定套接字的参数
+
+s.close()	Close socket
+s.close()	关闭套接字
+
+
+
+(continued )
+
+Table 16.1  Common Socket Object Methods (continued)
+
+Method	Description
+
+Blocking-Oriented Socket Methods
+
+
+s.setblocking()
+s.settimeout()a
+s.gettimeout()a
+
+Set blocking or non-blocking mode of socket
+设置套接字的阻塞与非阻塞模式
+
+
+Set timeout for blocking socket operations
+设置阻塞套接字操作的超时时间
+
+
+Get timeout for blocking socket operations
+得到阻塞套接字操作的超时时间
+
+File-Oriented Socket Methods
+面向文件的套接字的函数
+
+s.fileno()	File descriptor of socket
+s.makefile()	Create a file object associated with socket
+
+s.fileno()	套接字的文件描述符
+s.makefile()	创建一个与该套接字关连的文件
+
+a. New in Python 2.3.
+a. Python 2.3版本新加入的函数
+
+CORE TIP: Install clients and servers on different computers to run networked
+applications
+核心提示：在运行网络应用程序时，最好在不同的电脑上执行服务器和客户端的程序。
+
+In our multitude of examples in this chapter, you will often see code and
+output referring to host “localhost” or see an IP address of 127.0.0.1. Our
+examples are running the client(s) and server(s) on the same machine. We
+encourage the reader to change the hostnames and copy the code to different
+computers as it is much more fun developing and playing around with code that
+lets machines talk to one another across the network, and to see network
+programs that really do work!
+在本章的例子中，你将大量看到代码和输出中提及“localhost”主机和127.0.0.1 IP地址。
+我们的例子把客户与服务器运行在同一台电脑上，我们建议读者改掉主机名，并把代码
+放到不同的电脑上运行。眼见着自己的代码在不同的电脑上进行通讯，这一时刻，你更能
+体会到开发的乐趣。
+
+
+16.3.3  Creating a TCP Server
+16.3.3 创建一个TCP服务器
+
+We will first present some general pseudocode involved with creating a generic
+TCP server, then describe in general what is going on. Keep in mind that this
+is only one way of designing your server. Once you become comfortable with
+server design, you will be able to modify the pseudocode to operate the way you
+want it to:
+我们首先将给出一个关于如何创建一个通用的TCP服务器的伪代码，然后解释我们都做了些
+什么。要注意的是，这只是设计服务器的一种方法，当你对服务器的设计有了一定的了解之
+后，你就能用你所希望的方式来修改这段伪代码：
+
+ss = socket()	# create server socket 
+ss.bind()	# bind socket to address 
+ss.listen()	# listen for connections 
+inf_loop:	# server infinite loop
+cs = ss.accept()	# accept client connection
+comm_loop:	# communication loop 
+cs.recv()/cs.send() # dialog (receive/send)
+cs.close()	# close client socket 
+ss.close()	# close server socket # (opt)
+
+ss = socket()	# 创建服务器套接字
+ss.bind()	# 把地址绑定到套接字上
+ss.listen()	# 监听连接
+inf_loop:	# 服务器无限循环
+cs = ss.accept()	# 接受客户的连接
+comm_loop:	# 通讯循环
+cs.recv()/cs.send() # 对话（接收与发送）
+cs.close()	# 关闭客户套接字
+ss.close()	# 关闭服务器套接字（可选）
+
+All sockets are created using the socket.socket() function. Servers need to
+“sit on a port” and wait for requests, so they all must “bind” to a local
+address. Because TCP is a connection-oriented communication system, some
+infrastructure must be set up before a TCP server can begin operation. In
+particular, TCP servers must “listen” for (incoming) connections. Once this
+setup process is complete, a server can start its infinite loop.
+所有的套接字都用socket.socket()函数来创建。服务器需要“坐在某个端口上”等待请求。
+所以它们必需要“绑定”到一个本地的地址上。由于TCP是一个面向连接的通讯系统，在
+TCP服务器可以开始工作之前，要先完成一些设置。TCP服务器必需要“监听”（进来的）
+连接，设置完成之后，服务器就可以进入无限循环了。
+
+A simple (single-threaded) server will then sit on an accept() call waiting for
+a connection. By default, accept() is blocking, meaning that execution is
+suspended until a connection arrives. Sockets do support a non-blocking mode;
+refer to the documentation or operating systems textbooks for more details on
+why and how you would use non-blocking sockets.
+一个简单的（单线程的）服务器会调用accept()函数等待连接的到来。默认情况下，
+accept()函数是阻塞式的，即程序在连接到来之前会处于挂起状态。套接字也支持非阻塞模
+式。请参阅相关文档或操作系统手册以了解为何及如何使用非阻塞套接字。
+
+Once a connection is accepted, a separate client socket is returned [by
+accept()] for the upcoming message interchange. Using the new client socket is
+similar to handing off a customer call to a service representative. When a
+client eventually does come in, the main switchboard operator takes the
+incoming call and patches it through, using another line to the right person
+to handle their needs.
+一旦接收到一个连接，accept()函数就会返回一个单独的客户的套接字用于后续的通讯。
+使用新的客户套接字就像把客户的电话转给一个客户服务人员。当一个客户打电话进来的
+时候，总机接了电话，然后把电话转到合适的人那里来处理客户的需求。
+
+This frees up the main line, i.e., the original server socket, so that the
+operator can resume waiting for new calls (client requests) while the
+customer and the service representative he or she was connected to carry on
+their own conversation. Likewise, when an incoming request arrives, a new
+communication port is created to converse directly with that client while the
+main one is free to accept new client connections.
+这样就可以空出总机，也就是最初的那个服务器套接字，于是，话务员就可以等待下一个
+电话（客户的请求），与此同时，前一个客户与对应的客户服务人员在另一条线路上进行
+着他们自己的对话。同样的，当一个请求到来时，要创建一个新的端口，然后直接在那个
+端口上与客户对话，这样就可以空出主端口来接受其它客户的连接。
+
+CORE TIP: Spawning threads to handle client requests
+核心提示：创建线程来处理客户的请求。
+
+We do not implement this in our examples, but it is also fairly common to hand
+a client request off to a new thread or process to complete the client
+processing.The SocketServer module, a high-level socket communication module
+written on top of socket, supports both threaded and spawned process handling
+of client requests. We refer the reader to the documentation to obtain more
+information about the SocketServer module as well as the exercises in Chapter
+17, Multithreaded Programming.
+我们不打算在例子实现这样的功能。但是，创建一个新的线程或进程来完成与客户的通讯
+是一种非常常用的手段。SocketServer模块是一个基于socket模块的高级别的套接字通讯
+模块，它支持在新的线程或进程中处理客户的请求。建议读者参阅相关文章及第17章多线
+程编程的习题，以了解更多的信息。
+
+Once the temporary socket is created, communication can commence, and both
+client and server proceed to engage in a dialog of sending and receiving using
+this new socket until the connection is terminated. This usually happens when
+one of the parties either closes its connection or sends an empty string to its
+partner.
+在临时套接字创建好之后，通讯就可以开始了。客户与服务器都使用这个新创建的套接字进
+行数据的发送与接收，直到通讯的某一方关闭了连接或发送了一个空字符串之后，通讯就结
+束了。
+
+In our code, after a client connection is closed, the server goes back to wait
+for another client connection. The final line of code, where we close the
+server socket, is optional. It is never encountered since the server is
+supposed to run in an infinite loop. We leave this code in our example as a
+reminder to the reader that calling the close() method is recommended when
+implementing an intelligent exit scheme for the server, for example, a handler
+that detects some external condition whereby the server should be shut down.
+In those cases, a close() method call is warranted.
+在代码中，当客户连接关闭后，服务器继续等待下一个客户的连接。代码的最后一行，会
+把服务器的套接字关闭。由于服务器处在无限循环中，不可能会走到这一步，所以，这一步
+是可选的。我们写这一句话的主要目的是要提醒读者，在设计一个更智能的退出方案的时候，
+比方说，服务器被通知要关闭的时，要确保close()函数会被调用。
+
+In Example 16.1, we present tsTserv.py, a TCP server program that takes the
+data string sent from a client and returns it timestamped (format:
+“[timestamp]data”) back to the client. (“tsTserv” stands for timestamp TCP
+server. The other files are named in a similar manner.)
+在例16.1 tsTserv.py文件中，会创建一个TCP服务器程序，这个程序会把客户发送过来
+的字符串加上一个时间戳（格式：'[时间]数据'）返回给客户。
+
+
+Example 16.1  TCP Timestamp Server (tsTserv.py)
+例16.1 TCP时间戳服务器 (tsTserv.py)
+
+Creates a TCP server that accepts messages from clients and returns them with a
+timestamp prefix.
+创建一个能接收客户的消息，在消息前加一个时间戳后返回的TCP服务器。
+
+1	#!/usr/bin/env python
+2
+3	from socket import *
+4	from time import ctime
+
+
+
+8	BUFSIZ = 1024
+9	ADDR = (HOST, PORT)
+10
+11   tcpSerSock = socket(AF_INET, SOCK_STREAM)
+12   tcpSerSock.bind(ADDR)
+13   tcpSerSock.listen(5)
+14
+15   while True:
+16	print 'waiting for connection...'
+17	tcpCliSock, addr = tcpSerSock.accept()
+18	print '...connected from:', addr
+19
+20	while True:
+21	data = tcpCliSock.recv(BUFSIZ)
+22	if not data:
+23	break
+24	tcpCliSock.send('[%s] %s' % (
+25	ctime(), data))
+26
+27	tcpCliSock.close()
+28   tcpSerSock.close()
+
+
+Line-by-Line Explanation
+逐行解释
+Lines 1–4
+1-4行
+After the Unix start-up line, we import time.ctime() and all the attributes
+from the socket module.
+第1行是Unix的启动信息行，随后我们导入了time.ctime()函数和socket模块的所有属性。
+
+
+Lines 6–13
+6-13行
+The HOST variable is blank, an indication to the bind() method that it can use
+any address that is available. We also choose an arbitrarily random port
+number, which does not appear to be used or reserved by the system. For our
+application, we set the buffer size to 1K. You may vary this size based on your
+networking capability and application needs. The argument for the listen()
+method is simply a maximum number of incoming connection requests to accept
+before connections are turned away or refused.
+HOST变量为空，表示bind()函数可以绑定在所有有效的地址上。我们还选用了一个随机生成
+的未被占用的端口号。在程序中，我们把缓冲的大小设定为1K。你可以根据你的网络情况和
+应用的需要来修改这个大小。listen()函数的参数只是表示最多允许多少个连接同时连进来，
+后来的连接就会被拒绝掉。
+
+The TCP server socket (tcpSerSock) is allocated on line 11, followed by the
+calls to bind the socket to the server’s address and to start the TCP listener.
+TCP服务器的套接字(tcpSerSock)在第11行被生成。随后把套接字绑定到服务器的地址上，
+然后开始TCP监听。
+
+
+Lines 15–28
+15-28行
+Once we are inside the server’s infinite loop, we (passively) wait for a
+connection. When one comes in, we enter the dialog loop where we wait for the
+client to send its message. If the message is blank, that means that the client
+has quit, so we would break from the dialog loop, close the client connection,
+and go back to wait for another client. If we did get a message from the
+client, then we format and return the same data but prepended with the current
+timestamp. The final line is never executed, but is there as a reminder to the
+reader that a close() call should be made if a handler is written to allow for
+a more graceful exit, as we discussed before.
+在进入到服务器的无限循环后，我们(被动地)等待连接的到来。当有连接时，我们进入
+对话循环，等待客户发送数据。如果消息为空，表示客户已经退出，那就再去等待下一个
+客户的连接。得到客户的消息后，我们在消息前加一个时间戳然后返回。最后一行不会被
+执行到，放在这里用于提醒读者，在服务器要退出的时候，要记得调用close()函数。
+
+
+16.3.4 Creating a TCP Client
+16.3.4 创建TCP客户端
+
+Creating a client is much simpler than a server. Similar to our description of
+the TCP server, we will present the pseudocode with explanations first, then
+show you the real thing.
+创建TCP客户端相对服务器来说更为容易。与TCP服务器那段类似，我们也是先给出伪代码
+及其解释，然后再给出真正的代码。
+
+cs = socket()	# create client socket 
+cs.connect()	# attempt server connection 
+comm_loop:	# communication loop
+cs.send()/cs.recv()	# dialog (send/receive)
+cs.close()	# close client socket
+
+cs = socket()	# 创建客户套接字
+cs.connect()	# 尝试连接服务器
+comm_loop:	# 通讯循环
+cs.send()/cs.recv()	# 对话（发送／接收）
+cs.close()	# 关闭客户套接字
+
+As we noted before, all sockets are created using socket.socket(). Once a
+client has a socket, however, it can immediately make a connection to a server
+by using the socket’s connect() method. When the connection has been
+established, then it can participate in a dialog with the server. Once the
+client has completed its transaction, it may close its socket, terminating the
+connection.
+如之前所说，所有的套接字都由socket.socket()函数创建。在客户有了套接字之后，马上就
+可以调用connect()函数去连接服务器。连接建立后，就可以与服务器开始对话了。在对话
+结束后，客户就可以关闭套接字，结束连接。
+
+We present the code for tsTclnt.py in Example 16.2; it connects to the server
+and prompts the user for line after line of data. The server returns this data
+timestamped, which is presented to the user by the client code.
+在例16.2中，我们给出了tcTlnt.py的代码。程序连接到服务器，提示用户输入要传输的数据，
+然后显示服务器返回的加了时间戳的结果。
+
+
+Line-by-Line Explanation
+逐行解释
+Lines 1–3
+1-3行
+After the Unix startup line, we import all the attributes from the socket
+module.
+第1行是Unix的启动信息行，随后我们导入了socket模块的所有属性。
+
+
+Example 16.2  TCP Timestamp Client (tsTclnt.py)
+例16.2 TCP时间戳客户端(tsTclnt.py)
+
+Creates a TCP client that prompts the user for messages to send to the server,
+gets them back with a timestamp prefix, and displays the results to the user.
+创建一个TCP客户端，程序会提示用户输入要传给服务器的信息，显示服务器返回的加了
+时间戳的结果。
+
+1	#!/usr/bin/env python
+2
+3	from socket import *
+
+
+
+7	BUFSIZ = 1024
+8	ADDR = (HOST, PORT)
+9
+10   tcpCliSock = socket(AF_INET, SOCK_STREAM)
+11   tcpCliSock.connect(ADDR)
+12
+13   while True:
+14	data = raw_input('> ')
+15	if not data:
+16	break
+17	tcpCliSock.send(data)
+18	data = tcpCliSock.recv(BUFSIZ)
+19	if not data:
+20	break
+21	print data
+22
+23   tcpCliSock.close()
+
+
+Lines 5–11
+5-11行
+The HOST and PORT variables refer to the server’s hostname and port number.
+Since we are running our test (in this case) on the same machine, HOST contains
+the local hostname (change it accordingly if you are running your server on a
+different host). The port number PORT should be exactly the same as what you
+set for your server (otherwise there won’t be much communication[!]).  We also
+choose the same buffer size, 1K.
+HOST和PORT变量表示服务器的主机名与端口号。由于我们在同一台电脑上进行测试，所以
+HOST里放的是本机的主机名（如果你的服务器运行在其它电脑上，要做相应的修改）。端
+口号要与服务器上的设置完全相同（不然就没办法通讯了）。缓冲区的大小还是设为1K。
+
+The TCP client socket (tcpCliSock) is allocated on line 10, followed by (an
+active) call to connect to the server.
+TCP客户套接字(tcpCliSock)在第10行创建。然后就去连接服务器。
+
+Lines 13–23
+13-23行
+The client also has an infinite loop, but it is not meant to run forever like
+the server’s loop. The client loop will exit on either of two conditions: the
+user enters no input (lines 14–16), or the server somehow quit and our call to
+the recv() method fails (lines 18–20). Otherwise, in a normal situation, the
+user enters in some string data, which is sent to the server for processing.
+The newly timestamped input string is then received and displayed to the
+screen.
+客户端也有一个无限循环，但这跟服务器的那个不期望退出的无限循环不一样。客户端的
+循环在以下两个条件的任意一个发生后就退出：用户没有输入任何内容（14-16行），或
+服务器由于某种原因退出，导致recv()函数失败（18-20行）。否则，在一般情况下，
+客户端会把用户输入的字符串发给服务器进行处理，然后接收并显示服务器传回来的，
+加了时间戳的字符串。
+
+16.3.5  Executing Our TCP Server and Client(s)
+16.3.5 运行我们的客户端与服务器程序
+
+Now let us run the server and client programs to see how they work. Should we
+run the server first or the client first? Naturally, if we ran the client
+first, no connection would be possible because there is no server waiting to
+accept the request. The server is considered a passive partner because it has
+to establish itself first and passively wait for a connection. A client, on the
+other hand, is an active partner because it actively initiates a connection. In
+other words: Start the server first (before any clients try to connect).
+现在，我们来运行服务器和客户程序，看看它们的运行情况如何。我们应该先运行服务器
+还是客户呢？很显然，如果我们先运行客户，由于没有服务器在等待请求，客户没办法做
+连接。服务器是一个被动端，它先创建自己然后被动地等待连接。而客户则是主动端，由
+它主动地建立一个连接。所以：要先开服务器，后开客户。
+
+In our example running of the client and server, we use the same machine, but
+there is nothing to stop us from using another host for the server. If this is
+the case, then just change the hostname. (It is rather exciting when you get
+your first networked application running the server and client from different
+machines!)
+我们在运行客户和服务器的例子中，使用了同一台电脑。其实也可以把服务器放在其它的
+电脑上，这时，只要改改主机名就好了。（看到自己写的第一个网络程序运行在不同的电
+脑上，那是多么激动人心的事啊）。
+
+We now present the corresponding (input and) output from the client program,
+which exits with a simple RETURN (or Enter key) keystroke with no data entered:
+下面就是客户端的输入与输出，不输入数据，直接按回车键就可以退出程序：
+
+$ tsTclnt.py
+> hi
+[Sat Jun 17 17:27:21 2006] hi
+> spanish inquisition
+[Sat Jun 17 17:27:37 2006] spanish inquisition
+>
+$
+
+The server’s output is mainly diagnostic:
+服务器的输出主要用于调试目的：
+
+$ tsTserv.py
+waiting for connection...
+...connected from: ('127.0.0.1', 1040)
+waiting for connection...
+
+The “. . . connected from . . .” message was received when our client made its
+connection. The server went back to wait for new clients while we continued
+receiving “service.” When we exited from the server, we had to break out of it,
+resulting in an exception. The best way to avoid such an error is to create a
+more graceful exit, as we have been discussing.
+当有客户连接上来的时候，会显示一个“... connected from ...”信息。在客户接受服务
+的时候，服务器又回去等待其它客户的连接。在从服务器退出的时候，我们要跳出那个无限
+循环，这时会触发一个异常。避免这种错误的方法是采用一种更优美的退出方式。
+
+CORE TIP: Exit gracefully and call server close() method
+核心提示：优美的退出和调用服务器的close()函数
+
+One way to create this “friendly” exit is to put the server’s while loop inside
+the except clause of a try-except statement and monitor for EOFError or
+KeyboardInterrupt exceptions. Then in the except clause, you can make a call to
+close the server’s socket.
+“友好地”退出的一个方法就是把服务器的无限循环放在一个try-except语句的try子句当中，
+并捕获EOFError和KeyboardInterrupt异常。在异常处理子句中，调用close()函数关闭服务器
+的套接字。
+
+The interesting thing about this simple networked application is that we are
+not only showing how our data take a round trip from the client to the server
+and back to the client, but we also use the server as a sort of “time server,”
+because the timestamp we receive is purely from the server.
+这个简单的网络应用程序的有趣之处并不仅仅在于我们演示了数据怎样从客户传到服务器，
+然后又传回给客户，而且我们还把这个服务器当成了“时间服务器”，因为，字符串中的时
+间戳完全是来自于服务器的。
+
+16.3.6 Creating a UDP Server
+创建一个UDP服务器
+
+UDP servers do not require as much setup as TCP servers because they are not
+connection-oriented. There is virtually no work that needs to be done other
+than just waiting for incoming connections.
+由于UDP服务器不是面向连接的，所以不用像TCP服务器那样做那么多设置工作。事实上，
+并不用设置什么东西，直接等待进来的连接就好了。
+
+ss = socket()	# create server socket 
+ss.bind()	# bind server socket 
+inf_loop:	# server infinite loop
+cs = ss.recvfrom()/ss.sendto()# dialog (receive/send)
+ss.close()	# close server socket
+
+ss = socket()	# 创建一个服务器套接字
+ss.bind()	# 绑定服务器套接字
+inf_loop:	# 服务器无限循环
+cs = ss.recvfrom()/ss.sendto()# 对话（接收与发送）
+ss.close()	# 关闭服务器套接字
+
+As you can see from the pseudocode, there is nothing extra other than the usual
+create-the-socket and bind it to the local address (host/port pair). The infi-
+nite loop consists of receiving a message from a client, returning a
+timestamped one, then going back to wait for another message. Again, the
+close() call is optional and will not be reached due to the infinite loop, but
+it serves as a reminder that it should be part of the graceful or intelligent
+exit scheme we’ve been mentioning.
+从伪代码中可以看出，使用的还是那套先创建套接字然后绑定到本地地址（主机／端口对）
+的方法。无限循环中包含了从客户那接收消息，返回加了时间戳的结果和回去等下一个消
+息这三步。同样的，由于代码不会跳出无限循环，所以，close()函数调用是可选的。我们
+写这一句话的原因是要提醒读者，在设计一个更智能的退出方案的时候，要确保close()函
+数会被调用。
+
+
+
+Example 16.3  UDP Timestamp Server (tsUserv.py)
+例16.3 UDP时间戳服务器 (tsUserv.py)
+
+Creates a UDP server that accepts messages from clients and returns them with a
+timestamp prefix.
+创建一个能接收客户的消息，在消息前加一个时间戳后返回的UDP服务器。
+
+1	#!/usr/bin/env python
+2
+3	from socket import *
+4	from time import ctime
+
+
+
+8	BUFSIZ = 1024
+9	ADDR = (HOST, PORT)
+10
+11   udpSerSock = socket(AF_INET, SOCK_DGRAM)
+12   udpSerSock.bind(ADDR)
+13
+14   while True:
+15	print 'waiting for message...'
+16	data, addr = udpSerSock.recvfrom(BUFSIZ)
+17	udpSerSock.sendto('[%s] %s' % (
+18	ctime(), data), addr)
+19	print '...received from and returned to:', addr
+20
+21   udpSerSock.close()
+
+
+
+One other significant different between UDP and TCP servers is that because
+datagram sockets are connectionless, there is no “handing off” of a client
+connection to a separate socket for succeeding communication. These servers
+just accept messages and perhaps reply.
+UDP和TCP服务器的另一个重要的区别是，由于数据报套接字是无连接的，所以无法把客户
+的连接交给另外的套接字进行后续的通讯。这些服务器只是接受消息，需要的话，给客户
+返回一个结果就可以了。
+
+You will find the code to tsUserv.py in Example 16.3, a UDP version of the TCP
+server seen earlier. It accepts a client message and returns it to the client
+timestamped.
+例16.3的tsUserv.py是之前那个TCP服务器的UDP版本，它接收客户的消息，加时间戳后
+返回给客户。
+
+Line-by-Line Explanation
+逐行解释
+Lines 1–4
+1-4行
+After the Unix startup line, we import time.ctime() and all the attributes from
+the socket module, just like the TCP server setup.
+就像TCP服务器的设置那样，在Unix的启动信息行后，我们导入了time.ctime()函数和
+socket模块的所有属性。
+
+Lines 6–12
+6-12行
+The HOST and PORT variables are the same as before, and for all the same
+reasons. The call socket() differs only in that we are now requesting a
+datagram/UDP socket type, but bind() is invoked in the same way as in the TCP
+server version. Again, because UDP is connectionless, no call to “listen()
+for incoming connections” is made here.
+HOST和PORT变量与之前完全一样。socket()函数的调用有一些不同，我们现在要的是一个
+数据报/UDP的套接字类型。不过bind()函数还是跟TCP版本的一样。同样地，由于UDP是无
+连接的，就不用调用listen()函数来监听进来的连接了。
+
+Lines 14–21
+14-21行
+Once we are inside the server’s infinite loop, we (passively) wait for a
+message (a datagram). When one comes in, we process it (by adding a timestamp
+to it), then send it right back and go back to wait for another message. The
+socket close() method is there for show only, as indicated before.
+在进入到服务器的无限循环后，我们(被动地)等待(数据报)消息的到来。当有消息进来时，
+就处理它（在前面加时间戳），把结果返回回去，然后再去等等下一个消息。就像之前
+一样，那个close()函数只是一个演示而已。
+
+
+16.3.7  Creating a UDP Client
+16.3.7 创建一个UDP客户端
+
+Of the four highlighted here in this section, the UDP client is the shortest
+bit of code that we will look at. The pseudocode looks like this:
+这一节中介绍的4段程序中，下面的这段UDP客户的代码是最短的。伪代码如下：
+
+cs = socket()	# create client socket
+comm_loop:	# communication loop 
+cs.sendto()/cs.recvfrom()	# dialog (send/receive)
+cs.close()	# close client socket
+
+cs = socket()	# 创建客户套接字
+comm_loop:	# 通讯循环
+cs.sendto()/cs.recvfrom()	# 对话（发送／接收）
+cs.close()	# 关闭客户套接字
+
+Once a socket object is created, we enter the dialog loop of exchanging mes-
+sages with the server. When communication is complete, the socket is closed.
+The real client code, tsUclnt.py, is presented in Example 16.4.
+在套接字对象创建好之后，我们就进入一个与服务器的对话循环。在通讯结束后，套接
+字就被关闭了。tsUclnt.py真实的代码在例16.4中给出。
+
+
+Line-by-Line Explanation
+逐行解释
+Lines 1–3
+1-3行
+After the Unix startup line, we import all the attributes from the socket
+module, again, just like in the TCP version of the client.
+还是跟TCP版本的客户一样，在Unix的启动信息行后，我们导入了socket模块的所有属性。
+
+Lines 5–10
+5-10行
+Because we are running the server on our local machine again, we use “local-
+host” and the same port number on the client side, not to mention the same 1K
+buffer. We allocate our socket object in the same way as the UDP server.
+因为我们的服务器也是运行在本机，我们的客户还是使用本机和相同的端口号。自然地，
+缓冲的大小也还是1K。创建套接字的方法跟UDP服务器中的一样。
+
+Lines 12–22
+12-22行
+Our UDP client loop works in almost the exact manner as the TCP client. The
+only difference is that we do not have to establish a connection to the UDP
+server first; we simply send a message to it and await the reply. After the
+timestamped string is returned, we display it to the screen and go back for
+more. When the input is complete, we break out of the loop and close the
+socket.
+UDP客户的循环基本上与TCP客户的完全一样。唯一的区别就是，我们不用先去跟UDP服务
+器建立连接，而是直接把消息发送出去，然后等待服务器的回复。得到加了时间戳的字符
+串后，把它显示到屏幕上，然后再继续其它的消息。在输入结束后，退出循环，关闭套
+接字。
+
+Example 16.4  UDP Timestamp Client (tsUclnt.py)
+例16.4 UDP时间戳客户 (tsUclnt.py)
+
+Creates a UDP client that prompts the user for messages to send to the server,
+gets them back with a timestamp prefix, and displays them back to the user.
+创建一个UDP客户端，程序会提示用户输入要传给服务器的信息，显示服务器返回的加了
+时间戳的结果。
+
+1	#!/usr/bin/env python
+2
+3	from socket import *
+
+
+
+7	BUFSIZ = 1024
+8	ADDR = (HOST, PORT)
+9
+10   udpCliSock = socket(AF_INET, SOCK_DGRAM)
+11
+12   while True:
+13	data = raw_input('> ')
+14	if not data:
+15	break
+16	udpCliSock.sendto(data, ADDR)
+17	data, ADDR = udpCliSock.recvfrom(BUFSIZ)
+18	if not data:
+19	break
+20	print data
+21
+22   udpCliSock.close()
+
+
+16.3.7 Executing Our UDP Server and Client(s)
+执行UDP服务器和客户端
+
+The UDP client behaves the same as the TCP client:
+UDP客户与TCP客户的表现类似：
+
+$ tsUclnt.py
+> hi
+[Sat Jun 17 19:55:36 2006] hi
+> spam! spam! spam!
+[Sat Jun 17 19:55:40 2006] spam! spam! spam!
+>
+$
+Likewise for the server:
+服务器也差不多：
+
+$ tsUserv.py
+waiting for message...
+...received from and returned to: ('127.0.0.1', 1025)
+waiting for message...
+
+In fact, we output the client’s information because we can be receiving
+messages from multiple clients and sending replies, and such output helps by
+telling us where messages came from. With the TCP server, we know where
+messages come from because each client makes a connection. Note how the
+messages says, “waiting for message” as opposed to “waiting for connection.”
+我们输出客户信息的原因是，服务器可能会得到并回复多个客户的消息，这时，输出就可以
+让我们了解消息来自哪里。对于TCP服务器来说，由于客户会创建一个连接，我们自然就能
+知道消息来自哪里。注意，我们的提示信息写的是“waiting for message”(“等待消息”)
+而不是“waiting for connection”(“等待连接”)。
+
+16.3.9  socket Module Attributes
+16.3.9 套接字模块属性
+
+In addition to the socket.socket() function which we are now familiar with,
+the socket module features many more attributes that are used in network
+application development. Some of the most popular ones are shown in Table 16.2.
+除了我们已经很熟悉的socket.socket()函数之外，socket模块还有很多属性可供网络应用
+程序使用。表16.2中列出了最常用的几个。
+
+For more information, we refer you to the socket Module documentation in the
+Python Library Reference.
+请参考Python手册中socket模块的文档以了解更多的信息。
+
+
+Table 16.2   socket Module Attributes
+表16.2 socket模块属性
+
+Attribute Name	Description
+属性	名字	描述
+
+
+
+Data Attributes
+数据属性
+
+AF_UNIX, AF_INET, AF_INET6a Socket address families supported by Python
+AF_UNIX, AF_INET, AF_INET6a Python支持的套接字家族
+
+SO_STREAM, SO_DGRAM	Socket types (TCP = stream, UDP = datagram)
+SO_STREAM, SO_DGRAM	套接字类型 (TCP = 流, UDP = 数据报)
+
+has_ipv6b	Boolean flag indicating whether IPv6 is supported
+has_ipv6b	表示是否支持IPv6的标志变量
+
+
+Exceptions
+异常
+
+error	Socket-related error
+error	套接字相关错误
+
+herrora		Host and address-related error 
+gaierrora	Address-related error 
+timeoutb	Timeout expiration
+
+herrora		主机和地址相关的错误
+gaierrora	地址相关的错误
+timeoutb	超时
+
+Functions
+函数
+
+socket()	Create a socket object from the given address family, socket type, and protocol type (optional)
+socketpair()c	Create a pair of socket objects from the given address family, socket type, and protocol type (optional)
+fromfd()	Create a socket object from an open file descriptor
+
+socket()	用指定的地址家族，套接字类型和协议类型（可选）创建一个套接字对象
+socketpair()c	用指定的地址家族，套接字类型和协议类型（可选）创建一对套接字对象
+fromfd()	用一个已经打开的文件描述符创建一个套接字对象
+
+Data Attributes
+数据属性
+
+ssl()d	Initiates a Secure Socket Layer connection over socket; does not perform certificate validation
+ssl()d	在套接字初始化一个安全套接字层(SSL)。不做证书验证。
+
+getaddrinfo()a	Gets address information 
+getfqdn()e	Returns fully qualified domain name
+gethostname()	Returns current hostname
+gethostbyname()	Maps a hostname to its IP address
+gethostbyname_ex()	Extended version of gethostbyname() returning hostname,
+			set of alias hostnames, and list of IP addresses
+gethostbyaddr()	Maps an IP address to DNS info; returns same 3-tuple
+		as gethostbyname_ex()
+
+getaddrinfo()a	得到地址信息
+getfqdn()e	返回完整的域的名字
+gethostname()	得到当前主机名
+gethostbyname()	由主机名得到对应的ip地址
+gethostbyname_ex()	gethostbyname()的扩展版本，返回主机名，主机所有的别名和IP地址列表。
+gethostbyaddr()	由IP地址得到DNS信息，返回一个类似gethostbyname_ex()的3元组。
+
+getprotobyname()	Maps a protocol name (e.g. 'tcp') to a number
+getservbyname()/	Maps a service name to a port number or vice-versa;
+getservbyport()     	a protocol name is optional for either function
+
+getprotobyname()	由协议名（如'tcp'）得到对应的号码。
+getservbyname()/	由服务名得到对应的端口号或相反
+getservbyport()     	两个函数中，协议名都是可选的。
+
+ntohl()/ntohs()	Converts integers from network to host byte order
+htonl()/htons()	Converts integers from host to network byte order
+
+ntohl()/ntohs()	把一个整数由网络字节序转为主机字节序
+htonl()/htons()	把一个整数由主机字节序转为网络字节序
+
+inet_aton()/	Convert IP address octet string to 32-bit packed format or vice versa (for IPv4
+inet_ntoa() 	addresses only)
+
+inet_aton()/	把IP地址转为32位整型，以及反向函数。（仅对IPv4地址有效）
+inet_ntoa() 	
+
+inet_pton()/	Convert IP address string to packed binary format or vice versa (for both IPv4
+inet_ntop()b	and IPv6 addresses)
+
+inet_pton()/	把IP地址转为二进制格式以及反向函数。（仅对IPv4地址有效）
+inet_ntop()b	
+
+getdefaulttimeout()/	Return default socket timeout in seconds (float); set default socket timeout in
+setdefaulttimeout()b	seconds (float)
+
+getdefaulttimeout()/	得到／设置默认的套接字超时时间，单位秒（浮点数）
+setdefaulttimeout()b	
+
+a.	New in Python 2.2.
+b.	New in Python 2.3. 
+c.	New in Python 2.4. 
+d.	New in Python 1.6. 
+e.	New in Python 2.0.
+
+a.	Python 2.2新增.
+b.	Python 2.3新增. 
+c.	Python 2.4新增. 
+d.	Python 1.6新增. 
+e.	Python 2.0新增.
+
+16.4  *SocketServer Module
+16.4 *SocketServer模块
+
+SocketServer is a higher-level module in the standard library. Its goal is to
+simplify a lot of the boilerplate code that is necessary to create networked
+clients and servers. In this module are various classes created on your behalf:
+SocketServer是标准库中一个高级别的模块。用于简化网络客户与服务器的实现。模块中，
+已经实现了一些可供使用的类。
+
+
+Table 16.3  SocketServer Module Classes
+表16.3 SocketServer模块的类
+
+Class	Description
+类      描述
+
+BaseServer	        Contains core server functionality and hooks for mix-in
+                        classes; used only for derivation so you will not create
+                        instances of this class; use TCPServer or UDPServer instead
+
+TCPServer/              Basic networked synchronous TCP/UDP server
+UDPServer           
+                    
+UnixStreamServer/       Basic file-based synchronous TCP/UDP server
+UnixDatagramServer
+
+ForkingMixIn/           Core forking or threading functionality; used only as mix-in classes with one   
+ThreadingMixIn          of the server classes to achieve some asynchronicity; you will not instantiate
+                        this class directly
+
+ForkingTCPServer/       Combination of ForkingMixIn and TCPServer/
+ForkingUDPServer        UDPServer
+
+ThreadingTCPServer/     Combination of ThreadingMixIn and TCPServer/
+ThreadingUDPServer      UDPServer
+
+BaseRequestHandler      Contains core functionality for handling service requests; used only for
+                        derivation so you will not create instances of this class; use
+                        StreamRequestHandler or Datagram- RequestHandler instead
+
+StreamRequestHandler/   Implement service handler for TCP/UDP servers
+DatagramRequestHandler
+
+BaseServer	        包含服务器的核心功能与混合(mix-in)类的钩子功能。这个类用于派生，不要直接生成
+                        这个类的类对象，可以考虑使用TCPServer和UDPServer。
+
+TCPServer/              基本的网络同步TCP/UDP服务器
+UDPServer           
+                    
+UnixStreamServer/       基本的基于文件同步TCP/UDP服务器
+UnixDatagramServer
+
+ForkingMixIn/           实现了核心的进程化或线程化的功能，用于与服务器类进行混合(mix-in)，以提供一些异步特性。
+ThreadingMixIn          不要直接生成这个类的对象
+
+ForkingTCPServer/       ForkingMixIn和TCPServer/UDPServer的组合
+ForkingUDPServer        
+
+ThreadingTCPServer/     ThreadingMixIn和TCPServer/UDPServer的组合
+ThreadingUDPServer      
+
+BaseRequestHandler      包含处理服务请求的核心功能。只用于派生新的类，不要直接生成这个类的对象，
+                        可以考虑使用StreamRequestHandler或DatagramRequestHandler
+
+StreamRequestHandler/   TCP/UDP服务器的请求处理类的一个实现
+DatagramRequestHandler
+
+
+We will create a TCP client and server that duplicates the base TCP example
+shown earlier. You will notice the immediate similarities but should recognize
+how some of the dirty work is now taken care of so you do not have to worry
+about that boilerplate code. These represent the simplest synchronous server
+you can write. Please check out the exercises at the end of the chapter to turn
+your server into an asynchronous one.
+我们将再次实现之前的那个基本TCP的例子。你会注意到新实现与之前有很多相似之处，
+但你也要注意到，现在很多繁杂的事情已经被封装好了，你不用再去关心那个样板代码了。
+例子给出的是一个最简单的同步服务器。记得要看看本章最后的把服务器改成异步的练习题。
+
+In addition to hiding implementation details from you, another difference is
+that we are now writing our applications using classes. Doing things in an
+object-oriented way helps us organize our data and logically direct function-
+ality to the right places. You will also notice that our applications are now
+“event-driven,” meaning they only work when “reacting to” an occurrence of an
+event in our system.
+为了要隐藏实现的细节。我们现在写程序时会使用类，这是与之前代码的另一个不同。
+用面向对象的方法可以帮助我们更好的组织数据与逻辑功能。你也会注意到，我们的程序
+现在是“事件驱动”了。这就意味着，只有在事件出现的时候，程序才有“反应”。
+
+Events include the sending and receiving of messages. In fact, you will see
+that our class definition only consists of an event handler for the receiving
+of a client message. All other functionality is taken from the SocketServer
+classes we use. GUI programming (Chapter 18) is also event-driven. You will
+notice the similarity immediately as the final line of our code is usually a
+server’s infinite loop waiting for and responding to client service requests.
+It works almost the same as our infinite while loop in the original base TCP
+server we create earlier in the chapter.
+事件包含发送与接收数据两种。事实上，你会看到，我们的类定义中只包含了接收客户
+消息的事件处理器。其它的功能从我们所使用的SocketServer继承而来。界面编程
+（第18章）也是事件驱动的。你会注意到有一个相似之处，即在代码的最后一行都有一个
+服务器的无限循环，等待并处理客户的服务请求。本章之前创建的基本TCP服务器也有一
+个类似的无限while循环。
+
+In our original server loop, we block waiting for a request, then service it
+when something comes in, and then go back to waiting. In the server loop here,
+instead of building your code in the server, you define a handler that the
+server can just call your function when it receives an incoming request.
+在之前的服务循环中，我们阻塞等待请求，有请求来的时候就处理请求，然后再回去继续
+等待。现在的服务循环中，就不用在服务器里写代码了，改成定义一个处理器，服务器在
+收到进来的请求的时候，可以调用你的处理函数。
+
+
+16.4.1 Creating a SocketServerTCP Server
+16.4.1 创建一个SocketServerTCP服务器
+
+In our code, we first import our server classes, then define the same host
+constants as before. That is followed by our request handler class, and then
+startup. More details follow our code snippet.
+在代码中，先导入我们的服务器类，然后像之前一样定义主机常量。主机常量后就是我们的
+请求处理器类，然后是启动代码。在下面的代码片断中可以看到更多细节。
+
+
+Line-by-Line Explanation
+逐行解释
+Lines 1–9
+1-9行
+The initial stuff consists of importing the right classes from SocketServer.
+Note that we are using the Python 2.4 multi-line import. If you are using an
+earlier version of Python, then you will have use the fully-qualified
+module.attribute names or put both attribute imports on the same line: 
+from SocketServer import TCPServer as TCP, StreamRequestHandler as SRH
+最开始的部分是从SocketServer导入需要的类。注意，我们在使用Python2.4的多行导入
+的方式。如果你使用老版本的Python，那么你要使用模块的形如module.attribute的名字。
+或者在导入的时候，把代码写在同一行里：
+from SocketServer import TCPServer as TCP, StreamRequestHandler as SRH
+
+
+Example 16.5   SocketServer Timestamp TCP Server (tsTservSS.py)
+例16.5 SocketServer时间戳服务器(tsTservSS.py)
+
+Creates a timestamp TCP server using SocketServer classes TCPServer
+and StreamRequestHandler.
+使用SocketServer里的TCPServer和StreamRequestHandler类创建一个时间戳TCP服务器。
+
+1	#!/usr/bin/env python
+2
+3	from SocketServer import (TCPServer as TCP,
+4	StreamRequestHandler as SRH)
+5	from time import ctime
+6
+7	HOST = ''
+8	PORT = 21567
+9	ADDR = (HOST, PORT)
+10
+11   class MyRequestHandler(SRH):
+12	def handle(self):
+13	print '...connected from:', self.client_address
+14	self.wfile.write('[%s] %s' % (ctime(),
+15	self.rfile.readline()))
+16
+17   tcpServ = TCP(ADDR, MyRequestHandler)
+18   print 'waiting for connection...'
+19   tcpServ.serve_forever()
+
+
+
+Lines 11–15
+11-15行
+The bulk of the work happens here. We derive our request handler MyRequest-
+Handler as a subclass of SocketServer’s StreamRequestHandler and override its
+handle() method, which is stubbed out in the BaseRequest class with no default
+action as:
+主要的工作在这里。我们从SocketServer的StreamRequestHandler类中派生出一个子类，
+并重写handle()函数。在BaseRequest类中，这个函数什么也不做:
+
+def handle(self):
+    pass
+
+The handle() method is called when an incoming message is received from a
+client. The StreamRequestHandler class treats input and output sockets as
+file-like objects, so we will use readline() to get the client message and
+write() to send a string back to the client.
+在有客户消息进来的时候，handle()函数就会被调用。StreamRequestHandler类支持像操作
+文件对象那样操作输入输出套接字。我们可以用readline()函数得到客户消息，用write()
+函数把字符串发给客户。
+
+In accordance, we need additional carriage return and NEWLINE characters in
+both the client and server code. Actually, you will not see it in the code
+because we are just reusing those which come from the client. Other than these
+minor differences we have mentioned, it should look just like our earlier
+server.
+为了保持一致性，我们要在客户与服务器两端的代码里都加上回车与换行。实际上，你在
+代码中看不到这个，因为，我们重用了客户传过来的回车与换行。除了这些我们刚刚说到
+的不同之处外，代码看上去与之前的那个服务器是一样的。
+
+Lines 17–19
+17-19行
+The final bits of code create the TCP server with the given host information
+and request handler class. We then have our entire infinite loop waiting for
+and servicing client requests.
+代码的最后部分用给定的主机信息和请求处理类创建TCP服务器。然后进入等待客户请求与
+处理客户请求的无限循环中。
+
+
+
+16.4.2  Creating a SocketServerTCP Client
+16.4.2 创建SocketServerTCP客户端
+
+Our client will naturally resemble our original client, much more so than the
+server, but it has to be tweaked a bit to work well with our new server.
+很自然地，我们的客户端与之前的客户端的代码很相似，比服务器相似得多。但客户端要
+做一些相应地调整以适应新的服务器。
+
+
+Line-by-Line Explanation
+逐行解释
+Lines 1–8
+1-8行
+Nothing special here . . . this is an exact replica of our original client code.
+没什么特别的，与原来的客户端完全相同。
+
+
+Example 16.6   SocketServer Timestamp TCP Client (tsTclntSS.py)
+例16.6 SocketServer时间戳TCP客户端(tsTclntSS.py)
+
+This is a timestamp TCP client that knows how to speak to the file-like Socket
+Server class StreamRequestHandler objects.
+这是一个时间戳TCP客户端，它知道如何与SocketServer里StreamRequestHandler对象进行
+通讯。
+
+1	#!/usr/bin/env python
+2
+3	from socket import *
+
+
+
+7	BUFSIZ = 1024
+8	ADDR = (HOST, PORT)
+9
+10   while True:
+11	tcpCliSock = socket(AF_INET, SOCK_STREAM)
+12	tcpCliSock.connect(ADDR)
+13	data = raw_input('> ')
+14	if not data:
+15	break
+16	tcpCliSock.send('%s\r\n' % data)
+17	data = tcpCliSock.recv(BUFSIZ)
+18	if not data:
+19	break
+20	print data.strip()
+21	tcpCliSock.close()
+Lines 10–21
+10-21行
+The default behavior of the SocketServer request handlers is to accept a
+connection, get the request, and close the connection. This makes it so that we
+cannot keep our connection throughout the execution of our application, so we
+need to create a new socket each time we send a message to the server.
+SocketServer的请求处理器的默认行为是接受连接，得到请求，然后就关闭连接。这使得
+我们不能在程序的运行时，一直保持连接状态，要每次发送数据到服务器的时候都要创建
+一个新的套接字。
+
+This behavior makes the TCP server act more like a UDP server; however, this
+can be changed by overriding the appropriate methods in our request handler
+classes. We leave this as an exercise at the end of this chapter.
+这种行为使得TCP服务器的行为有些像UDP服务器。不过，这种行为也可以通过重写请求
+处理器中相应的函数来改变。我们把这个留在本章最后的练习中。
+
+Other than the fact that our client is somewhat “inside-out” now (because we
+have to create a connection each time), the only other minor difference was
+previewed in the line-by-line explanation for the server code: the handler
+class we are using treats socket communication like a file, so we have to send
+line-termination characters (carriage return and NEWLINE) each way. The server
+just retains and reuses the ones we send here. When we get a message back from
+the server, we strip() them and just use the NEWLINE automatically provided
+by the print statement.
+现在，我们的客户端有点完全不一样了（我们得每次都创建一个连接）。其它的小区别在
+服务器代码的逐行解释中已经看到了：我们使用的处理器类像文件一样操作套接字，
+所以我们每次都要发送行结束字符（回车与换行）。服务器只是保留并重用我们发送的行
+结束字符。当我们从服务器得到数据的时候，我们使用strip()函数去掉它们，然后使用
+print语句提供的回车。
+
+16.4.2 Executing our TCP Server and Client(s)
+16.4.2 执行TCP服务器和客户端
+
+Here is the output of our SocketServer TCP client:
+下面是我们SocketServer TCP客户端的输出：
+
+$ tsTclntSS.py
+> 'Tis but a scratch.
+[Tue Apr 18 20:55:49 2006] 'Tis but a scratch.
+> Just a flesh wound.
+[Tue Apr 18 20:55:56 2006] Just a flesh wound.
+>
+$
+
+And here is the server’s:
+下面是服务器的输出：
+
+$ tsTservSS.py
+waiting for connection...
+...connected from: ('127.0.0.1', 53476)
+...connected from: ('127.0.0.1', 53477)
+
+The output is similar to that of our original TCP client and servers, however,
+you will notice that we connected to the server twice.
+输出与我们之前的TCP客户与服务器相似。不过，你能看到，我们连了服务器两次。
+
+16.5  Introduction to the Twisted Framework
+16.5 Twisted框架介绍
+
+Twisted is a complete event-driven networking framework that allows you to both
+use and develop complete asynchronous networked applications and protocols. It
+is not part of the Python Standard library at the time of writing and must be
+downloaded and installed separately (see link at the end of the chapter). It
+provides a significant amount of support for you to build complete systems
+with: network protocols, threading, security and authentication, chat/ IM, DBM
+and RDBMS database integration, Web/Internet, e-mail, commandline arguments,
+GUI toolkit integration, etc.
+Twisted是一个完全事件驱动的网络框架。它允许你使用和开发完全异步的网络应用程序和
+协议。在写本书的时候，它还不是Python标准库的一部分，要使用它，你必需另外下载并
+安装它（在本章最后能找到链接）。它为你创建一个完整系统提供了很大的帮助。系统中
+可以有：网络协议，线程，安全和认证，聊天/即时通讯，数据库管理，关系数据库集成，
+网页/互联网，电子邮件，命令行参数，图形界面集成等。
+
+Using Twisted to implement our tiny simplistic example is like using a sledge-
+hammer to pound a thumbtack, but you have to get started somehow, and our
+application is the equivalent to the “hello world” of networked applications.
+使用Twisted来实现我们这个简单的例子有牛刀宰鸡的感觉。不过，学东西总要有切入点吧，
+我们先实现一个“Hello World”的网络应用程序。
+
+Like SocketServer, most of the functionality of Twisted lies in its classes.
+In particular for our examples, we will be using the classes found in the
+reactor and protocol subpackages of Twisted’s Internet component.
+像SocketServer一样，Twisted的大部分功能都在它的类里面。在我们的例子中，我们将
+使用Twisted的Internet组件中reactor和protocol包的类。
+
+16.5.1 Creating a Twisted Reactor TCP Server
+16.5.1 创建一个Twisted Reactor TCP服务器
+
+You will find our code similar to that of the SocketServer example. Instead of
+a handler class, we create a protocol class and override several methods in the
+same manner as installing callbacks. Also, this example is asynchronous. Let us
+take a look at the server now.
+你会发现我们的代码与SocketServer例子有些相似。我们创建一个协议类，并像安装回调函
+数那样重写几个函数，而不是写一个处理器类。同样的，我们的例子是异步的。先来看服务
+器：
+
+Line-by-Line Explanation
+逐行解释
+Lines 1–6
+1-6行
+The setup lines of code include the usual module imports, most notably the
+protocol and reactor subpackages of twisted.internet and our constant port
+number.
+一开始的代码照常是模块导入部分。要注意twisted.internet中protocol和reactor包和端口号
+常量。
+
+Lines 8–14
+8-14行
+We derive the Protocol class and call ours TSServProtocol for our timestamp
+server. We then override connectionMade(), a method that is executed when a
+client connects to us, and dataReceived(), called when a client sends a piece
+of data across the network. The reactor passes in the data as an argument to
+this method so we can get access to it right away without having to extract
+it ourselves.
+我们从Protocol类中派生出TSServProtocol类做为时间戳服务器。然后重写connectionMade()
+函数，这个函数在有客户连接的时候被调用，以及 dataReceived()函数，这个函数在客户通过
+网络发送数据过来时被调用。reactor把数据当成参数传到这个函数中，这样我们就不用自己
+去解析数据了。
+
+Example 16.7 Twisted Reactor Timestamp TCP Server (tsTservTW.py)
+例16.7 Twisted Reactor时间戳TCP服务器(tsTservTW.py)
+
+This is a timestamp TCP server using Twisted Internet classes.
+这是一个使用Twisted Internet类的时间戳TCP服务器
+
+1	#!/usr/bin/env python
+2
+3	from twisted.internet import protocol, reactor
+4	from time import ctime
+5
+6	PORT = 21567
+7
+8	class TSServProtocol(protocol.Protocol):
+9	def connectionMade(self):
+10	clnt = self.clnt = self.transport.getPeer().host
+11	print '...connected from:', clnt
+12	def dataReceived(self, data):
+13	self.transport.write('[%s] %s' % (
+14	ctime(), data))
+15
+16   factory = protocol.Factory()
+17   factory.protocol = TSServProtocol
+18   print 'waiting for connection...'
+19   reactor.listenTCP(PORT, factory)
+20   reactor.run()
+
+
+
+The transport instance object is how we can communicate with the client.
+You can see how we use it in connectionMade() to get the host information about
+who is connecting to us as well as in dataReceived() to return data back to the
+client.
+我们通过transport对象与客户进行通讯。你可以看到在connectionMade()函数中，我们如何
+得到主机的信息，以及在dataReceived()函数中，我们如何把数据传回客户端的。
+
+
+
+Lines 16–20
+16-20行
+In the final part of our server, we create a protocol Factory. It is called a
+“factory” so that an instance of our protocol is “manufactured” every time we
+get an incoming connection. We then install a TCP listener in our reactor to
+check for service requests and when it gets one, to create a TSServProtocol
+instance to take care of that client.
+在服务器的最后一部分，我们创建一个protocol工厂。它被称为“工厂”是因为，每次我们有
+连接进来的时候，它都会“生产”一个我们的protocol对象。然后在reactor中安装一个TCP
+监听器以等待服务请求。当有请求进来时，创建一个TSServProtocol实例来服务那个客户。
+
+
+
+16.5.2 Creating a Twisted Reactor TCP Client
+16.5.2 创建一个Twisted Reactor TCP客户端
+
+
+
+Unlike the SocketServer TCP client, this one will not look like all the other
+clients. This one is distinctly Twisted.
+与SocketServer TCP客户不一样的是，这个例子与之前的客户端看上去不大一样。它是完全
+Twisted的。
+
+Example 16.8  Twisted Reactor Timestamp TCP Client (tsTclntTW.py)
+例16.8 Twisted Reactor Timestamp TCP客户端(tsTclntTW.py)
+
+Our familiar timestamp TCP client written from a Twisted point of view.
+用Twisted重写我们已经熟悉的时间戳TCP客户端。
+
+1	#!/usr/bin/env python
+2
+3	from twisted.internet import protocol, reactor
+4
+
+
+
+8	class TSClntProtocol(protocol.Protocol):
+9	def sendData(self):
+10	data = raw_input('> ')
+11	if data:
+12	print '...sending %s...' % data
+13	self.transport.write(data)
+14	else:
+15	self.transport.loseConnection()
+16
+17	def connectionMade(self):
+18	self.sendData()
+19
+20	def dataReceived(self, data):
+21	print data
+22	self.sendData()
+23
+24   class TSClntFactory(protocol.ClientFactory):
+25	protocol = TSClntProtocol
+26	clientConnectionLost = clientConnectionFailed = \
+27	lambda self, connector, reason: reactor.stop()
+28
+29   reactor.connectTCP(HOST, PORT, TSClntFactory())
+30   reactor.run()
+
+
+
+Line-by-Line Explanation
+逐行解释
+
+Lines 1–6
+1-6行
+Again, nothing really new here other than the import of Twisted components. It
+is very similar to all of our other clients.
+跟之前所有的客户端程序类似，这里还是导入Twisted的组件。
+
+
+Lines 8–22
+8-22行
+Like the server, we extend Protocol by overriding the same methods,
+connectionMade() and dataReceived(). Both execute for the same reason as the
+server. We also add our own method for when data need to be sent and call it
+sendData().
+与服务器一样，我们扩展Protocol，重写同样的函数connectionMade()和dataReceived()。
+这两个函数的用途也跟服务器一样。我们新加一个自己的函数sendData()，用于在需要发
+送数据时调用。
+
+Since we are the client this time, we are the ones initiating a conversation
+with the server. Once that connection has been established, we take the first
+step and send a message. The server replies, and we handle it by displaying it
+to the screen and sending another message to the server.
+由于我们现在是客户，所以我们要主动初始化跟服务器的对话。一旦连接建立好之后，我们
+先发送一个消息，服务器回复这个消息，我们把收到的回复显示在屏幕上，然后再发送其它
+消息给服务器。
+
+This continues in a loop until we terminate the connection by giving no input
+when prompted. Instead of calling the write() method of the transport object
+to send another message to the server, loseConnection() is executed, closing
+the socket. When this occurs, the factory’s clientConnectionLost() method will
+be called, and our reactor is stopped, completing execution of our script. We
+also stop the reactor if a clientConnectionFailed() for some other reason.
+这个过程会一直循环，直到用户没有给任何输入时，连接结束。结束时，就不是调用
+transport对象的write()函数传数据给服务器了，而是调用loseConnection()函数来关闭
+套接字。这时，工厂的clientConnectionLost()函数会被调用，同时，reactor就被关闭，
+脚本的执行就结束了。由于某些原因，clientConnectionFailed()被调用时，reactor也会
+被关闭。
+
+The final part of the script is where we create a client factory and make a
+connection to the server and run the reactor. Note that we instantiate the
+client factory here instead of passing it in to the reactor like in the server.
+This is because we are not the server waiting for clients to talk to us, and
+its factory makes a new protocol object for each connection. We are one client,
+so we make a single protocol object that connects to the server whose factory
+makes one to talk to ours.
+脚本的最后一部分是创建一个客户工厂，连接到服务器，然后运行reactor。注意，我们
+在这里实例化了客户端工厂，而不是像在服务器里那样把它传到reactor中。这是因为，我们
+不是等待客户连接的服务器，服务器在有连接时要为每个连接创建一个新的protocol对象。
+我们只是一个客户，所以我们只要创建一个protocol对象，连接到服务器，服务器的工厂会
+创建一个protocol对象来与我们对话。
+
+
+16.5.3 Executing Our TCP Server and Client(s)
+16.5.3 执行TCP服务器和客户端
+
+The Twisted client displays output similar to all our other clients:
+Twisted客户显示的内容与我们之前的客户类似：
+
+$ tsTclntTW.py
+> Where is hope
+...sending Where is hope...
+[Tue Apr 18 23:53:09 2006] Where is hope
+> When words fail
+...sending When words fail...
+[Tue Apr 18 23:53:14 2006] When words fail
+>
+$
+The server is back to a single connection. Twisted maintains the connection and
+does not close the transport after every message:
+服务器又回到了只有一个连接的情况。Twisted维护连接，不会在每个消息后都关闭
+transport。
+
+$ tsTservTW.py
+waiting for connection...
+...connected from: 127.0.0.1
+
+The “connection from” output does not have the other information because we
+only asked for the host/address from the getPeer() method of the server’s
+transport object.
+“connection from”输出没有其它的信息，因为我们只问服务器的transport对象的getPeer()
+函数要了主机地址的信息。
+
+
+
+16.6 Related Modules
+16.6 相关模块
+
+Table 16.4 lists some of the other Python modules that are related to network
+and socket programming. The select module is usually used in conjunction with
+the socket module when developing lower-level socket applications. It
+provides the select() function, which manages sets of socket objects.
+表16.4列出了其它与网络和套接字相关的Python模块。select模块通常在底层套接字程序
+中与socket模块联合使用。它提供的select()函数可以同时管理多个套接字对象。
+
+One of the most useful things it does is to take a set of sockets and listen
+for active connections on them. The select() function will block until at least
+one socket is ready for communication, and when that happens,
+它最有用的功能就是同时监听多个套接字的连接。select()函数会阻塞，直到有至少一个
+套接字准备好要进行通讯的时候才退出。
+
+it provides you with a set of which ones are ready for reading. (It can also
+determine which are ready for writing, although that is not as common as the
+former operation.)
+它提供了哪些套接字已经准备好可以开始读取的集合。（它也提供了哪些套接字已经准备
+好可以开始写的集合，不过这个功能相对来说不大常用）
+
+The async* and SocketServer modules both provide higher-level functionality as
+far as creating servers is concerned. Written on top of the socket and/or
+select modules, they enable more rapid development of client/server systems
+because all the lower-level code is handled for you. All you have to do is to
+create or subclass the appropriate base classes, and you are on your way. As we
+mentioned earlier, SocketServer even provides the capability of integrating
+threading or new processes into the server for more parallelized processing of
+client requests.
+async*和SocketServer模块在创建服务器方面都提供了高层次的功能。由于是基于socket和
+（或）select模块，封装了所有的底层的代码，它们使得你可以快速开发客户/服务器的系
+统。你所需要做的只是从适当的基类中派生出一个新的类。所有的东西就已经就绪了。就像
+之前所说的，SocketServer甚至提供了把线程或进程集成到服务器中的功能，以实现更好的
+对客户请求的并行处理的能力。
+
+Although async* provide the only asynchronous development support in the
+standard library, we have seen a third-party package that is much more
+contemporary and powerful than those older modules, Twisted. Although the
+example code we have seen in this chapter is slightly longer than the barebones
+scripts, Twisted provides a much more powerful and flexible framework and has
+implemented many protocols for you already. You can find out more about Twisted
+at its Web site:
+虽然async*是标准库提供的唯一的异步开发支持库。我们也可选择如Twisted这样的，相对
+标准库更现代，更强大的第三方库。虽然这里看到的例子代码比之前的什么都自己处理的
+代码稍微长那么一点，Twisted提供了更为强大，更具弹性的框架。它已经实现了很多协议。
+你可以在下面的网站找到更多有关Twisted的信息：
+
+http://twistedmatrix.com
+
+
+Table 16.4  Network/Socket Programming Related Modules
+表16.4 网络/套接字编程相关模块
+
+Module	Description
+模块    描述
+
+socket	Lower-level networking interface as discussed in this chapter
+socket	底层网络接口。本章讨论过。
+
+
+asyncore/   Provide infrastructure to create networked applications that process clients asynchronously
+asynchat
+
+asyncore/   为能异步处理客户请求的网络应用程序提供底层功能。
+asynchat
+
+select	Manages multiple socket connections in a single-threaded network server application
+select	在单线程网络服务器程序中，管理多个套接字连接。
+
+SocketServer	High-level module that provides server classes for networked
+                applications, complete with forking or threading varieties
+SocketServer	包含了写网络应用程序服务器所需要的高级别模块。提供了完整的进程和线程的版本。
+
+
+The topics we have covered in this chapter deal with network programming with
+sockets in Python and how to create custom applications using lower-level
+protocol suites such as TCP/IP and UDP/IP. If you want to develop higher-level
+Web and Internet applications, we strongly encourage you to head to Chapter 17 and 20.
+我们本章所讨论的主题涵盖了在Python中用socket网络编程和如何用低级别的协议如TCP/IP
+和UDP/IP来创建应用程序。如果你想要开发高层次的网页和Internet应用程序，我们强烈
+建议你阅读第17章和第20章。
+
+
+16.7 Exercises
+练习
+
+
+16–1.	Sockets. What is the difference between connection-oriented versus
+connectionless?
+16-1    套接字。面向连接和无连接有什么区别？
+16–2.	Client/Server Architecture. Describe in your own words what this term
+means and give several examples.
+16-2.   客户/服务器架构。用你自己的语言描述这个架构，并给出几个例子。
+16–3.	Sockets. Between TCP and UDP, which type of servers accept connections
+and hands them off to separate sockets for client communication?
+16-3.   套接字。TCP和UDP中，哪一种服务器在接受连接后，把连接交给不同的套接字处理
+与客户的通讯。
+16–4.	Clients. Update the TCP (tsTclnt.py) and UDP (tsUclnt.py) clients so
+that the server name is not hardcoded into the application. Allow the user to
+specify a hostname and port number, and only use the default values if either
+or both parameters are missing.
+16-4.   客户。修改TCP(tsTclnt.py)和UDP(tsUclnt.py)客户端，让服务器的名字不要在代码
+里写死，要允许用户指定一个主机名和端口，只有在两个值都没有输入的时候，才使用默认值。
+16–5.	Internetworking and Sockets. Implement Guido van Rossum’s sample TCP
+client / server programs found in Section 7.2.2 of the Python Library Reference
+and get them to work. Set up the server, then the client. An online version of
+the source is also available here:
+Intenet网络和套接字。找到Python Library Reference中7.2.2节贵铎 范 罗萨姆的示例
+TCP 客户/服务器程序，实现它并让它运行起来。先运行服务器，然后是客户端。源代码的
+一个在线版本可以在这里找到：
+http://www.python.org/doc/current/lib/ Socket_Example.html
+
+You decide the server is too boring. Update the server so that it can do much
+more, recognizing the following commands:
+你认为这个服务器太无聊了，决定要修改服务器，让它能识别以下命令：
+
+date	Server will return its current date/timestamp, i.e., time.ctime(time.time())
+os	Get OS info (os.name)
+ls	Give a listing of the current directory (HINTS: os.listdir() lists a
+directory, os.curdir is the current directory.) Extra credit: Accept “ls dir”
+and return dir’s file listing.
+
+date	服务器将返回它的当前时间 i.e., time.ctime(time.time())
+os	得到操作系统的信息(os.name)
+ls	得到当前目录的文件列表 (提示: os.listdir()可以得到目录列表，os.curdir
+能得到当前目录) 附加题: 要能接受“ls dir”指令，并返回dir目录的文件列表。
+
+You do not need a network to do this assignment—your machine can talk to
+itself. Note: After the server exits, the binding must be cleared before you
+can run it again. You may experience “port already bound” errors. The operating
+system usually clears the binding within 5 minutes, so be patient!
+做这个作业的时候，你不一定要有网络——你的机器可以跟自己通讯。注：在服务器退出后，
+要清除绑定后才能再次运行。否则，有可能得碰到“端口已经被使用”（“port already bound”）
+的错误信息。操作系统一般会在5分钟内清除绑定。所以，请耐心等待。
+
+16–6.   Daytime Service. Use the socket.getservbyname() to determine the port
+number for the “daytime” service under the UDP protocol. Check the
+documentation for getservbyname() to get the exact usage syntax (i.e.,
+socket.getservbyname.__doc__). Now write an application that sends a dummy
+message over and wait for the reply. Once you have received a reply from the
+server, display it to the screen.
+16-6.   日期时间服务。使用socket.getservbyname()函数得到UDP协议中，“daytime”服
+务所对应的端口。请参考getservbyname()函数的文档，查阅详细的语法。（即：
+socket.getservbyname.__doc__）。现在，写一个程序发送一个随便什么数据过去，等待
+回答。一旦你收到了服务器的信息，显示到屏幕上。
+
+16–7.   Half-Duplex Chat. Create a simple, half-duplex chat program. By
+“half-duplex,” we mean that when a connection is made and the service starts,
+only one person can type. The other participant must wait to get a message
+before he or she is prompted to enter a message. Once a message is sent, then
+the sender must wait for a reply before being allowed to send another message.
+One participant will be on the server side, while the other will be on the
+client side.
+16-7.   半双工聊天。创建一个简单的，半双工的聊天程序。“半双工”的意思是当创建一
+个连接，服务启动的时候，只有一个人可以打字，另一个人只有在等到有消息通知他输入
+消息时，才能说话。一旦消息发送出去后，要等到有回复了才能发送下一条消息。一个人
+是服务端，另一个人是客户端。
+
+16–8.   Full-Duplex Chat. Update your solution to the previous problem so that
+your chat service is now full-duplex, meaning that both parties can send and
+receive independently of each other.
+16-8.   全双工聊天。修改你刚才的程序，改成全双工，即两个人可以独立地发送和接收
+消息。
+
+16–9.   Multi-User Full Duplex Chat. Further update your solution so that your
+chat service is multi-user.
+16-9.   多用户全双工聊天。再次修改你的程序，把聊天服务改成支持多用户版本。
+
+16–10. Multi-User Multi-Room Full Duplex Chat. Now make your chat service
+multi-user and multi-room.
+16-10.  多用户，多房间全双工聊天。现在把聊天服务改成支持多个用户，多个房间。
+
+16–11. Web Client. Write a TCP client that connects to port 80 of your favorite
+Web site (remove the “http://” and any trailing info; use only the hostname).
+Once a connection has been established, send the HTTP command string “GET /\n”
+and write all the data that the server returns to a file. (The GET command
+retrieves a Web page, the “/” file indicates the file to get, and the “\n”
+sends the command to the server.) Examine the contents of the retrieved file.
+What is it? How can you check to make sure the data you received is correct?
+(Note: You may have to give one or two NEWLINEs after the command string. One
+usually works.)
+16-11.  网页客户。写一个TCP客户，连到你最喜欢的网站的80端口（去掉“http://”和其它
+的后缀信息，只用主机名）。一旦创建了一个连接，发送HTTP命令字符串“GET /\n”，把服务
+器返回的所有数据写到一个文件中。（GET命令用于得到网页，“/”表示要得到的文件，
+“\n”把命令发送到服务器）。检查得到的文件的内容，它是什么？怎么检查你得到的数据是
+否正确？（注：你可能要在命令后加一个或是两个回车，一般来说，一个就可以了。）
+
+16–12. Sleep Server. Create a “sleep” server. A client will request to be “put
+to sleep” for a number of seconds. The server will issue the command on behalf
+of the client, then return a message to the client indicating success. The
+client should have slept or should have been idle for the exact time requested.
+This is a simple implementation of a “remote procedure call” where a client’s
+request invokes commands on another machine across the network.
+16-12.  休眠服务器。创建一个“休眠”服务器，客户可以要求要“休眠”几秒钟。服务器就
+去做休眠的操作。休眠结束后，返回一个消息给客户，表示结束。客户在收到消息的时候，应该
+刚好等待了指定的时间。这就是一个简单的“远程过程调用”（“remote procedure call”），
+即客户发送一个指令，网络另一边的远程的机器执行这个命令。
+
+16–13. Name Server. Design and implement a name server. Such a server is
+responsible for maintaining a database of hostname-port number pairs, perhaps
+along with the string description of the service that the corresponding servers
+provide. Take one or more existing servers and have them “register” their
+service with your name server. (Note that these servers are, in this case,
+clients of the name server.) Every client that starts up has no idea where the
+server is that it is looking for. Also as clients of the name server, these
+clients should send a request to the name server indicating what type of
+service they are seeking. The name server, in reply, returns a hostname-port
+number pair to this client, which then connects to the appropriate server to
+process its request.
+16-13. 名字服务器。设计并实现一个名字服务器。这个服务器负责维护一个主机名－端口对
+的数据库，以及一个描述这个服务器提供的服务的字符串。选择一个或几个服务器到你的
+名字服务器上进程“注册”。（注意，这时，这些服务器是名字服务器的客户）。每一个客户
+在启动的时候，都不知道它们想要找的服务器的信息。名字服务器的客户也是这样。这些客
+户应该发送一个请求到名字服务器，说明它们想要得到什么服务。名字服务器返回一个
+主机名－端口对给客户，客户这时就可以连到合适的服务器来处理它的请求。
+
+Extra credit:
+(1) Add caching to your name server for popular requests;
+(2) Add logging capability to your name server, keeping track of which servers
+have registered and which services clients are requesting;
+(3) Your name server should periodically “ping” the registered hosts at their
+respective port numbers to ensure
+that the service is indeed up. Repeated failures will cause a server to be
+delisted from the list of services.
+附加题：
+(1) 在名字服务器中，加入对常用请求的缓冲。
+(2) 在名字服务器中，加入日志功能，记录下哪个服务器注册了，客户在请求哪一个服务。
+(3) 名字服务器应该周期性地“ping”这些注册了的服务器的对应端口，以确定这些服务器
+还在运行中。在连续数次ping失败后，就把这个服务器从列表中删除。
+
+You may implement real services for the servers that register for your name
+service, or just use dummy servers (which merely acknowledge a request).
+你可以实现一些真实的服务，来注册到你的名字服务器上，或者也可以使用一些哑服务
+（它们根本不对请求做应答）。
+
+
+16–14. Error Checking and Graceful Shutdown. All of our sample client/server
+code in this chapter is poor in terms of errorchecking. We do not handle when
+users press ^C to exit out of a server or ^D to terminate client input, nor do
+we check other improper input to raw_input() or handle network errors. Because
+of this weakness, quite often we terminate an application without closing our
+sockets, potentially losing data. Choose a client/server pair of one of our
+examples, and add enough error-checking so that each application properly shuts
+down, e.g., closes network connections.
+16-14. 错误检查和优美的退出。本章中，我们所有客户和服务器的例子代码都没有做错误
+检查。我们没有检查用户是否按下了^C来退出服务，或^D来结束客户输入，也没有检查
+raw_input()函数得到的输入的合法性，也没有检查网络错误。由于这些弱点，我们很可能
+会在退出程序的时候，没有关闭套接字，也有可能会丢失数据。选择一对客户/服务器例子，
+加入足够的错误检查，让程序能正常的退出。比方说会关闭网络连接。
+
+16–15. Asynchronicity and SocketServer. Take the example TCP server example and
+use either mix-in class to support an asynchronous server. To test your server,
+create and run multiple clients simultaneously and show output that your server
+is serving requests from both interleaved.
+16-15. 异步和SocketServer。选取TCP服务器例子，使用某一个混合类(mix-in)，让你的
+程序成为一个异步服务器。测试你的服务器，创建并同时运行多个客户，在服务器的输出
+里查看你的服务器是否在同时响应多个请求。
+
+16–16. *Extending SocketServer Classes. In the SocketServer TCP server code,
+we had to change our client from the original base TCP client because the
+SocketServer class does not maintain the connection between requests.
+(a) Subclass the TCPServer and StreamRequestHandler classes and rearchitect
+the server so that it maintains and uses a single connection for each client
+(not one per request).
+(b) Integrate your solution for the previous problem with your solution to part
+(a) such that multiple clients are being serviced in parallel.
+16-16. *扩展SocketServer类。在SocketServer TCP服务器代码中，我们不能使用原来的
+TCP客户，要做修改。这是因为SocketServer类在多个请求之间不保持连接。
+(a) 从TCPServer和StreamRequestHandler中派生出新的类，重新设计服务器的架构，让
+服务器能为每个客户只使用一个连接。（而不是每个请求一个连接）
+(b) 把你之前的问题的解决方案应用到(a)部分，让多个客户的请求可以被并行地处理。
+

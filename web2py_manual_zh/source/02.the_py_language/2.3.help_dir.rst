@@ -1,0 +1,53 @@
+help和dir命令
+===============
+Python语言提供了两个命令，用来获得当前作用域内对象定义的文档，包括论坛上以及用户定义的内容。
+
+如下面例子所示，我们可以通过help指令获得“1”这个对象的描述信息：
+
+::
+
+	>>> help(1)
+	Help on int object:
+	class int(object)
+	 |  int(x[, base]) -> integer
+	 |  
+	 |  Convert a string or number to an integer, if possible.  A floating point
+	 |  argument will be truncated towards zero (this does not include a string
+	 |  representation of a floating point number!)  When converting a string, use
+	 |  the optional base.  It is an error to supply a base when converting a
+	 |  non-string.  If base is zero, the proper base is guessed based on the
+	 |  string content.  If the argument is outside the integer range a
+	 |  long object will be returned instead.
+	 |  
+	 |  Methods defined here:
+	 |  
+	 |  __abs__(...)
+	 |      x.__abs__() <==> abs(x)
+	 |  
+	 |  __add__(...)
+	 |      x.__add__(y) <==> x+y
+	 |  
+	 |  __and__(...)
+	 |      x.__and__(y) <==> x&y
+	...
+
+由于“1”是一个整数，所以我们会得到关于“int”类的信息以及方法。而且在这里输出的内容被截断了，因为描述信息很长非常详细。
+
+类似的，我们可以通过“dir”命令获得对象“1”的方法：
+
+::
+
+	>>> dir(1)
+	['__abs__', '__add__', '__and__', '__class__', '__cmp__', '__coerce__
+		', '__delattr__', '__div__', '__divmod__', '__doc__', '__float__'
+		, '__floordiv__', '__format__', '__getattribute__', '__getnewargs__', '__hash__', 
+		'__hex__', '__index__', '__init__', '__int__', '__invert__', '
+		__long__', '__lshift__', '__mod__', '__mul__', '__neg__', '
+		__new__', '__nonzero__', '__oct__', '__or__', '__pos__', '__pow__
+		', '__radd__', '__rand__', '__rdiv__', '__rdivmod__', '__reduce__
+		', '__reduce_ex__', '__repr__', '__rfloordiv__', '__rlshift__', '
+		__rmod__', '__rmul__', '__ror__', '__rpow__', '__rrshift__', '
+		__rshift__', '__rsub__', '__rtruediv__', '__rxor__', '__setattr__', '__sizeof__
+		', '__str__', '__sub__', '__subclasshook__', '__truediv__', '__trunc__', '__xor__']
+		
+		

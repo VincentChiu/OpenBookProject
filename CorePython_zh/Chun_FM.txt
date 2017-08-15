@@ -1,0 +1,695 @@
+Praise for Core Python Programming
+对《Python核心编程》的褒奖
+“The long-awaited second edition of Wesley Chun’s Core Python Programming proves to be well worth the wait—its deep and broad coverage and useful exercises will help readers learn and practice good Python.”
+—Alex Martelli, author of Python in a Nutshell and editor of Python Cookbook
+
+“对陈仲才《Python核心编程》第二版的漫长等待是值得的——它的深邃、它的全面以及书中实用的练习将会帮助读者学会并掌握杰出的Python技能”
+——亚历克斯·马特利（Alex Martelli）《Python in a Nutshell》一书作者，以及《Python Cookbook》的编辑
+
+
+
+“There has been lot of good buzz around Wesley Chun’s Core Python Programming. It turns out that all the buzz is well earned. I think this is the best book currently available for learning Python. I would recommend Chun’s book over Learning Python (O’Reilly), Programming Python (O’Reilly), or The Quick Python Book (Manning).”
+—David Mertz, Ph.D., IBM DeveloperWorks?
+
+“之前就听到许多对陈仲才《Python核心编程》的溢美之词，最终这些褒奖被证明都没有言过其实。我想这是现今学习Python最出色的书籍了。我认为仲才的书超越《Learning Python》（O’Reilly出版社），《Programming Python》（O’Reilly社），以及《Quick Python Book》（Manning出版社）”
+——大卫·梅尔兹（David Mertz），哲学博士，IBM DeveloperWorks
+
+
+
+“I have been doing a lot of research [on] Python for the past year and have seen a number of positive reviews of your book. The sentiment expressed confirms the opinion that Core Python Programming is now considered the standard introductory text.”
+—Richard Ozaki, Lockheed Martin
+
+“我在过去的一年里对Python进行了许多研究，并且读到了许多对你作品的肯定评价。这些评述准确的表达了一个观点，这就是《Python核心编程》现在被看作是一本权威的Python读本。”
+——理查德·尾崎（Richard Ozaki），洛克西德·马丁（Lockheed Martin）公司
+
+
+“Finally, a book good enough to be both a textbook and a reference on the
+Python language now exists.”
+—Michael Baxter, Linux Journal
+
+“最终，一本杰出的融教材和参考书目于一身的Python书籍诞生了。。”
+——迈克尔·巴克斯特（Michael Baxter），《Linux Journal》
+
+
+
+“Very well written. It is the clearest, friendliest book I have come across yet for explaining Python, and putting it in a wider context. It does not presume a large amount of other experience. It does go into some important Python topics carefully and in depth. Unlike too many beginner books, it never condescends or tortures the reader with childish hide-and-seek prose games. [It] sticks to gaining a solid grasp of Python syntax and structure.”
+—http://python.org bookstore Web site
+
+“非常不错的作品。这是我迄今遇到的最清楚最友好的阐释Python的书籍了，并且它还将Python引入了更广阔的领域。它没有冒昧的大量引用其他经验，而是谨慎、深入的探索了Python的一些重要主题。与许多入门读物不同，本书不会用小孩子捉迷藏般的文字游戏折磨或施惠于读者。它紧紧扣住了Python语法和结构这两个主题。”
+——http://python.org 网上书店
+
+
+“[If ] I could only own one Python book, it would be Core Python Programming by Wesley Chun. This book manages to cover more topics in more depth than Learning Python but includes it all in one book that also more than adequately covers the core language. [If] you are in the market for just one book about Python, I recommend this book. You will enjoy reading it, including its wry programmer’s wit. More importantly, you will learn Python. Even more importantly, you will find it invaluable in helping you in your day-to-day Python programming life. Well done, Mr. Chun!”
+—Ron Stephens, Python Learning Foundation
+
+“（假如）我只能拥有一本Python书籍，那肯定就是陈仲才的《Python核心编程》。它涵盖了《Learning Python》的全部主题，但是却更加深入宽泛，所以这绝不单单是一本充分包含了核心语言的书籍。如果你只想在市面上购买一本Python书籍的话，我向你推荐本书。你会享受阅读的，包括它里面会经常幽程序员的一默。更重要的是，你将学会Python。更更重要的是，你会在日复一日的编程生活中受益不尽。好样的，仲才兄！”
+——罗恩·斯蒂芬（Ron Stephens），Python学习基金
+
+
+ “I think the best language for beginners is Python, without a doubt. My favorite book is Core Python Programming.”
+—s003apr, MP3Car.com Forums
+
+“毫无疑问的，对于初学者最好的语言我认为就是Python。而《Python核心编程》则是我的最爱。”
+——s003apr，MP3Car.com论坛
+
+
+“Personally, I really like Python. It’s simple to learn, completely intuitive, amazingly flexible, and pretty darned fast. Python has only just started to claim mindshare in the Windows world, but look for it to start gaining lots of support as people discover it. To learn Python, I’d start with Core PythonProgramming by Wesley Chun.”
+—Bill Boswell, MCSE, Microsoft Certified Professional Magazine Online
+
+“就我个人而言，我喜欢Python。它简单易学、十分直观、具有惊人的灵活性、而且快到岂有此理！Python刚刚才开始引来了Windows世界应有的关注。但是，如同人们发现它的过程一般，让这种关注的深入需要足够的支撑。学习Python，我选择从陈仲才的《Python核心编程》开始。”
+——比尔·博斯韦尔（Bill Boswell），微软认证系统工程师，《微软认证专家在线杂志》
+
+
+
+“If you learn well from books, I suggest Core Python Programming. It is by far the best I’ve found. I’m a Python newbie as well and in three months time I’ve been able to implement Python in projects at work (automating MSOffice, SQL DB stuff, etc.).”
+—ptonman, Dev Shed Forums
+“如果你能通过书籍高效学习，我推荐《Python核心编程》。它是我迄今为止发现的最好的书了。三个月前我还是一只Python菜鸟，如今我却已经可以在工作的项目（微软Office自动化，SQL DB填充等等）中应用Python了。”
+——ptonman，Dev Shed论坛
+
+
+“Python is simply a beautiful language. It’s easy to learn, it’s cross-platform, and it works. It has achieved many of the technical goals that Java strives for.A one-sentence description of Python would be: ‘All other languages appear to have evolved over time—but Python was designed.’ And it was designed well. Unfortunately, there aren’t a large number of books for Python. The best one I’ve run across so far is Core Python Programming.”
+—Chris Timmons, C. R. Timmons Consulting
+
+“Python是一门美丽的语言。它简单易学，跨平台，而且运转良好。达成了许多Java一直求索的技术目标。一言以蔽之就是：’其他的语言是与时代同步，而Python则是未雨绸缪’而且计划得颇为出色。遗憾的是，并没有足够多的Python书籍。至今最禁得起考验的就当属《Python核心编程》了。”
+——克里斯·提曼斯（Chris Timmons），C. R. Timmons咨询公司
+
+
+“If you like the Prentice Hall Core series, another good full-blown treatment to consider would be Core Python Programming. It addresses in elaborate concrete detail many practical topics that get little, if any, coverage in other books.”
+—Mitchell L Model, MLM Consulting
+
+“如果你喜欢Prentice Hall Core系列，那么《Python核心编程》就称得上是另一席盛宴。它通过对技术细节的精心阐述令许多实用的主题变得易于消化，同类书籍中，无出其右”
+——米切尔·L·莫多（Mitchell L Model），MLM咨询公司
+
+
+Welcome to Core Python Programming!
+欢迎走进Python核心编程
+
+We  are  delighted  that  you  have  engaged  us  to  help  you  learn  Python  as quickly and as in-depth as possible. Learning the syntax is one goal of this book; however, we also believe that if you learn how Python works under the covers, you won’t just be able to program in Python, but you will write more effective Python applications even as a beginner to the language. As you know, just because you learn a language’s syntax does not make you competent in it right away.
+我们很高兴能帮你尽快以及尽可能深入的学习Python。掌握语法是本书的一个目标，不管怎样，我们都坚信，那怕是一个初学者，只要他能掌握Python的运作机理，他就不再仅仅是用Python“编写”，而是能开发出更多高效的Python应用程序。但是你知道，并不是说掌握了一门语言的语法就能让你立刻登堂入室。
+
+Throughout the book, you will find many examples that you can try right in front of your computer. To hammer the concepts home, you will also find fun and challenging exercises at the end of every chapter. These easy and inter- mediate  exercises  are  meant  to  test  your  learning  and  push  your  Python skills. There simply is no substitute for experience. We believe you should not only pick up Python programming skills but also be able to master them
+in as short a time period as possible.
+在本书中，你能发现许多可以立即上手的例子。为了巩固基础，你还会在每章的末尾找到有趣又富有挑战性的习题。这些承上启下的简单练习可以检验你的所得，并且提升你的Python技巧。这显然并不能替代经验，我们只是想尽量用最短的时间让你不止初涉Python，而且能学会驾驭它。
+
+About This Book
+关于本书
+
+This  book  differs  from  other  Python  books  on  the  market  by  presenting  a broad  range  of  topics,  providing  numerous  examples,  and  going  in-depth where necessary. This book does not require a specific background such as prior knowledge of C or object-oriented programming. It is also not a large case  study  book  that  does  not  facilitate  picking  up  the  language  quickly. Finally, this book is not a pure reference nor is it meant to be a quick “dive” into Python. What we have is an extremely comprehensive introduction to the core features of the language (Part I) followed by a set of chapters that delve into specific areas of intermediate Python programming.
+本书之所以比其他Python书籍畅销，是因为它拥有广泛的选题、丰富的例子、以及必要的深入解析。本书不需要你拥有C语言或者面向程序对象程序设计之类的背景。本书同样也不是一本让你很难入门的个案解析。最后，本书也绝非一本纯粹的参考书或者快速入门指南。你手中的是一本针对这门语言特性的包罗万象的介绍（第一部分中），通过其下各章你可以洞悉Python编程的每个细节。
+
+This book is 40 percent introductory, 40 percent intermediate to advanced, and 20 percent reference. It is targeted toward technical professionals who are already familiar with programming in one other high-level language, as well as university/college  and  secondary  students.  Because  Python  is  used  in  larger solutions such as Zope, Plone, MailMan, and Django, this book may be used by principals developing, managing, maintaining, or integrating with those systems. With  regards  to  the  code  in  this  book,  about  a  third  of  the  first  edition readers sent in complaints that there were not enough large, full-fledged appli- cations in the book, or that the code examples were not long or comprehensive enough. Everyone else wrote that they loved the short, easy-to-understand examples and were not bored of page after page of mind-numbing code. The philosophy behind more short examples is to give you the ability to look at a piece of code and grasp its entirety. These turn into building blocks to under- standing and then can be incorporated into larger applications as well. There are line-by-line explanations for most of the larger programs in the book. The abundant interpreter code snippets scattered throughout the book are there for you to try on your computer as you are learning Python—use the interactive interpreter as much as possible. You not only learn and improve your Python from using it, but you can also benefit from working out bugs in your code before you paste it into your source file.
+本书40%是介绍，40%是晋级，余下的20%则是参考。我们将目标锁定于那些已经熟悉某种其他高级语言的人士，以及大中学生。因为Python可以和Zope、Plone、MailMan以及Django大幅度的接驳。所以本书可能被主要用于与这些系统有关的开发、管理、维护以及整合工作。对于书中代码的关注，第一版大约三分之一的读者来信是抱怨说书中没有足够大和足够成熟的应用程序的。也有人说代码的例子不够长或者不够完整。其他人则全部写信说他们喜欢书中简洁易懂的例子，它们从不连篇累牍、乱人心智。我们偏爱提供简短代码背后的哲学是，让读者能学会窥一斑而知全豹。像搭积木一样步步深入，最终垒土成山，完成大型应用程序。书中大多数大型程序都有逐行解释。丰富的翻译代码注释遍布其中，你可以在学习Python的同时加以实践——尽可能充分的使用交互解释器。通过这个方法你不仅可以学习和提高Pyhon水平，同时还能在向源文件粘贴代码之前就解决bug。
+
+Because you cannot learn Python well without practice, you will find the exercises at the end of every chapter to be one of the greatest strengths of this book. They will test your knowledge of chapter topics and definitions, as well as get you to code as much as possible. There is no substitute to learning a programming language faster and more effectively than by building applica-tions. You will find easy, intermediate, and difficult problems to solve. It is also here that you may have to write one of those “large” applications that many readers wanted to see in the book, but rather than having me do it, you gain the most from such exercises. Appendix A features answers to selected problems from each chapter.
+对于Python你不能光学不练。你会在每章的末尾找到练习，这是本书的凝练。它们可以检验你对该章主题和定义的理解，还能尽可能将你引向编码。开发应用程序是最快最高效学习程序设计语言所无可替代的方式。你将面对简单、中等、困难三种深度的问题。你要自己编写那些读者想在书中看到的“大”应用程序，而不是由我代劳，这将令你获益匪浅。附录A中有各章节练习的答案。
+
+
+
+Another  set  of  first  edition  readers  remarked  how  useful  the  reference
+tables were throughout the book, and how they meticulously copied them for reference.  Well,  instead  of  flipping  through  each  chapter  looking  for  the tables,  we  have  summarized  the  most  highly  used  ones  in  Appendix  B. Thanks for all of your feedback. I encourage you to keep talking to us and help us make a third edition possible and better than its predecessors!
+此外，第一版的读者还重点提及了遍布全书的参考表对他们有多大的帮助，以及他们要如何小心翼翼的引用。为了改变这种要去逐章翻查参考表的局面，我们将大多数高引用率的参考表都汇总在附录B中。在此我要感谢所有人的反馈意见，并期盼大家能继续与我们联系，让第三版的诞生成为可能，并让它比自己的前辈更优秀。
+
+Finally, both the “Other References” appendix and the CD-ROM from the first edition are not included with this edition. You would not believe how quickly Web links can become obsolete in six months much less six years! The most  up-to-date  source  code  and  Python  interpreters  can  easily  be  down- loaded for offline use at the book’s Web site, so there really is no reason to include a CD-ROM.
+最后，本版放弃了第一版的“其他参考”和随书光盘。你很难想象一个网页链接会在六个月而不是六年之后就销声匿迹。你可以轻松的从本书的网站下载最新的Python源代码和解释程序。所以我们实在没必要再保留一份随书光盘。
+
+
+About the Reader
+关于读者
+
+This book is meant for you if you are a programmer completely new to Python
+or  already  know  some  Python  but  want  to  know  more  and  improve  your Python skillset. Python is used in many fields, including engineering, informa- tion technology, science, business, entertainment, and so on. This means that the list of Python users (and readers of this book) includes but is not limited to:
+本书主要面向那些对Python初来乍到的程序员以及那些已经初入门径但想继续学习和提高自身Python技巧的程序员。Python已经被应用在了众多领域，工程、信息技术、科学、商务、娱乐……不一而足。这些领域涵盖了，但绝不局限于下列Python用户（以及本书读者）：
+
+Software engineers
+软件工程师
+Hardware design/CAD engineers
+硬件设计师/计算机辅助设计工程师
+QA/testing and automation framework developers
+质量评测/测试和自动控制构架开发者
+IS/IT/system and network administrators
+信息服务/信息技术/系统和网络管理员
+Scientists and mathematicians
+科学家和数学家
+Technical or project management staff
+技术或项目管理人员
+Multimedia or audio/visual engineers
+多媒体或音频/视频工程师
+SCM or release engineers
+源代码管理和发布工程师
+Web masters and content management staff
+网站管理员和内容管理员
+Customer/technical support engineers
+客户/技术支持工程师
+Database engineers and administrators
+数据库工程师和管理员
+Research and development engineers
+研究与开发工程师
+Software integration and professional services staff
+软件集成开发和专业服务人士
+Collegiate and secondary educators
+大学和高中教职人员
+Web service engineers
+网络服务系统工程师
+Financial software engineers
+金融软件工程师
+And many others
+以及诸多其他行业人士
+
+Some of the most famous companies using Python include Google, Yahoo!, NASA, Lucasfilm/Industrial Light and Magic, Red Hat, Zope, Disney, Pixar, and Dreamworks.
+一些知名的大公司都在使用着Python，例如：Google、雅虎、NASA、卢卡斯影业/工业光魔、Red Hat、Zope、迪斯尼、皮克斯以及梦工厂。
+
+
+The Author’s Experience with Python
+作者的Python经验
+
+I discovered Python over a decade ago at a company called Four11. At the time, the company had one major product, the Four11.com White Page directory service. Python was being used to design our next product: the Rocketmail Webbased e-mail service that would eventually evolve into what today is Yahoo!Mail.
+我是在十多年前在一家名为Four11的公司里初涉Python的。那时，公司有一个拳头产品——Four11.com白页目录服务。Python当时被用于设计我们的下一个产品：Rockermail在线电子邮件服务系统，也就是今天雅虎邮件系统的前身。（白页是指用户信息数据库，Rockermail是第一个主流的免费邮件系统。日后Four11被雅虎收购，雅虎使用Rockermail的引擎开发了雅虎邮件——译者按）
+
+It  was  fun  learning  Python  and  being  on  the  original  Yahoo!Mail  engi- neering team. I helped rearchitect the address book and spell checker. At the time,  Python  also  made  its  way  as  part  of  a  number  of  other  Yahoo!  sites, including  People  Search,  Yellow  Pages,  and  Maps  and  Driving  Directions, just to name a few. I was the lead engineer for People Search.
+学习Python和加入最早的雅虎邮件引擎团队都是令人愉悦的。借此，我重构了地址簿和拼写检查程序。那时，Python的身影也逐渐出现在了其他的雅虎页面上。比如“网上寻友”（People Search）、“黄页”、“地图和出行路线”（Maps and Driving Directions）等等……我还曾担任过“网上寻友”的主管工程师。
+
+Although Python was new to me then, it was fairly easy to pick up—much simpler than other languages I had learned in the past. The scarcity of text- books at the time led me to primarily use the Library Reference and Quick Reference Guide as my tools in learning, and also led to the motivation for the book you are reading right now.
+虽然当时Python对我来说是全新的，但是它却很容易上手——比我之前学过的语言都简单多了。由于当时Python教程的匮乏，所以我不得不使用《Python库参考手册》和《快速参考指南》作为我的学习工具，这也触发了我写作你手中这本书的念头。
+
+Since my days at Yahoo!, I have been able to use Python in all sorts of interesting ways at the jobs that followed. In each case, I was able to harness the power of Python in solving the problems at hand and in a timely manner.I have also developed several Python courses and have used this book to teach those classes, truly eating my own dogfood.
+我还在雅虎的日子里，就可以利用Python找到有趣的途径来完成五花八门的工作了。每次，Python的力量都能让我眼前一亮、信手拈来的化解问题。我同时还开发了一些Python课程，并将本书的内容用于授课，所以这真算得上是集腋成裘了。
+
+Not only is Core Python Programming a great book to learn Python from, but it is also the best book to teach Python with! As an engineer, I know what it takes to learn, understand, and apply a new technology. As a professional instructor, I also know what is needed to deliver the most effective sessions for clients. This provides the experience necessary to be able to give you real-world analogies and tips that you cannot get from someone who is “just a trainer” or
+“just a book author.”
+《Python核心编程》不仅是一本出众的学习用书，同样也是一部绝佳的Python教学用书。身为一位工程师，我知道如何学习、掌握、应用一门新技术。作为一名职业讲师，我也知道如何向顾客传达最有效的信息。正因为有了这些经验，才能给你带来真刀真枪的类比和提点，这是你无法从那些仅仅是“训练师”或“书籍作者”而已的人手中获得的。
+
+About the Author’s Writing Style: Technical, Yet Easy Reading
+关于作者的写作风格：技术精湛，却易于阅读
+
+Rather than strictly a “beginners” book or a pure, hard-core computer science reference book, my instructional experience indicates that an easy-to-read, yet technically oriented book serves our purpose the best, which is to get you up to speed on Python as quickly as possible so that you can apply it to your tasks posthaste. We will introduce concepts coupled with appropriate examples to
+expedite the learning process. At the end of each chapter you will find numerous exercises to  reinforce some of the concepts and ideas acquired in your reading.
+与一本严格意义上的或纯粹的“入门”读物，或者计算机核心技术参考书籍不同的是，我的指导经验告诉我，一本易于阅读并且还能坚持技术导向的书才是最符合读者需求的。也只有这样的书才能让你尽可能的以最快的速度提高Python，并能将其应用于你的作业之中。我们引入概念，并配以相应的实例来加快学习进程。在每章的最后，你会发现许多练习，借此你可以巩固学到的概念以及验证阅读中产生的想法。
+
+We are thrilled and humbled to be compared with Bruce Eckel’s writing style  (see  the  reviews  to  the  first  edition  at  the  book’s  Web  site  (http:// corepython.com). This is not a dry college textbook. As the author, I am having a conversation with you, as if you were attending one of my well-received Python training courses. As a lifelong student, I constantly put myself in my student’s  shoes  and  tell  you  what  you  need  to  hear  in  order  to  learn  the concepts as quickly and as thoroughly as possible. You will find reading this book fast and easy, without losing sight of the technical details.
+布鲁斯?埃克尔（Bruce Eckel）的写作风格让人高山仰止（可以在本书网站corepython.com看到关于第一版的评论）。这可不是一本枯燥的大学教材，作为作者，我是在和你交流，把你当作是我广受好评的Python培训班中的一员。作为一个终身学习者，我经常将自己置身于学生中，告诉你如何才能让你尽可能快速通透的掌握概念。你将能够快速通畅的阅读本书，而不必去在意那些技术资料。
+
+As an engineer, I know what I need to tell you in order to teach you a concept in Python. As a teacher, I can take technical details and boil them down into language that is easy to understand and grasp right away. You are getting the  best  of  both  worlds  with  my  writing  and  teaching  styles,  but  you  will enjoy programming in Python even more.
+身为一名工程师，我知道为了让你掌握Python的概念需要传授什么。作为一个老师，我知道如何将技术细节凝练成能让你轻松理解并能立刻上手的语言。本书可谓将我的写作风格和教学风格展现地两全其美，你会前所未有的享受Python编程的。
+
+About This Second Edition
+关于第二版
+
+At the time the first edition was published, Python was entering its second era with the release of version 2.0. Since then, the language has seen significant improvements contributing to the overall continuing success and acceptance of the language.  Deficiencies have been removed and new  features added that bring a new level of power and sophistication to Python developers worldwide. We are thrilled to be able to update this book yet still deliver easy reading along with comprehensive coverage of the exciting new features. This book includes changes to Python 2.5, released in the fall of 2006, and even some pre-announced features of 2.6 and beyond. As in the first edition, we aim to keep all of the topics relevant for readers regardless of the Python version you are using, extending the lifetime of this book, retarding its obsolescence. 
+在本书第一版刊印之后，随着2.0版的发布，Python进入了自己的第二个时代。自那之后，这门语言的重大进步为其带来了全面而持续的成功和认可。摒除了缺陷，加入了新特点，这为全球的Python开发者带来了新一级别的能量和挑战。我真的很担心，这本续作能否在涵盖所有激动人心的新特点的同时还保持原来简单易懂的特点。本书涵盖了2006年秋发布的Python2.5版本，乃至一些关于将来2.6版的预告。如同第一版一样，我们的目标是让本书所有主题不受版本的影响，让读者能终身受用，而不是很快被淘汰。
+
+
+Python is slowly going to be transitioning to the next big version change with a release affectionately called “Python 3000” by its creator, Guido van Rossum. This is just the marketing name for Python 3.0, or “Py3K” for short.It will be developed in parallel with the remaining 2.x releases. There will be some incompatibilities with older versions of Python; however, the core team will work hard to ensure that code will be backwards-compatible for the most part. (This is in tradition with any new Python release.) Look mostly for interesting additions to the language as well as the disappearance of old design flaws and deprecated features.
+Python的创始人贵铎 范 罗萨姆（Guido van Rossum）一直慢慢酝酿着Python的下次大转变，他亲切地称之为“Python 3000”。“Python3000”和它的缩写“Py3k”都只是Python3.0的代号。它会和2.x版本平行开发。尽管会产生一些和过去Python版本的不兼容，但是核心团队会尽全力确保绝大部分的向后兼容性（这也是Python新版本研发的惯例）。我们更加期盼能在摒除原有设计缺陷和争议的同时，添加更多有趣的特性。
+
+We will continue to update the book’s Web site with white papers, updates, and other related articles to keep Core Python Programming as contemporary as possible, regardless of which new release of Python you have migrated to. 
+我们会保持本书网站的更新，包括白皮书、升级、和其他相关文章，并借此尽可能地令《Python核心编程》的同步——不管你打算将Python迁移至哪个新版本。
+
+The new topics we have added to this edition include:
+在本版中加入的新主题包括：
+
+?	Boolean and set types (Chapters 5 and 7)
+?	New-style classes (Chapter 13)
+?	Subclassing built-in types
+?	Static methods and class methods
+?	Slots
+?	Properties
+?	Descriptors
+?	Metaclasses
+布尔型和集合类型（第五和第七章）
+新式类（十三章）
+子类 内建类
+静态方法和类方法
+slot
+属性
+描述符
+元类
+
+?	Functions (Chapter 11)
+?	Generators
+?	Function (and method) decorators
+?	Statically nested scoping
+?	Inner functions
+?	Closures
+?	Currying and partial function application
+
+函数（十一章）
+生成器
+函数（与方法）装饰器
+静态嵌套作用域
+内部函数
+闭包
+Currying和偏函数应用
+
+?	Looping constructs (Chapter 8)
+?	Iterators
+?	List comprehensions
+?	Generator expressions
+循环结构（八章）
+迭代器
+列表解析
+生成器表达式
+
+?	Extended import syntax (Chapter 12)
+?	as keyword
+?	Multi-line import
+?	Absolute importing
+?	Relative importing
+扩展导入语法（十二章）
+as 关键字
+多行导入
+绝对导入
+相对导入
+?	Improved exception handling features (Chapter 10)
+?	with statement
+?	try-except-finally statement
+改良的异常处理功能（十章）
+with 语句
+try-except-finally语句
+In addition, we are proud to introduce three new chapters to the book: “Internet Client  Programming” (Chapter 17), “Database  Programming”  (Chapter 21), and “Miscellaneous” (Chapter 23). These are a few intermediate areas where Python is used quite often. All existing  chapters have been refreshed and updated to the latest versions of Python. Please see the chapter guide that follows for more details.
+
+此外，我们很高兴介绍本书的三个新章节：“网络客户端编程”（第十七章），“数据库编程”（第二十一章），“其他话题”（第二十三章）。这三章里面有很多中级的内容会经常用到。所有原来的章节都已经更新到Python的最新版本。欲知详情，请移驾下文章节指导。
+
+
+Chapter Guide
+章节导航
+
+
+Chapter Guide
+
+This book is divided into two main sections. The first part, taking up about two-thirds of the text, gives you treatment of the “core” part of the language, and the second part provides a set of various advanced topics to show what you can build using Python.
+本书分为两个主体部分：第一部分，占据了大约三分之二的篇幅，来向你阐释这门语言的“核心”内容。第二部分则提供了各种晋级主题来向你展示你可以使用Python来做些什么。
+
+Python is everywhere—sometimes it is amazing to discover who is using
+Python and what they are doing with it—and although we would have loved
+to produce additional chapters on such topics as Java/Jython, Win32 pro- gramming, CGI processing with  HTMLgen, GUI programming with third- party  toolkits  (wxWidgets,  GTK+,  Qt,  etc.),  XML  processing,  numerical and scientific processing, visual and graphics image manipulation, and Web services  and  application  frameworks  (Zope,  Plone,  Django,  TurboGears, and so on), there simply wasn’t enough time to develop these topics into their  own  chapters.  However,  we  are  certainly  glad  that  we  were  at  least able to provide you with a good introduction to many of the key areas of Python development including some of the topics mentioned previously.
+Python无处不在——有时发现正在使用Python的人，以及他们正在用Python解决的工作是令人惊异地——尽管我们很高兴在本书中加入了许多主题，比如Java/Jython、Win32编程、使用HTMLgen处理CGI、使用第三方工具（wxWidgets、GTK+、Qt等等）的GUI编程、XML处理、数字科学计算处理、视觉和图形图像处理、Web服务和应用程序框架（Zope、Plone、Django、TurboGears等等）。只是没有足够的时间将这些主题完善成独立的章节。不管怎样，我们很高兴至少针对这些Python发展的关键领域，我们已经完成了很不错的介绍。这当然就包括先前提到的那些主题。
+
+Here is a chapter-by-chapter guide.
+以下是每章概览：
+Part I: Core Python
+第一部分：Python核心
+
+Chapter 1—Welcome to Python!
+We begin by introducing Python to you, its history, features, benefits, and
+so on, as well as how to obtain and install Python on your system.
+第一章——欢迎来到Python世界！
+在开始的地方我们会介绍Python的历史、特性、优点等等，当然还有如何获得和安装
+Python。
+
+Chapter 2—Getting Started
+If you are an experienced programmer and just want to see “how it’s done”
+in Python, this is the right place to go. We introduce the basic Python
+concepts and statements, and because many of these will be familiar to you,
+you can simply learn the proper syntax in Python and get started right away
+on your projects without sacrificing too much reading time.
+第二章——快速入门
+如果你是一个有经验的编程人员，只想看看Python如何工作的，这一章就是你想要去
+的地方。在这里我们会介绍Python中基本的概念和语句，其中很多内容对你来说也
+许会很熟悉，你可以只学习Pythonz中正确的语法，然后直接开始你的项目了。
+
+Chapter 3—Syntax and Style
+This section gives you a good overview of Python’s syntax as well as style
+hints. You will also be exposed to Python’s keywords and its memory
+management ability.
+第三章——语法和风格
+本章将对Python的语法进行总览，并给出一些关于风格的注意事项。你可以接触到
+Python的关键词，还会见识到它的内存管理能力。
+
+Your first Python application will be presented at the end of the chapter
+to give you an idea of what real Python code looks like.
+在本章的结尾将会出现你的第一个Python程序，你可以体会到真正的Python代码。
+
+Chapter 4—Python Objects
+This  chapter  introduces  Python  objects.  In  addition  to  generic 
+object attributes, we will show you all of Python’s data types and
+operators, as well as show you different ways to categorize the standard
+types. Built-in functions that apply to most Python objects will also be
+covered.
+第四章——Python对象
+本章主要介绍Python中的对象。除了一般对象的属性外，我们还会展示Python的数据
+类型和操作符，以及多种对标准类型的分类方法。本章还会涉及一部分内建函数，它
+们对绝大多数Python对象都有效。
+
+Chapter 5—Numbers
+In  this  chapter,  we  discuss  Python’s  main  numeric  types:  integers,
+ floating point numbers, and complex numbers. We look at operators and
+built-in and factory functions which apply to all numbers, and we also
+briefly discuss a few other related types.
+第五章——数字
+在这一章，我们会讨论Python主要的数字类型：整数、浮点数以及复数。我们会研究
+对所有数字有效的操作符、内建函数以及工厂函数，还会简短地看一下其他相关的类型。
+
+Chapter 6—Sequences: Strings, Lists, and Tuples
+Your first meaty chapter will expose you to all of Python’s powerful
+sequence types: strings, lists, and tuples. We will show you all the
+built-in functions, meth- ods, and special features, which apply to each
+type as well as all their operators.
+第六章——序列：字符串，列表和元组
+这一章是你遇到的第一个内容丰富的章节，它将向你展示Python中所有的序列类型：字
+符串，列表以及元组，它们功能很强大。我们还会向你展示和每个类型有关的内建函
+数，方法，以及特性，当然还有所有的操作符。
+
+Chapter 7—Mapping and Set Types
+Dictionaries  are  Python’s  mapping  or  hashing  type.  Like  other  data
+ types, dictionaries also have operators and applicable built-in functions
+and methods. We  also  cover  Python’s  set  types  in  this  chapter, 
+discussing  their  operators, built-in and factory functions, and built-in
+methods.
+第七章——映射和集合类型
+字典是Python中的集合类型，又称哈希类型。和其他数据类型一样，字典也有操作
+符，内建函数和方法。本章还会讲述集合类型，同样会讨论它们的操作符，内建函
+数，工厂函数以及内建方法。
+
+Chapter 8—Conditionals and Loops
+Like many other high-level languages, Python supports loops such as for and
+while, as well as if statements (and related). Python also has a built-in
+func- tion called range() which enables Python’s for loop to behave more
+like a tra- ditional counting loop rather than the “foreach” iterative type
+loop that it is. Also included is coverage of auxiliary statements such as
+ break, continue, and pass, as well as a discussion of newer constructs
+like iterators, list compre- hensions, and generator expressions.
+第八章——条件和循环
+和许多其他高级编程语言一样，Python支持例如for和while之类的循环，以及if声明
+语句（还有其他相关的）。Python还有一个内建函数range()，它可以使得Python的
+for循环表现得像一个传统的计数循环，而不是像一个“foreach”迭代循环。本章还涵
+盖了一些辅助语句，例如break, continue, 以及pass。 还有一部分内容是关于新的
+结构，例如迭代器，列表解析以及生成器表达式。
+
+Chapter 9—Files and Input/Output
+In addition to standard file objects and input/output, this chapter
+introduces you to file system access, file execution, and persistent storage.
+第九章——文件和输入/输出
+除了标准文件对象和输入/输出，本章还介绍了文件系统存取，文件执行，以及永久存储。
+
+Chapter 10—Errors and Exceptions
+One  of  Python’s  most  powerful  constructs  is  its  exception  handling
+ ability. You can see a full treatment of it here, instruction on how to
+raise or throw exceptions, and more importantly, how to create your own
+exception classes.
+第十章——错误和异常
+Python 的最强大的结构之一就是它的异常处理能力。在本章，你可以看到完全的处理
+过程，还有一些指示用来告诉我们如何引发或者抛出异常。还有一点更重要的内容是
+如何创造我们自己的异常类。
+
+Chapter 11—Functions and Functional Programming
+Creating and calling functions are relatively straightforward, but Python
+has many  other  features  that  you  will  find  useful,  such  as 
+default  arguments, named or keyword arguments, variable-length arguments,
+and some func- tional programming constructs. We also dip into variable
+scope and recursion briefly. We will also discuss some advanced features
+such as generators, deco- rators, inner functions, closures, and partial
+function application (a more gen- eralized form of currying).
+第十一章——函数和函数式编程
+编写和调用函数相对而言还是比较直观的，但是Python还有许多特性会让你觉得有
+用，比如默认参数，"命名"参数或者说关键词参数，可变长度参数，以及函数式编程结
+构。我们还将粗略看一下变量范围和递归，另外还要讨论一些高级特性，比如生成
+器，装饰器，内部函数，闭包，偏函数程序（currying的更普遍形式）。
+
+
+Chapter 12—Modules
+One of Python’s key strengths is its ability to be extended. This feature
+allows for  “plug-and-play”  access  as  well  as  promotes  code  reuse. 
+Applications written as modules can be imported for use by other Python
+modules with a single line of code. Furthermore, multiple module software
+distribution can be simplified by using packages.
+第十二章——模块
+Python的一个关键能力就是它的可扩充性。这种特性允许“即插即用”访问，还鼓励了
+代码复用。写成模块的程序可以被其他程序导入，过程简单到只要一行代码。此外，
+多模块的软件分发可以通过使用包（package）来简化。
+
+Chapter 13—Object-Oriented Programming
+Python  is  a  fully  object-oriented  programming  language  and  was 
+designed that way from the beginning. However, Python does not require you
+to pro- gram in such a manner—you may continue to develop
+structural/procedural code  as  you  like,  and  can  transition  to  OO 
+programming  anytime  you  are ready to take advantage of its benefits.
+Likewise, this chapter is here to guide you through the concepts as well as
+advanced topics, such as operator over- loading, customization, and
+delegation. Also included is coverage of new fea- tures specific to
+new-style classes, including slots, properties, descriptors, and metaclasses.
+第十三章——面向对象编程
+Python是个完全的面向对象编程语言，而且从一开始就是这样设计的。当然，Python
+不强迫你用这种方式编程，你可以继续开发结构式、过程式的代码。任何时间当你准
+备好利用OO编程的优势时，你可以转换到OO编程上。同样地，本章是为了指导你完全
+理解这些概念，还讨论了一些高级主题，例如操作符重载，定制，以及授权。本章还
+介绍了一些关于新式类的新特性，例如slot，属性（property），描述符
+(descriptor), 元类(metaclass)。
+
+Chapter 14—Execution Environment
+The  term  “execution”  can  mean  many  different  things,  from  callable
+ and executable  objects  to  running  other  programs  (Python  or 
+otherwise).  We discuss these topics in this chapter, as well as
+controlling execution via the operating system interface and different ways
+of terminating execution.
+第十四张——执行环境
+“执行”这个词可以有很多不同的意义，从可调用和可执行的对象到执行行其他程序
+(Python或者其他的)。本章会讨论这些主题，以及通过操作系统接口来控制执行，另
+外还提出几种不同的终止执行的方法。
+
+Part II: Advanced Topics
+第二部分：高级主题
+
+Chapter 15—Regular Expressions
+Regular expressions are a powerful tool used for pattern matching, extract-
+ing, and search-and-replace functionality. Learn about them here.
+第15章——正则表达式
+正则表达式是个非常强大的工具，可以用来进行模式匹配，提取，以及搜索-替换。本
+章可以学习到这些内容。
+
+Chapter 16—Network Programming
+So many applications today need to be network-oriented. You have to start
+somewhere. In this chapter, you will learn to create clients and servers,
+using TCP/IP and UDP/IP, as well as get an introduction to SocketServer and
+Twisted.
+第十六章——网络编程
+如今有太多的程序是面向网络的。你该从何下手呢？你可以从本章学习到如何使用
+TCP/IP和UDP/IP来创建客户端和服务器端，另外还可以初步了解SocketServer和Twisted.
+
+Chapter 17—Internet Client Programming
+In  Chapter  16,  we  introduced  network  programming  using  sockets. 
+Most Internet protocols in use today were developed using sockets. In this
+chapter, we  explore  some  of  these  higher-level  libraries,  which  are
+ used  to  build clients  of  such  Internet  protocols.  In  particular, 
+we  focus  on  FTP,  NNTP, SMTP, and POP3 clients.
+第十七章——网络客户端编程
+在第十六章中，我们介绍了如何使用套接字来进行网络编程。今天我们使用的绝大部
+分网络协议都是使用套接字开发的。在这一章，我们将探索更高一层的库，它们被用
+来创建上述网络协议的客户端。特别来说，我们会关注FTP，NNTP，SMTP和POP3客户端。
+
+Chapter 18—Multithreaded Programming
+Multithreaded programming is a powerful way to improve the execution per-
+formance  of  many  types  of  application.  This  chapter  ends  the 
+drought  of written  documentation  on  how  to  do  threads  in  Python 
+by  explaining  the concepts  and  showing  you  how  to  correctly  build
+ a  Python  multithreaded application.
+第十八章——多线程编程
+多线程编程可以用来提高很多类型的程序的执行性能。很多人想要一些关于Python中
+多线程编程的文档，本章可以让这些呼声停止了，因为这里会解释概念，并向你展示
+如何正确的建造一个Python多线程程序。
+
+Chapter 19—GUI Programming
+Based on the Tk graphical toolkit, Tkinter is Python’s default GUI develop-
+ment module. We introduce Tkinter to you by showing you how to build sim-
+ple sample GUI applications (say that ten times, real fast!). One of the
+best ways to learn is to copy, and by building on top of some of these
+applications, you will be on your way in no time. We conclude the chapter
+by presenting a more complex example, as well as take a brief look at Tix,
+Pmw, wxPython, and PyGTK.
+第十九章——图形用户界面(GUI)编程
+Tkinter是Python上的默认GUI开发模块，它是基于Tk图形工具集的。我们将向你展示
+如何打造一个简单的GUI程序例子（我至少要说十遍：真的非常快！）。最好的一个学
+习方法是复制，通过修改已有的这几个程序例子，你已经开始了你的GUI之旅。我们以
+一个较复杂的例子结束本章，当然还顺便介绍了Tix, Pmw, wxPython和PyGTK。
+
+
+Chapter 20—Web Programming
+Web programming using Python takes three main forms: Web clients, Web
+servers, and the popular Common Gateway Interface applications that help
+Web servers deliver dynamically-generated Web pages. We will cover them
+all in this chapter: simple and advanced Web clients and CGI applications, as
+well as how to build your own Web server.
+第二十章——Web编程
+我们使用Python编程一共有三个主要形式：Web客户端，Web服务器，以及广受欢迎的
+通用网关接口(CGI)程序，后者用来帮助Web服务器传送动态产生的Web页面。本章将会
+包括所有内容：简单/高级的Web客户端和CGI程序，以及如何建立你自己的Web服务器。
+
+Chapter 21—Database Programming
+What Python does for application programming carries to database program-
+ming as well. It is simplified, and you will find it fun! We first review
+basic database  concepts,  then  introduce  you  to  the  Python  database
+ application programmer’s interface (API). We then show you how you can
+connect to a relational database and perform queries and operations with
+Python. Finally,
+if you want hands-off using the Structured Query Language (SQL) and want
+to just work with objects without having to worry about the underlying
+data- base layer, we will introduce you to a few object-relational managers
+(ORMs), which simplify database programming to yet another level.
+第二十一章——数据库编程
+对Python来说，数据库编程和其他类型的编程一样，都很简单又有趣。我们首先回顾
+一下基本的概念，然后向你介绍Python数据库的程序接口(API)。接着我们将向你展
+示如何才能连接到一个关系数据库，如何使用Python进行查询和其他操作。最后，如
+果你不想碰SQL，不想考虑底层的数据库， 而只想使用对象，我们将向你介绍一些对
+象-关系管理器（ORM），它们可以再次简化数据库编程。
+
+Chapter 22—Extending Python
+We mentioned earlier how powerful it is to be able to reuse code and extend
+the language. In pure Python, these extensions are modules, but you can
+also develop lower-level code in C, C++, or Java, and interface those with
+Python
+in a seamless fashion. Writing your extensions in a lower-level programming
+language  gives  you  added  performance  and  some  security  (because 
+the source code does not have to be revealed). This chapter walks you
+step-by- step through the extension building process.
+第二十二章——扩展Python
+我们以前提到过代码复用和语言扩展的强大性。在纯Python中，这些扩展是以模块形
+式存在的，但是你也可以使用C、C++或者Java来开发底层代码，并提供无缝的Python
+接口。使用低级别的编程语言编写你的扩展可以让你提高性能和安全性，因为源代码
+不需要公开。本章将一步一步介绍扩展的打造过程。
+
+
+Chapter 23—Miscellaneous
+This new chapter consists of bonus material that we would like to develop
+into full, individual chapters in the next edition. Topics covered here
+include Web Services, Microsoft Office (Win32 COM Client) Programming, and
+Java/ Jython.
+第二十三章——其它话题
+本章包含了一些额外材料，我们会在下一版将它们扩展成全面、单独的章节。本章包
+括的主题包括了Web服务，微软Office(Win32 COM 客户端)编程，以及Java/Jython。
+
+Optional Sections
+选读段落
+
+Subsections or exercises marked with an asterisk ( * ) may be skipped due to their advanced or optional nature. They are usually self-contained segments that can be addressed at another time.
+书中某些标有星号（*）的段落和练习，表示其为晋级或者可选读的。它们通常是自成一体的，你可以在今后有时间的时候再研究。
+
+Those  of  you  with  enough  previous  programming  knowledge  and  who have set up their Python development environments can skip the first chapter and go straight to Chapter 2, “Getting Started,” where you can absorb Python and be off to the races.
+如果你已经有了足够的编程知识，并且已经设置好了Python开发环境。那么你就可以跳过第一章，直接切入第二章“快速入门”。从那里你可以吸纳Python并且一马当先。
+
+Conventions
+体例
+
+All program output and source code are in Courier font. Python keywords appear  in  Courier-Bold font.  Lines  of  output  with  three  leading  greater than signs, >>>, represent the Python interpreter prompt.
+所有的程序输出和源代码都使用Courier英文字体标注。Python关键字则以Courier粗体标注。以“>>>”开头的输出行表示Python的解释器提示符。
+
+“Core Notes” are highlighted with this logo.
+“核心笔记”图标
+ 
+“Core Style” notes are highlighted with this logo.
+ “核心风格”图标
+
+“Core Module” notes are highlighted with this logo.
+“核心模块”图标
+ 
+“Core Tips” notes are highlighted with this logo.
+“核心提示”图标
+ 
+
+New features to Python are highlighted with this logo. The version(s) of
+Python these features first appeared in is given inside the logo.
+Python的新功能以这个图标标注。图标中数字是指该功能首次出现时的版本号。
+
+
+Book Resources
+
+
+I welcome any and all feedback: the good, the bad, and the ugly. If you have any comments, suggestions, kudos, complaints, bugs, questions … anything at all, feel free to contact me at corepython@yahoo.com.
+我欢迎一切反馈，不论是好的、坏的、即使是不理智的。如果你对本书有任何意见、建议、褒奖、抱怨、纠错、问题……请不要有顾虑，写信给我！corepython@yahoo.com
+
+You will find errata source code, updates, upcoming talks, Python training,
+downloads, and other information at the book’s Web site located at:http://corepython.com
+你可以在本书的网站（http://corepython.com）上找到：勘误表、更新、研讨预告、Python训练、下载、以及其他相关信息。
+
+Acknowledgments for the Second Edition
+第二版致谢
+Reviewers and Contributors
+评论家和贡献者
+
+Shannon -jj Behrens (lead reviewer) 顶级评论家
+Michael Santos (lead reviewer)顶级评论家
+Rick Kwan
+Lindell Aldermann (co-author of the new Unicode section in Chapter 6) 第六章Unicode新段落的合著者
+Wai-Yip Tung (co-author of the Unicode example in Chapter 20)第二十章Unicode实例的合著者
+Eric Foster-Johnson (co-author of Beginning Python)《Beginning Python》的合著者
+Alex Martelli (editor of Python Cookbook and author of Python in a Nutshell) 《Python Cookbook》的编辑以及《Python in a Nutshell》的作者
+Larry Rosenstein
+Jim Orosz
+Krishna Srinivasan
+Chuck Kung
+
+
+Inspiration
+灵感 
+My wonderful children and pet hamster.
+我出色的孩子和宠物仓鼠
+
+Production
+出版
+Mark Taub and Debra Williams-Cauley (Acquisitions Editors) 采编
+Lara Wysong (Project Editor)策划编辑
+John Fuller (Managing Editor)副主编
+Sam RC (Project Manager at International Typesetting and Composition) International Typesetting and Composition的项目主管
+
+
+Acknowledgements for the First Edition
+第一版致谢
+
+Reviewers and Contributors
+评论家和贡献者
+
+
+Guido van Rossum (creator of the Python language) Python语言的创始人
+Dowson Tong
+James C. Ahlstrom (co-author of Internet Programming with Python)《Internet Programming with Python》的合著者
+ S. Candelaria de Ram
+Cay S. Horstmann (co-author of Core Java and Core JavaServer Faces) 《Core Java and Core JavaServer Faces》的合著者
+Michael Santos
+Greg Ward (creator of distutils package and its documentation) distutils包和文档的创始人
+Vincent C. Rubino
+Martijn Faassen 
+Emile van Sebille 
+Raymond Tsai
+Albert L. Anders (co-author of MT Programming chapter) “多线程程序设计”章节的合著者
+Fredrik Lundh (author of Python Standard Library) 《Python Standard Library》一书的作者
+Cameron Laird
+Fred  L.  Drake,  Jr.  (co-author  of  Python  &  XML  and  editor  of  the  official
+Python documentation) 《Python  &  XML》的合著者，以及Python官方文档的编辑
+Jeremy Hylton
+Steve Yoshimoto
+Aahz Maruch (author of Python for Dummies)《Python for Dummies》一书作者
+Jeffrey E. F. Friedl (author of Mastering Regular Expressions)《Mastering Regular Expressions》一书作者
+ Pieter Claerhout
+Catriona (Kate) 
+Johnston
+David Ascher (co-author of Learning Python and editor of Python Cookbook) 《Learning Python》的合著者，以及《Python Cookbook》的编辑
+Reg Charney
+Christian Tismer (creator of Stackless Python) Stackless Python的发明人
+ Jason Stillwell
+and my students at UC Santa Cruz Extension
+以及我在加利福尼亚大学圣克鲁兹分校的学生们
+
+Inspiration
+灵感
+James P. Prior (my high school programming teacher)我高中的编程老师
+Louise Moser and P. Michael Melliar-Smith (my graduate thesis advisors at
+UCSB)我在加利福尼亚大学圣塔芭芭拉分校的毕业论文指导教师
+Alan  Parsons,  Eric  Woolfson,  Andrew  Powell,  Ian  Bairnson,  Stuart  Elliott, David  Paton,  all  other  Project  participants,  and  fellow  Projectologists  and Roadkillers (for all the music, support, and good times)
+所有的项目参与者，以及那些Projectologists和Roadkillers的伙伴（感谢那些音乐、鼓励、和美好的时光）
+
+I would also like to thank my family, friends and the Lord above, who have kept me safe and sane during this crazy period of late nights and abandonment. And finally, I would like give a big thanks to all those who believed in me (you know who you are!)—I couldn’t have done it without you. Those who didn’t … well, you know what you can do! :-)
+
+我还要感谢我的家人、朋友和上司，是你们让我安稳的度过了那些秉烛而作却常常才思枯竭的疯狂岁月。最后，我还要向所有信任我的人献上最诚挚的感谢（你知道，我在说你！）——没有你们，我是无法取得今天的成绩的。你们不用……等等，我想你知道你们能做什么！:-)
+
+
+Finally, I would like to thank you, my readers, and the Python community at large. I am excited at the prospect of teaching you Python and hope that you enjoy your travels with me, on our second journey.
+
+最后，我还要深深地感谢你们，我的读者，以及Python社区。我非常高兴能指导你学习Python ,并且希望在我们的第二次远航中你能与我们一同享受这段旅程！
+
+
+Wesley J. Chun
+陈仲才
+Silicon Valley, CA
+加利福尼亚，硅谷
+(It’s not as much a place as it is a state of sanity.) 
+（与其开拓的智慧疆域相比，这里只是个蕞尔小乡）
+July 2006 
+二零零六年七月

@@ -1,0 +1,453 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Python Standard Library</TITLE>
+
+<!-- Included style.css -->
+<STYLE TYPE="text/css">
+body, td, {
+	font-family: verdana, sans-serif;
+	font-size: 12px;
+}
+
+body {
+	background-color: #FDFBFC;
+	margin:20px 20px 20px 20px;
+}
+
+
+p {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+a {font-weight:normal; text-decoration:underline;}
+a:link {color:#0000FF;}
+a:visited {color:#0000FF;}
+a:active {color:#0000FF;}
+a:hover {color:#700000;}
+
+strong a {
+    font-weight: bold;
+}
+
+.toc {
+	background-color: #EEEEFB;
+	border: 1px solid;
+	/*padding:10px 8px 10px 15px;*/
+	float : right ; width : 37%;
+	margin : 5px; padding: 5px;
+	margin: 5px;
+}
+
+.toc a:link , .toc a:visited  { color : #003399; }
+
+.toc a:hover { 
+	color : #EEEEFB;
+	text-decoration : none;
+	background-color: black;
+}
+
+.trailbold {
+	font-weight:bold;
+}
+
+.light {
+	background-color: #EFEFEF;
+}
+
+.dark {
+	background-color: #D2D2D2;
+}
+
+.smalllogo {
+	float:left;
+}
+
+.headerbar {
+	padding-bottom:60px;
+}
+	
+.header {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.smallheader {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.filelist {
+	font-size:14px;
+	margin: 10px 10px 10px 70px;
+	line-height:25px;
+}
+
+.dirheader {
+	font-size:13px;
+	margin: 10px 50px 10px 20px
+}
+
+.toolbar {
+	text-align:right;
+	margin: 0px 10px 0px 10px
+}
+
+.copyright {
+	padding-top: 30px;
+	text-align:center;
+	font-size:9px;
+	color: #5F5F5F;
+}
+
+.small {
+	font-size:9px;
+}
+
+.sforgelogo {
+	text-align:right;
+	height: 40px;
+}
+
+pre, .source {
+	width:auto;
+	border		: 1px solid #666;
+	background	: #eee;
+	margin		: 2em 4em;
+	padding		: 1em 2em;
+}
+
+/*code {
+	color		: #DB1416;
+	
+}*/
+code { 
+font-size: 1.2em;
+font-family:courier,courier new,monospace;
+background: #666666;
+border-top: 0.03em solid #000;
+border-right: 0.03em solid #000;
+border-bottom: 0.03em solid #ccc;
+border-left: 0.03em solid #ccc;
+color: white;
+}
+
+blockquote{
+  margin: 2em 5em ; 
+ } 
+
+
+</STYLE>
+
+</HEAD>
+<BODY BGCOLOR="green">
+<A NAME="toptop"></A>
+<DIV CLASS="header" ID="header">
+<H1>Python Standard Library</H1>
+<H2>翻译: Python 江湖群</H2>
+<H3>2008-03-28 13:35:36</H3>
+</DIV>
+
+<DIV CLASS="body" ID="body">
+<DIV CLASS="toc" ID="toc">
+  <OL>
+  <LI><A HREF="#toc1">数据储存</A>
+    <UL>
+    <LI><A HREF="#toc2">1.1. 概览</A>
+    <LI><A HREF="#toc3">1.2. anydbm 模块</A>
+    <LI><A HREF="#toc4">1.3. whichdb 模块</A>
+    <LI><A HREF="#toc5">1.4. shelve 模块</A>
+    <LI><A HREF="#toc6">1.5. dbhash 模块</A>
+    <LI><A HREF="#toc7">1.6. dbm 模块</A>
+    <LI><A HREF="#toc8">1.7. dumbdbm 模块</A>
+    <LI><A HREF="#toc9">1.8. gdbm 模块</A>
+    </UL>
+  </OL>
+
+</DIV>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<P>
+<A HREF="index.html">返回首页</A>
+</P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<A NAME="toc1"></A>
+<H1><A href='#toptop'> 1. 数据储存 </A></H1>
+	<BLOCKQUOTE>
+	"Unlike mainstream component programming, scripts usually do not introduce new components but simply 'wire' existing ones. Scripts can be seen as introducing behavior but no new state ... Of course, there is nothing to stop a 'scripting' language from introducing persistent state — it then simply turns into a normal programming language."
+	</BLOCKQUOTE>
+<P></P>
+	<BLOCKQUOTE>
+	- Clemens Szyperski, in Component Software
+	</BLOCKQUOTE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc2"></A>
+<H2><A href='#toptop'> 1.1. 概览 </A></H2>
+<P>
+Python 提供了多种相似数据库管理( database manager )的驱动, 它们的模型都基于 Unix 的 <CODE>dbm</CODE> 库. 
+这些数据库和普通的字典对象类似, 但这里需要注意的是它只能接受字符串作为键和值. 
+( shelve 模块可以处理任何类型的值)
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc3"></A>
+<H2><A href='#toptop'> 1.2. anydbm 模块 </A></H2>
+<P>
+<CODE>anydbm</CODE> 模块为简单数据库驱动提供了统一标准的接口. 
+</P>
+<P>
+当第一次被导入的时候, <CODE>anydbm</CODE> 模块会自动寻找一个合适的数据库驱动, 按照 <CODE>dbhash</CODE> <CODE>,</CODE> gdbm , <CODE>dbm</CODE> , 
+或 <CODE>dumbdbm</CODE> 的顺序尝试. 如果没有找到任何模块, 它将引发一个 <I>ImportError</I> 异常.
+</P>
+<P>
+<CODE>open</CODE> 函数用于打开或创建一个数据库(使用导入时找到的数据库驱动), 如 <A HREF="#eg-10-1">Example 10-1</A> 所示.
+</P>
+<A NAME="eg-10-1"></A>
+<H4><A href='#toptop'> 1.2.0.1. Example 10-1. 使用 anydbm 模块 </A></H4>
+<PRE>
+File: anydbm-example-1.py
+
+import anydbm
+
+db = anydbm.open("database", "c")
+db["1"] = "one"
+db["2"] = "two"
+db["3"] = "three"
+db.close()
+
+db = anydbm.open("database", "r")
+for key in db.keys():
+    print repr(key), repr(db[key])
+
+*B*'2' 'two'
+'3' 'three'
+'1' 'one'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc4"></A>
+<H2><A href='#toptop'> 1.3. whichdb 模块 </A></H2>
+<P>
+<CODE>whichdb</CODE> 模块可以判断给定数据库文件的格式, 如 <A HREF="#eg-10-2">Example 10-2</A> 所示.
+</P>
+<A NAME="eg-10-2"></A>
+<H4><A href='#toptop'> 1.3.0.1. Example 10-2. 使用 whichdb 模块 </A></H4>
+<PRE>
+File: whichdb-example-1.py
+
+import whichdb
+
+filename = "database"
+
+result = whichdb.whichdb(filename)
+
+if result:
+    print "file created by", result
+    handler = _ _import_ _(result)
+    db = handler.open(filename, "r")
+    print db.keys()
+else:
+    # cannot identify data base
+    if result is None:
+        print "cannot read database file", filename
+    else:
+        print "cannot identify database file", filename
+    db = None
+</PRE>
+<P></P>
+<P>
+这个例子中使用了 <CODE>_ _import_ _</CODE> 函数来导入对应模块(还记得我们在第一章的例子么?).
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc5"></A>
+<H2><A href='#toptop'> 1.4. shelve 模块 </A></H2>
+<P>
+<CODE>shelve</CODE> 模块使用数据库驱动实现了字典对象的持久保存. <CODE>shelve</CODE> 对象使用字符串作为键, 但值可以是任意类型, 
+所有可以被 pickle 模块处理的对象都可以作为它的值. 如 <A HREF="#eg-10-3">Example 10-3</A> 所示.
+</P>
+<A NAME="eg-10-3"></A>
+<H4><A href='#toptop'> 1.4.0.1. Example 10-3. 使用 shelve 模块 </A></H4>
+<PRE>
+File: shelve-example-1.py
+
+import shelve
+
+db = shelve.open("database", "c")
+db["one"] = 1
+db["two"] = 2
+db["three"] = 3
+db.close()
+
+db = shelve.open("database", "r")
+for key in db.keys():
+    print repr(key), repr(db[key])
+
+*B*'one' 1
+'three' 3
+'two' 2*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-10-4">Example 10-4</A> 展示了如何使用 shelve 处理给定的数据库驱动.
+</P>
+<A NAME="eg-10-4"></A>
+<H4><A href='#toptop'> 1.4.0.2. Example 10-4. 使用 shelve 模块处理给定数据库 </A></H4>
+<PRE>
+File: shelve-example-3.py
+
+import shelve
+import gdbm
+
+def gdbm_shelve(filename, flag="c"):
+    return shelve.Shelf(gdbm.open(filename, flag))
+
+db = gdbm_shelve("dbfile")
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc6"></A>
+<H2><A href='#toptop'> 1.5. dbhash 模块 </A></H2>
+<P>
+(可选) <CODE>dbhash</CODE> 模块为 <CODE>bsddb</CODE> 数据库驱动提供了一个 <CODE>dbm</CODE> 兼容的接口. 如 <A HREF="#eg-10-5">Example 10-5</A> 所示.
+</P>
+<A NAME="eg-10-5"></A>
+<H4><A href='#toptop'> 1.5.0.1. Example 10-5. 使用 dbhash 模块 </A></H4>
+<PRE>
+File: dbhash-example-1.py
+
+import dbhash
+
+db = dbhash.open("dbhash", "c")
+db["one"] = "the foot"
+db["two"] = "the shoulder"
+db["three"] = "the other foot"
+db["four"] = "the bridge of the nose"
+db["five"] = "the naughty bits"
+db["six"] = "just above the elbow"
+db["seven"] = "two inches to the right of a very naughty bit indeed"
+db["eight"] = "the kneecap"
+db.close()
+
+db = dbhash.open("dbhash", "r")
+for key in db.keys():
+    print repr(key), repr(db[key])
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc7"></A>
+<H2><A href='#toptop'> 1.6. dbm 模块 </A></H2>
+<P>
+(可选) <CODE>dbm</CODE> 模块提供了一个到 <CODE>dbm</CODE> 数据库驱动的接口(在许多 Unix 平台上都可用). 
+如 <A HREF="#eg-10-6">Example 10-6</A> 所示.
+</P>
+<A NAME="eg-10-6"></A>
+<H4><A href='#toptop'> 1.6.0.1. Example 10-6. 使用 dbm 模块 </A></H4>
+<PRE>
+File: dbm-example-1.py
+
+import dbm
+
+db = dbm.open("dbm", "c")
+db["first"] = "bruce"
+db["second"] = "bruce"
+db["third"] = "bruce"
+db["fourth"] = "bruce"
+db["fifth"] = "michael"
+db["fifth"] = "bruce" # overwrite
+db.close()
+
+db = dbm.open("dbm", "r")
+for key in db.keys():
+    print repr(key), repr(db[key])
+
+*B*'first' 'bruce'
+'second' 'bruce'
+'fourth' 'bruce'
+'third' 'bruce'
+'fifth' 'bruce'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc8"></A>
+<H2><A href='#toptop'> 1.7. dumbdbm 模块 </A></H2>
+<P>
+<CODE>dumbdbm</CODE> 模块是一个简单的数据库实现, 与 <CODE>dbm</CODE> 一类相似, 但使用纯 Python 实现. 
+它使用两个文件: 一个二进制文件 (<I>.dat</I>) 用于储存数据, 一个文本文件 (<I>.dir</I>) 用于数据描述. 
+</P>
+<A NAME="eg-10-7"></A>
+<H4><A href='#toptop'> 1.7.0.1. Example 10-7. 使用 dumbdbm 模块 </A></H4>
+<PRE>
+File: dumbdbm-example-1.py
+
+import dumbdbm
+
+db = dumbdbm.open("dumbdbm", "c")
+db["first"] = "fear"
+db["second"] = "surprise"
+db["third"] = "ruthless efficiency"
+db["fourth"] = "an almost fanatical devotion to the Pope"
+db["fifth"] = "nice red uniforms"
+db.close()
+
+db = dumbdbm.open("dumbdbm", "r")
+for key in db.keys():
+    print repr(key), repr(db[key])
+
+*B*'first' 'fear'
+'third' 'ruthless efficiency'
+'fifth' 'nice red uniforms'
+'second' 'surprise'
+'fourth' 'an almost fanatical devotion to the Pope'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc9"></A>
+<H2><A href='#toptop'> 1.8. gdbm 模块 </A></H2>
+<P>
+(可选) <CODE>gdbm</CODE> 模块提供了到 GNU dbm 数据驱动的接口, 如 <A HREF="#eg-10-8">Example 10-8</A> 所示.
+</P>
+<A NAME="eg-10-8"></A>
+<H4><A href='#toptop'> 1.8.0.1. Example 10-8. 使用 gdbm 模块 </A></H4>
+<PRE>
+File: gdbm-example-1.py
+
+import gdbm
+
+db = gdbm.open("gdbm", "c")
+db["1"] = "call"
+db["2"] = "the"
+db["3"] = "next"
+db["4"] = "defendant"
+db.close()
+
+
+db = gdbm.open("gdbm", "r")
+
+keys = db.keys()
+keys.sort()
+for key in keys:
+    print db[key],
+
+*B*call the next defendant*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+</DIV>
+
+<!-- html code generated by txt2tags 2.4 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags chapter10.t2t -->
+</BODY></HTML>

@@ -1,0 +1,43 @@
+4.4 应用程序
+
+==============================================================================
+
+在WEB2PY中，开发由以下部分组成：
+   models 描述站点数据库结构
+   控制器 编写应用程序逻辑和工作流程
+   视图 选择哪些数据应该用html和js脚本输出
+   语言 程序的多国语言支持
+   静态文件 直接使用(图片,css样式表等)
+   关于 写程序的README和文档
+   错误 保存程序产生的错误
+   session 保存每个用户的会话 
+   数据库 sqlite数据库存储及额外的表信息
+   cache 为需要缓存的应用程序缓存
+   模块 是可选的PYTHON模块
+   private files are accessed by the controllers but not directly by the
+developer.
+   上传文件能够通过models实现而不需要直接开发（例如：用户通过应用程序上传文件）
+   tests是一个目录里面有一些测试脚本和测试性的功能
+
+Models, 视图, 控制器, 语言和静态文件通过web管理界面即可访问.关于,README和错误在导航菜单中。Sessions, cache, 模块和private files可以被应用程序使用但是无法通过管理界面来访问他们。
+
+应用程序的目录结构和文件应该尽可能的整理清晰，虽然用户并不需要进入存储的位置查看他们
+
+  ABOUT       databases   languages modules  static  views
+
+  cache       errors      LICENSE   private  tests   cron
+
+  controllers __init__.py models    sessions uploads
+
+" init .py" 是一个空文件它为Python(和web2py)导入modules目录中的模块。
+
+请注意admin应用只是提供了一个web界面以方便管理web2py中的应用程序。WEB2PY的应用程序也可以用命令行来创建，它并非只能通过web界面来创建。一个新的应用程序可以通过手动复制已存目录结构来创建，例如"applications/newapp/"（或者直接untar welcome.w2p文件到新应用程序的目录中）。应用程序代码可以不使用web界面而直接通过命令行进行编辑。
+
+
+SVN状态::
+
+    __修订__  = "$JeanToe$"
+    __日期__  = "$20100327$"
+    __版本__  = "$Rev$"
+    __在线__  = "$URL$"
+

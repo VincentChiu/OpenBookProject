@@ -1,0 +1,987 @@
+
+Python Basics
+Python基础
+Chapter Topics
+
+?       Statements and Syntax
+
+?       Variable Assignment
+
+?       Identifiers and Keywords
+
+?       Basic Style Guidelines
+
+?       Memory Management
+
+?       First Python Programs
+本章主题
+?       语句和语法
+?       变量赋值
+?       标识符和关键字
+?       基本风格指南
+?       内存管理
+?       第一个Python程序
+
+
+        3
+our next goal is to go through the basic Python syntax, describe some
+general style guidelines, then brief you on identifiers, variables, and keywords. We will also discuss how memory space for variables is
+allocated and deallocated. Finally, we will be exposed to a much larger exam- ple Python program—taking the plunge, as it were. No need to worry, there are plenty of life preservers around that allow for swimming rather than the alternative.
+        我们下一个目标是了解基本的Python语法，介绍一些基本的编程风格，之后简要介绍一下标识符、变量和关键字。我们也会讨论变量占用的内存是如何分配和回收的。最后，我们会给出一个较大的Python样例程序，让你实际体验一下这些特性。无须担心，在你畅游Python的过程中有很多救生员在保护着你。
+
+
+3.1     Statements and Syntax
+语句和语法
+
+Some rules and certain symbols are used with regard to statements in Python:
+Python语句中有一些基本规则和特殊字符：
+?       Hash mark ( # ) indicates Python comments
+        井号(#)表示之后的字符为 Python 注释
+?       NEWLINE ( \n ) is the standard line separator (one statement per line)
+        换行 (\n) 是标准的行分隔符（通常一个语句一行）
+?       Backslash ( \ ) continues a line
+        反斜线 ( \ ) 继续上一行
+?       Semicolon ( ; ) joins two statements on a line
+        分号 ( ; )将两个语句连接在一行中
+?       Colon ( : ) separates a header line from its suite
+        冒号 ( : ) 将代码块的头和体分开
+?       Statements (code blocks) grouped as suites
+        语句（代码块）用缩进块的方式体现
+?       Suites delimited via indentation
+        不同的缩进深度分隔不同的代码块
+?       Python files organized as modules
+        Python文件以模块的形式组织
+3.1.1   Comments ( # )
+注释( # )
+
+First things first: Although Python is one of the easiest languages to read, it does  not  preclude  the  programmer  from  proper  and  adequate  usage  and placement of comments in the code. Like many of its Unix scripting brethren, Python comment statements begin with the pound sign or hash symbol (#). A comment can begin anywhere on a line. All characters following the # to the end of the line are ignored by the interpreter. Use them wisely and judiciously.
+首要说明的事情是：尽管Python是可读性最好的语言之一，这并不意味着程序员在代码中就可以不写注释。和很多 Unix 脚本类似，Python 注释语句从 # 字符开始，注释可以在一行的任何地方开始，解释器会忽略掉该行 # 之后的所有内容。要正确的使用注释。
+
+
+
+
+3.1.2   Continuation ( \ )
+继续( \ )
+
+
+Python statements are, in general, delimited by NEWLINEs, meaning one statement per line. Single statements can be broken up into multiple lines by use of the backslash. The backslash symbol ( \ ) can be placed before a NEWLINE to continue the current statement onto the next line.
+Python语句，一般使用换行分隔，也就是说一行一个语句。一行过长的语句可以使用反斜杠( \ ) 分解成几行，如下例：
+
+# check conditions
+if (weather_is_hot == 1) and \
+(shark_warnings == 0):
+send_goto_beach_mesg_to_pager()
+                            
+There  are  two  exceptions  where  lines  can  be  continued  without  back- slashes. A single statement can take up more than one line when enclosing operators are used, i.e., parentheses, square brackets, or braces, and when NEWLINEs are contained in strings enclosed in triple quotes.
+有两种例外情况一个语句不使用反斜线也可以跨行。在使用闭合操作符时，单一语句可以跨多行，例如：在含有小括号、中括号、花括号时可以多行书写。另外就是三引号包括下的字符串也可以跨行书写。如下例：
+
+# display a string with triple quotes
+# 显示一个三引号字符串
+print '''hi there, this is a long message for you that goes over multiple lines... you will find
+out soon that triple quotes in Python allows
+this kind of fun! it is like a day on the beach!'''
+
+# set some variables
+# 给一些变量赋值
+go_surf, get_a_tan_while, boat_size, toll_money = (1,
+'windsurfing', 40.0, -2.00)
+Given a choice between using the backslash and grouping components you can break up with a NEWLINE, i.e., with parentheses, we recommend the latter as it is more readable.
+如果要在使用反斜线换行和使用括号元素换行作一个选择，我们推荐使用括号，这样可读性会更好。
+
+3.1.3   Multiple Statement Groups as Suites ( : )
+多个语句构成代码组(:)：
+
+Groups  of  individual  statements  making  up  a  single  code  block  are  called
+“suites” in Python (as we introduced in Chapter 2).  Compound or complex statements,  such  as  if,  while,  def,  and  class,  are  those  that  require  a
+header line and a suite. Header lines begin the statement (with the keyword)
+and terminate with a colon ( : ) and are followed by one or more lines that make up the suite. We will refer to the combin( : )ation of a header line and a suite as a clause.
+缩进相同的一组语句构成一个代码块，我们称之代码组。像if、while、def和class这样的复合语句，首行以关键字开始，以冒号( : )结束，该行之后的一行或多行代码构成代码组。我们将首行及后面的代码组称为一个子句(clause)。
+
+3.1.4   Suites Delimited via Indentation
+代码组由不同的缩进分隔
+
+As we introduced in Section 2.10, Python employs indentation as a means of delimiting  blocks  of  code.  Code  at  inner  levels  are  indented  via  spaces  or tabs. Indentation requires exact indentation; in other words, all the lines of code in a suite must be indented at the exact same level (e.g., same number of spaces). Indented lines starting at different positions or column numbers are  not  allowed;  each  line  would  be  considered  part  of  another  suite  and would more than likely result in syntax errors.
+
+我们在章节2.10中曾提到，Python使用缩进来分隔代码组。代码的层次关系是通过同样深度的空格或制表符缩进体现的。同一代码组的代码行必须严格左对齐（左边有同样多的空格或同样多的制表符），如果不严格遵守这个规则，同一组的代码就可能被当成另一个组，甚至会导致语法错误。
+
+CORE STYLE: Indent with four spaces and avoid using tabs
+核心风格：缩进四个空格宽度，避免使用制表符
+
+As someone who is perhaps new to block delimitation using whitespace,
+a first obvious question might be: How many spaces should I use? We think that two is too short, and six to eight is too many, so we suggest four spaces for everyone. Also, because tabs vary in the number of spaces depending on your system, we recommend not using tabs if there is any hint of cross-platform development. Both of these style guidelines are also supported by Guido van Rossum, the creator of Python, and documented in the Python Style Guide. You will find the same suggestions in our style guide in Section 3.4.
+对一个初次使用空白字符作为代码块分界的人来说，遇到的第一个问题是：缩进多大宽度才合适？两个太少，六到八个又太多，因此我们推荐使用四个空格宽度。需要说明一点，不同的文本编辑器中制表符代表的空白宽度不一，如果你的代码要跨平台应用，或者会被不同的编辑器读写，建议你不要使用制表符。使用空格或制表符这两种风格都得到了Python创始人Guido van Rossum的支持，并被收录到Python代码风格指南文档。在本章第3.4小节中你会看到同样的建议。
+
+A  new  code  block  is  recognized  when  the  amount  of  indentation  has increased, an d its termination is signaled by a dedentation,” or a reduction of indentation matching a previous level’s. Code that is not indented, i.e., the highest level of code, is considered the “main” portion of the script.
+随着缩进深度的增加，代码块的层次也在加深，没有缩进的代码块是最高层次的，别称做脚本的“main”部分。
+The decision to create code blocks in Python using indentation was based on the belief that grouping code in this manner is more elegant and contributes to the ease of reading to which we alluded earlier. It also helps avoid “dangling-else”-type problems, including ungrouped single statement clauses (those  where  a  C  if statement  does  not  use  braces  at  all,  but  has  two indented statements following). The second statement will execute regard- less of the conditional, leading to more programmer confusion until the light bulb finally blinks on.
+使用缩进对齐这种方式组织代码，不但代码风格优雅，而且也大大提高了代码的可读性。而且它有效的避免了"悬挂 else"（dangling-else）问题，和未写大括号的单一子句问题。（如果 C 语言中 if 语句没写大括号，而后面却跟着两个缩近的语句，这会造成不论条件表达式是否成立，第二个语句总会执行。这种问题很难调试，不知道困惑了多少程序员。）
+
+
+Finally, no “holy brace wars” can occur when using indentation. In C (also C++ and Java), starting braces may be placed on the same line as the header statement, or may start the very next line, or may be indented on the next line. Some like it one way, some prefer the other, etc. You get the picture
+最后一点，由于Python只使用缩进方式表达代码块逻辑，因此“神圣的大括号战争”永远不会发生在Python身上。C、C++和Java语言中，开始大括号可以在第一行的尾部，也可以在第二行的头部，也可以在第二行空几格后开始，这就造成不同的人选择不同的风格，于是你就会看到大括号战争的场景了。
+
+
+
+3.1.5   Multiple Statements on a Single Line ( ; )
+同一行书写多个语句(;)
+
+The semicolon ( ; ) allows multiple statements on a single line given that neither statement starts a new code block. Here is a sample snip using the semicolon:
+分号( ; )允许你将多个语句写在同一行上，语句之间用分号隔开，而这些语句也不能在这行开始一个新的代码块。这里有一个例子：
+
+import sys; x = 'foo'; sys.stdout.write(x + '\n')
+
+We caution the reader to be wary of chaining multiple statements on indi- vidual lines as it makes code much less readable, thus less “Pythonic.”
+必须指出一点， 同一行上书写多个语句会大大降低代码的可读性，Python虽然允许但不提倡你这么做。
+
+3.1.6   Modules
+模块
+
+
+Each Python script is considered a  module. Modules have a physical presence as disk files. When a module gets large enough or has diverse enough functionality, it may make sense to move some of the code out to another module. Code that resides in modules may belong to an application (i.e., a script that is directly executed), or may be executable code in a library-type module that may be “imported” from another module for invocation. As we mentioned in the last chapter, modules can contain blocks of code to run, class declarations, function declarations, or any combination of all of those.
+每一个Python脚本文件都可以被当成是一个模块。模块以磁盘文件的形式存在。当一个模块变得过大，并且驱动了太多功能的话，就应该考虑拆一些代码出来另外建一个模块。模块里的代码可以是一段直接执行的脚本，也可以是一堆类似库函数的代码，从而可以被别的模块导入(import)调用。记得我们在上一章中曾提到过，模块可以包含直接运行的代码块、类定义、函数定义或这几者的组合。
+
+3.2     Variable Assignment
+变量赋值
+
+This section focuses on variable assignment. We will discuss which identifiers make valid variables in Section 3.3.
+本节主题是变量赋值。我们将在3.3小节中讨论什么样的标识符才是合法的变量名。
+
+Assignment Operator
+赋值运算符
+
+The equal sign ( = ) is the main Python assignment operator. (The others are augmented assignment operator [see next section].)
+Python语言中， 等号(=)是主要的赋值运算符。（其他的是增量赋值运算符，参见下节）
+
+anInt = -12
+aString = 'cart'
+aFloat = -3.1415 * (5.0 ** 2)
+anotherString = 'shop' + 'ping'
+aList = [3.14e10, '2nd elmt of a list', 8.82-4.371j]
+
+Be aware now that assignment does not explicitly assign a value to a variable, although it may appear that way from your experience with other programming languages. In Python, objects are referenced, so on assignment, a reference (not a value) to an object is what is being assigned, whether the object was just created or was a pre-existing object. If this is not 100 percent clear now, do not worry about it. We will revisit this topic later on in the chapter, but just keep it in mind for now.
+
+注意，赋值并不是直接将一个值赋给一个变量， 尽管你可能根据其它语言编程经验认为应该如此。在Python语言中，对象是通过引用传递的。在赋值时，不管这个对象是新创建的，还是一个已经存在的，都是将该对象的引用（并不是值）赋值给变量。如果此刻你还不是100%理解清楚，也不用着急。 在本章的后面部分，我们还会再讨论这个话题， 现在你只需要有这么一个概念即可。
+
+Also, if you are familiar with C, you know that assignments are treated as expressions. This is not the case in Python, where assignments do not have inherent values. Statements such as the following are invalid in Python:
+同样的， 如果你比较熟悉C， 你会知道赋值语句其实是被当成一个表达式（可以返回值）。不过这条并不适合于 Python, Python的赋值语句不会返回值。类似下面的语句在Python中是非法的：
+
+>>> x = 1
+>>> y = (x = x + 1)     # assignments not expressions! File "<stdin>", line 1
+y = (x = x + 1)
+^
+SyntaxError: invalid syntax
+
+Chaining together assignments is okay, though (more on this later):
+链式赋值没问题， 看（本章稍后部分会给出更多的例子）：
+
+>>> y = x = x + 1
+>>> x, y
+(2, 2)
+
+Augmented Assignment 
+增量赋值
+
+Beginning in Python 2.0, the equal sign can be combined with an arithmetic operation and the resulting value reassigned to the existing variable. Known
+as augmented assignment, statements such as . . .
+
+从Python 2.0开始， 等号可以和一个算术运算符组合在一起， 将计算结果重新赋值给左边的变量。这被称为增量赋值， 类似下面这样的语句：
+
+x = x + 1
+
+. . . can now be written as . . .
+现在可以被写成：
+
+x += 1
+
+Augmented assignment refers to the use of operators, which imply both an arithmetic operation as well as an assignment. You will recognize the follow- ing symbols if you come from a C/ C++ or Java background:
+增量赋值通过使用赋值运算符，将数学运算隐藏在赋值过程当中。如果您用过C、C++或者Java，会觉得下面的运算符很熟悉。
+
++=      -=      *=      /=      %=      **=
+<<=     >>=     &=      ^=      |=      
+
+
+Other than the obvious syntactical change, the most significant difference is
+that  the  first  object  (A in  our  example)  is  examined  only  once.  Mutable objects will be modified in place, whereas immutable objects will have the same effect as A = A + B (with a new object allocated) except that A is only evalu- ated once, as we have mentioned before.
+增量赋值相对普通赋值不仅仅是写法上的改变，最有意义的变化是第一个对象（我们例子中的A）仅被处理一次。可变对象会被就地修改（无修拷贝引用）， 不可变对象则和 A = A + B 的结果一样（分配一个新对象），我们前面提到过，有一个例外就是 A 仅被求值一次。
+
+>>> m = 12
+>>> m %= 7
+>>> m
+5
+>>> m **= 2
+>>> m
+25
+>>> aList = [123, 'xyz']
+>>> aList += [45.6e7]
+>>> aList
+[123, 'xyz', 456000000.0]
+Python  does  not  support  pre-/post-increment  nor  pre-/post-decrement operators such as x++ or --x.
+
+Python 不支持类似 x++ 或 --x 这样的前置/后置自增/自减运算。
+
+Multiple Assignment
+多重赋值
+
+>>> x = y = z = 1
+>>> x
+1
+>>> y
+1
+>>> z
+1
+In the above example, an integer object (with the value 1) is created, and
+x, y, and z are all assigned the same reference to that object. This is the pro- cess of assigning a single object to multiple variables. It is also possible in Python to assign multiple objects to multiple variables.
+   在上面的例子中，一个值为1的整数对象被创建，该对象的同一个引用被赋值给 x、y 和z 。也就是将一个对象赋给了多个变量。当然，在Python当中，将多个对象赋给多个变量也是可以的。
+
+“Multuple” Assignment
+“多元”赋值
+
+Another way of assigning multiple variables is using what we shall call the
+“multuple” assignment. This is not an official Python term, but we use “mul- tuple” here because when assigning variables this way, the objects on both sides of the equal sign are tuples, a Python standard type we introduced in Section 2.8.
+另一种将多个变量同时赋值的方法我们称为多元赋值（multuple)。这不是官方Python术语， 而是我们将 "mul-tuple"连在一起自造的。因为采用这种方式赋值时， 等号两边的对象都是元组（我们在2.8节讲过元组是一种Python基本数据类型）。
+
+>>> x, y, z = 1, 2, 'a string'
+>>> x
+1
+>>> y
+2
+>>> z
+'a string'
+
+
+
+In the above example, two integer objects (with values 1 and 2) and one
+string object are assigned to x, y, and z respectively. Parentheses are normally used to denote tuples, and although they are optional, we recommend them anywhere they make the code easier to read:
+在上面的例子里， 两个整数对象（值分别为1和2）及一个字符串对象， 被分别赋值给x, y 和z。通常元组需要用圆括号（小括号）括起来，尽管它们是可选的。我们建议总是加上圆括号以使得你的代码有更高的可读性。
+
+>>> (x, y, z) = (1, 2, 'a string')
+
+If you have ever needed to swap values in other languages like C, you will be  reminded  that  a  temporary  variable,  i.e.,  tmp,  is  required  to  hold  one value while the other is being exchanged:
+在其它类似C的语言中， 如果你要交换两个值， 你会想到使用一个临时变量比如tmp来临时保存其中一个值：
+
+/* swapping variables in C */
+/* C语言中两个变量交换 */
+tmp = x;
+x = y;
+y = tmp;
+
+In  the  above  C  code  fragment,  the  values  of  the  variables  x and  y are being exchanged. The tmp variable is needed to hold the value of one of the variables while the other is being copied into it. After that step, the original value kept in the temporary variable can be assigned to the second variable. One interesting side effect of Python’s “multuple” assignment is that we no longer need a temporary variable to swap the values of two variables.
+在上面的C代码片段中，变量x 和变量y的值被互相交换。 临时变量tmp用于在将y赋值给x前先保存x的值。将y的值赋给x之后， 才可以将保存在tmp变量中的x的值赋给y。Python的多元赋值方式可以实现无需中间变量交换两个变量的值。
+
+# swapping variables in Python
+>>> x, y = 1, 2
+>>> x
+1
+>>> y
+2
+>>> x, y = y, x
+>>> x
+2
+>>> y
+1
+Obviously, Python performs evaluation before making assignments.
+显然， Python在赋值之前已经事先对x和y的新值做了计算。
+
+3.3     Identifiers
+标识符
+
+Identifiers are the set of valid strings that are allowed as names in a computer language.  From  this  all-encompassing  list,  we  segregate  out  those  that  are keywords, names that form a construct of the language. Such identifiers are reserved words that may not be used for any other purpose, or else a syntax error (SyntaxError exception) will occur.
+标识符是电脑语言中允许作为名字的有效字符串集合。其中，有一部分是关键字，构成语言的标识符。这样的标识符是不能做它用的标识符的，否则会引起语法错误（SyntaxError 异常）。
+
+
+Python  also  has  an  additional  set  of  identifiers  known  as  built-ins,  and although  they  are  not  reserved  words,  use  of  these  special  names  is  not recommended. (Also see Section 3.3.3.)
+Python还有称为built-in标识符集合，虽然它们不是保留字，但是不推荐使用这些特别的名字（见3.3.3）。
+
+3.3.1   Valid Python Identifiers
+合法的Python标识符
+
+The rules for Python identifier strings are like most other high-level program- ming languages that come from the C world:
+Python标识符字符串规则和其他大部分用C编写的高级语言相似：
+
+?       First character must be a letter or underscore ( _ )
+?       Any additional characters can be alphanumeric or underscore
+?       Case-sensitive
+	    第一个字符必须是字母或下划线（_）
+		剩下的字符可以是字母和数字或下划线
+		大小写敏感
+
+No identifiers can begin with a number, and no symbols other than the underscore are ever allowed. The easiest way to deal with underscores is to consider them as alphabetic characters. Case-sensitivity means that identifier foo is different from Foo, and both of those are different from FOO.
+标识符不能以数字开头；除了下划线，其他的符号都不允许使用。处理下划线最简单的方法是把它们当成字母字符。大小写敏感意味着标识符foo不同于Foo，而这两者也不同于FOO。
+
+3.3.2  Keywords 关键字
+
+Python’s keywords are listed in Table 3.1. Generally, the keywords in any lan- guage  should  remain  relatively  stable,  but  should  things  ever  change  (as Python is a growing and evolving language), a list of keywords as well as an iskeyword() function are available in the keyword module.
+Python的关键字列在表3.1中。一般来说，任何语言的关键字应该保持相对的稳定，但是因为Python是一门不断成长和进化的语言，关键字列表和iskeyword()函数都放入了keyword模块以便查阅。
+
+
+Table 3.1  Python Keywordsa
+and     asb     assertc break
+class   continue        def     del
+elif    else    except  exec
+finally for     from    global
+if      import  in      is
+lambda  not     or      pass
+print   raise   return  try
+while   withb   yieldd  Nonee
+a.      access keyword obsoleted as of Python 1.4. 
+	从Python1.4开始关键字access就被废除了
+b.   New in Python 2.6.
+	Python2.6时加入
+c.      New in Python 1.5.
+	Python1.5时加入
+d.   New in Python 2.3.
+	Python2.3时加入
+e.      Not a keyword but made a constant in Python 2.4.
+	Python2.4中非关键字常量
+
+
+
+3.3.3  Built-ins 内建
+
+In addition to keywords, Python has a set of “built-in” names available at any level  of  Python  code  that  are  either  set  and/or  used  by  the  interpreter. Although not keywords, built-ins should be treated as “reserved for the system” and not used for any other purpose. However, some circumstances may call for overriding (aka redefining, replacing) them. Python does not support overload- ing of identifiers, so only one name “binding” may exist at any given time.
+除了关键字之外，Python还有可以在任何一级代码使用的“内建”的名字集合，这些名字可以由解释器设置或使用。虽然built-in不是关键字，但是应该把它当作“系统保留字”，不做他用。然而，有些情况要求覆盖（也就是：重定义，替换）它们。Python不支持重载标识符，所以任何时刻都只有一个名字绑定。
+
+We  can  also  tell  advanced  readers  that  built-ins  are  members  of  the __builtins__ module, which is automatically imported by the interpreter before your program begins or before you are given the >>> prompt in the interactive interpreter. Treat them like global variables that are available at any level of Python code.
+我们还可以告诉高级读者built-in是__builtins__模块的成员，在你的程序开始或在交互解释器中给出>>>提示之前，由解释器自动导入的。把它们看成适用在任何一级Python代码的全局变量。
+
+3.3.4  Special Underscore Identifiers 专用下划线标识符
+
+Python designates (even more) special variables with underscores both prefixed and  suffixed.  We  will  also  discover  later  that  some  are  quite  useful  to  the programmer while others are unknown or useless. Here is a summary of the special underscore usage in Python:
+Python用下划线作为变量前缀和后缀指定特殊变量。稍后我们会发现，对于程序来说，其中的有些变量是非常有用的，而其他的则是未知或无用的。这里对Python中下划线的特殊用法做了总结：
+
+?       _xxx    Do not import with 'from module import *'
+                不用'from module import *'导入
+?       __xxx__ System-defined name
+				系统定义名字
+?       __xxx   Request private name mangling in classes
+				类中的私有变量名
+
+CORE STYLE: Avoid using underscores to begin variable names
+核心风格：避免用下划线作为变量名的开始
+
+Because of the underscore usage for special interpreter and built-in identifiers, we recommend that the programmer avoid beginning variable names with the underscore. Generally, a variable named _xxx is considered “private” and should not be used outside that module or class. It is good practice to use _xxx to denote when a variable is private. Since variables named __xxx__ often mean special things to Python, you should avoid naming normal variables this way.
+因为下划线对解释器有特殊的意义，而且是内建标识符所使用的符号，我们建议程序员避免用下划线作为变量名的开始。一般来讲，变量名_xxx被看作是“私有的”，在模块或类外不可以使用。当变量是私有的时候，用_xxx来表示变量是很好的习惯。因为变量名__xxx__对Python来说有特殊含义，对于普通的变量应当避免这种命名风格。
+
+
+3.4  Basic Style Guidelines 基本风格指南
+
+Comments
+注释
+You do not need to be reminded that comments are useful both to you and those who come after you. This is especially true for code that has been untouched by man (or woman) for a time (that means several months in software development time). Comments should  not  be  absent,  nor  should  there  be  novellas.  Keep  the comments explanatory, clear, short, and concise, but get them in there. In the end, it saves time and energy for everyone. Above all, make sure they stay accurate!
+注释对于自己和后来人来说都是非常重要的，特别是对那些很久没有被动过的代码而言，注释更显得有用了。既不能缺少注释，也不能过度使用注释。尽可能使注释简洁明了，并放在最合适的地方。这样注释便为每个人节省了时间和精力。记住，要确保注释的准确性。
+
+Documentation 文档
+Python  also  provides  a  mechanism  whereby  documentation strings  can  be  retrieved  dynamically  through  the  __doc__ special variable. The first unassigned string in a module, class declaration, or function declaration can be accessed using the attribute  obj.__doc__ where  obj is  the  module,  class,  or function name. This works during runtime too!
+Python还提供了一个机制，可以通过__doc__特别变量，动态获得文档字串。在模块，类声明，或函数声明中第一个没有赋值的字符串可以用属性obj.__doc__来进行访问，其中obj是一个模块，类，或函数的名字。这在运行时刻也可以运行。
+Python
+
+
+
+Indentation 缩进
+Since indentation plays a major role, you will have to decide on
+a spacing style that is easy to read as well as the least confusing. Common sense also plays a role in choosing how many spaces or columns to indent.
+因为缩进对齐有非常重要的作用，您得考虑用什么样的缩进风格才让代码容易阅读。在选择要空的格数的时候，常识也起着非常大的作用。
+
+1 or 2  Probably not enough; difficult to determine which block of code statements belong to
+1 或 2     可能不够，很难确定代码语句属于哪个块
+8 to 10 May be too many; code that has many embedded levels will wrap around, causing the source to be difficult to read Four spaces is very popular, not to mention being the preferred choice of Python’s creator. Five and six are not bad, but text editors usually do not use these settings, so they are not as commonly used. Three and seven are borderline cases.
+8 至10  可能太多，如果代码内嵌的层次太多，就会使得代码很难阅读。四个空格非常的流行，更不用说Python的创造者也支持这种风格。五和六个也不坏，但是文本编辑器通常不支持这样的设置，所以也不经常使用。三个和七个是边界情况。
+
+As far as tabs go, bear in mind that different text editors have different concepts of what tabs are. It is advised not to use tabs
+if your code will live and run on different systems or be accessed with different text editors.
+  当使用制表符Tab的时候，请记住不同的文本编辑器对它的设置是不一样。推荐您不要使用Tab，如果您的代码会存在并运行在不同的平台上，或者会用不同的文本编辑器打开，推荐您不要使用Tab。
+
+
+Choosing Identifier Names 选择标识符名称
+The concept of good judgment also applies in choosing logical identifier names. Decide on short yet meaningful identifiers for variables.  Although  variable  length  is  no  longer  an  issue  with programming languages of today, it is still a good idea to keep name sizes reasonable length. The same applies for naming your modules (Python files).
+好的判断也适用于选择标志符名称，请为变量选择短而意义丰富的标识符。虽然变量名的长度对于今天的编程语言不再是一个问题，但是使用简短的名字依然是个好习惯，这个原则同样使用于模块（Python文件）的命名。
+
+
+
+
+
+Python Style Guide(s)         Python 风格指南
+
+Guido van Rossum wrote up a Python Style Guide ages ago. It has since been replaced by no fewer than three PEPs: 7 (Style Guide for C Code), 8 (Style Guide for Python Code), and 257 (DocString Conventions). These PEPs are archived, maintained, and updated regularly.
+Guido van Rossum 在多年前写下Python代码风格指南。目前它已经被至少三个PEP代替：7（C代码风格指南）、8（Python代码风格指南）和257（文档字符串规范）。这些PEP被归档、维护并定期更新。
+Over time, you will hear the term “Pythonic,” which describes the Python way of writing code, organizing logic, and object behavior. Over more time, you  will  come  to  understand  what  that  means.  There  is  also  another  PEP, PEP 20, which lists the Zen of Python, starting you on your journey to discover what Pythonic really means. If you are not online and need to see this list, then use import this from your interpreter. Here are some links:
+
+渐渐的，你会听到“Pythonic”这个术语，它指的是以 Python的方式去编写代码、组织逻辑，及对象行为。更多时间过后，你才会真正理解它的含义。PEP 20 写的是 Python 之禅，你可以从那里开始你探索“Pythonic”真正含义的旅程。如果你不能上网，但想看到这篇诗句，那就从你的Python解释器输入 import this 然后回车。下面是一些网上资源：
+www.Python.org/doc/essays/styleguide.html 
+www.Python.org/dev/peps/pep-0007/ 
+www.Python.org/dev/peps/pep-0008/ 
+www.Python.org/dev/peps/pep-0020/ 
+www.Python.org/dev/peps/pep-0257/
+
+
+3.4.1  Module Structure and Layout 模块结构和布局
+
+Modules are simply physical ways of logically organizing all your Python code. Within each file, you should set up a consistent and easy-to-read structure. One such layout is the following:
+用模块来合理组织你的Python代码是简单又自然的方法。你应该建立一种统一且容易阅读的结构，并将它应用到每一个文件中去。下面就是一种非常合理的布局：
+
+# (1) startup line (Unix)
+# (2) module documentation
+# (3) module imports
+# (4) variable declarations
+# (5) class declarations
+# (6) function declarations
+# (7) "main" body
+
+# (1) 起始行(Unix)
+# (2) 模块文档
+# (3) 模块导入
+# (4) 变量定义
+# (5) 类定义
+# (6) 函数定义
+# (7) 主程序
+
+
+Figure 3–1 illustrates the internal structure of a typical module.
+图3–1 一个典型模块的内部结构图解。
+
+(1)     Startup line
+起始行
+Generally used only in Unix environments, the startup line allows for  script  execution  by  name  only  (invoking  the  interpreter  is not required).
+通常只有在类Unix环境下才使用起始行，有起始行就能够仅输入脚本名字来执行脚本，无需直接调用解释器。
+
+(2) Module documentation 模块文档
+Summary of a module’s functionality and significant global variables; accessible externally as module.__doc__.
+
+简要介绍模块的功能及重要全局变量的含义，模块外可通过 module.__doc__ 访问这些内容。
+
+#/usr/bin/env Python    (1) 起始行 (Unix)
+
+
+"this is a test module" (2) 模块文档（文档字符串）
+
+
+import sys
+import os       (3) 模块导入
+
+
+debug = True    (4) (全局) 变量定义
+
+
+ 
+class FooClass (object):
+"Foo class"
+pass
+
+(5) 类定义 (若有)
+
+
+ 
+def test():
+"test function"
+foo = FooClass()
+if debug:
+print 'ran test()'
+
+
+(6) 函数定义 (若有)
+
+
+if      name    == '  main  ':
+test()  (7) 主程序
+
+Figure 3–1   Typical Python file structure
+图3－1 典型Python文件结构
+
+
+
+(3) Module imports 模块导入
+Import  all  the  modules  necessary  for  all  the  code  in  current module;  modules  are  imported  once  (when  this  module  is loaded);  imports  within  functions  are  not  invoked  until  those functions are called.
+导入当前模块的代码需要的所有模块；每个模块仅导入一次（当前模块被加载时）；函数内部的模块导入代码不会被执行， 除非该函数正在执行。
+
+(4) Variable declarations变量定义
+Declare here (global) variables that are used by multiple func- tions in this module. We favor the use of local variables over globals,  for  good  programming  style  mostly,  and  to  a  lesser extent, for improved performance and less memory usage.
+这里定义的变量为全局变量，本模块中的所有函数都可直接使用。从好的编程风格角度说， 除非必须，否则就要尽量使用局部变量代替全局变量，如果坚持这样做，你的代码就不但容易维护，而且还可以提高性能并节省内存。
+
+(5) Class declarations类定义语句
+Any  classes  should  be  declared  here.  A  class  is  defined  when this  module  is  imported  and  the  class statement  executed. Documentation variable is class.__doc__.
+所有的类都需要在这里定义。当模块被导入时class 语句会被执行, 类也就会被定义。类的文档变量是class.__doc__。
+
+(6) Function declarations 函数定义语句
+Functions  that  are  declared  here  are  accessible  externally  as module.function(); function is defined when this module is imported  and  the  def statement  executed.  Documentation variable is function.__doc__.
+
+此处定义的函数可以通过module.function()在外部被访问到，当模块被导入时 def语句会被执行， 函数也就都会定义好，函数的文档变量是function.__doc__。 
+
+(7) “main” body  
+All code at this level is executed, whether this module is imported or started as a script; generally does not include much functional code, but rather gives direction depending on mode of execution.
+主程序
+
+无论这个模块是被别的模块导入还是作为脚本直接执行，都会执行这部分代码。通常这里不会有太多功能性代码，而是根据执行的模式调用不同的函数。
+
+CORE STYLE: “main” calls main()
+推荐代码风格：主程序调用main()函数
+
+The main body of code tends to contain lines such as the ones you see above, which check the __name__ variable and take appropriate action
+(see Core Note on the following page). Code in the main body typically
+executes the class, function, and variable declarations, then checks __name__
+to see whether it should invoke another function (often called main()),
+which performs the primary duties of this module.The main body usually
+does no more than that. (Our example above uses test() rather than
+main() to avoid confusion until you read this Core Style sidebar.)
+Regardless of the name, we want to emphasize that this is a great place to put a test suite in your code. As we explain in Section 3.4.2, most Python modules are created for import use only, and calling such a module directly
+should invoke a regression test of the code in such a module.
+主程序代码通常都和你前面看到的代码相似，检查 __name__ 变量的值然后再执行相应的调用（参阅下一页的核心笔记）。主程序中的代码通常包括变量赋值， 类定义和函数定义，随后检查__name__来决定是否调用另一个函数（通常调用main()函数）来完成该模块的功能。主程序通常都是做这些事。（我们上面的例子中使用test()而不是main()是为了避免你在读到核心笔记前感到迷惑。） 不管用什么名字，我们想强调一点那就是：这儿是放置测试代码的好地方。我们在3.4.2小节中曾经说过，大部分的Python模块都是用于导入调用的，直接运行模块应该调用该模块的回归测试代码。
+
+Most  projects  tend  to  consist  of  a  single  application  and  import  any required modules. Thus it is important to bear in mind that most modules are created solely to be imported rather than to execute as scripts. We are more likely to create a Python library-style module whose sole purpose is to be imported by another module. After all, only one of the modules—the one that houses the main application—will be executed, either by a user from the command line, by a batch or timed mechanism such as a Unix cron job, via a Web server call, or through a GUI callback.
+很多项目都是一个主程序，由它导入所有需要的模块。所以请记住，绝大部分的模块创建的目的是为了被别人调用而不是作为独立执行的脚本。我们也很可能创建一个Python库风格的模块，这种模块的创建目的就是为了被其他模块调用。总之，只有一个模块，也就是包含主程序的模块会被直接执行，或由用户通过命令行执行，或作为批处理执行， 或由Unix cron任务定时执行，或通过Web服务器调用，或通过GUI执行。
+
+With that fact in hand, we should also remember that all modules have the ability to execute code. All Python statements in the highest level of code— that is, the lines that are not indented—will be executed on import, whether desired  or  not.  Because  of  this  “feature,”  safer  code  is  written  such  that everything is in a function except for the code that should be executed on an import of a module. Again, usually only the main application module has the bulk of the executable code at its highest level. All other imported modules will  have  very  little  on  the  outside,  and  everything  in  functions  or  classes.
+时刻记住一个事实，那就是所有的模块都有能力来执行代码。最高级别的Python语句－－也就是说， 那些没有缩进的代码行在模块被导入时就会执行， 不管是不是真的需要执行。由于有这样一个“特性”，比较安全的写代码的方式就是除了那些真正需要执行的代码以外， 几乎所有的功能代码都在函数当中。再说一遍， 通常只有主程序模块中有大量的顶级可执行代码， 所有其它被导入的模块只应该有很少的顶级执行代码，所有的功能代码都应该封装在函数或类当中。
+
+(See Core Note that follows for more information.)
+（参阅核心笔记了解更多信息）
+CORE NOTE: __name__ indicates how module was loaded
+核心笔记：__name__ 指示模块应如何被加载
+
+Because the “main” code is executed whether a module is imported or
+executed directly, we often need to know how this module was loaded to guide the execution path. An application may wish to import the module of another application, perhaps to access useful code which will otherwise
+have to be duplicated (not the OO thing to do). However, in this case, you only want access to this other application’s code, not necessarily to run it. So the big question is, “Is there a way for Python to detect at runtime
+whether this module was imported or executed directly?” The answer is . . .
+(drum roll . . . ) yes! The __name__ system variable is the ticket.
+
+由于主程序代码无论模块是被导入还是被直接执行都会运行， 我们必须知道模块如何决定运行方向。一个应用程序可能需要导入另一个应用程序的一个模块，以便重用一些有用的代码（否则就只能用拷贝粘贴那种非面向对象的愚蠢手段）。这种情况下，你只想访问那些位于其它应用程序中的代码，而不是想运行那个应用程序。因此一个问题出现了，“Python是否有一种方法能在运行时检测该模块是被导入还是被直接执行呢？” 答案就是......(鼓声雷动).....没错！ __name__ 系统变量就是正确答案。
+
+?       __name__ contains module name if imported
+如果模块是被导入， __name__ 的值为模块名字
+?       __name__ contains ’__main__’ if executed directly
+如果模块是被直接执行， __name__ 的值为 '__main__'
+
+
+3.4.2  Create Tests in the Main Body 在主程序中书写测试代码
+
+For good programmers and engineers, providing a test suite or harness for our entire application is the goal. Python simplifies this task particularly well for modules created solely for import. For these modules, you know that they would never be executed directly. Wouldn’t it be nice if they were invoked to run code that puts that module through the test grinder? Would this be diffi- cult to set up? Not really.
+优秀的程序员和软件工程师，总是会为我们的应用程序提供一组测试代码或者简单教程。对那些仅仅为了让别的程序导入而创建的模块来说， Python有效的简化了这个任务。这些模块理论上永远不会被直接执行， 那么，在这个模块被直接执行时进行系统测试岂不妙哉？ 设置起来难吗？ 一点儿也不。
+
+The test software should run only when this file is executed directly, i.e., not when it is imported from another module, which is the usual case. Above and in the Core Note, we described how we can determine whether a mod- ule was imported or executed directly. We can take advantage of this mecha- nism by using the __name__ variable. If this module was called as a script, plug the test code right in there, perhaps as part of main() or test() (or whatever  you  decide  to  call  your  “second-level”  piece  of  code)  function, which is called only if this module is executed directly.
+测试代码仅当该文件被直接执行时运行， 也就是说不是被别的模块导入时。上文及核心笔记中提到如何判断一个模块是被直接运行还是被导入。我们应该利用 __name__ 变量这个有利条件。将测试代码放在一个或者叫main(), 或者叫test()(或者你随便取个啥名字）的函数中，如果该模块是被当成脚本运行， 就调用这个函数。
+
+The “tester” application for our code should be kept current along with any new test criteria and results, and it should run as often as the code is updated. These steps will help improve the robustness of our code, not to mention validating and verifying any new features or updates.
+这些测试代码应该随着测试条件及测试结果的变更及时修改， 每次代码更新都应该运行这些测试代码，以确认修改没有引发新问题。只要坚持这样做，你的代码就会足够健壮，更不用提验证和测试新特性和更新了。
+
+Tests in the main body are an easy way to provide quick coverage of your code.  The  Python  standard  library  also  provides  the  unittest module, sometimes referred to as PyUnit, as a testing framework. Use of unittest is beyond the scope of this book, but it is something to consider when you need serious regression testing of a large system of components.
+在主程序中放置测试代码是测试模块的简单快捷的手段。Python标准库中还提供了unittest 模块， 有时候它被称为 PyUnit, 是一个测试框架。如何使用 unittest 超出了本书的范围， 不过当需要对一个大系统的组件进行正规系统的回规测试时，它就会派上用场。
+
+3.5     Memory Management 内存管理
+
+
+So far you have seen a large number of Python code samples. We are going to cover a few more details about variables and memory management in this section, including:
+到现在为止， 你已经看了不少 Python代码的例子。我们本节的主题是变量和内存管理的细节， 包括：
+
+?       Variables not declared ahead of time
+变量无须事先声明
+?       Variable types not declared
+变量无须指定类型
+?       No memory management on programmers’ part
+程序员不用关心内存管理
+?       Variable names can be “recycled”
+变量名会被“回收”
+?       del statement allows for explicit “deallocation”
+del 语句能够直接释放资源
+
+
+
+3.5.1   Variable Declarations (or Lack Thereof )
+          变量定义
+
+In  most  compiled  languages,  variables  must  be  declared  before  they  are used. In fact, C is even more restrictive: variables have to be declared at the beginning of a code block and before any statements are given. Other languages, like C++ and Java, allow “on-the-fly” declarations, i.e., those which occur in the middle of a body of code—but these name and type declarations are still required before the variables can be used. In Python, there are no explicit  variable  declarations.  Variables  are  “declared”  on  first  assignment. Like  most  languages,  however,  variables  cannot  be  accessed  until  they  are (created and) assigned:
+大多数编译型语言，变量在使用前必须先声明，其中的 C 语言更加苛刻：变量声明必须位于代码块最开始，且在任何其他语句之前。其它语言，像C++和Java，允许“随时随地”声明变量，比如，变量声明可以在代码块的中间，不过仍然必须在变量被使用前声明变量的名字和类型。在Python中，无需此类显式变量声明语句，变量在第一次被赋值时自动声明。和其他大多数语言一样，变量只有被创建和赋值后才能被使用。
+
+>>> a
+Traceback (innermost last): File "<stdin>", line 1, in ?
+NameError: a
+
+Once a variable has been assigned, you can access it by using its name:
+变量一旦被赋值，您就可以通过变量名来访问它。
+
+>>> x = 4
+>>> y = 'this is a string'
+>>> x
+4
+>>> y
+'this is a string'
+
+
+3.5.2  Dynamic Typing 动态类型
+
+Another observation, in addition to lack of variable declaration, is the lack of type specification. In Python, the type and memory space for an object are determined and allocated at runtime. Although code is byte-compiled, Python is  still  an  interpreted  language.  On  creation—that  is,  on  assignment—the interpreter creates an object whose type is dictated by the syntax that is used for the operand on the right-hand side of an assignment. After the object is created, a reference to that object is assigned to the variable on the left-hand side of the assignment.
+还要注意一点，Python中不但变量名无需事先声明，而且也无需类型声明。Python语言中， 对象的类型和内存占用都是运行时确定的。尽管代码被编译成字节码，Python仍然是一种解释型语言。在创建－－也就是赋值时，解释器会根据语法和右侧的操作数来决定新对象的类型。在对象创建后，一个该对象的应用会被赋值给左侧的变量。
+
+3.5.3  Memory Allocation 
+内存分配
+
+As  responsible  programmers,  we  are  aware  that  when  allocating  memory space for variables, we are borrowing system resources, and eventually, we will have to return that which we borrowed back to the system. Python simplifies application writing because the complexities of memory management have been pushed down to the interpreter. The belief is that you should be using Python to solve problems with and not have to worry about lower-level issues that are not directly related to your solution.
+作为一个负责任的程序员，我们知道在为变量分配内存时，是在借用系统资源，在用完之后， 应该释放借用的系统资源。Python解释器承担了内存管理的复杂任务， 这大大简化了应用程序的编写。你只需要关心你要解决的问题，至于底层的事情放心交给Python解释器去做就行了。
+
+3.5.4  Reference Counting 
+引用计数
+
+To keep track of objects in memory, Python uses the simple technique of
+reference counting. This means that internally, Python keeps track of all objects in use and how many interested parties there are for any particular object. You can think of it as simple as card-counting while playing the card game blackjack or 21. An internal tracking variable, called a reference counter, keeps track of how many references are being made to each object, called a refcount for short. When an object is created, a reference is made to that object, and when it
+is no longer needed, i.e., when an object’s refcount goes down to zero, it is garbage-collected. (This is not 100 percent true, but pretend it is for now.)
+要保持追踪内存中的对象， Python 使用了引用计数这一简单技术。也就是说Python内部记录着所有使用中的对象各有多少引用。你可以将它想像成扑克牌游戏“黑杰克”或“21点”。一个内部跟踪变量，称为一个引用计数器。至于每个对象各有多少个引用， 简称引用计数。当对象被创建时， 就创建了一个引用计数， 当这个对象不再需要时， 也就是说， 这个对象的引用计数变为0时， 它被垃圾回收。（严格来说这不是100%正确，不过现阶段你可以就这么认为）
+
+Incrementing the Reference Count 
+增加引用计数
+
+The refcount for an object is initially set to 1 when an object is created and (its reference) assigned.
+  当对象被创建并（将其引用）赋值给变量时，该对象的引用计数就被设置为1。
+
+New references to objects, also called aliases, occur when additional vari- ables are assigned to the same object, passed as arguments to invoke other bodies of code such as functions, methods, or class instantiation, or assigned
+as members of a sequence or mapping.
+当同一个对象（的引用）又被赋值给其它变量时，或作为参数传递给函数， 方法或类实例时， 或者被赋值为一个窗口对象的成员时，该对象的一个新的引用，或者称作别名，就被创建（则该对象的引用计数自动加1）。
+
+x
+
+3.14
+
+y       Figure 3–2   An object with two references
+        图3–2 有两个引用的同一对象
+
+
+
+Let us say we make the following declarations:
+请看以下声明：
+
+x = 3.14
+y = x
+
+The statement  x = 3.14 allocates a floating point number (float) object and assigns a reference x to it. x is the first reference, hence setting that object’s refcount to one. The statement y = x creates an alias y, which “points to” the same integer object as x (see Figure 3-2). A new object is not created for y. Instead, the only thing that happens is that the reference count for this object is incremented by one (to 2). This is one way in which an object’s refcount goes up. Other ways it can increment include the object being passed into a function call, and when the object is added to a container object such as a list.
+语句 x=3.14 创建了一个浮点数对象并将其引用赋值给 x。 x是第一个引用， 因此，该对象的引用计数被设置为1。语句 y=x 创建了一个指向同一对象的别名 y（参阅图3－2）。事实上并没有为Y创建一个新对象， 而是该对象的引用计数增加了1次（变成了2）。这是对象引用计数增加的方式之一。还有一些其它的方式也能增加对象的引用计数， 比如该对象作为参数被函数调用或这个对象被加入到某个容器对象当中时。
+
+In summary, an object’s refcount is increased when 
+总之，对象的引用计数在
+
+?       It (the object) is created  
+对象被创建
+
+x = 3.14
+
+?       Additional aliases for it are created
+       或另外的别名被创建
+
+y = x
+
+?       It is passed to a function (new local reference)
+       或被作为参数传递给函数（新的本地引用）
+
+foobar(x)
+
+?       It becomes part of a container object
+      或成为容器对象的一个元素
+
+myList = [123, x, 'xyz']
+
+时自动增1.
+
+Now let us look at how reference counts go down.
+下面让我们来看一下引用计数是如何变少的。
+
+Decrementing the Reference Count 减少引用计数
+
+When references to an object “go away,” the refcount is decreased. The most obvious case is when a reference goes out of scope. This occurs most often when the function in which a reference is made completes. The local (automatic) variable is gone, and an object’s reference counter is decremented.
+当对象的引用被销毁时，引用计数会减小。最明显的例子就是当引用离开其作用范围时，这种情况最经常出现在函数运行结束时，所有局部变量都被自动销毁，对象的引用计数也就随之减少。
+
+A reference also goes away when a variable is reassigned to another object. For example:
+当变量被赋值给另外一个对象时，原对象的引用计数也会自动减1：
+
+foo = 'xyz' 
+bar = foo 
+foo = 123
+
+The reference count for string object “xyz” is one when it is created and assigned to foo. It is then incremented when bar is added as an alias. How-ever, when foo is reassigned to the integer 123, the reference count to “xyz” is decremented by one.
+当字符串对象"xyz"被创建并赋值给foo时， 它的引用计数是1. 当增加了一个别名 bar 时， 引用计数变成了2. 不过当foo被重新赋值给整数对象123时， xyz对象的引用计数自动减1，又重新变成了1.
+
+Other  ways  in  which  an  object’s  reference  count  goes  down  include explicit removal of a reference using the  del statement (see next section), when an object is removed from a container (or if the reference count to that container itself goes to zero).
+In summary, an object’s refcount is decreased when:
+其它造成对象的引用计数减少的方式包括使用 del 语句删除一个变量（参阅下一节）， 或者当一个对象被移出一个窗口对象时（或该容器对象本身的引用计数变成了0时）。 总结一下， 一个对象的引用计数在以下情况会减少：
+
+?       A local reference goes out of scope, i.e., when foobar() (see previous example) terminates
+一个本地引用离开了其作用范围。比如 foobar()(参见上一下例子）函数结束时。
+?       Aliases for that object are explicitly destroyed
+对象的别名被显式的销毁。
+
+del y   # or del x
+
+?       An alias is reassigned to another object (taking on a new reference)
+对象的一个别名被赋值给其它的对象
+
+x = 123
+
+?       It is explicitly removed from a container object
+对象被从一个窗口对象中移除
+myList.remove(x)
+
+?       The container itself is deallocated
+窗口对象本身被销毁
+del myList      # or goes out-of-scope
+See Section 11.8 for more information on variable scope.
+参阅11.8了解更多变量作用范围的信息。
+
+del Statement    del 语句
+
+The del statement removes a single reference to an object. Its syntax is:
+Del语句会删除对象的一个引用，它的语法是：
+
+del obj1[, obj2[,... objN]]
+
+For example, executing del y in the example above has two results:
+例如，在上例中执行del y会产生两个结果：
+
+?       Removes name y from current namespace
+?       从现在的名字空间中删除y
+?       Lowers reference count to object x (by one)
+?       x的引用计数减一
+
+Further still, executing del x will remove the final reference to the object, decrementing  the  reference  counter  to  zero  and  causing  the  object  to become  “inaccessible”  or  “unreachable.”  It  is  at  this  point  that  the  object becomes a candidate for garbage collection. Note that any tracing or debug- ging facility may keep additional references to an object, delaying or postpon- ing that object from being garbage-collected.
+引申一步， 执行 del x 会删除该对象的最后一个引用， 也就是该对象的引用计数会减为 0， 这会导致该对象从此“无法访问”或“无法抵达”。 从此刻起， 该对象就成为垃圾回收机制的回收对象。 注意任何追踪或调试程序会给一个对象增加一个额外的引用， 这会推迟该对象被回收的时间。
+
+3.5.5  Garbage Collection 
+垃圾收集
+
+Memory  that  is  no  longer  being  used  is  reclaimed  by  the  system  using  a mechanism known as garbage collection. The interpreter keeps track of ref- erence counts as above, but it is up to the garbage collector to deallocate the memory.  The  garbage  collector  is  a  separate  piece  of  code  that  looks  for objects  with  reference  counts  of  zero.  It  is  also  responsible  to  check  for objects with a reference count greater than zero that need to be deallocated. Certain situations lead to cycles.
+不再被使用的内存会被一种称为垃圾收集的机制释放。象上面说的， 虽然解释器跟踪对象的引用计数， 但垃圾收集器负责释放内存。垃圾收集器是一块独立代码， 它用来寻找引用计数为0的对象。它也负责检查那些虽然引用计数大于0但也应该被销毁的对象。 特定情形会导致循环引用。
+
+A  cyclic  reference  is  where  you  have  (at  least  two)  objects  that  refer  to each other, and even if all other references fall by the wayside, these refer- ences still exist, meaning that reference counting alone is not good enough. Python’s garbage collector is actually a combination of reference counting and the periodic invocation of a cyclic garbage collector. When an object’s refcount reaches zero, the interpreter pauses to deallocate it and all objects that  were  reachable  only  from  that  object.  In  addition  to  this  reference counting, the garbage collector also notices if a large number of objects have been  allocated  (and  not  deallocated  though  reference  counting).  In  such cases, the interpreter will pause to try to clear out any unreferenced cycles.
+一个循环引用发生在当你有至少两个对象互相引用时， 也就是说所有的引用都消失时， 这些引用仍然存在， 这说明只靠引用计数是不够的。Python的垃圾收集器实际上是一个引用计数器和一个循环垃圾收集器。 当一个对象的引用计数变为0，解释器会暂停，释放掉这个对象和仅有这个对象可访问（可到达）的其它对象。作为引用计数的补充， 垃圾收集器也会留心被分配的总量很大（及未通过引用计数销毁的那些）的对象。 在这种情况下， 解释器会暂停下来， 试图清理所有未引用的循环。
+
+3.6  First Python Programs 
+第一个Python程序
+
+Now  that  we  are  familiar  with  the  syntax,  style,  variable  assignment,  and memory allocation, it is time to look at slightly more complex code. You may or may not be familiar with all of the constructs of Python that we’re going to show, but we believe that Python is so simple and elegant that you should be able to figure out what each piece of code does.
+
+我们已经熟悉了语法、代码风格、变量赋值及内存分配，现在来看一点略微复杂的代码。这个例子中还有你不熟悉（我们还未讲到的）的Python结构，不过我们相信因为Python非常的简单和优雅，你一定可以弄懂每一行代码的用途。
+
+We are going to introduce two related scripts that manipulate text files. The first, makeTextFile.py, creates text files. It prompts the user for each line of text and writes the results to a file. The other,  readTextFile.py, reads and displays the contents of a text file to the screen. Take a look at both now, and see if you can figure out how each works.
+
+我们将要介绍两段处理文本文件的相关脚本。首先， makeTextFile.py， 创建一个文本文件。 它提示用户输入每一行文本， 然后将结果写到文件中。另一个 readTextFile.py 读取并显示该文本文件的内容。 研究一下这两段代码， 看看他们是如何工作的。
+
+
+Example 3.1  File Create (makeTextFile.py)
+例3.1  创建文件(makeTextFile.py)
+
+This application prompts the user for a (nonexistent) filename, then has the user
+enter each line of that file (one at a time). Finally, it writes the entire text file to disk.
+
+这个脚本提醒用户输入一个（尚不存在的）文件名， 然后由用户输入该文件的每一行。最后， 将所有文本写入文本文件。
+
+1       #!/usr/bin/env Python
+2
+3       'makeTextFile.py -- create text file'
+4
+5       import os
+6       ls = os.linesep
+7
+8       # get filename
+9       while True:
+10
+11      if os.path.exists(fname):
+12      print "ERROR: '%s' already exists" % fname
+13      else:
+14      break
+15
+16   # get file content (text) lines
+17   all = []
+18   print "\nEnter lines ('.' by itself to quit).\n"
+19
+20   # loop until user terminates input
+21   while True:
+22      entry = raw_input('> ')
+23      if entry == '.':
+24      break
+25      else:
+26      all.append(entry)
+27
+28   # write lines to file with proper line-ending
+29   fobj = open(fname, 'w')
+30   fobj.writelines(['%s%s' % (x, ls) for x in all])
+31 fobj.close()
+32   print 'DONE!'
+
+
+
+Lines 1–3   
+The  Unix  startup  line  is  followed  by  the  module  documentation  string. Keep  your  documentation  string  simple  yet  descriptive  enough  to  be useful.  Ours  is  a  bit  short,  but  so  is  this  script.  (We  invite  the  reader  to take a look at the documentation string at the commencement of the cgi module in the standard library for a seriously lengthy example of module documentation.)
+第1–3行
+UNIX 启动行之后是模块的文档字符串。应该坚持写简洁并有用的文档字符串。这里我们写的有点短，不过对这段代码已经够用。（建议读者看一下标准库中cgi模块的文档字符串，那是一个很好的示例）
+
+Lines 5–6  
+
+We import the operating system (os) module next, and in line 6, we create a new local alias for the linesep attribute of that module. By doing this, we can shorten the name of the variable and also speed up access to it.
+第5–6行
+之后我们导入 os 模块， 在第6行我们为 os.linesep 属性取了一个新别名。这样做一方面可以缩短变量名， 另一方面也能改善访问该变量的性能。
+
+CORE TIP: Use local variables to substitute for module attributes
+核心技巧：使用局部变量替换模块变量
+
+Names like os.linesep require the interpreter to do two lookups: (1) lookup os to find that it is a module, and (2) look up the linesep attribute of that module. Because modules are also global variables, we pay another penalty. If you use an attribute like this often in a function, we recommend you alias it to a single local variable. Lookups are much faster—local variables are always searched first before globals, and we don’t have attribute lookups either.This is one of the tricks in making your programs faster: replace often-used (and name-lengthy) module attributes with local references.Your code runs faster and has less clutter with a shorter name.  In our code snippet, we do not have a function to show you an example of using a local alias. Instead, we have a global alias, which is halfway there. At least we do not have to perform two lookups to get to the object.
+
+类似 os.linesep 这样的名字需要解释器做两次查询：（1）查找os以确认它是一个模块， （2）在这个模块中查找 linesep 变量。因为模块也是全局变量， 我们多消耗了系统资源。如果你在一个函数中类似这样频繁使用一个属性，我们建议你为该属性取一个本地变量别名。 变量查找速度将会快很多－－在查找全局变量之前， 总是先查找本地变量。 这也是一个让你的程序跑的更快的技巧： 将经常用到的模块属性替换为一个本地引用。代码跑得更快，而也不用老是敲那么长的变量名了。在我们的代码片段中，并没有定义函数，所以不能给你定义本地别名的示例。不过我们有一个全局别名，至少也减少了一次名字查询
+
+
+Lines 8–14  
+If it is not apparent already, this is an “infinite loop,” meaning we are pre- sented with a body of code that will repeat and run forever unless we exit the loop—look for a break statement somewhere! The while True condi- tional causes this to happen because while statements execute whenever its conditional expression evaluates to Boolean true, and  True is Boolean true.
+Lines 10–14 prompt the user for an unused filename, meaning that the filename  entered  should  not  be  the  name  of  an  already  existing  file.  The raw_input() built-in function takes an argument to use as the prompt to the  user.  The  resulting  string  entered  by  the  user  is  the  return  value  of raw_input(), which in this case gets assigned to fname.
+If the user is unlucky enough to pick a name already in use, we notify the user and return the user to the prompt to enter another (file)name. Note that os.path.exists() is  a  helper  function  in  the  os.path (sub)module, which helps us make this determination. Only when a file with such a name does not exist, meaning that os.path.exists() returns False, do we break out
+of this loop and continue.
+第  8–14行
+显然这是一个无限循环， 也就是说除非我们在while语句体提供 break语句， 否则它会一直循环下去。
+while 语句根据后面的表达式决定是否进行下一次循环， 而 True 则确保它一直循环下去。
+第10－14行提示用户输入一个未使用的文件名。 raw_input() 内建函数接受一个“提示字符串”参数，作为对用户的提示信息。raw_input()返回用户输入的字符串，也就是为 fname 赋值。 如果用户不小心输入了一个已经存在的文件的名字，我们要提示这个用户重新输入另一个名字。 os.path.exists() 是 os 模块中一个有用的函数， 帮助我们确认这一点。 当有输入一个不存在的文件名时， os.path.exists() 才会返回 False, 这时我们中断循环继续下面的代码。
+
+Lines 16–26
+This is the part of our application that gives the user some instruction and prompts them for the contents of our text file, one line at a time. The all list will hold each line—we initialize it on line 17. Line 21 begins another infinite loop, which prompts the user for each line of the text file and only terminates when they enter a period ‘.’ on a line by itself. The if-else statement on lines 23–26 look for that sentinel and break out of the loop if it is seen (line 24); otherwise it adds another line to our total (line 26).
+第16–26  行
+这部分代码提供用户指令，引导用户输入文件内容，一次一行。我们在第十七行初始化了列表 all，它用来保存每一行文本。第21行开始另一个无限循环， 提示用户输入每一行文本，一行仅输入一个句点 '.' 表示输入结束。 23－26行的 if-else 语句判断是否满足结束条件以中止循环（行24）， 否则就再添加新的一行。
+
+Lines 28–32
+Now that we have the entire contents in memory, we need to dump it to the text file. Line 29 opens the file for write, and line 30 writes each line to the file. Every file requires a line terminator (or termination character[s]). The construct on line 30, called a list comprehension, does the following: for every line in our file, append it with the appropriate line terminator for our platform. '%s%s' puts a line next to the termination character(s), and the grouping (x, ls) represents each line x of all lines and the terminator—for Unix, it is '\n', DOS and Win32, '\r\n', etc. By using os.linesep, we do not need to have code to check which operating system this program is running on in order to determine which line terminating character(s) to use.  The  file  object’s  writelines() method  then  takes  the  resulting  list  of lines (now with terminators) and writes it to the file. The file is then closed in line 31, and we are done!
+第28–32 行
+现在所有内容都保存在内存当中， 我们需要将它们保存到文件。 第29行打开文件准备进行写操作，第30行将内存中的内容逐行写入文件。每个文件都需要一个行结束符（或文件结束字符）。 第30行的结构称为列表解析， 它做以下事： 对我们文件的每一行， 根据程序运行平台添加一个合适的行结束符。 '%s%s' 为每一行添加行结束符，(x, ls)表示每一行及其行结束符， 对Unix平台，是'\n', 对DOS或win32平台，则是 '\r\n'。通过使用 os.lineseq ， 我们不必关心程序运行在什么平台，也不必要根据不同的平台决定使用哪种行结束符。 文件对象的 writelines() 方法接收包含行结束符的结果列表，并将它写入文件
+
+Not too bad, right? Now let us look at how to view the file we just cre- ated! For this, we have your second Python program, readTextFile.py. As you will see, it is much shorter than makeTextfile.py. The complexity of file creation is almost always greater than the reading of it. The only new and interesting part for you is the appearance of an exception handler.
+不错吧。现在来看一下如何查看刚刚创建的文件。出于这个目的，我们创建了第二个Python脚本， readTextFile.py。你会看到，它比makeTextFile.py 短的多。创建一个文件的复杂度总是比读取它要大。你可能感兴趣的、有新意的一点在于异常处理的出现。
+
+Lines 1–3      第1–3 行
+These are the Unix startup line and module documentation string as usual.
+和前面一样， 是Unix启动行及模块文档字符串。
+
+Lines 5–7      第5–7  行
+Unlike makeTextFile.py where we kept pegging the user for names until they he or she chooses an unused filename, we don’t care in this example.
+不同于makeTextFil.py， 我们在这个例子中不再关心用户是否输入合适的文件名。
+
+
+Example 3.2  File Read and Display (readTextFile.py)
+
+1       #!/usr/bin/env Python
+2
+3       'readTextFile.py -- read and display text file'
+4
+5       # get filename
+6       fname = raw_input('Enter filename: ')
+7       print
+8
+9       # attempt to open file for reading
+10   try:
+11      fobj = open(fname, 'r')
+12   except IOError, e:
+13      print "*** file open error:", e
+14   else:
+15      # display contents to the screen
+16      for eachLine in fobj:
+17      print eachLine,
+18      fobj.close()
+
+
+
+In other words, we are performing the validation elsewhere (if at all). Line 7
+just displays a new line to separate the prompting of the filename and the contents of the file.
+换句话说， 我们在其它地方进行验证工作（如果需要）。第7行打印一个空行以便将提示信息和文件内容分隔开来。
+
+Lines 9–18     第  9–18行
+This next Python construct (other than the comment) represents the rest of the script. This is a try-except-else statement. The try clause is a block
+of code that we want to monitor for errors. In our code (lines 10–11), we are
+attempting to open the file with the name the user entered.
+The except clause is where we decide what type of errors we’re looking out for and what to do if such errors occur. In this case (lines 12–13), we are checking to see if the file open() failed—this is usually an IOError type of error.
+
+Finally, lines 14–18 represent the else clause of a try-except—the code that is executed if no errors occurred in the try block. In our case, we display each line of the file to the screen. Note that because we are not removing the trailing  whitespace  (line  termination)  characters  from  each  line,  we  have  to suppress the NEWLINE that the print statement automatically generates— this is done by adding a trailing comma to the end of the print statement. We then close the file (line 18), which ends the program.
+One final note regarding the use of os.path.exists() and an excep- tion handler: The author is generally in favor of the former, when there is an existing function that can be used to detect error conditions—and even more simply, where the function is Boolean and gives you a “yes” or “no” answer.
+(Note that there is probably already an exception handler in such a function.) Why do you have to reinvent the wheel when there’s already code just for that purpose?
+An exception handler is best applied when there isn’t such a convenient function, where you the programmer must recognize an “out of the ordinary” error  condition  and  respond  appropriately.  In  our  case,  we  were  able  to dodge  an  exception  because  we  check  to  see  if  a  file  exists,  but  there  are many other situations that may cause a file open to fail, such as improper per- missions, the connection to a network drive is out, etc. For safety’s sake, you may end up with “checker” functions like os.path.exists() in addition to an exception handler, which may be able to take care of a situation where no such function is available.
+
+脚本的剩余部分展示了一种新的Python结构， try-except-else 语句。try 子句是一段我们希望监测错误的代码块。 在第10－11行代码，我们尝试打开用户输入的文件。except 子句是我们处理错误的地方。在12－13行，我们检查 open() 是否失败－通常是 IOError类型的错误。
+
+最后，14－18行的else 子句在try代码块运行无误时执行。我们在这儿将文件的每一行显示在屏幕上。注意由于我们没有移除代表每行结束的行结束符，我们不得不抵制 print语句自动生成的行结束符 －－通过在print语句的最后加一个逗号可以达到这一目的。 第18行关闭文件，从而结束这段脚本。
+最后要讲的一点是关于使用 os.path.exists() 和异常处理：一般程序员倾向于使用前者， 因为有一个现成的函数可以检查错误条件 －－ 并且很简单， 这是个布尔函数， 它会告你“是”还是“不是”。 （注意，这个函数内可能已经有异常处理代码）。那你为什么还要重新发明一个轮子来干同样一件事？异常处理最适用的场合，是在没有合适的函数处理异常状况的时候。这时程序员必须识别这些非正常的错误，并做出相应处理。对我们的例子来说， 我们能够通过检查文件是否存在来避免异常发生， 不过因为有可能因为其它原因造成文件打开失败，比如缺少权限，网络驱动器突然连接失败等等。从更安全的角度来说， 就不应该使用类似 os.path.exists() 之类的函数而是使用异常处理， 尤其是在没有合适函数的情况下更应如此。
+
+You  will  find  more  examples  of  file  system  functions  in  Chapter  9  and more about exception handling in Chapter 10.
+你会在第9章中找到更多文件系统函数的例子， 在第10章则有更多关于异常处理的知识。
+
+3.6     Related Modules/Developer Tools
+相关模块和开发工具
+
+The Python Style Guide (PEP 8), Python Quick Reference Guide, and the Python FAQ make for great reading as developer “tools.” In addition, there are  some  modules  that  may  help  you  become  a  more  proficient  Python programmer:
+
+Python代码风格指南（PEP8）, Python快速参考和Python常见问答都是开发者很重要的“工具”。另外， 还有一些模块会帮助你成为一个优秀的Python程序员。
+
+?       Debugger: pdb
+?       Logger: logging
+?       Profilers: profile, hotshot, cProfile
+
+The  debugging  module  pdb allows  you  to  set  (conditional)  breakpoints, single-step through lines of code, and check out stack frames. It also lets you perform post-mortem debugging.
+调试模块 pdb 允许你设置（条件）断点，代码逐行执行，检查堆栈。它还支持事后调试。
+
+The logging module, which was added in Python 2.3, defines functions and classes that help you implement a flexible logging system for your appli- cation. There are five levels of logging you can use: critical, error, warning, info, and debug. 
+logging 模块是在 Python2.3中新增的， 它定义了一些函数和类帮助你的程序实现灵活的日志系统。共有五级日志级别： 紧急， 错误，警告，信息和调试。
+
+Python  has  had  a  history  of  profilers,  mostly  because  they  were  imple- mented at different times by different people with different needs. The orig- inal Python profile module was written in pure Python and measured the time  spent  in  functions,  the  total  time  as  well  as  the  time  spent  per  call, either  only  the  time  spent  in  particular  functions  or  including  subsequent (sub)functions calls from there. It is the oldest and the slowest of the three profilers but still gives useful profiling information.
+The  hotshot module  was  added  in  Python  2.2  and  was  intended  to replace profile because it fixes various errors that profile was prone to and has improved performance due to being implemented in C. Note that hotshot focuses on reducing profiling overhead during execution but could take longer to deliver results. A critical bug in the timing code was fixed in Python 2.5.
+历史上，因为不同的人们为了满足不同的需求重复实现了很多性能测试器，Python也有好几个性能测试模块。 最早的 Python profile 模块是Python写成的，用来测试函数的执行时间，及每次脚本执行的总时间，既没有特定函数的执行时间也没有被包含的子函数调用时间。在三个profile模块中，它是最老的也是最慢的，尽管如此， 它仍然可以提供一些有价值的性能信息。 hotshot 模块是在Python2.2中新增的，它的目标是取代profile模块， 它修复了profile模块的一些错误， 因为它是用C语言写成，所以它有效的提高了性能。 注意 hotshot 重点解决了性能测试过载的问题， 但却需要更多的时间来生成结果。Python2.5版修复了hotshot模块的一个关于时间计量的严重bug。
+
+The  cProfile module,  which  was  added  in  Python  2.5,  was  meant  to replace the hotshot and profile modules. The one significant flaw identified by the authors of cProfile is that it takes a long time to load results from the log file, does not support detailed child function statistics, and some results appear inaccurate. It is also implemented in C.
+cProfile 模块是Python2.5新增的， 它用来替换掉已经有历史的hotshot和profile模块。被作者确认的它的一个较明显的缺点是它需要花较长时间从日志文件中载入分析结果， 不支持子函数状态细节及某些结果不准。它也是用 C 语言来实现的。
+
+
+3.8  Exercises 练习
+
+3–1.   Identifiers. Why are variable name and type declarations not used in Python?
+      标识符。为什么Python中不需要变量名和变量类型声明？
+3–2.   Identifiers. Why are function type declarations not used in
+Python?
+  标识符。为什么Python中不需要声明函数类型？
+3–3.   Identifiers. Why should we avoid beginning and ending vari- able names with double underscores?
+标识符。为什么应当避免在变量名的开始和和结尾使用双下划线？
+3–4.   Statements. Can multiple Python statements be written on
+a single line?
+ 语句。在Python中一行可以书写多个语句吗？
+3–5.   Statements. Can a single Python statement be written over multiple lines?
+     语句。在Python中可以将一个语句分成多行书写吗？
+3–6.   Variable Assignment.
+(a)  Given the assignment x, y, z = 1, 2, 3, what do x, y, and z
+contain?
+(b)  What do x, y, and z contain after executing: z, x, y = y,
+z, x?
+变量赋值
+(a)赋值语句 x, y, z = 1, 2, 3 会在 x、y、z 中分别赋什么值？
+(b)执行z, x, y = y, z, x后，x、y、z中分别含有什么值？
+3–7.   Identifiers. Which of the following are valid Python identifiers?
+If not, why not? Of the invalid ones, which are keywords?
+标识符。下面哪些是Python合法的标识符？如果不是，请说明理由！在合法的标识符中，哪些是关键字？
+
+int32   40XL    $aving$ printf  print
+_print  this    self    __name__        0x40L
+bool    true    big-daddy       2hot2touch      type
+thisIsn’tAVar  thisIsAVar      R_U_Ready       Int     True
+if      do      counter-1       access  _
+
+ 
+The remaining problems deal with the makeTextFile.py and readTex- tFile.py programs.
+ 下面的问题涉及了 makeTextFile.py 和readTextFile.py 脚本。
+
+3–8.   Python Code. Copy the scripts to your file system and customize (tweak, improve) them. Modifications can include adding your own comments, changing the prompts (‘>’ is pretty boring), etc. Get comfortable looking at and editing Python code.
+      Python 代码。将脚本拷贝到您的文件系统中，然后修改它。可以添加注释，修改提示符（‘>’太单调了）等等，修改这些代码，使它看上去更舒服。
+3–9.   Porting. If you have Python installed on different types of computers, check to see if there are any differences in the os.linesep characters. Write down the type/OS and what linesep is.
+移植。 如果你在不同类型的计算机系统中分别安装有Python， 检查一下， os.linesep的值是否有不同。 记下操作系统的类型以及 linesep 的值。
+
+3–10.   Exceptions. Replace the call to os.path.exists() in
+makeTextFile.py with an exception handler as seen in
+readTextFile.py. On the flip side, replace the exception
+handler in readTextFile.py with a call to
+os.path.exists().
+异常。使用类似readTextFile.py中异常处理的方法取代 readTextFile.py makeTextFile.py中对os.path.exists()的调用。反过来， 用os.path.exists()取代readTextFile.py中的异常处理方法。
+
+3–11.   String Formatting. Rather than suppressing the NEWLINE
+character generated by the print statement in readTextFile.py, change your code so that you strip each line of its whitespace before displaying it. In this case, you can remove the trailing comma from the print statement. Hint: Use the string strip() method.
+字符串格式化 不再抑制readTextFile.py中 print 语句生成的 NEWLINE 字符，修改你的代码， 在显示一行之前删除每行末尾的空白。这样， 你就可以移除 print语句末尾的逗号了。提示： 使用字符串对象的 strip()方法 
+3–12.   Merging Source Files. Combine both programs into one—call
+it anything you like, perhaps readNwriteTextFiles.py. Let the user choose whether to create or display a text file.
+合并源文件。将两段程序合并成一个，给它起一个你喜欢的名字，比方readNwriteTextFiles.py。让用户自己选择是创建还是显示一个文本文件。
+
+3–13.   ?Adding Features. Take your readNwriteTextFiles.py
+solution from the previous problem and add a major feature
+to it: Allow the user to edit an existing text file. You can do this any way you wish, whether you let the user edit line by line or the entire document at once. Note that the latter is much more difficult as you may need help from a GUI toolkit or a screen-based text editing module such as curses. Give users the option to apply the changes (saving the file) or discard them (leaving the original file intact), and also ensure the original file is preserved in case the program exits abnormally during operation.
+?添加新功能。将你上一个问题改造好的 readNwriteTextFiles.py 增加一个新功能：允许用户编辑一个已经存在的文本文件。 你可以使用任何方式，无论是一次编辑一行，还是一次编辑所有文本。需要提醒一下的是， 一次编辑全部文本有一定难度，你可能需要借助 GUI  工具包或一个基于屏幕文本编辑的模块比如 curses 模块。要允许用户保存他的修改（保存到文件）或取消他的修改（不改变原始文件），并且要确保原始文件的安全性（不论程序是否正常关闭）。
+

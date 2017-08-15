@@ -1,0 +1,809 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chapter id="soap">
+<?dbhtml filename="soap_web_services/index.html"?>
+<title>&soap; Web 服务</title>
+<titleabbrev id="soap.numberonly">第 12 章</titleabbrev>
+<abstract>
+<para><xref linkend="oa" endterm="oa.numberonly"/> 关注 HTTP 上面向文档的web 服务。<quote>输入参数</quote> 是 &url;，<quote>返回值</quote> 是需要你来解析的一个实际的 XML 文档。</para>
+<para>本章将关注更加结构化的 &soap; web 服务。&soap; 不需要你直接与 HTTP 请求和 XML 文档打交道，而是允许你模拟返回原始数据类型的函数调用。正像你将要看到的，这个描述恰如其份；你可以使用标准 &python; 调用语法通过 &soap; 库去调用一个函数，这个函数也自然会返回 &python; 对象和值。但揭开这层面纱，&soap; 库实际上执行了一个多个 XML 文档和远程服务器参与的复杂处理过程。</para>
+<para>&soap; 的贴切定义很复杂，不要误认为 &soap; 就是用于调用远程函数。有些人觉得应该补充上：&soap; 还允许单向异步的信息通过，以及面向文档的 Web 服务。有这样想法的人是正确的，&soap; 的确是这样，但却不止于此。但这一章的重点在于所谓的 <quote>RPC-style</quote> &soap;――调用远程函数获得返回结果。</para>
+</abstract>
+<section id="soap.divein">
+<title>概览</title>
+<abstract>
+<title/>
+<para>你用 Google，对吧？它是一个很流行的搜索引擎。你是否希望能以程序化的方式访问 Google 的搜索结果呢？现在你能做到了。下面是一个用 &python; 搜索 Google 的程序。</para>
+</abstract>
+<example>
+<title><filename>search.py</filename></title>
+<programlisting>from SOAPpy import WSDL
+
+# you'll need to configure these two values;
+# see http://www.google.com/apis/
+WSDLFILE = '/path/to/copy/of/GoogleSearch.wsdl'
+APIKEY = 'YOUR_GOOGLE_API_KEY'
+
+_server = WSDL.Proxy(WSDLFILE)
+def search(q):
+    """Search Google and return list of {title, link, description}"""
+    results = _server.doGoogleSearch(
+        APIKEY, q, 0, 10, False, "", False, "", "utf-8", "utf-8")
+    return [{"title": r.title.encode("utf-8"),
+             "link": r.URL.encode("utf-8"),
+             "description": r.snippet.encode("utf-8")}
+            for r in results.resultElements]
+
+if __name__ == '__main__':
+    import sys
+    for r in search(sys.argv[1])[:5]:
+        print r['title']
+        print r['link']
+        print r['description']
+        print</programlisting>
+</example>
+<para>你可以在较大的程序中以模块导入并使用它，也可以在命令行上运行这个脚本。在命令行上，需要把查询字符串作为命令行参数使用，之后就会打印出最前面的五个 Google 查询结果，包括：URL、标题和描述信息。</para>
+<para>下面是以 <quote>python</quote> 作为命令行参数的查询结果。</para>
+<example>
+<title><filename>search.py</filename> 的使用样例</title>
+<screen>
+<prompt>C:\diveintopython\common\py></prompt> <userinput>python search.py "python"</userinput>
+<computeroutput>&lt;b>Python&lt;/b> Programming Language
+http://www.python.org/
+Home page for &lt;b>Python&lt;/b>, an interpreted, interactive, object-oriented,
+extensible&lt;br> programming language. &lt;b>...&lt;/b> &lt;b>Python&lt;/b>
+is OSI Certified Open Source: OSI Certified.
+
+&lt;b>Python&lt;/b> Documentation Index
+http://www.python.org/doc/
+ &lt;b>...&lt;/b> New-style classes (aka descrintro). Regular expressions. Database
+API. Email Us.&lt;br> docs@&lt;b>python&lt;/b>.org. (c) 2004. &lt;b>Python&lt;/b>
+Software Foundation. &lt;b>Python&lt;/b> Documentation. &lt;b>...&lt;/b>
+
+Download &lt;b>Python&lt;/b> Software
+http://www.python.org/download/
+Download Standard &lt;b>Python&lt;/b> Software. &lt;b>Python&lt;/b> 2.3.3 is the
+current production&lt;br> version of &lt;b>Python&lt;/b>. &lt;b>...&lt;/b>
+&lt;b>Python&lt;/b> is OSI Certified Open Source:
+
+Pythonline
+http://www.pythonline.com/
+
+
+Dive Into &lt;b>Python&lt;/b>
+http://diveintopython.org/
+Dive Into &lt;b>Python&lt;/b>. &lt;b>Python&lt;/b> from novice to pro. Find:
+&lt;b>...&lt;/b> It is also available in multiple&lt;br> languages. Read
+Dive Into &lt;b>Python&lt;/b>. This book is still being written. &lt;b>...&lt;/b></computeroutput>
+</screen>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para><ulink url="http://www.xmethods.net/"/> 是一个访问 &soap; web 服务的公共知识库。</para></listitem>
+<listitem><para><ulink url="http://www.w3.org/TR/soap/">&soap; 规范</ulink>相当可读，如果你喜欢这类东西的话。</para></listitem>
+</itemizedlist>
+</section>
+<section id="soap.install">
+<?dbhtml filename="soap_web_services/install.html"?>
+<title>安装 SOAP 库</title>
+<abstract>
+<title/>
+<para>与本书中的其他代码不同，本章依赖的库不是 &python; 预安装的。</para>
+</abstract>
+<para>在深入学习 &soap; web 服务之前，你需要安装三个库：&pyxml;、&fpconst; 和 &soappy;。</para>
+<section>
+<title>安装 &pyxml;</title>
+<para>你要用到的第一个库是 &pyxml;，它是 &xml; 库的一个高级组件，提供了比我们在 <xref linkend="kgp" endterm="kgp.numberonly"/> 学习的 &xml; 内建库更多的功能。</para>
+<procedure>
+<title/>
+<para>下面是安装 &pyxml; 的步骤：</para>
+<step><para>访问 <ulink url="&url_pyxml;"/>，点击 Downloads，下载适合你所使用操作系统的最新版本。</para></step>
+<step><para>如果你所使用的是 &windows;，那么你有多个选择。一定要确保你所下载的 &pyxml; 和你所使用的 &python; 版本匹配。</para></step>
+<step><para>双击安装程序。如果你下载的是为 &windows; 提供的 &pyxml; 0.8.3，并且你所使用的是 &python; 2.3，这个安装程序应该是 <filename>PyXML-0.8.3.win32-py2.3.exe</filename>。</para></step>
+<step><para>深入安装过程。</para></step>
+<step><para>安装完成后，关闭安装程序，没有任何安装成功的昭示 (并没有在开始菜单、快捷栏或桌面出现图标)。因为 &pyxml; 仅仅是被其他程序调用的 &xml; 的库集合。</para></step>
+</procedure>
+<para>要检验 &pyxml; 安装得是否正确，可以运行 &python; &ide;，下面的指令可以看到 &xml; 库的安装版本。</para>
+<example>
+<title>检验 &pyxml; 安装</title>
+<screen>
+&prompt;<userinput>import xml</userinput>
+&prompt;<userinput>xml.__version__</userinput>
+<computeroutput>'0.8.3'</computeroutput>
+</screen>
+<para>这个安装版本号应该和你所下载并安装的 &pyxml; 安装程序版本号一致。</para>
+</example>
+</section>
+<section>
+<title>安装 &fpconst;</title>
+<para>你所需要安装的第二个库是 &fpconst;，它是一系列支持 IEEE754 double-precision 特殊值的常量和函数，提供了对 Not-a-Number (NaN), Positive Infinity (Inf) 和 Negative Infinity (-Inf) 等特殊值的支持，而这是 &soap; 数据类型规范的组成部分。</para>
+<procedure>
+<title/>
+<para>下面是 &fpconst; 的安装过程：</para>
+<step><para>从 <ulink url="&url_fpconst;"/> 下载 &fpconst; 的最新版本。</para></step>
+<step><para>提供了两种格式的下载：<filename>.tar.gz</filename> 和 <filename>.zip</filename>。如果你使用的是 &windows; 操作系统，下载 <filename>.zip</filename> 文件；其他情况下应该下载 <filename>.tar.gz</filename> 文件。</para></step>
+<step><para>对这个文件进行解压缩。在 &windows; XP 上你可以鼠标右键单击这个文件并选择“解压文件”；在较早的 &windows; 版本上则需要 WinZip 之类的第三方解压程序。在 &macosx; 上，可以右键单击压缩文件进行解压。</para></step>
+<step><para>打开命令提示符窗口并定位到解压目录。</para></step>
+<step><para>键入 <userinput>python setup.py install</userinput> 运行安装程序。</para></step>
+</procedure>
+<para>要检验 &fpconst; 安装得是否正确，运行 &python; &ide; 并查看版本号。</para>
+<example>
+<title>检验 &fpconst; 安装</title>
+<screen>
+&prompt;<userinput>import fpconst</userinput>
+&prompt;<userinput>fpconst.__version__</userinput>
+<computeroutput>'0.6.0'</computeroutput>
+</screen>
+<para>这个安装版本号应该和你所下载并用于安装的 &fpconst; 压缩包版本号一致。</para>
+</example>
+</section>
+<section>
+<title>安装 &soappy;</title>
+<para>第三个，也是最后一个需要安装的库是 &soap; 库本身：&soappy;。</para>
+<procedure>
+<title/>
+<para>下面是安装 &soappy;的过程：</para>
+<step><para>访问 <ulink url="&url_soappy;"/> 并选择 &soappy; 部分中最新的官方发布。</para></step>
+<step><para>提供了两种格式的下载。如果你使用的是 &windows;，那么下载 <filename>.zip</filename> 文件；其他情况则下载 <filename>.tar.gz</filename> 文件。</para></step>
+<step><para>和安装 &fpconst; 时一样先解压下载的文件．</para></step>
+<step><para>打开命令提示符窗口并定位到解压 &soappy; 文件的目录。</para></step>
+<step><para>键入 <userinput>python setup.py install</userinput> 运行安装程序。</para></step>
+</procedure>
+<para>要检验 &soappy; 安装得是否正确，运行 &python; &ide; 并查看版本号。</para>
+<example>
+<title>检验 &soappy; 安装</title>
+<screen>
+&prompt;<userinput>import SOAPpy</userinput>
+&prompt;<userinput>SOAPpy.__version__</userinput>
+<computeroutput>'0.11.4'</computeroutput>
+</screen>
+<para>这个安装版本号应该和你所下载并用于安装的 &soappy; 压缩包版本号一致。</para>
+</example>
+</section>
+</section>
+<section id="soap.firststeps">
+<?dbhtml filename="soap_web_services/first_steps.html"?>
+<title>步入 &soap;</title>
+<abstract>
+<title/>
+<para>调用远程函数是 &soap; 的核心功能。有很多提供公开 &soap; 访问的服务器提供用于展示的简单功能。</para>
+</abstract>
+<para>最受欢迎的 &soap; 公开访问服务器是 <ulink url="http://www.xmethods.net/"/>。这个例子使用了一个展示函数，可以根据美国邮政编码返回当地气温。</para>
+<example>
+<title>获得现在的气温</title>
+<screen>
+&prompt;<userinput>from SOAPpy import SOAPProxy</userinput>            <co id="soap.firststeps.1.1"/>
+&prompt;<userinput>url = 'http://services.xmethods.net:80/soap/servlet/rpcrouter'</userinput>
+&prompt;<userinput>namespace = 'urn:xmethods-Temperature'</userinput>  <co id="soap.firststeps.1.2"/>
+&prompt;<userinput>server = SOAPProxy(url, namespace)</userinput>      <co id="soap.firststeps.1.3"/>
+&prompt;<userinput>server.getTemp('27502')</userinput>                 <co id="soap.firststeps.1.4"/>
+<computeroutput>80.0</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.firststeps.1.1">
+<para>你通过 <classname>SOAPProxy</classname> 这个代理 (proxy) 类访问远程 &soap; 服务器。这个代理处理了所有的 &soap; 内部事务，其中包括：根据函数名和参数列表创建 XML 请求文档，并将这个请求文档通过 HTTP 发送到远程 &soap; 服务器；解析 XML 返回文档，并创建本地的 &python; 返回值。在下一节中你将看到这个 XML 文档。</para>
+</callout>
+<callout arearefs="soap.firststeps.1.2">
+<para>每个 &soap; 服务都有一个 &url; 用以处理所有请求。相同的 &url; 可以用于所有的函数请求。每个特定服务则只有一个函数。但稍后你将看到的 Google &api; 却有多个函数。这个服务的 &url; 提供给所有函数分享。</para>
+<para>每个 &soap; 服务都有一个命名空间 (namespace)，这个命名空间是由服务器任意命名的。这不过是为调用 &soap; 方法设置的。它使得服务器让多个不相关的服务共享服务 &url; 和路径请求成为可能。这与 &python; 中模块相对于<link linkend="kgp.packages">包</link>的关系类似。</para>
+</callout>
+<callout arearefs="soap.firststeps.1.3">
+<para>这里你创建了包含服务 &url; 和服务命名空间的 <classname>SOAPProxy</classname>。此时还不会连接到 &soap; 服务器；仅仅是建立了一个本地 &python; 对象。</para>
+</callout>
+<callout arearefs="soap.firststeps.1.4">
+<para>到此为止，如果你的设置完全正确，应该可以向调用本地函数一样调用远程 &soap; 方法。这和给普通函数传递参数并接收返回值一样，但在背后却隐藏着很多的工作。</para>
+</callout>
+</calloutlist>
+</example>
+<para>让我们看一看这些背后的工作。</para>
+</section>
+
+<section id="soap.debug">
+<?dbhtml filename="soap_web_services/debugging.html"?>
+<title> &soap; 网络服务查错</title>
+<abstract>
+<title/>
+<para> &soap; 提供了一个很方便的方法用以查看背后的情形。</para>
+</abstract>
+<para><classname>SOAPProxy</classname> 的两个小设置就可以打开查错模式。</para>
+<example>
+<title> &soap; 网络服务查错</title>
+<screen>
+&prompt;<userinput>from SOAPpy import SOAPProxy</userinput>
+&prompt;<userinput>url = 'http://services.xmethods.net:80/soap/servlet/rpcrouter'</userinput>
+&prompt;<userinput>n = 'urn:xmethods-Temperature'</userinput>
+&prompt;<userinput>server = SOAPProxy(url, namespace=n)</userinput>     <co id="soap.debug.1.1"/>
+&prompt;<userinput>server.config.dumpSOAPOut = 1</userinput>            <co id="soap.debug.1.2"/>
+&prompt;<userinput>server.config.dumpSOAPIn = 1</userinput>
+&prompt;<userinput>temperature = server.getTemp('27502')</userinput>    <co id="soap.debug.1.3"/>
+<computeroutput>*** Outgoing SOAP ******************************************************
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:xsd="http://www.w3.org/1999/XMLSchema">
+&lt;SOAP-ENV:Body>
+&lt;ns1:getTemp xmlns:ns1="urn:xmethods-Temperature" SOAP-ENC:root="1">
+&lt;v1 xsi:type="xsd:string">27502&lt;/v1>
+&lt;/ns1:getTemp>
+&lt;/SOAP-ENV:Body>
+&lt;/SOAP-ENV:Envelope>
+************************************************************************
+*** Incoming SOAP ******************************************************
+&lt;?xml version='1.0' encoding='UTF-8'?>
+&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+&lt;SOAP-ENV:Body>
+&lt;ns1:getTempResponse xmlns:ns1="urn:xmethods-Temperature"
+  SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+&lt;return xsi:type="xsd:float">80.0&lt;/return>
+&lt;/ns1:getTempResponse>
+
+&lt;/SOAP-ENV:Body>
+&lt;/SOAP-ENV:Envelope>
+************************************************************************
+</computeroutput>
+&prompt;<userinput>temperature</userinput>
+<computeroutput>80.0</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.debug.1.1">
+<para>首先，和平常一样，建立带有服务 &url; 和命名空间的 <classname>SOAPProxy</classname>。</para>
+</callout>
+<callout arearefs="soap.debug.1.2">
+<para>然后，通过设置 <varname>server.config.dumpSOAPIn</varname> 和 <varname>server.config.dumpSOAPOut</varname> 打开查错模式。</para>
+</callout>
+<callout arearefs="soap.debug.1.3">
+<para>最后，和平常一样，调用远程 &soap; 方法。&soap; 库将会输出送出的 XML 请求文档和收到的 XML 返回文档。这是 <classname>SOAPProxy</classname> 为你做的所有工作。有点恐怖，不是吗？让我们来分析一下。</para>
+</callout>
+</calloutlist>
+</example>
+<para>大部分 XML 请求文档都基于模板文件。忽略所有命名空间声明这些对于所有 &soap; 调用都一成不变的东西。这个 <quote>函数调用</quote> 的核心是<sgmltag>&lt;Body></sgmltag> 当中的部分：</para>
+<informalexample>
+<programlisting>
+&lt;ns1:getTemp                                 <co id="soap.debug.2.1"/>
+  xmlns:ns1="urn:xmethods-Temperature"       <co id="soap.debug.2.2"/>
+  SOAP-ENC:root="1">
+&lt;v1 xsi:type="xsd:string">27502&lt;/v1>         <co id="soap.debug.2.3"/>
+&lt;/ns1:getTemp>
+</programlisting>
+<calloutlist>
+<callout arearefs="soap.debug.2.1">
+<para>这个元素名 <function>getTemp</function> 就是函数名。<classname>SOAPProxy</classname> 使用 <link linkend="kgp.handler">&getattr; 作为分发器</link>。有别于使用方法名分别调用本地方法，这里使用方法名构造了一个 XML 请求文档。</para>
+</callout>
+<callout arearefs="soap.debug.2.2">
+<para>函数的 XML 元素被存储于一个特别的命名空间，这个命名空间就是你在建立 <classname>SOAPProxy</classname> 对象时所指定的那个命名空间。也不必为 <literal>SOAP-ENC:root</literal> 而苦恼，因为它也是基于模板文件的。</para>
+</callout>
+<callout arearefs="soap.debug.2.3">
+<para>函数的参数也被记入 XML 文档。<classname>SOAPProxy</classname> 查看并确定每个参数的数据类型 (这里是 string 字符串类型)。参数的数据类型记入 <literal>xsi:type</literal> 属性，并在其后记入实际的字符串值。</para>
+</callout>
+</calloutlist>
+</informalexample>
+<para>返回的 XML 文档同样容易理解，重点在于知道应该忽略掉哪些内容。把注意力集中在 <sgmltag>&lt;Body></sgmltag> 部分：</para>
+<informalexample>
+<programlisting>
+&lt;ns1:getTempResponse                             <co id="soap.debug.3.1"/>
+  xmlns:ns1="urn:xmethods-Temperature"           <co id="soap.debug.3.2"/>
+  SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+&lt;return xsi:type="xsd:float">80.0&lt;/return>       <co id="soap.debug.3.3"/>
+&lt;/ns1:getTempResponse>
+</programlisting>
+<calloutlist>
+<callout arearefs="soap.debug.3.1">
+<para>服务器传回的值记录在 <sgmltag>&lt;getTempResponse></sgmltag> 部分的几行中。通常包括函数名和回应 <literal> (Response)</literal>。当然其他的内容也可能出现在这里，但 <classname>SOAPProxy</classname> 所重视的不是这里的元素名，而是命名空间。</para>
+</callout>
+<callout arearefs="soap.debug.3.2">
+<para>服务器返回时所使用的命名空间就是在请求时所用的命名空间，也就是在创建 <classname>SOAPProxy</classname> 对象时所指定的命名空间。本章稍后的部分中，我们将看到在创建 <classname>SOAPProxy</classname> 对象时忘记指定功能名空间会怎样。</para>
+</callout>
+<callout arearefs="soap.debug.3.3">
+<para>这是返回值和它的数据类型 (浮点类型 float)。<classname>SOAPProxy</classname> 使用显式数据类型创建一个本地数据类型的 &python; 对象并返回之。</para>
+</callout>
+</calloutlist>
+</informalexample>
+</section>
+
+<section id="soap.wsdl">
+<?dbhtml filename="soap_web_services/wsdl.html"?>
+<title>&wsdl; 介绍</title>
+<abstract>
+<title/>
+<para><classname>SOAPProxy</classname> 类本地方法调用并透明地转向到远程 &soap; 方法。正如你所看到的，这是很多的工作，<classname>SOAPProxy</classname> 快速和透明地完成他们。它没有做到的是提供方法自省的手段。</para>
+</abstract>
+<para>考虑一下：前面两部分所展现的调用只有一个参数和返回的简单远程 &soap; 方法。服务 &url; 和一系列参数及它们的数据类型需要被知道并跟踪。任何的缺失或错误都会导致整体的失败。</para>
+<para>这并没有什么可惊讶的。如果我要调用一个本地函数，我需要知道函数所在的包和模块名 (与之对应的则是服务 &url; 和命名空间)。我还需要知道正确的函数名以及其函数个数。&python; 精妙地不需明示类型，但我还是需要知道有多少个参数需要传递，多少个值将被返回。</para>
+<para>最大的区别就在于内省。就像你在 <xref linkend="apihelper" endterm="apihelper.numberonly"/> 看到的那样，&python; 擅长于让你实时地去探索模块和函数的情况。你可以对一个模块中的所有函数进行列表，并不费吹灰之力地明了函数的声明和参数情况。</para>
+<para>&wsdl; 允许你对 &soap; 网络服务做相同的事情。&wsdl; 是 <quote>网络服务描述语言 (Web Services Description Language)</quote>的缩写。它尽管是为自如地表述多种类型的网络服务而设定，却也经常用于描述 &soap; 网络服务。</para>
+<para>一个 &wsdl; 文件不过就是一个文件。更具体地讲，是一个 XML 文件。通常存储于你所访问的 &soap; 网络服务这个被描述对象所在的服务器上，并没有什么特殊之处。在本章稍后的位置，我们将下载 Google API 的 &wsdl; 文件并在本地使用它。这并不意味着本地调用 Google，这个 &wsdl; 文件所描述的仍旧是 Google 服务器上的远程函数。</para>
+<para>在 &wsdl; 文件中描述了调用相应的 &soap; 网络服务的一切：</para>
+<itemizedlist>
+<listitem><para>服务 &url; 和命名空间</para></listitem>
+<listitem><para>网络服务的类型 (可能是 &soap; 的函数调用，但我说过，&wsdl; 足够自如地去描述网络服务的广泛内容)</para></listitem>
+<listitem><para>有效函数列表</para></listitem>
+<listitem><para>每个函数的参数</para></listitem>
+<listitem><para>每个参数的类型</para></listitem>
+<listitem><para>每个函数的返回值及其数据类型</para></listitem>
+</itemizedlist>
+<para>换言之，一个 &wsdl; 文件告诉你调用 &soap; 所需要知道的一切。</para>
+</section>
+
+<section id="soap.introspection">
+<?dbhtml filename="soap_web_services/introspection.html"?>
+<title>以 &wsdl; 进行 &soap; 内省</title>
+<abstract>
+<title/>
+<para>就像网络服务舞台上的所有事物，&wsdl; 也经历了一个充满明争暗斗而且漫长多变的历史。我不打算讲述这段令我伤心的历史。还有一些其他的标准提供相同的支持，但 &wsdl; 还是胜出，所以我们还是来学习一下如何使用它。</para>
+</abstract>
+<para>&wsdl; 最基本的功能便是让你揭示 &soap; 服务器所提供的有效方法。</para>
+<example>
+<title>揭示有效方法</title>
+<screen>
+&prompt;<userinput>from SOAPpy import WSDL</userinput>          <co id="soap.introspection.1.1"/>
+&prompt;<userinput>wsdlFile = 'http://www.xmethods.net/sd/2001/TemperatureService.wsdl'</userinput>
+&prompt;<userinput>server = WSDL.Proxy(wsdlFile)</userinput>    <co id="soap.introspection.1.2"/>
+&prompt;<userinput>server.methods.keys()</userinput>            <co id="soap.introspection.1.3"/>
+<computeroutput>[u'getTemp']</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.introspection.1.1">
+<para>&soappy; 包含一个 &wsdl; 解析器。在本书写作之时，它被标示为开发的初级阶段，但我从来没有在解析任何 &wsdl; 文件时遇到问题。</para>
+</callout>
+<callout arearefs="soap.introspection.1.2">
+<para>使用一个 &wsdl; 文件，你还是要用到一个 proxy 类：<classname>WSDL.Proxy</classname>，它只需一个参数：&wsdl; 文件。我指定的是存储在远程服务器上的 &wsdl; 的 &url;，但是这个 proxy 类对于本地的 &wsdl; 副本工作同样出色。创建 &wsdl; proxy 将会下载 &wsdl; 文件并解析它，所以如果 &wsdl; 文件有任何问题 (或者由于网络问题不能获得) 你会立刻知道。</para>
+</callout>
+<callout arearefs="soap.introspection.1.3">
+<para>&wsdl; proxy 类通过 &python; 字典 <varname>server.methods</varname> 揭示有效函数。所以列出有效方法只需调用字典方法 <methodname>keys()</methodname>。</para>
+</callout>
+</calloutlist>
+</example>
+<para>好的，你知道这个 &soap; 服务器提供一个方法：<methodname>getTemp</methodname>。但是如何去调用它呢？&wsdl; 也在这方面提供信息。</para>
+<example>
+<title>揭示一个方法的参数</title>
+<screen>
+&prompt;<userinput>callInfo = server.methods['getTemp']</userinput>  <co id="soap.introspection.2.1"/>
+&prompt;<userinput>callInfo.inparams</userinput>                     <co id="soap.introspection.2.2"/>
+<computeroutput>[&lt;SOAPpy.wstools.WSDLTools.ParameterInfo instance at 0x00CF3AD0>]</computeroutput>
+&prompt;<userinput>callInfo.inparams[0].name</userinput>             <co id="soap.introspection.2.3"/>
+<computeroutput>u'zipcode'</computeroutput>
+&prompt;<userinput>callInfo.inparams[0].type</userinput>             <co id="soap.introspection.2.4"/>
+<computeroutput>(u'http://www.w3.org/2001/XMLSchema', u'string')</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.introspection.2.1">
+<para> <varname>server.methods</varname> 字典中记录一个 &soappy; 的特别结构，被称为 <classname>CallInfo</classname>。<classname>CallInfo</classname> 对象中包含着特定函数和函数参数的信息。</para>
+</callout>
+<callout arearefs="soap.introspection.2.2">
+<para>函数参数信息存储在 <varname>callInfo.inparams</varname> 中，这是一个记录每一个参数信息的 <classname>ParameterInfo</classname> 对象的 &python; 列表。</para>
+</callout>
+<callout arearefs="soap.introspection.2.3">
+<para>每个 <classname>ParameterInfo</classname> 对象包含一个 <varname>name</varname> 属性，这便是参数名。在通过 &soap; 调用函数时，你不需要知道参数名，但 &soap; 支持在调用函数时使用参数名 (类似于 &python;)。如果使用参数名，<classname>WSDL.Proxy</classname> 将会正确地把这些参数关联到远程函数。</para>
+</callout>
+<callout arearefs="soap.introspection.2.4">
+<para>每个参数都是都是显式类型的，使用的是在 XML Schema 定义的数据类型。你可以在上一节中发现这一点：XML Schema 命名空间是我让你忽略的模版的一部分。就目前而言，你还是可以继续忽略它。<varname>zipcode</varname> 参数是一个字符串，如果你向 <classname>WSDL.Proxy</classname> 对象传递一个 &python; 字符串，它会被正确地关联和传递到服务器。</para>
+</callout>
+</calloutlist>
+</example>
+<para>&wsdl; 还允许你自省函数的返回值。</para>
+<example>
+<title>揭示方法返回值</title>
+<screen>
+&prompt;<userinput>callInfo.outparams</userinput>            <co id="soap.introspection.3.1"/>
+<computeroutput>[&lt;SOAPpy.wstools.WSDLTools.ParameterInfo instance at 0x00CF3AF8>]</computeroutput>
+&prompt;<userinput>callInfo.outparams[0].name</userinput>    <co id="soap.introspection.3.2"/>
+<computeroutput>u'return'</computeroutput>
+&prompt;<userinput>callInfo.outparams[0].type</userinput>
+<computeroutput>(u'http://www.w3.org/2001/XMLSchema', u'float')</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.introspection.3.1">
+<para>与揭示函数参数的 <varname>callInfo.inparams</varname> 对应的是揭示返回值的 <varname>callInfo.outparams</varname>。它也同样是一个列表，因为通过 &soap; 调用函数时可以返回多个值，就像 &python; 函数一样。</para>
+</callout>
+<callout arearefs="soap.introspection.3.2">
+<para> <classname>ParameterInfo</classname> 对象包含 <varname>name</varname> 和 <varname>type</varname>。这个函数返回一个浮点值，它的名字是 <varname>return</varname>。</para>
+</callout>
+</calloutlist>
+</example>
+<para>让我们整合一下，通过 &wsdl; proxy 调用一个 &soap; 网络服务。</para>
+<example>
+<title>通过 &wsdl; proxy 调用一个 &soap; 网络服务</title>
+<screen>
+&prompt;<userinput>from SOAPpy import WSDL</userinput>
+&prompt;<userinput>wsdlFile = 'http://www.xmethods.net/sd/2001/TemperatureService.wsdl')</userinput>
+&prompt;<userinput>server = WSDL.Proxy(wsdlFile)</userinput>               <co id="soap.introspection.4.1"/>
+&prompt;<userinput>server.getTemp('90210')</userinput>                     <co id="soap.introspection.4.2"/>
+<computeroutput>66.0</computeroutput>
+&prompt;<userinput>server.soapproxy.config.dumpSOAPOut = 1</userinput>     <co id="soap.introspection.4.3"/>
+&prompt;<userinput>server.soapproxy.config.dumpSOAPIn = 1</userinput>
+&prompt;<userinput>temperature = server.getTemp('90210')</userinput>
+<computeroutput>*** Outgoing SOAP ******************************************************
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:xsd="http://www.w3.org/1999/XMLSchema">
+&lt;SOAP-ENV:Body>
+&lt;ns1:getTemp xmlns:ns1="urn:xmethods-Temperature" SOAP-ENC:root="1">
+&lt;v1 xsi:type="xsd:string">90210&lt;/v1>
+&lt;/ns1:getTemp>
+&lt;/SOAP-ENV:Body>
+&lt;/SOAP-ENV:Envelope>
+************************************************************************
+*** Incoming SOAP ******************************************************
+&lt;?xml version='1.0' encoding='UTF-8'?>
+&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+&lt;SOAP-ENV:Body>
+&lt;ns1:getTempResponse xmlns:ns1="urn:xmethods-Temperature"
+  SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+&lt;return xsi:type="xsd:float">66.0&lt;/return>
+&lt;/ns1:getTempResponse>
+
+&lt;/SOAP-ENV:Body>
+&lt;/SOAP-ENV:Envelope>
+************************************************************************
+</computeroutput>
+&prompt;<userinput>temperature</userinput>
+<computeroutput>66.0</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.introspection.4.1">
+<para>这比直接调用 &soap; 服务时的设置简单，因为在 &wsdl; 文件中包含着调用服务所需要的服务 &url; 和命名空间。创建 <classname>WSDL.Proxy</classname> 对象将会下载 &wsdl; 文件，解析之，并设置一个用以调用实际的 &soap; 网络服务的 <classname>SOAPProxy</classname> 对象。</para>
+</callout>
+<callout arearefs="soap.introspection.4.2">
+<para>只要创建了 <classname>WSDL.Proxy</classname> 对象，你就可以像调用 <classname>SOAPProxy</classname> 对象一样简单地调用一个函数。这并不奇怪，<classname>WSDL.Proxy</classname> 就是一个具有自省方法的 <classname>SOAPProxy</classname> 封装套件，所以调用函数的语法也是一样的。</para>
+</callout>
+<callout arearefs="soap.introspection.4.3">
+<para>你可以通过 <varname>server.soapproxy</varname> 访问 <classname>WSDL.Proxy</classname> 的 <classname>SOAPProxy</classname>。这对于打开查错模式很重要，这样一来当你通过 &wsdl; proxy 调用函数时，它的 <classname>SOAPProxy</classname> 将会把线路上来往的 XML 文档甩下来。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+
+<section id="soap.google">
+<?dbhtml filename="soap_web_services/google.html"?>
+<title>搜索 Google</title>
+<abstract>
+<title/>
+<para>让我们回到这章开始时你看到的那段代码，获得比当前气温更有价值和令人振奋的信息。</para>
+</abstract>
+<para>Google 提供了一个 &soap; &api;，以便通过程序进行 Google 搜索。使用它的前提是，你注册了 Google 网络服务。</para>
+<procedure>
+<title>注册 Google 网络服务</title>
+<step><para>访问 <ulink url="http://www.google.com/apis/"/> 并创建一个账号。唯一的需要是提供一个 E-mail 地址。注册之后，你将通过 E-mail 收到你的 Google API 许可证 (license key)。你需要在调用 Google 搜索函数时使用这个许可证。</para></step>
+<step><para>还是在 <ulink url="http://www.google.com/apis/"/> 上，下载 Google 网络 APIs 开发工具包 (Google Web APIs developer kit)。它包含着包括 &python; 在内的多种语言的样例代码，更重要的是它包含着 &wsdl; 文件。</para></step>
+<step><para>解压这个开发工具包并找到 <filename>GoogleSearch.wsdl</filename>。将这个文件拷贝到你本地驱动器的一个永久地址。在本章后面位置你会用到它。</para></step>
+</procedure>
+<para>你有了开发许可证和 Google &wsdl; 文件之后就可以和 Google 网络服务打交道了。</para>
+<example>
+<title>内省 Google 网络服务</title>
+<screen>
+&prompt;<userinput>from SOAPpy import WSDL</userinput>
+&prompt;<userinput>server = WSDL.Proxy('/path/to/your/GoogleSearch.wsdl')</userinput> <co id="soap.google.1.1"/>
+&prompt;<userinput>server.methods.keys()</userinput>                                  <co id="soap.google.1.2"/>
+<computeroutput>[u'doGoogleSearch', u'doGetCachedPage', u'doSpellingSuggestion']</computeroutput>
+&prompt;<userinput>callInfo = server.methods['doGoogleSearch']</userinput>
+&prompt;<userinput>for arg in callInfo.inparams:</userinput>                          <co id="soap.google.1.3"/>
+&continuationprompt;<userinput>print arg.name.ljust(15), arg.type</userinput>
+<computeroutput>key             (u'http://www.w3.org/2001/XMLSchema', u'string')
+q               (u'http://www.w3.org/2001/XMLSchema', u'string')
+start           (u'http://www.w3.org/2001/XMLSchema', u'int')
+maxResults      (u'http://www.w3.org/2001/XMLSchema', u'int')
+filter          (u'http://www.w3.org/2001/XMLSchema', u'boolean')
+restrict        (u'http://www.w3.org/2001/XMLSchema', u'string')
+safeSearch      (u'http://www.w3.org/2001/XMLSchema', u'boolean')
+lr              (u'http://www.w3.org/2001/XMLSchema', u'string')
+ie              (u'http://www.w3.org/2001/XMLSchema', u'string')
+oe              (u'http://www.w3.org/2001/XMLSchema', u'string')</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.google.1.1">
+<para>步入 Google 网络服务很简单：建立一个 <classname>WSDL.Proxy</classname> 对象并指向到你复制到本地的 Google &wsdl; 文件。</para>
+</callout>
+<callout arearefs="soap.google.1.2">
+<para>由 &wsdl; 文件可知，Google 提供三个函数：<function>doGoogleSearch</function>、<function>doGetCachedPage</function> 和 <function>doSpellingSuggestion</function>。顾名思义，执行 Google 搜索并返回结果；获得 Google 最后一次扫描该页时获得的缓存；基于常见拼写错误提出单词拼写建议。</para>
+</callout>
+<callout arearefs="soap.google.1.3">
+<para><function>doGoogleSearch</function> 函数需要一系列不同类型的参数。注意：&wsdl; 文件可以告诉你有哪些参数和他们的参数类型，但不能告诉你它们的含义和使用方法。在参数值有限定的情况下，理论上它能够告诉你参数的取值范围，但 Google 的 &wsdl; 没有那么细化。<classname>WSDL.Proxy</classname> 不会变魔术，它只能给你 &wsdl; 文件中提供的信息。</para>
+</callout>
+</calloutlist>
+</example>
+<para>这里简要地列出了 <function>doGoogleSearch</function> 函数的所有参数：</para>
+<itemizedlist>
+<listitem><para><varname>key</varname>――你注册 Google 网络服务时获得的 Google API 许可证。</para></listitem>
+<listitem><para><varname>q</varname>――你要搜索的词或词组。其语法与 Google 的网站表单处完全相同，你所知道的高级搜索语法和技巧这里完全适用。</para></listitem>
+<listitem><para><varname>start</varname>――起始的结果编号。与使用 Google 网页交互搜索时相同，这个函数每次返回 10 个结果。如果你需要查看 <quote>第二</quote> 页结果则需要将 <varname>start</varname> 设置为 10。</para></listitem>
+<listitem><para><varname>maxResults</varname>――返回的结果个数。目前的值是 10，当然如果你只对少数返回结果感兴趣或者希望节省网络带宽，也可以定义为返回更少的结果。</para></listitem>
+<listitem><para><varname>filter</varname>――如果设置为 &true;，Google 将会过滤结果中重复的页面。</para></listitem>
+<listitem><para><varname>restrict</varname>――这里设置 <literal>country</literal> 并跟上一个国家代码可以限定只返回特定国家的结果。例如：<literal>countryUK</literal> 用于在英国搜索页面。你也可以设定 <literal>linux</literal>，<literal>mac</literal> 或者 <literal>bsd</literal> 以便搜索 Google 定义的技术站点组，或者设为 <literal>unclesam</literal> 来搜索美国政府站点。</para></listitem>
+<listitem><para><varname>safeSearch</varname>――如果设置为 &true;，Google 将会过滤掉色情站点。</para></listitem>
+<listitem><para><varname>lr</varname> (<quote>language restrict</quote>，语言限制)――这里设置语言限定值返回特定语言的站点。</para></listitem>
+<listitem><para><varname>ie</varname> 和 <varname>oe</varname> (<quote>input encoding</quote>，输入编码和 <quote>output encoding</quote>，输出编码)――不赞成使用，都应该是 <literal>utf-8</literal>。</para></listitem>
+</itemizedlist>
+<example>
+<title>搜索 Google</title>
+<screen>
+&prompt;<userinput>from SOAPpy import WSDL</userinput>
+&prompt;<userinput>server = WSDL.Proxy('/path/to/your/GoogleSearch.wsdl')</userinput>
+&prompt;<userinput>key = 'YOUR_GOOGLE_API_KEY'</userinput>
+&prompt;<userinput>results = server.doGoogleSearch(key, 'mark', 0, 10, False, "",</userinput>
+&continuationprompt;<userinput>False, "", "utf-8", "utf-8")</userinput>             <co id="soap.google.2.1"/>
+&prompt;<userinput>len(results.resultElements)</userinput>                  <co id="soap.google.2.2"/>
+<computeroutput>10</computeroutput>
+&prompt;<userinput>results.resultElements[0].URL</userinput>                <co id="soap.google.2.3"/>
+<computeroutput>'http://diveintomark.org/'</computeroutput>
+&prompt;<userinput>results.resultElements[0].title</userinput>
+<computeroutput>'dive into &lt;b>mark&lt;/b>'</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.google.2.1">
+<para>在设置好 <classname>WSDL.Proxy</classname> 对象之后，你可以使用十个参数来调用 <function>server.doGoogleSearch</function>。记住要使用你注册 Google 网络服务时授权给你自己的 Google API 许可证。</para>
+</callout>
+<callout arearefs="soap.google.2.2">
+<para>有很多的返回信息，但我们还是先来看一下实际的返回结果。它们被存储于 <varname>results.resultElements</varname> 之中，你可以像使用普通的 &python; 列表那样来调用它。</para>
+</callout>
+<callout arearefs="soap.google.2.3">
+<para><varname>resultElements</varname> 中的每个元素都是一个包含 <varname>URL</varname>、<varname>title</varname>、<varname>snippet</varname> 以及其他属性的对象。基于这一点，你可以使用诸如 <userinput>dir(results.resultElements[0])</userinput> 的普通 &python; 自省技术来查看有效属性，或者通过 &wsdl; proxy 对象查看函数的 <varname>outparams</varname>。不同的方法能带给你相同的结果。</para>
+</callout>
+</calloutlist>
+</example>
+<para> <varname>results</varname> 对象中所加载的不仅仅是实际的搜索结果。它也含有搜索行为自身的信息，比如耗时和总结果数等 (尽管只返回了10条结果)。Google 网页界面中显示了这些信息，通过程序你也同样能获得它们。</para>
+<example>
+<title>从Google获得次要信息</title>
+<screen>
+&prompt;<userinput>results.searchTime</userinput>                     <co id="soap.google.3.1"/>
+<computeroutput>0.224919</computeroutput>
+&prompt;<userinput>results.estimatedTotalResultsCount</userinput>     <co id="soap.google.3.2"/>
+<computeroutput>29800000</computeroutput>
+&prompt;<userinput>results.directoryCategories</userinput>            <co id="soap.google.3.3"/>
+<computeroutput>[&lt;SOAPpy.Types.structType item at 14367400>:
+ {'fullViewableName':
+  'Top/Arts/Literature/World_Literature/American/19th_Century/Twain,_Mark',
+  'specialEncoding': ''}]</computeroutput>
+&prompt;<userinput>results.directoryCategories[0].fullViewableName</userinput>
+<computeroutput>'Top/Arts/Literature/World_Literature/American/19th_Century/Twain,_Mark'</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.google.3.1">
+<para>这个搜索耗时 0.224919 秒。这不包括用于发送和接收 &soap; XML 文档的时间，仅仅是 Google 在接到搜索请求后执行搜索所花费的时间。</para>
+</callout>
+<callout arearefs="soap.google.3.2">
+<para>总共有接近 30,000,000 个结果信息。通过让 <varname>start</varname> 参数以 10 递增来重复调用 <function>server.doGoogleSearch</function>，你能够获得全部的结果。</para>
+</callout>
+<callout arearefs="soap.google.3.3">
+<para>对于有些请求，Google 还返回一个 <ulink url="http://directory.google.com/">Google Directory</ulink> 中的类别列表。你可以用这些 URLs 到 <ulink url="http://directory.google.com/"/> 建立到 directory category 页面的链接。</para>
+</callout>
+</calloutlist>
+</example>
+<!--
+<directoryCategories xmlns:ns2="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns2:Array" ns2:arrayType="ns1:DirectoryCategory[1]">
+<item xsi:type="ns1:DirectoryCategory">
+<fullViewableName xsi:type="xsd:string">Top/Arts/Literature/World_Literature/American/19th_Century/Twain,_Mark</fullViewableName>
+<specialEncoding xsi:type="xsd:string"></specialEncoding>
+</item>
+</directoryCategories>
+-->
+
+<!--
+-->
+
+</section>
+
+<section id="soap.troubleshooting">
+<?dbhtml filename="soap_web_services/troubleshooting.html"?>
+<title> &soap; 网络服务故障排除</title>
+<abstract>
+<title/>
+<para>是的，&soap; 网络服务的世界中也不总是欢乐和阳光。有时候也会有故障。</para>
+</abstract>
+<para>正如你在本章中看到的，&soap; 牵扯了很多层面。&soap; 向 HTTP 服务器发送 XML 文档并接收返回的 XML 文档时需要用到 HTTP 层。这样一来，你在 <xref linkend="oa"/> 学到的调试技术在这里都有了用武之地。你可以 <userinput>import httplib</userinput> 并设置 <userinput>httplib.HTTPConnection.debuglevel = 1</userinput> 来查看潜在的 HTTP 传输。</para>
+<para>在 HTTP 层之上，还有几个可能发生问题的地方。&soappy; 隐藏 &soap; 语法的本领令你惊叹不已，但也意味着在发生问题时更难确定问题所在。</para>
+<para>下面的这些例子是我在使用 &soap; 网络服务时犯过的一些常见错误以及所产生的错误信息。</para>
+<example>
+<title>以错误的设置调用 Proxy 方法</title>
+<screen>
+&prompt;<userinput>from SOAPpy import SOAPProxy</userinput>
+&prompt;<userinput>url = 'http://services.xmethods.net:80/soap/servlet/rpcrouter'</userinput>
+&prompt;<userinput>server = SOAPProxy(url)</userinput>                                        <co id="soap.troubleshooting.1.1"/>
+&prompt;<userinput>server.getTemp('27502')</userinput>                                        <co id="soap.troubleshooting.1.2"/>
+<computeroutput role="traceback">&lt;Fault SOAP-ENV:Server.BadTargetObjectURI:
+Unable to determine object id from call: is the method element namespaced?>
+Traceback (most recent call last):
+  File "&lt;stdin>", line 1, in ?
+  File "c:\python23\Lib\site-packages\SOAPpy\Client.py", line 453, in __call__
+    return self.__r_call(*args, **kw)
+  File "c:\python23\Lib\site-packages\SOAPpy\Client.py", line 475, in __r_call
+    self.__hd, self.__ma)
+  File "c:\python23\Lib\site-packages\SOAPpy\Client.py", line 389, in __call
+    raise p
+SOAPpy.Types.faultType: &lt;Fault SOAP-ENV:Server.BadTargetObjectURI:
+Unable to determine object id from call: is the method element namespaced?></computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.troubleshooting.1.1">
+<para>你看出错误了吗？你手工地创建了一个 <classname>SOAPProxy</classname>，你正确地指定了服务 &url;，但是你没有指定命名空间。由于多个服务可能被路由到相同的服务 &url;，命名空间是确定你所调用的服务和方法的重要内容。</para>
+</callout>
+<callout arearefs="soap.troubleshooting.1.2">
+<para>服务器返回的是一个 &soap; 错误 (Fault)，&soappy; 把它转换为 &python; 异常 <classname>SOAPpy.Types.faultType</classname>。从任何 &soap; 服务器返回的错误都是 &soap; 错误，因此你可以轻易地捕获这个异常。就此处而言，我们能从 &soap; 错误信息中看出端倪：由于源 <classname>SOAPProxy</classname> 对象没有设置服务命名空间，因此方法元素也就没有了命名空间。</para>
+</callout>
+</calloutlist>
+</example>
+<para>错误配置 &soap; 服务的基本元素是 &wsdl; 着眼解决的问题。&wsdl; 文件包含服务 &url; 和命名空间，所以你应该不会在这里犯错。但是，还有其他可能出错的地方。</para>
+<example>
+<title>以错误参数调用方法</title>
+<screen>
+&prompt;<userinput>wsdlFile = 'http://www.xmethods.net/sd/2001/TemperatureService.wsdl'</userinput>
+&prompt;<userinput>server = WSDL.Proxy(wsdlFile)</userinput>
+&prompt;<userinput>temperature = server.getTemp(27502)</userinput>                                <co id="soap.troubleshooting.2.1"/>
+<computeroutput role="traceback">&lt;Fault SOAP-ENV:Server: Exception while handling service request:
+services.temperature.TempService.getTemp(int) -- no signature match>   <co id="soap.troubleshooting.2.2"/>
+Traceback (most recent call last):
+  File "&lt;stdin>", line 1, in ?
+  File "c:\python23\Lib\site-packages\SOAPpy\Client.py", line 453, in __call__
+    return self.__r_call(*args, **kw)
+  File "c:\python23\Lib\site-packages\SOAPpy\Client.py", line 475, in __r_call
+    self.__hd, self.__ma)
+  File "c:\python23\Lib\site-packages\SOAPpy\Client.py", line 389, in __call
+    raise p
+SOAPpy.Types.faultType: &lt;Fault SOAP-ENV:Server: Exception while handling service request:
+services.temperature.TempService.getTemp(int) -- no signature match></computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.troubleshooting.2.1">
+<para>你看出错误了吗？这是一个不易察觉的错误：你在使用整数而不是字符串来调用 <function>server.getTemp</function> 。自省 &wsdl; 文件不难发现，<function>getTemp()</function> 这个 &soap; 函数接受一个参数 <varname>zipcode</varname>，这是一个字符串参数。<classname>WSDL.Proxy</classname> <emphasis>不</emphasis> 会为你强制转换数据类型；你需要根据服务器需要的数据类型传递数据。</para>
+</callout>
+<callout arearefs="soap.troubleshooting.2.2">
+<para>又是这样，服务器传回一个 &soap; 错误，你能从 &soap; 错误信息中看出端倪：你在使用整数类型的参数调用 <function>getTemp</function> 函数，但却没有一个以此命名的函数接收整数参数。理论上讲，&soap; 允许你重载 (<emphasis>overload</emphasis>) 函数，也就是可以在同一个 &soap; 服务中存在同名函数，并且参数个数也相同，但是参数的数据类型不同。这就是数据类型必须匹配的原因，也说明了为什么 <classname>WSDL.Proxy</classname> 不强制地为你改变数据类型。如果真的强制改变了数据类型，发生这样的错误时，调用的可能是另外一个不相干的函数。看来产生这样的错误是件幸运的事。对于数据类型多加注意会让事情简单很多，一旦搞错了数据类型便立刻会发生错误。</para>
+</callout>
+</calloutlist>
+</example>
+<para>&python; 所期待的返回值个数与远程函数的实际返回值个数不同是另一种可能的错误。</para>
+<example>
+<title>调用时方法所期待的返回值个数错误</title>
+<screen>
+&prompt;<userinput>wsdlFile = 'http://www.xmethods.net/sd/2001/TemperatureService.wsdl'</userinput>
+&prompt;<userinput>server = WSDL.Proxy(wsdlFile)</userinput>
+&prompt;<userinput>(city, temperature) = server.getTemp(27502)</userinput>  <co id="soap.troubleshooting.3.1"/>
+<computeroutput role="traceback">Traceback (most recent call last):
+  File "&lt;stdin>", line 1, in ?
+TypeError: unpack non-sequence</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.troubleshooting.3.1">
+<para>你看出错误了吗？<function>server.getTemp</function> 只返回一个浮点值，但你写的代码却期待着获得两个值，并把它们赋值给不同的两个变量。注意这不是一个 &soap; 错误。就远程服务器而言没有发生任何错误。错误发生在完成 &soap; 交割<emphasis>之后</emphasis>。<classname>WSDL.Proxy</classname> 返回一个浮点数，你本地的 &python; 解释器试图将这个浮点数分成两个变量。由于函数只返回了一个值，你在试图分割它时所获得的是一个 &python; 异常，而不是 &soap; 错误。</para>
+</callout>
+</calloutlist>
+</example>
+<para>那么 Google 网络服务方面又如何呢？我曾经犯过的最常见的错误是忘记正确设置应用许可证。</para>
+<example>
+<title>调用方法返回一个应用特定的错误</title>
+<screen>
+&prompt;<userinput>from SOAPpy import WSDL</userinput>
+&prompt;<userinput>server = WSDL.Proxy(r'/path/to/local/GoogleSearch.wsdl')</userinput>
+&prompt;<userinput>results = server.doGoogleSearch('foo', 'mark', 0, 10, False, "",</userinput> <co id="soap.troubleshooting.4.1"/>
+&continuationprompt;<userinput>False, "", "utf-8", "utf-8")</userinput>
+<computeroutput role="traceback">&lt;Fault SOAP-ENV:Server:                                              <co id="soap.troubleshooting.4.2"/>
+ Exception from service object: Invalid authorization key: foo:
+ &lt;SOAPpy.Types.structType detail at 14164616>:
+ {'stackTrace':
+  'com.google.soap.search.GoogleSearchFault: Invalid authorization key: foo
+   at com.google.soap.search.QueryLimits.lookUpAndLoadFromINSIfNeedBe(
+     QueryLimits.java:220)
+   at com.google.soap.search.QueryLimits.validateKey(QueryLimits.java:127)
+   at com.google.soap.search.GoogleSearchService.doPublicMethodChecks(
+     GoogleSearchService.java:825)
+   at com.google.soap.search.GoogleSearchService.doGoogleSearch(
+     GoogleSearchService.java:121)
+   at sun.reflect.GeneratedMethodAccessor13.invoke(Unknown Source)
+   at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+   at java.lang.reflect.Method.invoke(Unknown Source)
+   at org.apache.soap.server.RPCRouter.invoke(RPCRouter.java:146)
+   at org.apache.soap.providers.RPCJavaProvider.invoke(
+     RPCJavaProvider.java:129)
+   at org.apache.soap.server.http.RPCRouterServlet.doPost(
+     RPCRouterServlet.java:288)
+   at javax.servlet.http.HttpServlet.service(HttpServlet.java:760)
+   at javax.servlet.http.HttpServlet.service(HttpServlet.java:853)
+   at com.google.gse.HttpConnection.runServlet(HttpConnection.java:237)
+   at com.google.gse.HttpConnection.run(HttpConnection.java:195)
+   at com.google.gse.DispatchQueue$WorkerThread.run(DispatchQueue.java:201)
+Caused by: com.google.soap.search.UserKeyInvalidException: Key was of wrong size.
+   at com.google.soap.search.UserKey.&lt;init>(UserKey.java:59)
+   at com.google.soap.search.QueryLimits.lookUpAndLoadFromINSIfNeedBe(
+     QueryLimits.java:217)
+   ... 14 more
+'}>
+Traceback (most recent call last):
+  File "&lt;stdin>", line 1, in ?
+  File "c:\python23\Lib\site-packages\SOAPpy\Client.py", line 453, in __call__
+    return self.__r_call(*args, **kw)
+  File "c:\python23\Lib\site-packages\SOAPpy\Client.py", line 475, in __r_call
+    self.__hd, self.__ma)
+  File "c:\python23\Lib\site-packages\SOAPpy\Client.py", line 389, in __call
+    raise p
+SOAPpy.Types.faultType: &lt;Fault SOAP-ENV:Server: Exception from service object:
+Invalid authorization key: foo:
+&lt;SOAPpy.Types.structType detail at 14164616>:
+{'stackTrace':
+  'com.google.soap.search.GoogleSearchFault: Invalid authorization key: foo
+   at com.google.soap.search.QueryLimits.lookUpAndLoadFromINSIfNeedBe(
+     QueryLimits.java:220)
+   at com.google.soap.search.QueryLimits.validateKey(QueryLimits.java:127)
+   at com.google.soap.search.GoogleSearchService.doPublicMethodChecks(
+     GoogleSearchService.java:825)
+   at com.google.soap.search.GoogleSearchService.doGoogleSearch(
+     GoogleSearchService.java:121)
+   at sun.reflect.GeneratedMethodAccessor13.invoke(Unknown Source)
+   at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+   at java.lang.reflect.Method.invoke(Unknown Source)
+   at org.apache.soap.server.RPCRouter.invoke(RPCRouter.java:146)
+   at org.apache.soap.providers.RPCJavaProvider.invoke(
+     RPCJavaProvider.java:129)
+   at org.apache.soap.server.http.RPCRouterServlet.doPost(
+     RPCRouterServlet.java:288)
+   at javax.servlet.http.HttpServlet.service(HttpServlet.java:760)
+   at javax.servlet.http.HttpServlet.service(HttpServlet.java:853)
+   at com.google.gse.HttpConnection.runServlet(HttpConnection.java:237)
+   at com.google.gse.HttpConnection.run(HttpConnection.java:195)
+   at com.google.gse.DispatchQueue$WorkerThread.run(DispatchQueue.java:201)
+Caused by: com.google.soap.search.UserKeyInvalidException: Key was of wrong size.
+   at com.google.soap.search.UserKey.&lt;init>(UserKey.java:59)
+   at com.google.soap.search.QueryLimits.lookUpAndLoadFromINSIfNeedBe(
+     QueryLimits.java:217)
+   ... 14 more
+'}></computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="soap.troubleshooting.4.1">
+<para>你看出错误了吗？调用的语法，参数个数以及数据类型都没有错误。这个问题是应用特定的：第一个参数应该是我的应用许可证，但 <literal>foo</literal> 不是一个有效的 Google 许可证。</para>
+</callout>
+<callout arearefs="soap.troubleshooting.4.2">
+<para>Google 服务器返回的是一个 &soap; 错误和一大串特别长的错误信息，其中包含了完整的 Java 堆栈跟踪。记住<emphasis>所有</emphasis> 的 &soap; 错误都被标示为 &soap; Faults: errors in configuration (设置错误), errors in function arguments (函数参数错误)，或者是应用特定的错误 (这里就是) 等等。在其中埋藏的至关重要信息是：<literal>Invalid authorization key: foo</literal> (非有效授权许可证：foo)。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para><ulink url="http://www-106.ibm.com/developerworks/webservices/library/ws-pyth17.html">New developments for &soappy;</ulink> 一步步连接到另一个不名副其实的 &soap; 服务。</para></listitem>
+</itemizedlist>
+</section>
+
+<section id="soap.summary">
+<?dbhtml filename="soap_web_services/summary.html"?>
+<title>小结</title>
+<abstract>
+<title/>
+<para>&soap; 网络服务是很复杂的，雄心勃勃的它试图涵盖网络服务的很多不同应用。这一章我们接触了它的一个简单应用。</para>
+</abstract>
+<highlights>
+<para>在开始下一章的学习之前，确保你能自如地做如下工作：</para>
+<itemizedlist>
+<listitem><para>连接到 &soap; 服务器并调用远程方法</para></listitem>
+<listitem><para>通过 &wsdl; 文件自省远程方法</para></listitem>
+<listitem><para>有效排除 &soap; 调用中的错误</para></listitem>
+<listitem><para>排除常见的 &soap; 相关错误</para></listitem>
+</itemizedlist>
+</highlights>
+</section>
+</chapter>
+
+<!--
+- diving in
+* installing soap libraries
+- first soap call
+  - soap-notes-2.txt
+- debugging soap transactions
+- introducing wsdl
+- introspecting soap web services with wsdl
+  - soap-notes-4.txt
+- searching google
+  - soap-notes-3.txt
+  - soap-notes.txt
+- troubleshooting
+  - wrong proxy config (missing namespace)
+  - wrong inparam type (int instead of string)
+  - expect 2 return values but only get 1 (python error)
+  - application-specific (incorrect Google API key)
+- summary
+-->

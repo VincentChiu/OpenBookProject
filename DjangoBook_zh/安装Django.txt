@@ -1,0 +1,180 @@
+How to install Django
+安装Django
+This document is for Django's SVN release, which can be significantly different from previous releases. Get old docs here: 0.96, 0.95.
+
+This document will get you up and running with Django.
+本文档会指引你安装配置Django
+
+Install Python
+安装python
+Being a Python Web framework, Django requires Python.
+因为Django是一个基于python的web框架，所以在安装Django之前，必须安装python
+
+It works with any Python version 2.3 and higher.
+Django需要python2.3或者更高的版本
+
+Get Python at http://www.python.org. If you’re running Linux or Mac OS X, you probably already have it installed.
+可以由 http://www.python.org 获得python。如果你使用Linux或者Mac OS X，你的系统可能安装了python。
+
+
+Install Apache and mod_python
+安装Apache和mod_python
+
+If you just want to experiment with Django, skip ahead to the next section; Django includes a lightweight web server you can use for testing, so you won’t need to set up Apache until you’re ready to deploy Django in production.
+如果你只是进行Django实验，请跳过这一部分。因为Django自带了一个轻量级的网页服务器，你可以使用它来测试你的代码，在配置到实际应用的时候，你才需要将Django工程放到Apache上。
+
+If you want to use Django on a production site, use Apache with mod_python. mod_python is similar to mod_perl — it embeds Python within Apache and loads Python code into memory when the server starts. Code stays in memory throughout the life of an Apache process, which leads to significant performance gains over other server arrangements. Make sure you have Apache installed, with the mod_python module activated. Django requires Apache 2.x and mod_python 3.x.
+如果你需要在实际应用中使用Django，请使用Apache和mod_python来配置你的项目。mod_python和mod_perl类似，它作为Apache的一个模块，在Apache启动的时候，将python代码装载入内存。在Apache进程的整个生命周期，python代码都在内存中，这样的配置方式比其他服务器的配置方式有更显著的性能。使用Apache和mod_python配置Django项目，首先要安装好Apache，并安装和激活mod_python。Django需要Apache2.X和mod_python 3.X
+
+See How to use Django with mod_python for information on how to configure mod_python once you have it installed.
+关于安装mod_python后的设置，请查阅 <a>怎样配置mod_python来运行Django</a>。
+
+
+If you can’t use mod_python for some reason, fear not: Django follows the WSGI spec, which allows it to run on a variety of server platforms. See the server-arrangements wiki page for specific installation instructions for each platform.
+如果因为某些原因，你不能使用mod_python，不用担心，Django符合WSGI的规范，使得它可以运行在许多服务器平台上。查阅<a>服务器配置维基页面</a>来获取在不同平台上的安装和配置说明。
+
+Get your database running
+启动数据库服务器
+
+If you plan to use Django’s database API functionality, you’ll need to make sure a database server is running. Django works with PostgreSQL, MySQL, Oracle and SQLite (although SQLite doesn’t require a separate server to be running).
+如果你使用Django的数据库API，你需要启动数据库服务器。Django可以使用PostgreSQL, MySQL, Oracle和SQLite（ SQLite不需要一个数据库服务器 ）。
+
+
+Additionally, you’ll need to make sure your Python database bindings are installed.
+进一步，你需要确定对应的数据库驱动包已经安装
+    *
+
+      If you’re using PostgreSQL, you’ll need the psycopg package. Django supports both version 1 and 2. (When you configure Django’s database layer, specify either postgresql [for version 1] or postgresql_psycopg2 [for version 2].)
+如果你使用PostgreSQL数据库，你需要安装psycopg，Django支持psycopg的两个版本，当你设置Django数据库层的时候，设置为postgresql表示使用psycopg1，设置为postgresql_psycopg2时表示使用psycopg2。
+
+      If you’re on Windows, check out the unofficial compiled Windows version.
+如果你使用的OS是Windows，请下载非官方的<a>windows版本</a>
+
+    *
+
+      If you’re using MySQL, you’ll need MySQLdb, version 1.2.1p2 or higher. You will also want to read the database-specific notes for the MySQL backend.
+如果你使用MySQL，你需要安装MySQLdb，版本为1.2.1p2或者更高。你可能需要阅读关于MySQL的<a>一些注意事项</a>。
+
+    *
+
+      If you’re using SQLite and either Python 2.3 or Python 2.4, you’ll need pysqlite. Use version 2.0.3 or higher. Python 2.5 ships with an sqlite wrapper in the standard library, so you don’t need to install anything extra in that case.
+如果你使用SQLite，或者使用python2.3、2.4版本，你需要安装pysqlite，版本为2.0.3或更高。如果你使用python2.5，因为python2.5将sqlite包含在标准库中，你不需要安装任何东西。
+
+    *
+
+      If you’re using Oracle, you’ll need cx_Oracle, version 4.3.1 or higher. You will also want to read the database-specific notes for the Oracle backend.
+如果你使用Oracle，你需要安装cx_Oracle，版本4.3.1或更高。你可能需要阅读关于Oracle的<a>一些注意事项</a>。
+
+If you plan to use Django’s manage.py syncdb command to automatically create database tables for your models, you’ll need to ensure that Django has permission to create tables in the database you’re using; if you plan to manually create the tables, you can simply grant Django SELECT, INSERT, UPDATE and DELETE permissions. Django does not issue ALTER TABLE statements, and so will not require permission to do so. If you will be using Django’s testing framework with data fixtures, Django will need permission to create a temporary test database.
+如果你使用manage.py syncdb命令来自动创数据库表，你需要保证Django有创建表的权限。如果你手工建立数据表，你只需赋予Django SELECT、INSERT、UPDATE和DELETE 的权限。Django不支持ALTER TABLE语句，所以不需要这个权限。如果你使用Django的<a>测试框架（testing framework）</a>,Django需要创建临时测试表的权限。
+
+Remove any old versions of Django
+删除旧版本的Django
+If you are upgrading your installation of Django from a previous version, you will need to uninstall the old Django version before installing the new version.
+如果你的系统原来就安装了旧版本的Django，在安装新版本Django之前你需要将旧版本卸载。
+
+If you installed Django using setup.py install, uninstalling is as simple as deleting the django directory from your Python site-packages.
+如果你使用setup.py install命令来安装Django，只需要删除旧版本的Django文件夹，该文件夹在你的python目录下的site-packages文件夹中。
+
+If you installed Django from a Python egg, remove the Django .egg file, and remove the reference to the egg in the file named easy-install.pth. This file should also be located in your site-packages directory.
+如果你使用python egg来安装Django，在删除旧版本的Django .egg文件的同时，你还需要删除在easy-install.pth文件中对旧版egg文件的引用。easy-install.pth文件在你的site-packages文件夹里。
+
+#Note
+Where are my site-packages stored?
+我的site-packages文件夹在哪里？
+
+The location of the site-packages directory depends on the operating system, and the location in which Python was installed. To find out your system’s site-packages location, execute the following:
+site-packages文件夹的存放位置与操作系统和python的安装位置有关。为了找到你系统的site-packages文件夹位置，你需要在shell中执行：
+
+python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"
+
+(Note that this should be run from a shell prompt, not a Python interactive prompt.)
+（注意:这个命令是在shell提示符下运行的，而不是python的交互提示符下运行.）
+#EndNote
+
+Install the Django code
+安装Django
+Installation instructions are slightly different depending on whether you’re installing a distribution-specific package, downloading the the latest official release, or fetching the latest development version.
+不同的Django安装包的安装方法有一点点不同。安装包主要有：特别发布版，Django官方安装版，开发版。（特别发布包指社区贡献者将Django文件打包成对应unix、linux系统的安装包）
+
+It’s easy, no matter which way you choose.
+无论你选择哪一种安装包来安装，都是非常简单的。
+
+
+Installing a distribution-specific package
+安装特别发布包
+
+Check the distribution specific notes to see if your platform/distribution provides official Django packages/installers. Distribution-provided packages will typically allow for automatic installation of dependancies and easy upgrade paths.
+检查<a>特别发布包事项</a>，查看你的操作系统的是否提供Django的安装包。一般来说，特别发布包可以自动安装并更新系统路径path。
+
+Installing an official release
+安装Django官方发布的安装包
+   1. Download the latest release from our download page.
+   2. Untar the downloaded file (e.g. tar xzvf Django-NNN.tar.gz, where NNN is the version number of the latest release). If you’re using Windows, you can download the command-line tool bsdtar to do this, or you can use a GUI-based tool such as 7-zip.
+   3. Change into the directory created in step 2 (e.g. cd Django-NNN).
+   4. If you’re using Linux, Mac OS X or some other flavor of Unix, enter the command sudo python setup.py install at the shell prompt. If you’re using Windows, start up a command shell with administrator privileges and run the command setup.py install.
+1、在官方下载页下载最新的版本
+2、解压你下载的文件(如；tar xzvf Django-NNN.tar.gz， NNN是你下载文件的版本号）。如果你使用的Windows，你可以下载<a>bsdtar</a>(一个命令行工具）或者使用7-zip（有用户界面）来解压。
+3、进入到你解压后的文件夹中（如 cd Django-NNN）
+4、如果你使用Linux、Mac OS X或者其他Unix系的操作系统，可以在shell提示符下输入 sudo python setyp.py install 来安装。如果你使用Windows，请在管理员（administrator）权限下，在命令行提示符中输入setup.py install来安装。
+
+These commands will install Django in your Python installation’s site-packages directory.
+以上的步骤会将Django安装在系统Python安装目录的site-packages文件夹中。
+
+
+Installing the development version
+安装Django开发版
+
+If you’d like to be able to update your Django code occasionally with the latest bug fixes and improvements, follow these instructions:
+如果你愿意常常升级Django（添加补丁和改进），你可以按如下方法处理：
+   1.
+
+      Make sure that you have Subversion installed, and that you can run its commands from a shell. (Enter svn help at a shell prompt to test this.)
+    确定你安装了<a>Subversion</a>,并且可以在命令行提示符下运行Subversion的命令。可以在命令行下输入 svn help来测试你的系统Subversion是否正确安装。
+    
+   2.
+
+      Check out Django’s main development branch (the ‘trunk’) like so:
+
+      svn co http://code.djangoproject.com/svn/django/trunk/ django-trunk
+    用下面的命令在服务器中导出Django开发版的主分支（trunk）：
+    svn co http://code.djangoproject.com/svn/django/trunk/ django-trunk
+   3.
+
+      Next, make sure that the Python interpreter can load Django’s code. There are various ways of accomplishing this. One of the most convenient, on Linux, Mac OSX or other Unix-like systems, is to use a symbolic link:
+    确定Python解释器能够找到Django代码。在Linux、Mac OS X和Unix系的系统中，最简单的方法是建立一个符号链接：
+      ln -s `pwd`/django-trunk/django SITE-PACKAGES-DIR/django
+
+      (In the above line, change SITE-PACKAGES-DIR to match the location of your system’s site-packages directory, as explained in the “Where are my site-packages stored?” section above.)
+    在上面的命令中，将SITE-PACKAGES-DIR更改为你系统中site-packages文件夹的位置。也就是本文中“我的site-packages文件夹在哪里？”里面提到的那个路径。
+    
+    
+      Alternatively, you can define your PYTHONPATH environment variable so that it includes the django subdirectory of django-trunk. This is perhaps the most convenient solution on Windows systems, which don’t support symbolic links. (Environment variables can be defined on Windows systems from the Control Panel.)
+    另一种方法是在PYTHONPATH环境变量中包含django-trunk文件夹。这通常在Windows环境下采用（因为Windows不支持符号链接，环境变量可以在Windows控制面板——>系统属性中定义）。
+
+      What about Apache and mod_python?
+        关于Apache和mod_python：
+      If you take the approach of setting PYTHONPATH, you’ll need to remember to do the same thing in your Apache configuration once you deploy your production site. Do this by setting PythonPath in your Apache configuration file.
+    如果你使用设置PYTHONPATH的方法，你需要在Apache的设置文件中添加PYTHONPATH。
+      More information about deployment is available, of course, in our How to use Django with mod_python documentation.
+    你可以在<a>怎样配置mod_python来运行Django</a>中找到关于这种配置方式更详细的信息。
+    
+   4.
+
+On Unix-like systems, create a symbolic link to the file django-trunk/django/bin/django-admin.py in a directory on your system path, such as /usr/local/bin. For example:
+在Unix系的系统中，在你系统路径的一个文件夹（如/usr/local/bin)中建立一个到 django-trunk/django/bin/django-admin.py 的符号链接。例如：
+
+ln -s `pwd`/django-trunk/django/bin/django-admin.py /usr/local/bin
+
+
+This simply lets you type django-admin.py from within any directory, rather than having to qualify the command with the full path to the file.
+这样可以免去你在任何文件夹中使用django-admin.py时候输入长长的绝对路径。
+
+On Windows systems, the same result can be achieved by copying the file django-trunk/django/bin/django-admin.py to somewhere on your system path, for example C:\Python24\Scripts.
+在Windows系统下，你同样可以将django-trunk/django/bin/django-admin.py添加到系统路径中，如C:\Python24\Scripts里面。
+
+You don’t have to run python setup.py install, because you’ve already carried out the equivalent actions in steps 3 and 4.
+你不需要运行 python setup.py install，因为第3、4步的工作已经完成了Django的安装配置工作。
+
+When you want to update your copy of the Django source code, just run the command svn update from within the django-trunk directory. When you do this, Subversion will automatically download any changes.
+当你想更新你的Django源代码，只需要在django-trunk目录下运行 svn update， Subversion会自动下载和更新django。

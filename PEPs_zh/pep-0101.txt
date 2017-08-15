@@ -1,0 +1,728 @@
+PEP: 101
+Title: Doing Python Releases 101
+Version: $Revision: 62137 $
+Last-Modified: $Date: 2008-04-04 09:19:32 +0800 (Fri, 04 Apr 2008) $
+Author: barry@python.org (Barry A. Warsaw), guido@python.org (Guido van Rossum)
+Status: Active
+Type: Informational
+Created: 22-Aug-2001
+Post-History:
+
+
+Abstract
+
+    Making a Python release is an arduous process that takes a
+    minimum of half a day's work even for an experienced releaser.
+    Until recently, most -- if not all -- of that burden was borne by
+    Guido himself.  But several recent releases have been performed by
+    other folks, so this PEP attempts to collect, in one place, all
+    the steps needed to make a Python release.  It is organized as a
+    recipe and you can actually print this out and check items off as
+    you complete them.
+
+
+How to Make A Release
+
+    Here are the steps taken to make a Python release.  Some steps are
+    more fuzzy than others because there's little that can be
+    automated (e.g. writing the NEWS entries).  Where a step is
+    usually performed by An Expert, the role of that expert is given.
+    Otherwise, assume the step is done by the Release Manager (RM),
+    the designated person performing the release.  The roles and their
+    current experts are:  
+
+        * WE = Windows: Martin von Loewis
+        * ME = Mac: Ronald Oussoren
+        * DE = Documentation: Fred Drake
+
+    XXX: We should include a dependency graph to illustrate the steps
+    that can be taken in parallel, or those that depend on other
+    steps.
+
+    We use the following conventions in the examples below.  Where a
+    release number is given, it is of the form X.YaZ, e.g. 2.6a3 for
+    Python 2.6 alpha 3, where "a" == alpha, "b" == beta, "c" ==
+    release candidate.
+
+    Final releases are named "releaseXY".  The branch tag is
+    "releaseXY-maint" because this will point to the long lived
+    maintenance branch.  The fork tag on the trunk is
+    "releaseXY-fork".  If a micro release number is used, then we'll
+    say X.Y.MaZ.
+
+    Note: This document has been updated to reflect the more
+    streamlined procedures used to release Python 2.6 (including the
+    alphas and betas).
+
+    We recommend that you use the release tool, from
+
+    http://svn.python.org/projects/sandbox/trunk/release/
+
+    This helps by performing several automatic editing steps, and guides you
+    to perform some manual editing steps.
+
+  ___ Impose a check-in freeze.  Send a message to
+      python-dev@python.org telling people not to make any check-ins
+      on the tree until further notice.
+
+      At this point, nobody except the RM or his duly assigned agents
+      should make any commits to the branch.  The assigned agents are
+      either from the list above or by coordination as necessary.  If
+      a checkin needs to made, make sure to state in the checkin
+      comment that the change was approved.  If the RM screwed up and
+      some desperate last minute change to the branch is necessary, it
+      can mean extra work for others.  So try to avoid this!
+
+  ___ Log into irc.freenode.net and join the #python-dev channel.
+
+      You probably need to coordinate with other people around the
+      world.  This IRC channel is where we've arranged to meet.
+
+  ___ The most important thing to do is to update the Misc/NEWS file.
+      This step can be pretty tedious, so it's best to get to it
+      immediately after making the branch, or even before you've made
+      the branch.
+
+      Add high level items new to this release.  E.g. if we're releasing
+      2.6a3, there must be a section at the top of the file explaining
+      "What's new in Python 2.6 alpha 3".  It will be followed by a
+      section entitled "What's new in Python 2.6 alpha 2".
+
+      Note that you /hope/ that as developers add new features to the
+      trunk, they've updated the NEWS file accordingly.  You can't be
+      positive, so double check.  It helps to verify with the Windows
+      and Mac experts.
+
+      This command should help you:
+
+      % svn log -r '{YYYY-MM-DD}:HEAD' > /tmp/news.txt
+
+      IOW, you're printing out all the svn log entries from the
+      previous release date until now.  You can then troll through the
+      news.txt file looking for interesting things to add to NEWS.
+
+  ___ For major releases (e.g. 2.6 final), move any historical "what's
+      new" entries from Misc/NEWS to Misc/HISTORY.
+
+  ___ Check with the IDLE maintainer to be sure that
+      Lib/idlelib/NEWS.txt has been similarly updated.
+
+  ___ Make sure the release date is fully spelled out in
+      Doc/conf.py (setting 'today') (XXX update welease).
+
+  ___ Tag and/or branch the tree for release X.YaZ (welease does tagging)
+
+      If you're releasing an alpha/beta/release candidate, you will
+      just tag the tree, AFTER you made the edits below.  If you are
+      releasing a final release, you will both tag the trunk and
+      create the long-lived maintenance branch.
+
+      All Python development happens on the trunk.  While it's
+      sometimes challenging to keep people from checking things in
+      while you're making a release, it's still preferred to creating
+      a short-lived release branch.
+
+      Practically speaking, we tag and branch just before making the
+      release.  Branching too early causes too much merging work.
+
+      When making a major release (e.g., for 2.6), you should branch.
+      To create a _branch_ (e.g., release26-maint), do the following:
+
+    ___ svn copy \
+          svn+ssh://pythondev@svn.python.org/python/trunk \
+          svn+ssh://pythondev@svn.python.org/python/branches/release26-maint
+
+      When making a minor release (e.g., for 2.6a1 or 2.6.1), you should tag.
+      To create a _tag_ (e.g., r26a1), do the following:
+
+      DO NOT TAG UNTIL YOU"VE MADE THE NECESSARY EDITS BELOW
+
+    ___ svn copy \
+          svn+ssh://pythondev@svn.python.org/python/branches/release26-maint \
+          svn+ssh://pythondev@svn.python.org/python/tags/r26a1
+
+    ___ Check out a clean version of the branch into a new directory.
+        You'll be doing a lot of work in this directory and you want
+        to keep it straight from your trunk working directory.  E.g.
+
+        % svn co \
+            svn+ssh://pythondev@svn.python.org/python/branches/release26-maint
+
+    ___ cd release26-maint  # cd into the branch directory.
+
+  ___ Change Include/patchlevel.h in two places, to
+      reflect the new version number you've just created.  You'll want
+      to change the PY_VERSION macro, and one or several of the
+      version subpart macros just above PY_VERSION, as appropriate.
+      (checked by welease)
+
+  ___ IDLE maintains its own versioning and NEWS file (Lib/idlelib/NEWS.txt).
+      There should be a number of entries reflecting new development, under a
+      temporary header.  Update that header to reflect IDLE's new version and
+      release date.  Then update Lib/idlelib/idlever.py to show a matching
+      version. (checked by welease)
+
+  ___ distutils also maintains its own versioning file
+      (Lib/distutils/__init__.py).  Update this file with the Python version.
+
+  ___ Change the "%define version" line of Misc/RPM/python-X.Y.spec to
+      the same string as PY_VERSION was changed to above.  E.g.
+
+       %define version 2.6a1
+
+       The following line, "%define libvers", should reflect the
+       major/minor number as one would usually see in the
+       "/usr/lib/python<libvers>" directory name.  E.g.
+
+       %define libvers 2.6
+
+       You also probably want to reset the %define release line
+       to '1pydotorg' if it's not already that.
+
+       If the new release uses a major/minor version which is
+       different than is in the name of the current
+       "Misc/RPM/python-*.spec" file, rename the file:
+
+       % svn rename python-2.5.spec python-2.6.spec
+       % svn commit
+
+  ___ If this is a release candidate, mail Sean <jafo@tummy.com>
+      noting the impending release, so that RPMs can be built and
+      tested.
+
+  ___ Update the README file, which has a big banner at the top
+      proclaiming its identity.
+
+  ___ Also update the LICENSE file, adding the pending version to the
+      list of releases.
+
+    ___ There's a copy of the license in
+        Doc/license.rst; the DE usually takes care of that.
+
+  ___ If the minor (middle) digit of the version number changes, update:
+
+    ___ Doc/tutorial/interpreter.rst (3 references to '[Pp]ython26', one
+        to 'Python 2.6').
+
+    ___ Doc/tutorial/stdlib.rst and Doc/tutorial/stdlib2.rst, which have
+        each one reference to '[Pp]ython26'.
+
+  ___ Check the years on the copyright notice.  If the last release
+      was some time last year, add the current year to the copyright
+      notice in several places:
+
+    ___ README
+
+    ___ LICENSE (make sure to change on trunk and the branch)
+
+    ___ Python/getcopyright.c
+
+    ___ Doc/README.txt (at the end)
+
+    ___ Doc/copyright.rst
+
+    ___ Doc/license.rst
+
+    ___ PC/python_nt.rc sets up the DLL version resource for Windows
+        (displayed when you right-click on the DLL and select
+        Properties).
+
+    ___ The license.ht file for the distribution on the website
+        contains what purports to be an HTML-ized copy of the LICENSE
+        file from the distribution.  BROKEN
+
+  ___ For a final release, edit the first paragraph of
+      Doc/whatsnew/X.Y.rst to include the actual release date;
+      e.g. "Python 2.5 was released on August 1, 2003."
+      There's no need to edit this for alpha or beta releases.  Note
+      that Andrew Kuchling often takes care of this.
+
+  ___ At this point, the DE will create the formatted versions of the
+      documentation and push the appropriate files out to their FTP
+      locations on www.python.org.  The HTML format is used to build
+      the HTML Help format for the Windows installer, but the RM
+      doesn't need this to build the source distribution.  The HTML
+      Help format will typically be generated by whoever builds the
+      Windows installer.
+
+      Once the DE is done, there can be no further checkins on the
+      branch in the Doc/ directory -- not even by the RM.
+
+      Building the documentation is done using the Makefile in the
+      Doc/ directory.  Use these commands to build the formatted
+      documentation packages:
+
+        $ make clean
+	$ make distribution
+
+      The packages in build/distribution can be installed on the
+      FTP server using commands like these:
+
+        $ VERSION=`python tools/sphinxext/patchlevel.py`
+        $ TARGET=/data/python-releases/doc/$VERSION
+        $ ssh dinsdale.python.org mkdir $TARGET
+        $ scp build/distribution/* dinsdale.python.org:$TARGET
+
+  ___ For final releases, publish the documentation on python.org.
+      This must be done by someone with write access to the pydotorg
+      repository.
+
+      Start by creating a new directory and filling it with the
+      standard boilerplate.  $VERSION is the same as for uploading the
+      documentation, above; $OLDVERSION is the most recently published
+      version on the site.
+
+        $ cd .../pydotorg/doc/
+        $ svn mkdir $VERSION $VERSION/download
+        $ cd $OLDVERSION
+        $ svn cp content.{html,rst,yml} index.yml nav.yml ../$VERSION
+        $ cd download
+        $ svn cp content.{html,rst,yml} index.yml nav.yml ../$VERSION/download
+        $ cd ../../$VERSION
+
+      In $VERSION/content.rst and $VERSION/download/content.rst, change:
+
+      - in the header at the top of the page, update to reflect
+        the version number and release date
+      - if the minor release number changed (for example, from 2.5
+        to 2.6), the title and link to the "What's New" document
+        (search for "whatsnew")
+      - make sure all the documents included in the package are listed
+
+      In $VERSION/index.yml and $VERSION/download/index.yml, change
+      the version number in the title.
+
+      In versions/content.rst, add an entry for the new version near
+      the top.
+
+      Use the "rst2html" command (commonly installed with docutils) to
+      ensure that the .rst files can be formatted without errors.
+
+      Log into dinsdale.python.org using SSH and unpack a copy of the
+      documentation into place:
+
+        # on dinsdale:
+        $ cd /data/ftp.python.org/pub/www.python.org/doc
+        $ bzip2 -dc /data/python-releases/doc/$VERSION/html-$VERSION.tar.bz2 \
+          | tar xf -
+        $ mv Python-Docs-$VERSION $VERSION
+        $ find $VERSION -type d | xargs chmod g+s
+
+      Now head back to your pydotorg checkout and commit the changes
+      so the site will be updated:
+
+        $ svn commit -m \
+          "Add website content for Python $VERSION documentation."
+
+      Point your browser at this URL and check it out:
+
+        http://www.python.org/doc/$VERSION/
+
+      There is one more change that may need to happen in the
+      top-level doc/ directory of the website content.  This should
+      happen as soon as the release announcement has been made.  The
+      required actions are described in a separate step of this
+      checklist.
+
+  ___ Ping Neal Norwitz (or anyone else with access to the PSF box
+      which runs the automated builds) to fix conflicts that arise
+      in the checked out working areas.
+
+  ___ The WE builds the Windows helpfile, using (in Doc/) either
+      
+        $ make htmlhelp   (on Unix)
+
+      or
+
+        > make.bat htmlhelp   (on Windows)
+
+      to create suitable input for HTML Help Workshop in
+      build/htmlhelp. HTML Help Workshop is then fired up on the
+      created python26.hhp file, finally resulting in an
+      python26.chm file.  He then copies the file into the Doc
+      directories of the build trees (once for each target architecture).
+
+  ___ The WE then generates Windows installer files for each Windows
+      target architecture (for Python 2.6, this means x86 
+      and AMD64). He has one checkout tree per target architecture,
+      and builds the pcbuild.sln project for the appropriate 
+      architecture. He then edits Tools/msi/config.py to update
+      full_current_version, and runs msi.py with ActivePython 2.5.
+      For that to work, the following prerequisites must be met:
+
+      - PC\icons.mak must have been run with nmake.
+
+      - The cmd.exe window in which this is run must have Cygwin/bin
+        in its path (atleast for x86).
+
+      - The cmd.exe window must have MS compiler tools for the target
+        architecture in its path (VS 2003 for x86, the platform
+        SDK for AMD64).
+
+      The WE checksums the files (*.msi and *.chm), uploads them to
+      some place in the net, and emails you the location and md5sums.
+
+  ___ Sean Reifschneider grabs the HTML and uses this to build the
+      Linux RPMs.  Sean performs his Red Hat magic, generating a set
+      of RPMs.  He uploads these files to python.org.  He then sends
+      the RM a notice which includes the location and MD5 checksum of
+      the RPMs.
+
+  ___ Time to build the source tarball.  If you created a branch, be
+      sure to cd to your working directory for the branch.  E.g.
+      % cd .../python-26a3
+      (supported by welease)
+
+  ___ Do a "svn update ; svn status" in this directory.
+
+      You should not see any files.  I.e. you better not have any
+      uncommitted changes in your working directory, but you may pick
+      up some of the expert's last minute changes.
+      (checked by welease)
+
+  ___ If you've seen updates to existing files, update the svn tag:
+
+      % svn copy \
+          svn+ssh://pythondev@svn.python.org/python/trunk \
+          svn+ssh://pythondev@svn.python.org/python/tags/r26a3
+
+      If you created a maintenance branch and you've changed any files
+      since you branched, tag the tree -- in the branch -- now with
+      something like
+
+      % svn copy \
+          svn+ssh://pythondev@svn.python.org/python/trunk \
+          svn+ssh://pythondev@svn.python.org/python/tags/r26
+
+      This is the tag you will use below.
+      (supported by welease)
+
+  ___ Change to a neutral directory, i.e. one in which you can do a
+      fresh, virgin, svn export of the branch.  You will be creating a
+      new directory at this location, to be named "Python-X.YaZ".  Export
+      the tagged branch.
+
+      % cd ~
+      % svn export svn+ssh://pythondev@svn.python.org/python/tags/r26a1 Python-2.6c2
+      (supported by welease)
+
+  ___ Generate the tarballs.  Note that we're not using the `z' option
+      on the tar command because 1) that's only supported by GNU tar
+      as far as we know, and 2) we're going to max out the compression
+      level, which isn't a supported option.
+
+      % tar cf - Python-2.6c2 | gzip -9 > Python-2.6c2.tgz
+      % tar cf - Python-2.6c2 | bzip2 -9 > Python-2.6c2.tar.bz2
+      (supported by welease)
+
+  ___ Calculate the MD5 checksums of the files you just created
+
+      % md5sum Python-2.6c2.tgz
+      % md5sum Python-2.6c2.tar.bz2
+
+      Note that if you don't have the md5sum program, there is a
+      Python replacement in the Tools/scripts/md5sum.py file.
+
+  ___ Now you want to perform the very important step of checking the
+      tarball you just created, to make sure a completely clean,
+      virgin build passes the regression test.  Here are the best
+      steps to take:
+
+      % cd /tmp
+      % tar zxvf ~/Python-2.6c2.tgz  # tar xjvf ~/Python-2.6c2.tar.bz2
+      % cd Python-2.6c2
+      % ls
+      (Do things look reasonable?)
+      % ./configure
+      (Loads of configure output)
+      % make test
+      (Do all the expected tests pass?)
+
+      If you're feeling lucky and have some time to kill, run the full
+      test suite:
+
+      % make TESTOPTS='-u all' test
+
+      If the tests pass, then you can feel good that the tarball is
+      fine.  If some of the tests fail, or anything else about the
+      freshly unpacked directory looks weird, you better stop now and
+      figure out what the problem is.
+
+  ___ Upload the tar files to dinsdale.python.org using scp.
+
+  # XXX(nnorwitz): this entire section dealing with the website is outdated.
+  # The website uses SVN and the build process has changed.
+  ___ While you're waiting, you can start twiddling the web pages to
+      include the announcement.
+
+    ___ If necessary, and if you have the right permissions (the
+        python.org sysadmins must set this up for you), check out the
+        web site tree by doing:
+
+        % cvs -d :ext:<you>@dinsdale.python.org:/usr/local/cvsroot co pydotorg
+
+        XXX: what's the svn equivalent?
+
+    ___ In the python.org web site SVN tree, cd to the X.Y
+        subdirectory, and copy index.ht to new-index.ht.  Be sure to
+        do a "svn update" first!
+
+        % cd .../pydotorg
+        % svn up
+        % cd 2.6
+        % cp index.ht new-index.ht
+
+    ___ Edit the file for content: usually you can globally replace
+        X.Ya(Z-1) with X.YaZ.  However, you'll need to think about the
+        "What's New?" section.
+
+    ___ Copy the Misc/NEWS file to NEWS.txt in the X.Y directory for
+        python.org; this contains the "full scoop" of changes to
+        Python since the previous release for this version of Python.
+
+    ___ Also, update the MD5 checksums.
+
+    ___ Preview the web page by doing a "make" -- NOT a "make install".
+        View the page via a file: url.
+
+    ___ Similarly, edit the ../index.ht file, i.e. the python.org home
+        page.  In the Big Blue Announcement Block, move the paragraph
+        for the new version up to the top and boldify the phrase
+        "Python X.YaZ is out".  Edit for content, and preview as
+        above.  Do NOT do a "make install" yet!
+
+    ___ Also on the ../index.ht file (still the python.org home page),
+        update the link information so that the release status is
+        correct.  Update the links in the left-hand navigation
+        sidebar.  Still do NOT do a "make install"!
+
+  ___ Now we're waiting for the scp to dinsdale to finish.  Da de da,
+      da de dum, hmm, hmm, dum de dum.
+
+  ___ Now you need to go to dinsdale.python.org and move all the files
+      in place over there.  Our policy is that every Python version
+      gets its own directory, but each directory may contain several
+      releases.  We keep all old releases, moving them into a "prev"
+      subdirectory when we have a new release.
+
+      So, there's a directory called "2.6" which contains
+      Python-2.5a2.exe and Python-2.6a2.tgz, along with a "prev"
+      subdirectory containing Python-2.6a1.msi, Python-2.6a1.tgz,
+      Python-2.6a1.tar.bz2, etc.
+
+      So...
+
+    ___ On dinsdale, cd /data/ftp.python.org/pub/python/X.Y[.Z]
+        creating it if necessary.
+
+    ___ Move the previous release files to a directory called "prev"
+        creating the directory if necessary (make sure the directory
+        has g+ws bits on).  If this is the first alpha release of a
+        new Python version, skip this step.
+
+    ___ Move the .tgz, tar.bz2, and .msi files to this directory.  Make
+        sure they are world readable.  They should also be group
+        writable, and group-owned by webmaster.
+
+    ___ md5sum the files and make sure they got uploaded intact.
+
+
+  ___ Update the X.Y/bugs.ht file if necessary.
+
+  ___ Now preview the new-index.ht file once more.  IMPORTANT: follow
+      every link on the page to make sure it goes where you expect it
+      to go, and that what you expect to be there is there.
+
+  ___ If everything looks good, move new-index.ht to index.ht and do a
+      "make install" in this directory.  Go up to the parent directory
+      (i.e. the root of the web page hierarchy) and do a "make
+      install" there too.  You're release is now live!
+
+  ___ Now it's time to write the announcement for the mailing lists.
+      This is the fuzzy bit because not much can be automated.  You
+      can use an earlier announcement as a template, but edit it for content!
+
+      Once the announcement is ready, send it to the following
+      addresses:
+
+      python-list@python.org
+      python-announce@python.org
+      python-dev@python.org
+
+  ___ Mention the release as the most recent stable one in
+      pydotorg:doc/faq/general.ht (section "How stable is
+      Python?")
+
+  ___ Make the last change to the documentation area on
+      python.org.  (Remember those from the documentation items above?
+      It's time now.)
+
+      The "current" symlink needs to be updated if this release is the
+      highest-versioned release.  Log in to dinsdale.python.org, and
+      update a symlink in the doc/ tree:
+
+        # on dinsdale:
+        $ cd /data/ftp.python.org/pub/www.python.org/doc/
+        $ rm current && ln -s $VERSION current
+
+    Now it's time to do some cleaning up.  These steps are very important!
+
+  ___ If you made a non-maintenance branch, be sure to merge it into
+      the trunk!  Now that we've released this branch, we don't need
+      it any more.  We've already tagged it so we can always reproduce
+      it.  Note that merging branches is a bit of a black art, but
+      here's what's worked for us.
+
+      NOTE: If this was an X.Y major release, we will be using this as
+      the maintenance branch for a long time to come.
+
+    ___ Check out a completely clean, virgin working directory of the
+        trunk, by doing this in the directory that is the parent of
+        your branch working directory python-XYaZ:
+        % svn co \
+            svn+ssh://pythondev@svn.python.org/python/trunk python-clean
+
+    ___ Run a diff against your branch by doing this in the common
+        parent directory containing both python-clean and python-XYaZ:
+        % diff -r python-clean python-26a2 | grep ^diff | grep -v /.svn/ \
+            > /tmp/diffcmd.sh
+
+    ___ Edit diffcmd.sh to get rid of files that you know don't have
+        important changes.  You're looking for files that have updates
+        in the branch that haven't made it to the trunk.
+
+        Generally you can ignore any changes to the Doc or Mac
+        subdirectories, or any changes to Windows related files.  The
+        sub-RMs for those parts will take care of any necessary merges
+        from the branch to the trunk.
+
+        If you've been diligent about merging changes from the trunk
+        into the branch, there shouldn't be many of these files.
+
+    ___ Edit /tmp/diffcmd.sh, changing all the -r's into -u's.  Run
+        the /tmp/diffcmd.sh command like so:
+        % sh /tmp/diffcmd.sh > /tmp/pydiff.txt
+
+    ___ Attempt to patch your python-clean working directory.  Do this
+        first, noting that --dry-run does not actually apply any
+        patches, it just makes sure that the patch command runs
+        successfully to completion:
+        % patch -p1 --dry-run < /tmp/pydiff.txt
+
+    ___ If this goes well, run it again, taking out the --dry-run
+        option.  If this fails, or if it prompts you for a file to
+        patch, try using -p0 instead of -p1.  Otherwise, your diff
+        command was messed up, so try again.
+
+    ___ cd to python-clean and do a "svn commit".  Use as your log
+        message something like "Merging the rXYaZ-maint tag back into
+        the trunk".
+
+    ___ Edit the file Include/patchlevel.h so that the PY_VERSION
+        string says something like "X.YaZ+".  Note the trailing `+'
+        indicating that the trunk is going to be moving forward with
+        development.  E.g. the line should look like:
+
+        #define PY_VERSION              "2.6a2+"
+
+        Make sure that the other PY_ version macros contain the
+        correct values.  Commit this change.
+
+    ___ For the extra paranoid, do a completely clean test of the
+        release.  This includes downloading the tarball from
+        www.python.org.
+
+    ___ Make sure the md5 checksums match.  Then unpack the tarball,
+        and do a clean make test.
+
+        % make distclean
+        % ./configure
+        % make test
+
+        To ensure that the regression test suite passes.  If not, you
+        screwed up somewhere!
+
+    Step 5 ...
+
+    Verify!  This can be interleaved with Step 4.  Pretend you're a
+    user: download the files from python.org, and make Python from it.
+    This step is too easy to overlook, and on several occasions we've
+    had useless release files.  Once a general server problem caused
+    mysterious corruption of all files; once the source tarball got
+    built incorrectly; more than once the file upload process on SF
+    truncated files; and so on.
+
+
+What Next?
+
+    Rejoice.  Drink.  Be Merry.  Write a PEP like this one.  Or be
+    like unto Guido and take A Vacation.
+
+    You've just made a Python release!
+
+
+Final Release Notes
+
+    The Final release of any major release, e.g. Python 2.5 final, has
+    special requirements, specifically because it will be one of the
+    longest lived releases (i.e. betas don't last more than a couple
+    of weeks, but final releases can last for years!).
+
+    For this reason we want to have a higher coordination between the
+    three major releases: Windows, Mac, and source.  So we add this
+    extra step to the release process for a final release:
+
+    ___ Hold up the final release until the WE and ME approve, or until we
+        lose patience <wink>.
+
+
+Windows Notes
+
+    Windows has a MSI installer, various flavors of Windows have
+    "special limitations", and the Windows installer also packs
+    precompiled "foreign" binaries (Tcl/Tk, expat, etc).  So Windows
+    testing is tiresome but very necessary.
+
+    Concurrent with uploading the installer, the WE installs Python
+    from it twice: once into the default directory suggested by the
+    installer, and later into a directory with embedded spaces in its
+    name.  For each installation, he runs the full regression suite
+    from a DOS box, and both with and without -0. For maintenance
+    release, he also tests whether upgrade installations succeed.
+
+    He also tries *every* shortcut created under Start -> Menu -> the
+    Python group.  When trying IDLE this way, you need to verify that
+    Help -> Python Documentation works.  When trying pydoc this way
+    (the "Module Docs" Start menu entry), make sure the "Start
+    Browser" button works, and make sure you can search for a random
+    module (like "random" <wink>) and then that the "go to selected"
+    button works.
+
+    It's amazing how much can go wrong here -- and even more amazing
+    how often last-second checkins break one of these things.  If
+    you're "the Windows geek", keep in mind that you're likely the
+    only person routinely testing on Windows, and that Windows is
+    simply a mess.
+
+    Repeat the testing for each target architecture.  On XP/2003, try
+    both an Admin and a plain User (not Power User) account. If you
+    can, also test the installer on Windows 9x.
+
+    WRT Step 5 above (verify the release media), since by the time
+    release files are ready to download the WE has generally run many
+    Windows tests on the installer he uploaded, he usually doesn't do
+    anything for Step 5 except a full byte-comparison ("fc /b" if
+    using a Windows shell) of the downloaded file against the file he
+    uploaded.
+
+
+Copyright
+
+    This document has been placed in the public domain.
+
+
+
+Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+End:

@@ -1,0 +1,1516 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Python Standard Library</TITLE>
+
+<!-- Included style.css -->
+<STYLE TYPE="text/css">
+body, td, {
+	font-family: verdana, sans-serif;
+	font-size: 12px;
+}
+
+body {
+	background-color: #FDFBFC;
+	margin:20px 20px 20px 20px;
+}
+
+
+p {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+a {font-weight:normal; text-decoration:underline;}
+a:link {color:#0000FF;}
+a:visited {color:#0000FF;}
+a:active {color:#0000FF;}
+a:hover {color:#700000;}
+
+strong a {
+    font-weight: bold;
+}
+
+.toc {
+	background-color: #EEEEFB;
+	border: 1px solid;
+	/*padding:10px 8px 10px 15px;*/
+	float : right ; width : 37%;
+	margin : 5px; padding: 5px;
+	margin: 5px;
+}
+
+.toc a:link , .toc a:visited  { color : #003399; }
+
+.toc a:hover { 
+	color : #EEEEFB;
+	text-decoration : none;
+	background-color: black;
+}
+
+.trailbold {
+	font-weight:bold;
+}
+
+.light {
+	background-color: #EFEFEF;
+}
+
+.dark {
+	background-color: #D2D2D2;
+}
+
+.smalllogo {
+	float:left;
+}
+
+.headerbar {
+	padding-bottom:60px;
+}
+	
+.header {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.smallheader {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.filelist {
+	font-size:14px;
+	margin: 10px 10px 10px 70px;
+	line-height:25px;
+}
+
+.dirheader {
+	font-size:13px;
+	margin: 10px 50px 10px 20px
+}
+
+.toolbar {
+	text-align:right;
+	margin: 0px 10px 0px 10px
+}
+
+.copyright {
+	padding-top: 30px;
+	text-align:center;
+	font-size:9px;
+	color: #5F5F5F;
+}
+
+.small {
+	font-size:9px;
+}
+
+.sforgelogo {
+	text-align:right;
+	height: 40px;
+}
+
+pre, .source {
+	width:auto;
+	border		: 1px solid #666;
+	background	: #eee;
+	margin		: 2em 4em;
+	padding		: 1em 2em;
+}
+
+/*code {
+	color		: #DB1416;
+	
+}*/
+code { 
+font-size: 1.2em;
+font-family:courier,courier new,monospace;
+background: #666666;
+border-top: 0.03em solid #000;
+border-right: 0.03em solid #000;
+border-bottom: 0.03em solid #ccc;
+border-left: 0.03em solid #ccc;
+color: white;
+}
+
+blockquote{
+  margin: 2em 5em ; 
+ } 
+
+
+</STYLE>
+
+</HEAD>
+<BODY BGCOLOR="green">
+<A NAME="toptop"></A>
+<DIV CLASS="header" ID="header">
+<H1>Python Standard Library</H1>
+<H2>翻译: Python 江湖群</H2>
+<H3>2008-03-28 13:35:34</H3>
+</DIV>
+
+<DIV CLASS="body" ID="body">
+<DIV CLASS="toc" ID="toc">
+  <OL>
+  <LI><A HREF="#toc1">文件格式</A>
+    <UL>
+    <LI><A HREF="#toc2">1.1. 概览</A>
+    <LI><A HREF="#toc3">1.2. xmllib 模块</A>
+    <LI><A HREF="#toc4">1.3. xml.parsers.expat 模块</A>
+    <LI><A HREF="#toc5">1.4. sgmllib 模块</A>
+    <LI><A HREF="#toc6">1.5. htmllib 模块</A>
+    <LI><A HREF="#toc7">1.6. htmlentitydefs 模块</A>
+    <LI><A HREF="#toc8">1.7. formatter 模块</A>
+    <LI><A HREF="#toc9">1.8. ConfigParser 模块</A>
+    <LI><A HREF="#toc10">1.9. netrc 模块</A>
+    <LI><A HREF="#toc11">1.10. shlex 模块</A>
+    <LI><A HREF="#toc12">1.11. zipfile 模块</A>
+    <LI><A HREF="#toc13">1.12. gzip 模块</A>
+    </UL>
+  </OL>
+
+</DIV>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<P>
+<A HREF="index.html">返回首页</A>
+</P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<A NAME="toc1"></A>
+<H1><A href='#toptop'> 1. 文件格式 </A></H1>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc2"></A>
+<H2><A href='#toptop'> 1.1. 概览 </A></H2>
+<P>
+本章将描述用于处理不同文件格式的模块.
+</P>
+<H3><A href='#toptop'> 1.1.1. Markup 语言 </A></H3>
+<P>
+Python 提供了一些用于处理可扩展标记语言( Extensible Markup Language , XML )
+和超文本标记语言( Hypertext Markup Language , HTML )的扩展. Python 同样提供了对
+标准通用标记语言( Standard Generalized Markup Language , SGML )的支持.
+</P>
+<P>
+所有这些格式都有着相同的结构, 因为 HTML 和 XML 都来自 SGML . 每个文档都是由
+起始标签( start tags ), 结束标签( end tags ), 文本(又叫字符数据), 
+以及实体引用( entity references )构成:
+</P>
+<PRE>
+&lt;document name="sample.xml"&gt;
+    &lt;header&gt;This is a header&lt;/header&gt;
+    &lt;body&gt;This is the body text.  The text can contain
+    plain text (&amp;quot;character data&amp;quot;), tags, and
+    entities.
+    &lt;/body&gt;
+&lt;/document&gt;
+</PRE>
+<P></P>
+<P>
+在这个例子中, <CODE>&lt;document&gt;</CODE>, <CODE>&lt;header&gt;</CODE>, 以及 <CODE>&lt;body&gt;</CODE> 是起始标签. 
+每个起始标签都有一个对应的结束标签, 使用斜线 "<CODE>/</CODE>" 标记. 起始标签可以包含多个属性, 
+比如这里的 <CODE>name</CODE> 属性.
+</P>
+<P>
+起始标签和它对应的结束标签中的任何东西被称为 <I>元素( element )</I>. 
+这里 <CODE>document</CODE> 元素包含 <CODE>header</CODE> 和 <CODE>body</CODE> 两个元素.
+</P>
+<P>
+<CODE>&amp;quot;</CODE> 是一个字符实体( character entity ). 
+字符实体用于在文本区域中表示特殊的保留字符, 使用 <CODE>&amp;</CODE> 指示. 
+这里它代表一个引号, 常见字符实体还有 " <CODE>&lt; ( &amp;lt; )</CODE>" 和 " <CODE>&gt; ( &amp;gt; )</CODE>" .
+</P>
+<P>
+虽然 XML , HTML , SGML 使用相同的结构块, 但它们还有一些不同点. 
+在 XML 中, 所有元素必须有起始和结束标签, 所有标签必须正确嵌套( well-formed ). 
+而且 XML 是区分大小写的, 所以 <CODE>&lt;document&gt;</CODE> 和 <CODE>&lt;Document&gt;</CODE> 是不同的元素类型.
+</P>
+<P>
+HTML 有很高灵活性, HTML 语法分析器一般会自动补全缺失标签; 例如, 
+当遇到一个以 <CODE>&lt;P&gt;</CODE> 标签开始的新段落, 却没有对应结束标签, 语法分析器会自动添加一个 
+<CODE>&lt;/P&gt;</CODE> 标签. HTML 也是区分大小写的. 另一方面, XML 允许你定义任何元素, 
+而 HTML 使用一些由 HTML 规范定义的固定元素.
+</P>
+<P>
+SGML 有着更高的灵活性, 你可以使用自己的声明( declaration )
+定义源文件如何转换到元素结构, DTD ( document type description , 文件类型定义)可以用来
+检查结构并补全缺失标签. 技术上来说, HTML 和 XML 都是 SGML 应用, 
+有各自的 SGML 声明, 而且 HTML 有一个标准 DTD .
+</P>
+<P>
+Python 提供了多个 makeup 语言分析器. 由于 SGML 是最灵活的格式, Python 的 <CODE>sgmllib</CODE> 
+事实上很简单. 它不会去处理 DTD , 不过你可以继承它来提供更复杂的功能.
+</P>
+<P>
+Python 的 HTML 支持基于 SGML 分析器. <CODE>htmllib</CODE> 将具体的格式输出工作交给 formatter 对象. 
+<CODE>formatter</CODE> 模块包含一些标准格式化标志.
+</P>
+<P>
+Python 的 XML 支持模块很复杂. 先前是只有与 <CODE>sgmllib</CODE> 类似的 <CODE>xmllib</CODE> , 后来加入了更高级的
+ <CODE>expat</CODE> 模块(可选). 而最新版本中已经准备废弃 <CODE>xmllib</CODE> ,启用 <CODE>xml</CODE> 包作为工具集.
+</P>
+<H3><A href='#toptop'> 1.1.2. 配置文件 </A></H3>
+<P>
+<CODE>ConfigParser</CODE> 模块用于读取简单的配置文件, 类似 Windows 下的 INI 文件.
+</P>
+<P>
+<CODE>netrc</CODE> 模块用于读取 .netrc 配置文件, shlex 模块用于读取类似 shell 脚本语法的配置文件.
+</P>
+<H3><A href='#toptop'> 1.1.3. 压缩档案格式 </A></H3>
+<P>
+Python 的标准库提供了对 GZIP 和 ZIP ( 2.0 及以后) 格式的支持. 
+基于 zlib 模块, <CODE>gzip</CODE> 和 <CODE>zipfile</CODE> 模块分别用来处理这类文件.
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc3"></A>
+<H2><A href='#toptop'> 1.2. xmllib 模块 </A></H2>
+<P>
+<CODE>xmllib</CODE> 已在当前版本中申明不支持.
+</P>
+<P>
+<CODE>xmlib</CODE> 模块提供了一个简单的 XML 语法分析器, 使用正则表达式将 XML 数据分离, 
+如 <A HREF="#eg-5-1">Example 5-1</A> 所示. 语法分析器只对文档做基本的检查, 
+例如是否只有一个顶层元素, 所有的标签是否匹配.
+</P>
+<P>
+XML 数据一块一块地发送给 xmllib 分析器(例如在网路中传输的数据). 分析器在遇到起始标签, 
+数据区域, 结束标签, 和实体的时候调用不同的方法.
+</P>
+<P>
+如果你只是对某些标签感兴趣, 你可以定义特殊的 <CODE>start_tag</CODE> 和 
+<CODE>end_tag</CODE> 方法, 这里 <CODE>tag</CODE> 是标签名称. 这些 <CODE>start</CODE> 
+函数使用它们对应标签的属性作为参数调用(传递时为一个字典).
+</P>
+<A NAME="eg-5-1"></A>
+<H4><A href='#toptop'> 1.2.0.1. Example 5-1. 使用 xmllib 模块获取元素的信息 </A></H4>
+<PRE>
+File: xmllib-example-1.py
+
+import xmllib
+
+class Parser(xmllib.XMLParser):
+    # get quotation number
+
+    def _ _init_ _(self, file=None):
+        xmllib.XMLParser._ _init_ _(self)
+        if file:
+            self.load(file)
+
+    def load(self, file):
+        while 1:
+            s = file.read(512)
+            if not s:
+                break
+            self.feed(s)
+        self.close()
+
+    def start_quotation(self, attrs):
+        print "id =&gt;", attrs.get("id")
+        raise EOFError
+
+try:
+    c = Parser()
+    c.load(open("samples/sample.xml"))
+except EOFError:
+    pass
+
+*B*id =&gt; 031*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-5-2">Example 5-2</A> 展示了一个简单(不完整)的内容输出引擎( rendering engine ). 
+分析器有一个元素堆栈( <CODE>_ _tags</CODE> ), 它连同文本片断传递给输出生成器. 
+生成器会在 style 字典中查询当前标签的层次, 如果不存在, 它将根据样式表创建一个新的样式描述.
+</P>
+<A NAME="eg-5-2"></A>
+<H4><A href='#toptop'> 1.2.0.2. Example 5-2. 使用 xmllib 模块 </A></H4>
+<PRE>
+File: xmllib-example-2.py
+
+import xmllib
+import string, sys
+
+STYLESHEET = {
+    # each element can contribute one or more style elements
+    "quotation": {"style": "italic"},
+    "lang": {"weight": "bold"},
+    "name": {"weight": "medium"},
+}
+
+class Parser(xmllib.XMLParser):
+    # a simple styling engine
+
+    def _ _init_ _(self, renderer):
+        xmllib.XMLParser._ _init_ _(self)
+        self._ _data = []
+        self._ _tags = []
+        self._ _renderer = renderer
+
+    def load(self, file):
+        while 1:
+            s = file.read(8192)
+            if not s:
+                break
+            self.feed(s)
+        self.close()
+
+    def handle_data(self, data):
+        self._ _data.append(data)
+
+    def unknown_starttag(self, tag, attrs):
+        if self._ _data:
+            text = string.join(self._ _data, "")
+            self._ _renderer.text(self._ _tags, text)
+        self._ _tags.append(tag)
+        self._ _data = []
+
+    def unknown_endtag(self, tag):
+        self._ _tags.pop()
+        if self._ _data:
+            text = string.join(self._ _data, "")
+            self._ _renderer.text(self._ _tags, text)
+        self._ _data = []
+
+class DumbRenderer:
+
+    def _ _init_ _(self):
+        self.cache = {}
+
+    def text(self, tags, text):
+        # render text in the style given by the tag stack
+        tags = tuple(tags)
+        style = self.cache.get(tags)
+        if style is None:
+            # figure out a combined style
+            style = {}
+            for tag in tags:
+                s = STYLESHEET.get(tag)
+                if s:
+                    style.update(s)
+            self.cache[tags] = style # update cache
+        # write to standard output
+        sys.stdout.write("%s =&gt;\n" % style)
+        sys.stdout.write("  " + repr(text) + "\n")
+
+#
+# try it out
+
+r = DumbRenderer()
+c = Parser(r)
+c.load(open("samples/sample.xml"))
+
+*B*{'style': 'italic'} =&gt;
+  'I\'ve had a lot of developers come up to me and\012say,
+  "I haven\'t had this much fun in a long time. It sure
+  beats\012writing '
+{'style': 'italic', 'weight': 'bold'} =&gt;
+  'Cobol'
+{'style': 'italic'} =&gt;
+  '" -- '
+{'style': 'italic', 'weight': 'medium'} =&gt;
+  'James Gosling'
+{'style': 'italic'} =&gt;
+  ', on\012'
+{'weight': 'bold'} =&gt;
+  'Java'
+{'style': 'italic'} =&gt;
+  '.'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc4"></A>
+<H2><A href='#toptop'> 1.3. xml.parsers.expat 模块 </A></H2>
+<P>
+(可选) <CODE>xml.parsers.expat</CODE> 模块是 James Clark's Expat XML parser 的接口. 
+<A HREF="#eg-5-3">Example 5-3</A> 展示了这个功能完整且性能很好的语法分析器.
+</P>
+<A NAME="eg-5-3"></A>
+<H4><A href='#toptop'> 1.3.0.1. Example 5-3. 使用 xml.parsers.expat 模块 </A></H4>
+<PRE>
+File: xml-parsers-expat-example-1.py
+
+from xml.parsers import expat
+
+class Parser:
+
+    def _ _init_ _(self):
+        self._parser = expat.ParserCreate()
+        self._parser.StartElementHandler = self.start
+        self._parser.EndElementHandler = self.end
+        self._parser.CharacterDataHandler = self.data
+
+    def feed(self, data):
+        self._parser.Parse(data, 0)
+
+    def close(self):
+        self._parser.Parse("", 1) # end of data
+        del self._parser # get rid of circular references
+
+    def start(self, tag, attrs):
+        print "START", repr(tag), attrs
+
+    def end(self, tag):
+        print "END", repr(tag)
+
+    def data(self, data):
+        print "DATA", repr(data)
+
+p = Parser()
+p.feed("&lt;tag&gt;data&lt;/tag&gt;")
+p.close()
+
+*B*START u'tag' {}
+DATA u'data'
+END u'tag'*b*
+</PRE>
+<P></P>
+<P>
+注意即使你传入的是普通的文本, 这里的分析器仍然会返回 Unicode 字符串. 默认情况下, 
+分析器将源文本作为 UTF-8 解析. 如果要使用其他编码, 请确保 XML 文件包含 <I>encoding</I> 说明. 
+如 <A HREF="#eg-5-4">Example 5-4</A> 所示.
+</P>
+<A NAME="eg-5-4"></A>
+<H4><A href='#toptop'> 1.3.0.2. Example 5-4. 使用 xml.parsers.expat 模块读取 ISO Latin-1 文本 </A></H4>
+<PRE>
+File: xml-parsers-expat-example-2.py
+
+from xml.parsers import expat
+
+class Parser:
+
+    def _ _init_ _(self):
+        self._parser = expat.ParserCreate()
+        self._parser.StartElementHandler = self.start
+        self._parser.EndElementHandler = self.end
+        self._parser.CharacterDataHandler = self.data
+
+    def feed(self, data):
+        self._parser.Parse(data, 0)
+
+    def close(self):
+        self._parser.Parse("", 1) # end of data
+        del self._parser # get rid of circular references
+
+    def start(self, tag, attrs):
+        print "START", repr(tag), attrs
+
+    def end(self, tag):
+        print "END", repr(tag)
+
+    def data(self, data):
+        print "DATA", repr(data)
+
+p = Parser()
+p.feed("""\
+&lt;?xml version='1.0' encoding='iso-8859-1'?&gt;
+&lt;author&gt;
+&lt;name&gt;fredrik lundh&lt;/name&gt;
+&lt;city&gt;linköping&lt;/city&gt;
+&lt;/author&gt;
+"""
+)
+p.close()
+
+*B*START u'author' {}
+DATA u'\012'
+START u'name' {}
+DATA u'fredrik lundh'
+END u'name'
+DATA u'\012'
+START u'city' {}
+DATA u'link\366ping'
+END u'city'
+DATA u'\012'
+END u'author'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc5"></A>
+<H2><A href='#toptop'> 1.4. sgmllib 模块 </A></H2>
+<P>
+<CODE>sgmllib</CODE> 模块, 提供了一个基本的 SGML 语法分析器. 它与 <CODE>xmllib</CODE> 分析器基本相同, 
+但限制更少(而且不是很完善). 如 <A HREF="#eg-5-5">Example 5-5</A> 所示.
+</P>
+<P>
+和在 <CODE>xmllib</CODE> 中一样, 这个分析器在遇到起始标签, 数据区域, 结束标签以及实体时调用内部方法. 
+如果你只是对某些标签感兴趣, 那么你可以定义特殊的方法.
+</P>
+<A NAME="eg-5-5"></A>
+<H4><A href='#toptop'> 1.4.0.1. Example 5-5. 使用 sgmllib 模块提取 Title 元素 </A></H4>
+<PRE>
+File: sgmllib-example-1.py
+
+import sgmllib
+import string
+
+class FoundTitle(Exception):
+    pass
+
+class ExtractTitle(sgmllib.SGMLParser):
+
+    def _ _init_ _(self, verbose=0):
+        sgmllib.SGMLParser._ _init_ _(self, verbose)
+        self.title = self.data = None
+
+    def handle_data(self, data):
+        if self.data is not None:
+            self.data.append(data)
+
+    def start_title(self, attrs):
+        self.data = []
+
+    def end_title(self):
+        self.title = string.join(self.data, "")
+        raise FoundTitle # abort parsing!
+
+def extract(file):
+    # extract title from an HTML/SGML stream
+    p = ExtractTitle()
+    try:
+        while 1:
+            # read small chunks
+            s = file.read(512)
+            if not s:
+                break
+            p.feed(s)
+        p.close()
+    except FoundTitle:
+        return p.title
+    return None
+
+#
+# try it out
+
+print "html", "=&gt;", extract(open("samples/sample.htm"))
+print "sgml", "=&gt;", extract(open("samples/sample.sgm"))
+
+html =&gt; A Title.
+sgml =&gt; Quotations
+</PRE>
+<P></P>
+<P>
+重载 <CODE>unknown_starttag</CODE> 和 <CODE>unknown_endtag</CODE> 方法就可以处理所有的标签. 如 <A HREF="#eg-5-6">Example 5-6</A> 所示.
+</P>
+<A NAME="eg-5-6"></A>
+<H4><A href='#toptop'> 1.4.0.2. Example 5-6. 使用 sgmllib 模块格式化 SGML 文档 </A></H4>
+<PRE>
+File: sgmllib-example-2.py
+
+import sgmllib
+import cgi, sys
+
+class PrettyPrinter(sgmllib.SGMLParser):
+    # A simple SGML pretty printer
+
+    def _ _init_ _(self):
+        # initialize base class
+        sgmllib.SGMLParser._ _init_ _(self)
+        self.flag = 0
+
+    def newline(self):
+        # force newline, if necessary
+        if self.flag:
+            sys.stdout.write("\n")
+        self.flag = 0
+
+    def unknown_starttag(self, tag, attrs):
+        # called for each start tag
+
+        # the attrs argument is a list of (attr, value)
+        # tuples. convert it to a string.
+        text = ""
+        for attr, value in attrs:
+            text = text + " %s='%s'" % (attr, cgi.escape(value))
+
+        self.newline()
+        sys.stdout.write("&lt;%s%s&gt;\n" % (tag, text))
+
+    def handle_data(self, text):
+        # called for each text section
+        sys.stdout.write(text)
+        self.flag = (text[-1:] != "\n")
+
+    def handle_entityref(self, text):
+        # called for each entity
+        sys.stdout.write("&amp;%s;" % text)
+        
+    def unknown_endtag(self, tag):
+        # called for each end tag
+        self.newline()
+        sys.stdout.write("&lt;%s&gt;" % tag)
+
+#
+# try it out
+
+file = open("samples/sample.sgm")
+
+p = PrettyPrinter()
+p.feed(file.read())
+p.close()
+
+*B*&lt;chapter&gt;
+&lt;title&gt;
+Quotations
+&lt;title&gt;
+&lt;epigraph&gt;
+&lt;attribution&gt;
+eff-bot, June 1997
+&lt;attribution&gt;
+&lt;para&gt;
+&lt;quote&gt;
+Nobody expects the Spanish Inquisition! Amongst
+our weaponry are such diverse elements as fear, surprise,
+ruthless efficiency, and an almost fanatical devotion to
+Guido, and nice red uniforms &amp;mdash; oh, damn!
+&lt;quote&gt;
+&lt;para&gt;
+&lt;epigraph&gt;
+&lt;chapter&gt;*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-5-7">Example 5-7</A> 检查 SGML 文档是否是如 XML 那样 "正确格式化", 所有的元素是否正确嵌套, 起始和结束标签是否匹配等.
+</P>
+<P>
+我们使用列表保存所有起始标签, 然后检查每个结束标签是否匹配前个起始标签. 
+最后确认到达文件末尾时没有未关闭的标签. 
+</P>
+<A NAME="eg-5-7"></A>
+<H4><A href='#toptop'> 1.4.0.3. Example 5-7. 使用 sgmllib 模块检查格式 </A></H4>
+<PRE>
+File: sgmllib-example-3.py
+
+import sgmllib
+
+class WellFormednessChecker(sgmllib.SGMLParser):
+    # check that an SGML document is 'well-formed'
+    # (in the XML sense).
+
+    def _ _init_ _(self, file=None):
+        sgmllib.SGMLParser._ _init_ _(self)
+        self.tags = []
+        if file:
+            self.load(file)
+
+    def load(self, file):
+        while 1:
+            s = file.read(8192)
+            if not s:
+                break
+            self.feed(s)
+        self.close()
+
+    def close(self):
+        sgmllib.SGMLParser.close(self)
+        if self.tags:
+            raise SyntaxError, "start tag %s not closed" % self.tags[-1]
+
+    def unknown_starttag(self, start, attrs):
+        self.tags.append(start)
+
+    def unknown_endtag(self, end):
+        start = self.tags.pop()
+        if end != start:
+            raise SyntaxError, "end tag %s does't match start tag %s" %\
+                  (end, start)
+
+try:
+    c = WellFormednessChecker()
+    c.load(open("samples/sample.htm"))
+except SyntaxError:
+    raise # report error
+else:
+    print "document is well-formed"
+
+*B*Traceback (innermost last):
+...
+SyntaxError: end tag head does't match start tag meta*b*
+</PRE>
+<P></P>
+<P>
+最后, <A HREF="#eg-5-8">Example 5-8</A> 中的类可以用来过滤 HTML 和 SGML 文档. 继承这个类, 
+然后实现 <CODE>start</CODE> 和 <CODE>end</CODE> 方法即可.
+</P>
+<A NAME="eg-5-8"></A>
+<H4><A href='#toptop'> 1.4.0.4. Example 5-8. 使用 sgmllib 模块过滤 SGML 文档 </A></H4>
+<PRE>
+File: sgmllib-example-4.py
+
+import sgmllib
+import cgi, string, sys
+
+class SGMLFilter(sgmllib.SGMLParser):
+    # sgml filter.  override start/end to manipulate
+    # document elements
+
+    def _ _init_ _(self, outfile=None, infile=None):
+        sgmllib.SGMLParser._ _init_ _(self)
+        if not outfile:
+            outfile = sys.stdout
+        self.write = outfile.write
+        if infile:
+            self.load(infile)
+
+    def load(self, file):
+        while 1:
+            s = file.read(8192)
+            if not s:
+                break
+            self.feed(s)
+        self.close()
+
+    def handle_entityref(self, name):
+        self.write("&amp;%s;" % name)
+
+    def handle_data(self, data):
+        self.write(cgi.escape(data))
+
+    def unknown_starttag(self, tag, attrs):
+        tag, attrs = self.start(tag, attrs)
+        if tag:
+            if not attrs:
+                self.write("&lt;%s&gt;" % tag)
+            else:
+                self.write("&lt;%s" % tag)
+                for k, v in attrs:
+                    self.write(" %s=%s" % (k, repr(v)))
+                self.write("&gt;")
+
+    def unknown_endtag(self, tag):
+        tag = self.end(tag)
+        if tag:
+            self.write("&lt;/%s&gt;" % tag)
+
+    def start(self, tag, attrs):
+        return tag, attrs # override
+
+    def end(self, tag):
+        return tag # override
+
+class Filter(SGMLFilter):
+
+    def fixtag(self, tag):
+        if tag == "em":
+            tag = "i"
+        if tag == "string":
+            tag = "b"
+        return string.upper(tag)
+
+    def start(self, tag, attrs):
+        return self.fixtag(tag), attrs
+
+    def end(self, tag):
+        return self.fixtag(tag)
+
+c = Filter()
+c.load(open("samples/sample.htm"))
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc6"></A>
+<H2><A href='#toptop'> 1.5. htmllib 模块 </A></H2>
+<P>
+<CODE>htmlib</CODE> 模块包含了一个标签驱动的( tag-driven ) HTML 语法分析器, 
+它会将数据发送至一个格式化对象. 如 <A HREF="#eg-5-9">Example 5-9</A> 所示. 
+更多关于如何解析 HTML 的例子请参阅 <CODE>formatter</CODE> 模块.  
+</P>
+<A NAME="eg-5-9"></A>
+<H4><A href='#toptop'> 1.5.0.1. Example 5-9. 使用 htmllib 模块 </A></H4>
+<PRE>
+File: htmllib-example-1.py
+
+import htmllib
+import formatter
+import string
+
+class Parser(htmllib.HTMLParser):
+    # return a dictionary mapping anchor texts to lists
+    # of associated hyperlinks
+
+    def _ _init_ _(self, verbose=0):
+        self.anchors = {}
+        f = formatter.NullFormatter()
+        htmllib.HTMLParser._ _init_ _(self, f, verbose)
+
+    def anchor_bgn(self, href, name, type):
+        self.save_bgn()
+        self.anchor = href
+
+    def anchor_end(self):
+        text = string.strip(self.save_end())
+        if self.anchor and text:
+            self.anchors[text] = self.anchors.get(text, []) + [self.anchor]
+
+file = open("samples/sample.htm")
+html = file.read()
+file.close()
+
+p = Parser()
+p.feed(html)
+p.close()
+
+for k, v in p.anchors.items():
+    print k, "=&gt;", v
+
+print
+
+*B*link =&gt; ['http://www.python.org']*b*
+</PRE>
+<P></P>
+<P>
+如果你只是想解析一个 HTML 文件, 而不是将它交给输出设备, 
+那么 <CODE>sgmllib</CODE> 模块会是更好的选择.
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc7"></A>
+<H2><A href='#toptop'> 1.6. htmlentitydefs 模块 </A></H2>
+<P>
+<CODE>htmlentitydefs</CODE> 模块包含一个由 HTML 中 ISO Latin-1 字符实体构成的字典. 
+如 <A HREF="#eg-5-10">Example 5-10</A> 所示.
+</P>
+<A NAME="eg-5-10"></A>
+<H4><A href='#toptop'> 1.6.0.1. Example 5-10. 使用 htmlentitydefs 模块 </A></H4>
+<PRE>
+File: htmlentitydefs-example-1.py
+
+import htmlentitydefs
+
+entities = htmlentitydefs.entitydefs
+
+for entity in "amp", "quot", "copy", "yen":
+    print entity, "=", entities[entity]
+
+*B*amp = &amp;
+quot = "
+copy = \302\251
+yen = \302\245*b*
+</PRE>
+<P></P>
+<P>
+Example 5-11 展示了如何将正则表达式与这个字典结合起来翻译字符串中的实体 
+( <CODE>cgi.escape</CODE> 的逆向操作).
+</P>
+<A NAME="eg-5-11"></A>
+<H4><A href='#toptop'> 1.6.0.2. Example 5-11. 使用 htmlentitydefs 模块翻译实体 </A></H4>
+<PRE>
+File: htmlentitydefs-example-2.py
+
+import htmlentitydefs
+import re
+import cgi
+
+pattern = re.compile("&amp;(\w+?);")
+
+def descape_entity(m, defs=htmlentitydefs.entitydefs):
+    # callback: translate one entity to its ISO Latin value
+    try:
+        return defs[m.group(1)]
+    except KeyError:
+        return m.group(0) # use as is
+
+def descape(string):
+    return pattern.sub(descape_entity, string)
+
+print descape("&amp;lt;spam&amp;amp;eggs&amp;gt;")
+print descape(cgi.escape("&lt;spam&amp;eggs&gt;"))
+
+*B*&lt;spam&amp;eggs&gt;
+&lt;spam&amp;eggs&gt;*b*
+</PRE>
+<P></P>
+<P>
+最后, <A HREF="#eg-5-12">Example 5-12</A> 展示了如何将 XML 保留字符和 ISO Latin-1 字符转换为 XML 字符串. 
+与 <CODE>cgi.escape</CODE> 相似, 但它会替换非 ASCII 字符.
+</P>
+<A NAME="eg-5-12"></A>
+<H4><A href='#toptop'> 1.6.0.3. Example 5-12. 转义 ISO Latin-1 实体 </A></H4>
+<PRE>
+File: htmlentitydefs-example-3.py
+
+import htmlentitydefs
+import re, string
+
+# this pattern matches substrings of reserved and non-ASCII characters
+pattern = re.compile(r"[&amp;&lt;&gt;\"\x80-\xff]+")
+
+# create character map
+entity_map = {}
+
+for i in range(256):
+    entity_map[chr(i)] = "&amp;%d;" % i
+
+for entity, char in htmlentitydefs.entitydefs.items():
+    if entity_map.has_key(char):
+        entity_map[char] = "&amp;%s;" % entity
+
+def escape_entity(m, get=entity_map.get):
+    return string.join(map(get, m.group()), "")
+
+def escape(string):
+    return pattern.sub(escape_entity, string)
+
+print escape("&lt;spam&amp;eggs&gt;")
+print escape("\303\245 i \303\245a \303\244 e \303\266")
+
+*B*&amp;lt;spam&amp;amp;eggs&amp;gt;
+&amp;aring; i &amp;aring;a &amp;auml; e &amp;ouml;*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc8"></A>
+<H2><A href='#toptop'> 1.7. formatter 模块 </A></H2>
+<P>
+<CODE>formatter</CODE> 模块提供了一些可用于 <CODE>htmllib</CODE> 的格式类( formatter classes ).
+</P>
+<P>
+这些类有两种, <I>formatter</I> 和 <I>writer</I> . 
+formatter 将 HTML 解析器的标签和数据流转换为适合输出设备的事件流( 
+event stream ), 而 writer 将事件流输出到设备上. 如 <A HREF="#eg-5-13">Example 5-13</A> 所示.
+</P>
+<P>
+大多情况下, 你可以使用 <I>AbstractFormatter</I> 类进行格式化. 
+它会根据不同的格式化事件调用 writer 对象的方法. <I>AbstractWriter</I> 类在每次方法调用时打印一条信息.
+</P>
+<A NAME="eg-5-13"></A>
+<H4><A href='#toptop'> 1.7.0.1. Example 5-13. 使用 formatter 模块将 HTML 转换为事件流 </A></H4>
+<PRE>
+File: formatter-example-1.py
+
+import formatter
+import htmllib
+
+w = formatter.AbstractWriter()
+f = formatter.AbstractFormatter(w)
+
+file = open("samples/sample.htm")
+
+p = htmllib.HTMLParser(f)
+p.feed(file.read())
+p.close()
+
+file.close()
+
+*B*send_paragraph(1)
+new_font(('h1', 0, 1, 0))
+send_flowing_data('A Chapter.')
+send_line_break()
+send_paragraph(1)
+new_font(None)
+send_flowing_data('Some text. Some more text. Some')
+send_flowing_data(' ')
+new_font((None, 1, None, None))
+send_flowing_data('emphasized')
+new_font(None)
+send_flowing_data(' text. A')
+send_flowing_data(' link')
+send_flowing_data('[1]')
+send_flowing_data('.')*b*
+</PRE>
+<P></P>
+<P>
+<CODE>formatter</CODE> 模块还提供了 <I>NullWriter</I> 类, 它会将任何传递给它的事件忽略; 以及 <I>DumbWriter</I> 类, 
+它会将事件流转换为纯文本文档. 如 <A HREF="#eg-5-14">Example 5-14</A> 所示.
+</P>
+<A NAME="eg-5-14"></A>
+<H4><A href='#toptop'> 1.7.0.2. Example 5-14. 使用 formatter 模块将 HTML 转换为纯文本 </A></H4>
+<PRE>
+File: formatter-example-2.py
+
+import formatter
+import htmllib
+
+w = formatter.DumbWriter() # plain text
+f = formatter.AbstractFormatter(w)
+
+file = open("samples/sample.htm")
+
+# print html body as plain text
+p = htmllib.HTMLParser(f)
+p.feed(file.read())
+p.close()
+
+file.close()
+
+# print links
+print
+print
+i = 1
+for link in p.anchorlist:
+    print i, "=&gt;", link
+    i = i + 1
+
+*B*A Chapter.
+
+Some text. Some more text. Some emphasized text. A link[1].
+
+1 =&gt; http://www.python.org*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-5-15">Example 5-15</A> 提供了一个自定义的 Writer , 它继承自 <I>DumbWriter</I> 类, 
+会记录当前字体样式并根据字体美化输出格式.
+</P>
+<A NAME="eg-5-15"></A>
+<H4><A href='#toptop'> 1.7.0.3. Example 5-15. 使用 formatter 模块自定义 Writer </A></H4>
+<PRE>
+File: formatter-example-3.py
+
+import formatter
+import htmllib, string
+
+class Writer(formatter.DumbWriter):
+
+    def _ _init_ _(self):
+        formatter.DumbWriter._ _init_ _(self)
+        self.tag = ""
+        self.bold = self.italic = 0
+        self.fonts = []
+
+    def new_font(self, font):
+        if font is None:
+            font = self.fonts.pop()
+            self.tag, self.bold, self.italic = font
+        else:
+            self.fonts.append((self.tag, self.bold, self.italic))
+            tag, bold, italic, typewriter = font
+            if tag is not None:
+                self.tag = tag
+            if bold is not None:
+                self.bold = bold
+            if italic is not None:
+                self.italic = italic
+
+    def send_flowing_data(self, data):
+        if not data:
+            return
+        atbreak = self.atbreak or data[0] in string.whitespace
+        for word in string.split(data):
+            if atbreak:
+                self.file.write(" ")
+            if self.tag in ("h1", "h2", "h3"):
+                word = string.upper(word)
+            if self.bold:
+                word = "*" + word + "*"
+            if self.italic:
+                word = "_" + word + "_"
+            self.file.write(word)
+            atbreak = 1
+        self.atbreak = data[-1] in string.whitespace
+
+w = Writer()
+f = formatter.AbstractFormatter(w)
+
+file = open("samples/sample.htm")
+
+# print html body as plain text
+p = htmllib.HTMLParser(f)
+p.feed(file.read())
+p.close()
+
+*B*_A_ _CHAPTER._
+
+Some text. Some more text. Some *emphasized* text. A link[1].*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc9"></A>
+<H2><A href='#toptop'> 1.8. ConfigParser 模块 </A></H2>
+<P>
+<CODE>ConfigParser</CODE> 模块用于读取配置文件.
+</P>
+<P>
+配置文件的格式与 Windows INI 文件类似, 可以包含一个或多个区域( section ), 
+每个区域可以有多个配置条目.
+</P>
+<P>
+这里有个样例配置文件, 在 <A HREF="#eg-5-16">Example 5-16</A> 用到了这个文件:
+</P>
+<PRE>
+[book]
+title: The Python Standard Library
+author: Fredrik Lundh
+email: fredrik@pythonware.com
+version: 2.0-001115
+
+[ematter]
+pages: 250
+
+[hardcopy]
+pages: 350
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-5-16">Example 5-16</A> 使用 <CODE>ConfigParser</CODE> 模块读取这个配制文件.
+</P>
+<A NAME="eg-5-16"></A>
+<H4><A href='#toptop'> 1.8.0.1. Example 5-16. 使用 ConfigParser 模块 </A></H4>
+<PRE>
+File: configparser-example-1.py
+
+import ConfigParser
+import string
+
+config = ConfigParser.ConfigParser()
+
+config.read("samples/sample.ini")
+
+# print summary
+print
+print string.upper(config.get("book", "title"))
+print "by", config.get("book", "author"),
+print  "(" + config.get("book", "email") + ")"
+print
+print config.get("ematter", "pages"), "pages"
+print
+
+# dump entire config file
+for section in config.sections():
+    print section
+    for option in config.options(section):
+        print " ", option, "=", config.get(section, option)
+
+*B*THE PYTHON STANDARD LIBRARY
+by Fredrik Lundh (fredrik@pythonware.com)
+
+250 pages
+
+book
+  title = The Python Standard Library
+  email = fredrik@pythonware.com
+  author = Fredrik Lundh
+  version = 2.0-001115
+  _ _name_ _ = book
+ematter
+  _ _name_ _ = ematter
+  pages = 250
+hardcopy
+  _ _name_ _ = hardcopy
+  pages = 350*b*
+</PRE>
+<P></P>
+<P>
+Python 2.0 以后, <CODE>ConfigParser</CODE> 模块也可以将配置数据写入文件, 如 <A HREF="#eg-5-17">Example 5-17</A> 所示.
+</P>
+<A NAME="eg-5-17"></A>
+<H4><A href='#toptop'> 1.8.0.2. Example 5-17. 使用 ConfigParser 模块写入配置数据 </A></H4>
+<PRE>
+File: configparser-example-2.py
+
+import ConfigParser
+import sys
+
+config = ConfigParser.ConfigParser()
+
+# set a number of parameters
+config.add_section("book")
+config.set("book", "title", "the python standard library")
+config.set("book", "author", "fredrik lundh")
+
+config.add_section("ematter")
+config.set("ematter", "pages", 250)
+
+# write to screen
+config.write(sys.stdout)
+
+*B*[book]
+title = the python standard library
+author = fredrik lundh
+
+[ematter]
+pages = 250*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc10"></A>
+<H2><A href='#toptop'> 1.9. netrc 模块 </A></H2>
+<P>
+netrc 模块可以用来解析 <I>.netrc</I> 配置文件, 如 Example 5-18 所示. 
+该文件用于在用户的 home 目录储存 FTP 用户名和密码. (别忘记设置这个文件的属性为: "chmod 0600 ~/.netrc," 
+这样只有当前用户能访问).
+</P>
+<A NAME="eg-5-18"></A>
+<H4><A href='#toptop'> 1.9.0.1. Example 5-18. 使用 netrc 模块 </A></H4>
+<PRE>
+File: netrc-example-1.py
+
+import netrc
+
+
+# default is $HOME/.netrc
+info = netrc.netrc("samples/sample.netrc")
+
+login, account, password = info.authenticators("secret.fbi")
+print "login", "=&gt;", repr(login)
+print "account", "=&gt;", repr(account)
+print "password", "=&gt;", repr(password)
+
+*B*login =&gt; 'mulder'
+account =&gt; None
+password =&gt; 'trustno1'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc11"></A>
+<H2><A href='#toptop'> 1.10. shlex 模块 </A></H2>
+<P>
+<CODE>shlex</CODE> 模块为基于 Unix shell 语法的语言提供了一个简单的 lexer (也就是 tokenizer). 
+如 <A HREF="#eg-5-19">Example 5-19</A> 所示.
+</P>
+<A NAME="eg-5-19"></A>
+<H4><A href='#toptop'> 1.10.0.1. Example 5-19. 使用 shlex 模块 </A></H4>
+<PRE>
+File: shlex-example-1.py
+
+import shlex
+
+lexer = shlex.shlex(open("samples/sample.netrc", "r"))
+lexer.wordchars = lexer.wordchars + "._"
+
+while 1:
+    token = lexer.get_token()
+    if not token:
+        break
+    print repr(token)
+
+*B*'machine'
+'secret.fbi'
+'login'
+'mulder'
+'password'
+'trustno1'
+'machine'
+'non.secret.fbi'
+'login'
+'scully'
+'password'
+'noway'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc12"></A>
+<H2><A href='#toptop'> 1.11. zipfile 模块 </A></H2>
+<P>
+( 2.0 新增) <CODE>zipfile</CODE> 模块可以用来读写 ZIP 格式.
+</P>
+<H3><A href='#toptop'> 1.11.1. 列出内容 </A></H3>
+<P>
+使用 <CODE>namelist</CODE> 和 <CODE>infolist</CODE> 方法可以列出压缩档的内容, 前者返回由文件名组成的列表, 
+后者返回由 <I>ZipInfo</I> 实例组成的列表. 如 <A HREF="#eg-5-20">Example 5-20</A> 所示.
+</P>
+<A NAME="eg-5-20"></A>
+<H4><A href='#toptop'> 1.11.1.1. Example 5-20. 使用 zipfile 模块列出 ZIP 文档中的文件 </A></H4>
+<PRE>
+File: zipfile-example-1.py
+
+import zipfile
+
+file = zipfile.ZipFile("samples/sample.zip", "r")
+
+# list filenames
+for name in file.namelist():
+    print name,
+print
+
+# list file information
+for info in file.infolist():
+    print info.filename, info.date_time, info.file_size
+
+*B*sample.txt sample.jpg
+sample.txt (1999, 9, 11, 20, 11, 8) 302
+sample.jpg (1999, 9, 18, 16, 9, 44) 4762*b*
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.11.2. 从 ZIP 文件中读取数据 </A></H3>
+<P>
+调用 <CODE>read</CODE> 方法就可以从 ZIP 文档中读取数据. 它接受一个文件名作为参数, 返回字符串. 
+如 <A HREF="#eg-5-21">Example 5-21</A> 所示.
+</P>
+<A NAME="eg-5-21"></A>
+<H4><A href='#toptop'> 1.11.2.1. Example 5-21. 使用 zipfile 模块从 ZIP 文件中读取数据 </A></H4>
+<PRE>
+File: zipfile-example-2.py
+
+import zipfile
+
+file = zipfile.ZipFile("samples/sample.zip", "r")
+
+for name in file.namelist():
+    data = file.read(name)
+    print name, len(data), repr(data[:10])
+
+*B*sample.txt 302 'We will pe'
+sample.jpg 4762 '\377\330\377\340\000\020JFIF'*b*
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.11.3. 向 ZIP 文件写入数据 </A></H3>
+<P>
+向压缩档加入文件很简单, 将文件名, 文件在 ZIP 档中的名称传递给 <CODE>write</CODE> 方法即可.
+</P>
+<P>
+<A HREF="#eg-5-22">Example 5-22</A> 将 samples 目录中的所有文件打包为一个 ZIP 文件.
+</P>
+<A NAME="eg-5-22"></A>
+<H4><A href='#toptop'> 1.11.3.1. Example 5-22. 使用 zipfile 模块将文件储存在 ZIP 文件里 </A></H4>
+<PRE>
+File: zipfile-example-3.py
+
+import zipfile
+import glob, os
+
+# open the zip file for writing, and write stuff to it
+
+file = zipfile.ZipFile("test.zip", "w")
+
+for name in glob.glob("samples/*"):
+    file.write(name, os.path.basename(name), zipfile.ZIP_DEFLATED)
+
+file.close()
+
+# open the file again, to see what's in it
+
+file = zipfile.ZipFile("test.zip", "r")
+for info in file.infolist():
+    print info.filename, info.date_time, info.file_size, info.compress_size
+
+*B*sample.wav (1999, 8, 15, 21, 26, 46) 13260 10985
+sample.jpg (1999, 9, 18, 16, 9, 44) 4762 4626
+sample.au (1999, 7, 18, 20, 57, 34) 1676 1103
+...*b*
+</PRE>
+<P></P>
+<P>
+<CODE>write</CODE> 方法的第三个可选参数用于控制是否使用压缩. 默认为 <CODE>zipfile.ZIP_STORED</CODE> , 
+意味着只是将数据储存在档案里而不进行任何压缩. 如果安装了 <CODE>zlib</CODE> 模块, 那么就可以使用 
+<CODE>zipfile.ZIP_DEFLATED</CODE> 进行压缩.
+</P>
+<P>
+<CODE>zipfile</CODE> 模块也可以向档案中添加字符串. 不过, 这需要一点技巧, 
+你需要创建一个 <I>ZipInfo</I> 实例, 并正确配置它. <A HREF="#eg-5-23">Example 5-23</A> 提供了一种简单的解决办法.
+</P>
+<A NAME="eg-5-23"></A>
+<H4><A href='#toptop'> 1.11.3.2. Example 5-23. 使用 zipfile 模块在 ZIP 文件中储存字符串 </A></H4>
+<PRE>
+File: zipfile-example-4.py
+
+import zipfile
+import glob, os, time
+
+file = zipfile.ZipFile("test.zip", "w")
+
+now = time.localtime(time.time())[:6]
+
+for name in ("life", "of", "brian"):
+    info = zipfile.ZipInfo(name)
+    info.date_time = now
+    info.compress_type = zipfile.ZIP_DEFLATED
+    file.writestr(info, name*1000)
+
+file.close()
+
+# open the file again, to see what's in it
+
+file = zipfile.ZipFile("test.zip", "r")
+
+for info in file.infolist():
+    print info.filename, info.date_time, info.file_size, info.compress_size
+
+*B*life (2000, 12, 1, 0, 12, 1) 4000 26
+of (2000, 12, 1, 0, 12, 1) 2000 18
+brian (2000, 12, 1, 0, 12, 1) 5000 31*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc13"></A>
+<H2><A href='#toptop'> 1.12. gzip 模块 </A></H2>
+<P>
+<CODE>gzip</CODE> 模块用来读写 gzip 格式的压缩文件, 如 <A HREF="#eg-5-24">Example 5-24</A> 所示.
+</P>
+<A NAME="eg-5-24"></A>
+<H4><A href='#toptop'> 1.12.0.1. Example 5-24. 使用 gzip 模块读取压缩文件 </A></H4>
+<PRE>
+File: gzip-example-1.py
+
+import gzip
+
+file = gzip.GzipFile("samples/sample.gz")
+
+print file.read()
+
+*B*Well it certainly looks as though we're in for
+a splendid afternoon's sport in this the 127th
+Upperclass Twit of the Year Show.*b*
+</PRE>
+<P></P>
+<P>
+标准的实现并不支持 <CODE>seek</CODE> 和 <CODE>tell</CODE> 方法. 不过 <A HREF="#eg-5-25">Example 5-25</A> 可以解决这个问题.
+</P>
+<A NAME="eg-5-25"></A>
+<H4><A href='#toptop'> 1.12.0.2. Example 5-25. 给 gzip 模块添加 seek/tell 支持 </A></H4>
+<PRE>
+File: gzip-example-2.py
+
+import gzip
+
+class gzipFile(gzip.GzipFile):
+    # adds seek/tell support to GzipFile
+
+    offset = 0
+
+    def read(self, size=None):
+        data = gzip.GzipFile.read(self, size)
+        self.offset = self.offset + len(data)
+        return data
+
+    def seek(self, offset, whence=0):
+        # figure out new position (we can only seek forwards)
+        if whence == 0:
+            position = offset
+        elif whence == 1:
+            position = self.offset + offset
+        else:
+            raise IOError, "Illegal argument"
+        if position &lt; self.offset:
+            raise IOError, "Cannot seek backwards"
+
+        # skip forward, in 16k blocks
+        while position &gt; self.offset:
+            if not self.read(min(position - self.offset, 16384)):
+                break
+
+    def tell(self):
+        return self.offset
+
+#
+# try it
+
+file = gzipFile("samples/sample.gz")
+file.seek(80)
+
+print file.read()
+
+*B*this the 127th
+Upperclass Twit of the Year Show.*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+</DIV>
+
+<!-- html code generated by txt2tags 2.4 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags chapter5.t2t -->
+</BODY></HTML>

@@ -1,0 +1,1726 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chapter id="kgp">
+<?dbhtml filename="xml_processing/index.html"?>
+<title>&xml; 处理</title>
+<titleabbrev id="kgp.numberonly">第 9 章</titleabbrev>
+<section id="kgp.divein">
+<title>概览</title>
+<para>下面两章是关于 &python; 中 &xml; 处理的。如果你已经对 &xml; 文档有了一个大概的了解，比如它是由结构化标记构成的，这些标记形成了层次模型的元素，等等这些知识都是有帮助的。如果你不明白这些，这里有<ulink url="&url_xmltutorial;">很多 &xml; 教程</ulink>能够解释这些基础知识。</para>
+<para>如果你对 XML 不是很感兴趣，你还是应该读一下这些章节，它们涵盖了不少重要的主题，比如 &python; 包、Unicode、命令行参数以及如何使用 &getattr; 进行方法分发。</para>
+<para>如果你在大学里主修哲学 (而不是像计算机科学这样的实用专业)，并且曾不幸地被伊曼努尔·康德的著作折磨地够呛，那么你会非常欣赏本章的样例程序。(这当然不意味着你必须修过哲学。)</para>
+<abstract>
+<title/>
+<para>处理 &xml; 有两种基本的方式。一种叫做 &sax; (<quote>Simple &api; for &xml;</quote>)，它的工作方式是，一次读出一点 &xml; 内容，然后对发现的每一个元素调用一个方法。(如果你读了 <xref linkend="dialect"/>，这应该听起来很熟悉，因为这是 &sgmllib_modulename; 工作的方式。) 另一种方式叫做 &dom; (<quote>Document Object Model</quote>)，它的工作方式是，一次性读入整个 &xml; 文档，然后使用 &python; 类创建一个内部表示形式 (以树结构进行连接)。&python; 拥有这两种解析方式的标准模块，但是本章只涉及 &dom;。</para>
+</abstract>
+<para>下面是一个完整的 &python; 程序，它根据 &xml; 格式定义的上下文无关语法生成伪随机输出。如果你不明白是什么意思，不用担心，下面两章中将会深入检视这个程序的输入和输出。</para>
+<example>
+<title>&kgp_filename;</title>
+&para_download;
+<programlisting>
+&kgp_doc;
+&kgp_import;
+
+&kgp_debug;
+
+&kgp_exception;
+
+&kgp_classdef;
+&kgp_classdoc;
+
+&kgp_init;
+&kgp_initgrammar;
+&kgp_initsource;
+&kgp_refresh;
+
+&kgp_privateload;
+&kgp_loaddoc;
+&kgp_loadopen;
+&kgp_loadparse;
+&kgp_loadclose;
+&kgp_loadreturn;
+
+&kgp_loadgrammardef;
+&kgp_loadgrammardoc;
+&kgp_loadgrammar;
+&kgp_initrefs;
+&kgp_forref;
+&kgp_refid;
+
+&kgp_loadsourcedef;
+&kgp_loadsourcedoc;
+&kgp_loadsource;
+
+&kgp_defaultsourcedef;
+&kgp_defaultsourcedoc;
+&kgp_initxrefs;
+&kgp_forxref;
+&kgp_xrefid;
+&kgp_xrefkeys;
+&kgp_standalonexrefs;
+&kgp_ifstandalone;
+&kgp_raiseerror;
+&kgp_returndefaultsource;
+        
+&kgp_resetdef;
+&kgp_resetdoc;
+&kgp_initpieces;
+&kgp_initcapitalizenextword;
+
+&kgp_refreshdef;
+&kgp_refreshdoc;
+&kgp_reset;
+&kgp_parse;
+&kgp_output;
+
+&kgp_outputdef;
+&kgp_outputdoc;
+&kgp_returnoutput;
+
+&kgp_randomchildelementdef;
+&kgp_randomchildelementdoc;
+&kgp_choices;
+&kgp_chosen;
+&kgp_ifdebug;
+&kgp_printchoices;
+&kgp_printchosen;
+&kgp_returnchosen;
+
+&kgp_parsedef;
+&kgp_parsedoc;
+&kgp_getparsemethod;
+&kgp_parsemethod;
+
+&kgp_parsedocumentdef;
+&kgp_parsedocumentdoc;
+&kgp_parsedocument;
+
+&kgp_parsetextdef;
+&kgp_parsetextdoc;
+&kgp_text;
+&kgp_ifcapitalizenextword;
+&kgp_appendcapital;
+&kgp_appendrest;
+&kgp_resetcapital;
+&kgp_elsecapitalizenextword;
+&kgp_appendnormal;
+
+&kgp_parseelementdef;
+&kgp_parseelementdoc;
+&kgp_gethandlermethod;
+&kgp_handlermethod;
+
+&kgp_parsecommentdef;
+&kgp_parsecommentdoc;
+&kgp_pass;
+    
+&kgp_doxrefdef;
+&kgp_doxrefdoc;
+&kgp_id;
+&kgp_parsexref;
+
+&kgp_dopdef;
+&kgp_dopdoc;
+&kgp_keys;
+&kgp_ifclass;
+&kgp_sentence;
+&kgp_setcapitalizenextword;
+&kgp_ifchance;
+&kgp_chance;
+&kgp_rolldice;
+&kgp_elsechance;
+&kgp_setdoit;
+&kgp_ifdoit;
+&kgp_parsep;
+
+&kgp_dochoicedef;
+&kgp_dochoicedoc;
+&kgp_parsechoice;
+
+&kgp_usagedef;
+&kgp_usagecode;
+
+&kgp_maindef;
+&kgp_initmaingrammar;
+&kgp_trygetopt;
+&kgp_getopt;
+&kgp_exceptgetopt;
+&kgp_errorusage;
+&kgp_errorexit;
+&kgp_foropt;
+&kgp_ifh;
+&kgp_helpusage;
+&kgp_helpexit;
+&kgp_ifd;
+&kgp_globaldebug;
+&kgp_setdebug;
+&kgp_ifg;
+&kgp_setmaingrammar;
+    
+&kgp_setdefaultsource;
+
+&kgp_createkantgenerator;
+&kgp_nowrap;
+
+&kgp_ifmain;
+&kgp_main;
+</programlisting>
+</example>
+<example>
+<title>&toolbox_filename;</title>
+<programlisting>
+&tb_doc;
+
+&tb_openanythingdef;
+&tb_openanythingdoc;
+&tb_ifhasattr;
+&tb_returnsource;
+
+&tb_stdin;
+&tb_stdinimport;
+&tb_stdinreturn;
+
+&tb_urllibcomment;
+&tb_importurllib;
+&tb_tryurllib;
+&tb_urlopen;
+&tb_excepturllib;
+&tb_urllibpass;
+    
+&tb_nativecomment;
+&tb_trynative;
+&tb_native;
+&tb_exceptnative;
+&tb_nativepass;
+    
+&tb_stringiocomment;
+&tb_importstringio;
+&tb_stringio;
+</programlisting>
+</example>
+<para>独立运行程序 &kgp_filename;，它会解析 &kantxml_filename; 中默认的基于 &xml; 的语法，并以康德的风格打印出几段有哲学价值的段落来。</para>
+<example>
+<title>&kgp_filename; 的样例输出</title>
+<screen><prompt>[you@localhost kgp]$ python kgp.py</prompt>
+<computeroutput>     As is shown in the writings of Hume, our a priori concepts, in
+reference to ends, abstract from all content of knowledge; in the study
+of space, the discipline of human reason, in accordance with the
+principles of philosophy, is the clue to the discovery of the
+Transcendental Deduction.  The transcendental aesthetic, in all
+theoretical sciences, occupies part of the sphere of human reason
+concerning the existence of our ideas in general; still, the
+never-ending regress in the series of empirical conditions constitutes
+the whole content for the transcendental unity of apperception.  What
+we have alone been able to show is that, even as this relates to the
+architectonic of human reason, the Ideal may not contradict itself, but
+it is still possible that it may be in contradictions with the
+employment of the pure employment of our hypothetical judgements, but
+natural causes (and I assert that this is the case) prove the validity
+of the discipline of pure reason.  As we have already seen, time (and
+it is obvious that this is true) proves the validity of time, and the
+architectonic of human reason, in the full sense of these terms,
+abstracts from all content of knowledge.  I assert, in the case of the
+discipline of practical reason, that the Antinomies are just as
+necessary as natural causes, since knowledge of the phenomena is a
+posteriori.
+    The discipline of human reason, as I have elsewhere shown, is by
+its very nature contradictory, but our ideas exclude the possibility of
+the Antinomies.  We can deduce that, on the contrary, the pure
+employment of philosophy, on the contrary, is by its very nature
+contradictory, but our sense perceptions are a representation of, in
+the case of space, metaphysics.  The thing in itself is a
+representation of philosophy.  Applied logic is the clue to the
+discovery of natural causes.  However, what we have alone been able to
+show is that our ideas, in other words, should only be used as a canon
+for the Ideal, because of our necessary ignorance of the conditions.
+
+[...snip...]</computeroutput></screen>
+</example>
+<para>这当然是胡言乱语。噢，不完全是胡言乱语。它在句法和语法上都是正确的 (尽管非常罗嗦――康德可不是你们所说的踩得到点上的那种人)。其中一些实际上是正确的 (或者至少康德可能会认同的事情)，其中一些则明显是错误的，大部分只是语无伦次。但所有内容都符合康德的风格。
+</para>
+<para>让我重复一遍，如果你现在或曾经主修哲学专业，这会非常、非常有趣。</para>
+<para>有趣之处在于，这个程序中没有一点内容是属于康德的。所有的内容都来自于上下文无关语法文件 &kantxml_filename;。如果你要程序使用不同的语法文件 (可以在命令行中指定)，输出信息将完全不同。</para>
+<example>
+<title>&kgp_filename; 的简单输出</title>
+<screen><prompt>[you@localhost kgp]$ python kgp.py -g binary.xml</prompt>
+<computeroutput>00101001</computeroutput>
+<prompt>[you@localhost kgp]$ python kgp.py -g binary.xml</prompt>
+<computeroutput>10110100</computeroutput></screen>
+</example>
+<para>在本章后面的内容中，你将近距离地观察语法文件的结构。现在，你只要知道语法文件定义了输出信息的结构，而 &kgp_filename; 程序读取语法规则并随机确定哪些单词插入哪里。
+</para>
+</section>
+<section id="kgp.packages">
+<?dbhtml filename="xml_processing/packages.html"?>
+<title>包</title>
+<abstract>
+<para>实际上解析一个 &xml; 文档是很简单的：只要一行代码。但是，在你接触那行代码前，需要暂时岔开一下，讨论一下包。</para>
+</abstract>
+<example>
+<title>载入一个 &xml; 文档 (偷瞥一下)</title>
+<screen>
+&prompt;<userinput>from xml.dom import minidom</userinput> <co id="kgp.packages.1.1"/>
+&prompt;<userinput>xmldoc = minidom.parse('~/diveintopython/common/py/kgp/binary.xml')</userinput></screen>
+<calloutlist>
+<callout arearefs="kgp.packages.1.1">
+<para>这个语法你之前没有见过。它看上去很像我们熟知的 &frommoduleimport;，但是<literal>"."</literal> 使得它好像不只是普通的 import 那么简单。事实上，&xml_packagename; 称为包，&dom_packagename; 是 &xml_packagename; 中嵌套的包，而 &minidom_modulename; 是 &xmldom_packagename; 中的模块。</para>
+</callout>
+</calloutlist>
+</example>
+<para>听起来挺复杂的，其实不是。看一下确切的实现可能会有帮助。包不过是模块的目录；嵌套包是子目录。一个包 (或一个嵌套包) 中的模块也只是 <filename class="headerfile">.py</filename> 文件罢了，永远都是，只是它们是在一个子目录中，而不是在你的 &python; 安装环境的主 <filename class="directory">lib/</filename> 目录下。</para>
+<example>
+<title>包的文件布局</title>
+<screen><computeroutput>&python;21/           &python; 安装根目录 (可执行文件的所在地)
+|
++--lib/             库目录 (标准库模块的所在地)
+   |
+   +-- xml/         xml包 (实际上目录中还有其它东西)
+       |
+       +--sax/      xml.sax包 (也只是一个目录)
+       |
+       +--dom/      xml.dom包 (包含 minidom.py)
+       |
+       +--parsers/  xml.parsers包 (内部使用)</computeroutput></screen>
+</example>
+<para>所以你说 <literal>from xml.dom import minidom</literal>，&python; 认为它的意思是<quote>在 &xml_packagename; 目录中查找 &dom_packagename; 目录，然后在<emphasis>这个目录</emphasis> 中查找 &minidom_modulename; 模块，接着导入它并以 &minidom_modulename; 命名 </quote>。但是 &python; 更聪明；你不仅可以导入包含在一个包中的所有模块，还可以从包的模块中有选择地导入指定的类或者函数。语法都是一样的； &python; 会根据包的布局理解你的意思，然后自动进行正确的导入。
+</para>
+<example>
+<title>包也是模块</title>
+<screen>&prompt;<userinput>from xml.dom import minidom</userinput>         <co id="kgp.packages.2.1"/>
+&prompt;<userinput>minidom</userinput>
+<computeroutput>&lt;module 'xml.dom.minidom' from 'C:\Python21\lib\xml\dom\minidom.pyc'&gt;</computeroutput>
+&prompt;<userinput>minidom.Element</userinput>
+<computeroutput>&lt;class xml.dom.minidom.Element at 01095744&gt;</computeroutput>
+&prompt;<userinput>from xml.dom.minidom import Element</userinput> <co id="kgp.packages.2.2"/>
+&prompt;<userinput>Element</userinput>
+<computeroutput>&lt;class xml.dom.minidom.Element at 01095744&gt;</computeroutput>
+&prompt;<userinput>minidom.Element</userinput>
+<computeroutput>&lt;class xml.dom.minidom.Element at 01095744&gt;</computeroutput>
+&prompt;<userinput>from xml import dom</userinput>                 <co id="kgp.packages.2.3"/>
+&prompt;<userinput>dom</userinput>
+<computeroutput>&lt;module 'xml.dom' from 'C:\Python21\lib\xml\dom\__init__.pyc'&gt;</computeroutput>
+&prompt;<userinput>import xml</userinput>                          <co id="kgp.packages.2.4"/>
+&prompt;<userinput>xml</userinput>
+<computeroutput>&lt;module 'xml' from 'C:\Python21\lib\xml\__init__.pyc'&gt;</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.packages.2.1">
+<para>这里你正从一个嵌套包 (&xmldom_packagename;)中导入一个模块 (&minidom_modulename;)。结果就是 &minidom_modulename; 被导入到了你 (程序) 的<link linkend="dialect.locals">命名空间</link>中了。要引用 &minidom_modulename; 模块中的类 (比如 &element_classname;)，你必须在它们的类名前面加上模块名。</para>
+</callout>
+<callout arearefs="kgp.packages.2.2">
+<para>这里你正从一个来自嵌套包 (&xmldom_packagename;) 的模块 (&minidom_modulename;) 中导入一个类 (&element_classname;)。结果就是 &element_classname; 直接导入到了你 (程序) 的命名空间中。注意，这样做并不会干扰以前的导入；现在 &element_classname; 类可以用两种方式引用了 (但其实是同一个类)。</para>
+</callout>
+<callout arearefs="kgp.packages.2.3">
+<para>这里你正在导入 &dom_packagename; 包 (&xml_packagename; 的一个嵌套包)，并将其作为一个模块。一个包的任何层次都可以视为一个模块，一会儿就会看到。它甚至可以拥有自己的属性和方法，就像你在前面看到过的模块。</para>
+</callout>
+<callout arearefs="kgp.packages.2.4">
+<para>这里你正在将根层次的 &xml_packagename; 包作为一个模块导入。</para>
+</callout>
+</calloutlist>
+</example>
+<para>那么如何才能导入一个包 (它不过是磁盘上的一个目录) 并使其成为一个模块 (它总是在磁盘上的一个文件) 呢？答案就是神奇的 &init_filename; 文件。你明白了吧，包不只是目录，它们是包含一个特殊文件 &init_filename; 的目录。这个文件定义了包的属性和方法。例如，&xmldom_packagename; 包含了 &node_classname; 类，它在<filename>xml/dom/__init__.py</filename>中有所定义。当你将一个包作为模块导入 (比如从 &xml_packagename; 导入 &dom_packagename;) 的时候，实际上导入了它的 &init_filename; 文件。</para>
+<note>
+<title>What makes a package</title>
+<para>一个包是一个其中带有特殊文件 &init_filename; 的目录。&init_filename; 文件定义了包的属性和方法。其实它可以什么也不定义；可以只是一个空文件，但是必须要存在。如果 &init_filename; 不存在，这个目录就仅仅是一个目录，而不是一个包，它就不能被导入或者包含其它的模块和嵌套包。</para>
+</note>
+<para>那为什么非得用包呢？嗯，它们提供了在逻辑上将相关模块归为一组的方法。不使用其中带有 &sax_packagename; 和 &dom_packagename; 的 &xml_packagename; 包，作者也可以选择将所有的 &sax_packagename; 功能放入 <filename>xmlsax.py</filename>中，并将所有的 &dom_packagename; 功能放入 <filename>xmldom.py</filename>中，或者干脆将所有东西放入单个模块中。但是这样可能不实用 (写到这儿时，&xml; 包已经超过了 3000 行代码) 并且很难管理 (独立的源文件意味着多个人可以同时在不同的地方进行开发)。</para>
+<para>如果你发现自己正在用 &python; 编写一个大型的子系统 (或者，很有可能，当你意识到你的小型子系统已经成长为一个大型子系统时)，你应该花费些时间设计一个好的包架构。它是 &python; 所擅长的事情之一，所以应该好好利用它。</para>
+</section>
+<section id="kgp.parse">
+<?dbhtml filename="xml_processing/parsing_xml.html"?>
+<title>&xml; 解析</title>
+<abstract>
+<para>正如我说的，实际解析一个 &xml; 文档是非常简单的：只要一行代码。从这里出发到哪儿去就是你自己的事了。</para>
+</abstract>
+<example>
+<title>载入一个 &xml; 文档 (这次是真的)</title>
+<screen>
+&prompt;<userinput>from xml.dom import minidom</userinput>                                          <co id="kgp.parse.1.1"/>
+&prompt;<userinput>xmldoc = minidom.parse('~/diveintopython/common/py/kgp/binary.xml')</userinput>  <co id="kgp.parse.1.2"/>
+&prompt;<userinput>xmldoc</userinput>                                                               <co id="kgp.parse.1.3"/>
+<computeroutput>&lt;xml.dom.minidom.Document instance at 010BE87C&gt;</computeroutput>
+&prompt;<userinput>print xmldoc.toxml()</userinput>                                                 <co id="kgp.parse.1.4"/>
+<computeroutput>&lt;?xml version="1.0" ?&gt;
+&lt;grammar&gt;
+&lt;ref id="bit"&gt;
+  &lt;p&gt;0&lt;/p&gt;
+  &lt;p&gt;1&lt;/p&gt;
+&lt;/ref&gt;
+&lt;ref id="byte"&gt;
+  &lt;p&gt;&lt;xref id="bit"/&gt;&lt;xref id="bit"/&gt;&lt;xref id="bit"/&gt;&lt;xref id="bit"/&gt;\
+&lt;xref id="bit"/&gt;&lt;xref id="bit"/&gt;&lt;xref id="bit"/&gt;&lt;xref id="bit"/&gt;&lt;/p&gt;
+&lt;/ref&gt;
+&lt;/grammar&gt;</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.parse.1.1">
+<para>正如在<link linkend="kgp.packages">上一节</link>看到的，该语句从 &xmldom_packagename; 包中导入 &minidom_modulename; 模块。</para>
+</callout>
+<callout arearefs="kgp.parse.1.2">
+<para>这就是进行所有工作的一行代码：&minidomparse_functionname; 接收一个参数并返回 &xml; 文档解析后的表示形式。这个参数可以是很多东西；在本例中，它只是我本地磁盘上一个 &xml; 文档的文件名。(你需要将路径改为指向下载的例子所在的目录。) 但是你也可以传入一个<link linkend="fileinfo.files">文件对象</link>，或甚至是一个<link linkend="dialect.extract.urllib">类文件对象</link>。这样你就可以在本章后面好好利用这一灵活性了。</para>
+</callout>
+<callout arearefs="kgp.parse.1.3">
+<para>从 &minidomparse_functionname; 返回的对象是一个 &document_classname; 对象，它是 &node_classname; 类的一个子对象。这个 &document_classname; 对象是联锁的 &python; 对象的一个复杂树状结构的根层次，这些 &python; 对象完整表示了传给 &minidomparse_functionname; 的 &xml; 文档。</para>
+</callout>
+<callout arearefs="kgp.parse.1.4">
+<para>&toxml_functionname; 是 &node_classname; 类的一个方法 (因此可以在从 &minidomparse_functionname; 中得到的 &document_classname; 对象上使用)。&toxml_functionname; 打印出了 &node_classname; 表示的 &xml;。对于 &document_classname; 节点，这样就会打印出整个 &xml; 文档。</para>
+</callout>
+</calloutlist>
+</example>
+<para>现在内存中已经有了一个 &xml; 文档了，你可以开始遍历它了。</para>
+<example id="kgp.parse.gettingchildnodes.example">
+<title>获取子节点</title>
+<screen>
+&prompt;<userinput>xmldoc.childNodes</userinput>    <co id="kgp.parse.2.1"/>
+<computeroutput>[&lt;DOM Element: grammar at 17538908>]</computeroutput>
+&prompt;<userinput>xmldoc.childNodes[0]</userinput> <co id="kgp.parse.2.2"/>
+<computeroutput>&lt;DOM Element: grammar at 17538908></computeroutput>
+&prompt;<userinput>xmldoc.firstChild</userinput>    <co id="kgp.parse.2.3"/>
+<computeroutput>&lt;DOM Element: grammar at 17538908></computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.parse.2.1">
+<para>每个 &node_classname; 都有一个 &childnodes_attr; 属性，它是一个 &node_classname; 对象的列表。一个 &document_classname; 只有一个子节点，即 &xml; 文档的根元素 (在本例中，是 &grammarnode; 元素)。</para>
+</callout>
+<callout arearefs="kgp.parse.2.2">
+<para>为了得到第一个 (在本例中，只有一个) 子节点，只要使用正规的列表语法。回想一下，其实这里没有发生什么特别的；这只是一个由正规 &python; 对象构成的正规 &python; 列表。</para>
+</callout>
+<callout arearefs="kgp.parse.2.3">
+<para>鉴于获取某个节点的第一个子节点是有用而且常见的行为，所以 &node_classname; 类有一个 &firstchild_attr; 属性，它和<literal>childNodes[0]</literal>具有相同的语义。(还有一个 &lastchild_attr; 属性，它和<literal>childNodes[-1]</literal>具有相同的语义。)</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>&toxml_functionname; 用于任何节点</title>
+<screen>
+&prompt;<userinput>grammarNode = xmldoc.firstChild</userinput>
+&prompt;<userinput>print grammarNode.toxml()</userinput> <co id="kgp.parse.3.1"/>
+<computeroutput>&lt;grammar>
+&lt;ref id="bit">
+  &lt;p>0&lt;/p>
+  &lt;p>1&lt;/p>
+&lt;/ref>
+&lt;ref id="byte">
+  &lt;p>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>\
+&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;/p>
+&lt;/ref>
+&lt;/grammar></computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.parse.3.1">
+<para>由于 &toxml_functionname; 方法是定义在 &node_classname; 类中的，所以对任何 &xml; 节点都是可用的，不仅仅是 &document_classname; 元素。</para>
+</callout>
+</calloutlist>
+</example>
+<example id="kgp.parse.childnodescanbetext.example">
+<title>子节点可以是文本</title>
+<screen>
+&prompt;<userinput>grammarNode.childNodes</userinput>                  <co id="kgp.parse.4.1"/>
+<computeroutput>[&lt;DOM Text node "\n">, &lt;DOM Element: ref at 17533332>, \
+&lt;DOM Text node "\n">, &lt;DOM Element: ref at 17549660>, &lt;DOM Text node "\n">]</computeroutput>
+&prompt;<userinput>print grammarNode.firstChild.toxml()</userinput>    <co id="kgp.parse.4.2"/>
+<computeroutput>
+
+</computeroutput>
+&prompt;<userinput>print grammarNode.childNodes[1].toxml()</userinput> <co id="kgp.parse.4.3"/>
+<computeroutput>&lt;ref id="bit">
+  &lt;p>0&lt;/p>
+  &lt;p>1&lt;/p>
+&lt;/ref></computeroutput>
+&prompt;<userinput>print grammarNode.childNodes[3].toxml()</userinput> <co id="kgp.parse.4.4"/>
+<computeroutput>&lt;ref id="byte">
+  &lt;p>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>\
+&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;/p>
+&lt;/ref></computeroutput>
+&prompt;<userinput>print grammarNode.lastChild.toxml()</userinput>     <co id="kgp.parse.4.5"/>
+<computeroutput>
+
+</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.parse.4.1">
+<para>查看 &binaryxml_filename; 中的 &xml; ，你可能会认为 &grammarnode; 只有两个子节点，即两个 &refnode; 元素。但是你忘记了一些东西：硬回车！在<literal>'&lt;grammar>'</literal>之后，第一个<literal>'&lt;ref>'</literal>之前是一个硬回车，并且这个文本算作 &grammarnode; 元素的一个子节点。类似地，在每个<literal>'&lt;/ref>'</literal>之后都有一个硬回车；它们都被当作子节点。所以<literal>grammar.childNodes</literal>实际上是一个有5个对象的列表：3个 &text_classname; 对象和两个 &element_classname; 对象。</para>
+</callout>
+<callout arearefs="kgp.parse.4.2">
+<para>第一个子节点是一个 &text_classname; 对象，它表示在<literal>'&lt;grammar>'</literal>标记之后、第一个<literal>'&lt;ref>'</literal>标记之后的硬回车。</para>
+</callout>
+<callout arearefs="kgp.parse.4.3">
+<para>第二个子节点是一个 &element_classname; 对象，表示了第一个 &refnode; 元素。</para>
+</callout>
+<callout arearefs="kgp.parse.4.4">
+<para>第四个子节点是一个 &element_classname; 对象，表示了第二个 &refnode; 元素。</para>
+</callout>
+<callout arearefs="kgp.parse.4.5">
+<para>最后一个子节点是一个 &text_classname; 对象，表示了在<literal>'&lt;/ref>'</literal>结束标记之后、<literal>'&lt;/grammar>'</literal> 结束标记之前的硬回车。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>把文本挖出来</title>
+<screen>
+&prompt;<userinput>grammarNode</userinput>
+<computeroutput>&lt;DOM Element: grammar at 19167148></computeroutput>
+&prompt;<userinput>refNode = grammarNode.childNodes[1]</userinput> <co id="kgp.parse.5.1"/>
+&prompt;<userinput>refNode</userinput>
+<computeroutput>&lt;DOM Element: ref at 17987740></computeroutput>
+&prompt;<userinput>refNode.childNodes</userinput>                  <co id="kgp.parse.5.2"/>
+<computeroutput>[&lt;DOM Text node "\n">, &lt;DOM Text node "  ">, &lt;DOM Element: p at 19315844>, \
+&lt;DOM Text node "\n">, &lt;DOM Text node "  ">, \
+&lt;DOM Element: p at 19462036>, &lt;DOM Text node "\n">]</computeroutput>
+&prompt;<userinput>pNode = refNode.childNodes[2]</userinput>
+&prompt;<userinput>pNode</userinput>
+<computeroutput>&lt;DOM Element: p at 19315844></computeroutput>
+&prompt;<userinput>print pNode.toxml()</userinput>                 <co id="kgp.parse.5.3"/>
+<computeroutput>&lt;p>0&lt;/p></computeroutput>
+&prompt;<userinput>pNode.firstChild</userinput>                    <co id="kgp.parse.5.4"/>
+<computeroutput>&lt;DOM Text node "0"></computeroutput>
+&prompt;<userinput>pNode.firstChild.data</userinput>               <co id="kgp.parse.5.5"/>
+<computeroutput>u'0'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.parse.5.1">
+<para>正如你在前面的例子中看到的，第一个 <sgmltag>ref</sgmltag> 元素是 <literal>grammarNode.childNodes[1]</literal>，因为 childNodes[0] 是一个代表硬回车的 &text_classname; 节点。</para>
+</callout>
+<callout arearefs="kgp.parse.5.2">
+<para><sgmltag>ref</sgmltag> 元素有它自己的子节点集合，一个表示硬回车，另一个表示空格，一个表示 <sgmltag>p</sgmltag> 元素，诸如此类。</para>
+</callout>
+<callout arearefs="kgp.parse.5.3">
+<para>你甚至可以在这里使用 &toxml_functionname; 方法，尽管它深深嵌套在文档中。</para>
+</callout>
+<callout arearefs="kgp.parse.5.4">
+<para><sgmltag>p</sgmltag> 元素只有一个子节点 (在这个例子中无法看出，但是如果你不信，可以看看<literal>pNode.childNodes</literal>)，而且它是表示单字符<literal>'0'</literal>的一个 &text_classname; 节点。</para>
+</callout>
+<callout arearefs="kgp.parse.5.5">
+<para>&text_classname; 节点的 <literal>.data</literal> 属性可以向你提供文本节点真正代表的字符串。但是字符串前面的<literal>'u'</literal>是什么意思呢？答案将自己专门有一部分来论述。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section id="kgp.unicode">
+<?dbhtml filename="xml_processing/unicode.html"?>
+<title>Unicode</title>
+<abstract>
+<title/>
+<para>Unicode 是一个系统，用来表示世界上所有不同语言的字符。当 &python; 解析一个 &xml; 文档时，所有的数据都是以unicode的形式保存在内存中的。</para>
+</abstract>
+<para>一会儿你就会了解，但首先，先看一些背景知识。</para>
+<formalpara>
+<title>历史注解</title>
+<para>在 unicode 之前，对于每一种语言都存在独立的字符编码系统，每个系统都使用相同的数字(0-255)来表示这种语言的字符。一些语言 (像俄语) 对于如何表示相同的字符还有几种有冲突的标准；另一些语言 (像日语) 拥有太多的字符，需要多个字符集。在系统之间进行文档交流是困难的，因为对于一台计算机来说，没有方法可以识别出文档的作者使用了哪种编码模式；计算机看到的只是数字，并且这些数字可以表示不同的东西。接着考虑到试图将这些 (采用不同编码的) 文档存放到同一个地方 (比如在同一个数据库表中)；你需要在每段文本的旁边保存字符的编码，并且确保在传递文本的同时将编码也进行传递。接着考虑多语言文档，即在同一文档中使用了不同语言的字符。(比较有代表性的是使用转义符来进行模式切换；噗，我们处于俄语 koi8-r 模式，所以字符 241 表示这个；噗，现在我们处于 Mac 希腊语模式，所以字符 241 表示其它什么。等等。) 这些就是 unicode 被设计出来要解决的问题。
+</para>
+</formalpara>
+<para>为了解决这些问题，unicode 用一个 2 字节数字表示每个字符，从 0 到 65535。<footnote><para>这一点，很不幸<emphasis>仍然</emphasis> 过分简单了。现在 unicode 已经扩展用来处理古老的汉字、韩文和日文文本，它们有太多不同的字符，以至于 2 字节的 unicode 系统不能全部表示。但当前 &python; 不支持超出范围的编码，并且我不知道是否有正在计划进行解决的项目。对不起，你已经到了我经验的极限了。</para></footnote> 每个 2 字节数字表示至少在一种世界语言中使用的一个唯一字符。(在多种语言中都使用的字符具有相同的数字码。) 这样就确保每个字符一个数字，并且每个数字一个字符。Unicode 数据永远不会模棱两可。</para>
+<para>当然，仍然还存在着所有那些遗留的编码系统的情况。例如，7 位 &ascii;，它可以将英文字符存诸为从 0 到 127 的数值。(65 是大写字母 <quote><literal>A</literal></quote>，97 是小写字母 <quote><literal>a</literal></quote>，等等。) 英语有着非常简单的字母表，所以它可以完全用 7 位 &ascii; 来表示。像法语、西班牙语和德语之类的西欧语言都使用叫做 ISO-8859-1 的编码系统 (也叫做<quote>latin-1</quote>)，它使用 7 位 &ascii; 字符表示从 0 到 127 的数字，但接着扩展到了 128-255 的范围来表示像 n 上带有一个波浪线(241)，和 u 上带有两个点(252)的字符。Unicode 在 0 到 127 上使用了同 7 位 &ascii; 码一样的字符表，在 128 到 255上同 ISO-8859-1 一样，接着使用剩余的数字，256 到 65535，扩展到表示其它语言的字符。</para>
+<para>在处理 unicode 数据时，在某些地方你可能需要将数据转换回这些遗留编码系统之一。例如，为了同其它一些计算机系统集成，这些系统期望它的数据使用一种特定的单字节编码模式，或将数据打印输出到一个不识别 unicode 的终端或打印机。或将数据保存到一个明确指定编码模式的 &xml; 文档中。</para>
+<para>在了解这个注解之后，让我们回到 &python;上来。</para>
+<para>从 2.0 版开始，&python; 整个语言都已经支持 unicode。&xml; 包使用 unicode 来保存所有解析了的 &xml; 数据，而且你可以在任何地方使用 unicode。</para>
+<example>
+<title>unicode 介绍</title>
+<screen>
+&prompt;<userinput>s = u'Dive in'</userinput>            <co id="kgp.unicode.1.1"/>
+&prompt;<userinput>s</userinput>
+<computeroutput>u'Dive in'</computeroutput>
+&prompt;<userinput>print s</userinput>                   <co id="kgp.unicode.1.2"/>
+<computeroutput>Dive in</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.unicode.1.1">
+<para>为了创建一个 unicode 字符串而不是通常的 &ascii; 字符串，要在字符串前面加上字母 <quote><literal>u</literal></quote>。注意这个特殊的字符串没有任何非 &ascii; 的字符。这样很好；unicode 是 &ascii; 的一个超集 (一个非常大的超集)，所以任何正常的 &ascii; 都可以以 unicode 形式保存起来。</para>
+</callout>
+<callout arearefs="kgp.unicode.1.2">
+<para>在打印字符串时，&python; 试图将字符串转换为你的默认编码，通常是 &ascii; 。(过会儿有更详细的说明。) 因为组成这个 unicode 字符串的字符都是 &ascii; 字符，打印结果与打印正常的 &ascii; 字符串是一样的；转换是无缝的，而且如果你没有注意到 <varname>s</varname> 是一个 unicode 字符串的话，你永远也不会注意到两者之间的差别。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>存储非 &ascii; 字符</title>
+<screen>
+&prompt;<userinput>s = u'La Pe\xf1a'</userinput>         <co id="kgp.unicode.2.1"/>
+&prompt;<userinput>print s</userinput>                   <co id="kgp.unicode.2.2"/>
+<computeroutput role="traceback">&traceback;
+UnicodeError: ASCII encoding error: ordinal not in range(128)</computeroutput>
+&prompt;<userinput>print s.encode('latin-1')</userinput> <co id="kgp.unicode.2.3"/>
+<computeroutput>La Pe&ntilde;a</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.unicode.2.1">
+<para>unicode 真正的优势，理所当然的是它保存非 &ascii; 字符的能力，例如西班牙语的 <quote><literal>&ntilde;</literal></quote>(<literal>n</literal> 上带有一个波浪线)。用来表示波浪线 n 的 unicode 字符编码是十六进制的 <literal>0xf1</literal> (十进制的241)，你可以像这样输入：<literal>\xf1</literal>。</para>
+</callout>
+<callout arearefs="kgp.unicode.2.2">
+<para>还记得我说过 &print; 函数会尝试将 unicode 字符串转换为 &ascii; 从而打印它吗？嗯，在这里将不会起作用，因为你的 unicode 字符串包含非 &ascii; 字符，所以 &python; 会引发 <errorname>UnicodeError</errorname> 异常。</para>
+</callout>
+<callout arearefs="kgp.unicode.2.3">
+<para>这儿就是将 unicode 转换为其它编码模式起作用的地方。<varname>s</varname> 是一个 unicode 字符串，但 &print; 只能打印正常的字符串。为了解决这个问题，我们调用 <function>encode</function> 方法 (它可以用于每个 unicode 字符串) 将 unicode 字符串转换为指定编码模式的正常字符串。我们向此函数传入一个参数。在本例中，我们使用 <literal>latin-1</literal> (也叫 <literal>iso-8859-1</literal>)，它包括带波浪线的 n (然而缺省的 &ascii; 编码模式不包括，因为它只包含数值从 0 到 127 的字符)。</para>
+</callout>
+</calloutlist>
+</example>
+<para>还记得我说过：需要从一个 unicode 得到一个正常字符串时，&python; 通常默认将 unicode 转换成 &ascii; 吗？嗯，这个默认编码模式是一个可以定制的选项。</para>
+<example>
+<title><filename>sitecustomize.py</filename></title>
+<programlisting>
+# sitecustomize.py                   <co id="kgp.unicode.3.1"/>
+# this file can be anywhere in your Python path,
+# but it usually goes in ${pythondir}/lib/site-packages/
+import sys
+sys.setdefaultencoding('iso-8859-1') <co id="kgp.unicode.3.2"/>
+</programlisting>
+<calloutlist>
+<callout arearefs="kgp.unicode.3.1">
+<para><filename>sitecustomize.py</filename> 是一个特殊的脚本；&python; 会在启动的时候导入它，所以在其中的任何代码都将自动运行。就像注解中提到的那样，它可以放在任何地方 (只要 &import; 能够找到它)，但是通常它位于 &python; 的<filename>lib</filename> 目录的 <filename>site-packages</filename> 目录中。</para>
+</callout>
+<callout arearefs="kgp.unicode.3.2">
+<para>嗯，<function>setdefaultencoding</function> 函数设置默认编码。&python; 会在任何需要将 unicode 字符串自动转换为正规字符串的地方，使用这个编码模式。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>设置默认编码的效果</title>
+<screen>
+&prompt;<userinput>import sys</userinput>
+&prompt;<userinput>sys.getdefaultencoding()</userinput> <co id="kgp.unicode.4.1"/>
+<computeroutput>'iso-8859-1'</computeroutput>
+&prompt;<userinput>s = u'La Pe\xf1a'</userinput>
+&prompt;<userinput>print s</userinput>                  <co id="kgp.unicode.4.2"/>
+<computeroutput>La Pe&ntilde;a</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.unicode.4.1">
+<para>这个例子假设你已经按前一个例子中的改动对 <filename>sitecustomize.py</filename> 文件做了修改，并且已经重启了 &python;。如果你的默认编码还是 <literal>'ascii'</literal>，可能你就没有正确设置 <filename>sitecustomize.py</filename> 文件，或者是没有重新启动 &python;。默认的编码只能在 &python; 启动的时候改变；之后就不能改变了。(由于一些我们现在不会仔细研究的古怪的编程技巧，你甚至不能在 &python; 启动之后调用 <function>sys.setdefaultencoding</function> 函数。仔细研究 <filename>site.py</filename>，并搜索 <quote><literal>setdefaultencoding</literal></quote> 去发现为什么吧。)</para>
+</callout>
+<callout arearefs="kgp.unicode.4.2">
+<para>现在默认的编码模式已经包含了你在字符串中使用的所有字符，&python; 对字符串的自动强制转换和打印就不存在问题了。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>指定<filename>.py</filename>文件的编码</title>
+<para>如果你打算在你的 &python; 代码中保存非 &ascii; 字符串，你需要在每个文件的顶端加入编码声明来指定每个 <filename>.py</filename> 文件的编码。这个声明定义了 <filename>.py</filename> 文件的编码为 UTF-8：</para>
+<programlisting>
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+</programlisting>
+</example>
+<para>现在，想想 &xml; 中的编码应该是怎样的呢？不错，每一个 &xml; 文档都有指定的编码。重复一下，ISO-8859-1 是西欧语言存放数据的流行编码方式。KOI8-R 是俄语流行的编码方式。编码――如果指定了的话――都在 &xml; 文档的首部。</para>
+<example>
+<title><filename>russiansample.xml</filename></title>
+<screen><computeroutput>
+&lt;?xml version="1.0" encoding="koi8-r"?>       </computeroutput><co id="kgp.unicode.5.1"/><computeroutput>
+&lt;preface>
+&lt;title&gt;&#1055;&#1088;&#1077;&#1076;&#1080;&#1089;&#1083;&#1086;&#1074;&#1080;&#1077;&lt;/title>                    </computeroutput><co id="kgp.unicode.5.2"/><computeroutput>
+&lt;/preface></computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.unicode.5.1">
+<para>这是从一个真实的俄语 &xml; 文档中提取出来的示例；它就是这本书俄语翻译版的一部分。注意，编码 <literal>koi8-r</literal> 是在首部指定的。</para>
+</callout>
+<callout arearefs="kgp.unicode.5.2">
+<para>这些是古代斯拉夫语的字符，就我所知，它们用来拼写俄语单词<quote>Preface</quote>。如果你在一个正常文本编辑器中打开这个文件，这些字符非常像乱码，因为它们使用了 <literal>koi8-r</literal> 编码模式进行编码，但是却以 <literal>iso-8859-1</literal> 编码模式进行显示。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>解析 <filename>russiansample.xml</filename></title>
+<screen>
+&prompt;<userinput>from xml.dom import minidom</userinput>
+&prompt;<userinput>xmldoc = minidom.parse('russiansample.xml')</userinput> <co id="kgp.unicode.6.1"/>
+&prompt;<userinput>title = xmldoc.getElementsByTagName('title')[0].firstChild.data</userinput>
+&prompt;<userinput>title</userinput>                                       <co id="kgp.unicode.6.2"/>
+<computeroutput>u'\u041f\u0440\u0435\u0434\u0438\u0441\u043b\u043e\u0432\u0438\u0435'</computeroutput>
+&prompt;<userinput>print title</userinput>                                 <co id="kgp.unicode.6.3"/>
+<computeroutput role="traceback">&traceback;
+UnicodeError: ASCII encoding error: ordinal not in range(128)</computeroutput>
+&prompt;<userinput>convertedtitle = title.encode('koi8-r')</userinput>     <co id="kgp.unicode.6.4"/>
+&prompt;<userinput>convertedtitle</userinput>
+<computeroutput>'\xf0\xd2\xc5\xc4\xc9\xd3\xcc\xcf\xd7\xc9\xc5'</computeroutput>
+&prompt;<userinput>print convertedtitle</userinput>                        <co id="kgp.unicode.6.5"/>
+<computeroutput>&#1055;&#1088;&#1077;&#1076;&#1080;&#1089;&#1083;&#1086;&#1074;&#1080;&#1077;</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.unicode.6.1">
+<para>我假设在这里你将前一个例子以 <filename>russiansample.xml</filename> 为名保存在当前目录中。也出于完整性的考虑，我假设你已经删除了 <filename>sitecustomize.py</filename> 文件，将缺省编码改回到 <literal>'ascii'</literal>，或至少将 <function>setdefaultencoding</function> 一行注释起来了。</para>
+</callout>
+<callout arearefs="kgp.unicode.6.2">
+<para>注意 <sgmltag>title</sgmltag> 标记 (现在在 <varname>title</varname> 变量中，上面那一长串 &python; 函数我们暂且跳过，下一节再解释)――在 &xml; 文档的 <sgmltag>title</sgmltag> 元素中的文本数据是以 unicode 保存的。</para>
+</callout>
+<callout arearefs="kgp.unicode.6.3">
+<para>直接打印 title 是不可能的，因为这个 unicode 字符串包含了非 &ascii; 字符，所以 &python; 不能把它转换为 &ascii;，因为它无法理解。</para>
+</callout>
+<callout arearefs="kgp.unicode.6.4">
+<para>但是，你能够显式地将它转换为 <literal>koi8-r</literal>，在本例中，我们得到一个 (正常，非 unicode) 单字节字符的字符串 (<literal>f0</literal>, <literal>d2</literal>, <literal>c5</literal>，等等)，它是初始unicode字符串中字符 <literal>koi8-r</literal> 编码的版本。</para>
+</callout>
+<callout arearefs="kgp.unicode.6.5">
+<para>打印 <literal>koi8-r</literal> 编码的字符串有可能会在你的屏幕上显示为乱码，因为你的 &python; &ide; 将这些字符作为 <literal>iso-8859-1</literal> 的编码进行解析，而不是 <literal>koi8-r</literal> 编码。但是，至少它们能打印。 (并且，如果你仔细看，当在一个不支持 unicode 的文本编辑器中打开最初的 &xml; 文档时，会看到相同的乱码。&python; 在解析 &xml; 文档时，将它从 <literal>koi8-r</literal> 转换到了unicode，你只不过是将它转换回来。)</para>
+</callout>
+</calloutlist>
+</example>
+<para>总结一下，如果你以前从没有看到过 unicode，倒是有些唬人，但是在 &python; 处理 unicode 数据真是非常容易。如果你的 &xml; 文档都是 7 位的 &ascii; (像本章中的例子)，你差不多永远都不用考虑 unicode。&python; 在进行解析时会将 &xml; 文档中的 &ascii; 数据转换为 unicode，在任何需要的时候强制转换回为 &ascii;，你甚至永远都不用注意。但是如果你要处理其它语言的数据，&python; 已经准备好了。</para>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para><ulink url="&url_unicode;">Unicode.org</ulink> 是 unicode 标准的主页，包含了一个简要的<ulink url="&url_unicodetech;">技术简介</ulink>。</para></listitem>
+<listitem><para><ulink url="&url_unicodetutorial;">Unicode 教程</ulink>有更多关于如何使用 &python; unicode 函数的例子，包括甚至在并不真的需要时如何将 unicode 强制转换为 &ascii;。</para></listitem>
+<listitem><para><ulink url="http://www.python.org/peps/pep-0263.html">PEP 263</ulink> 涉及了何时、如何在你的<filename>.py</filename>文件中定义字符编码的更多细节。</para></listitem>
+</itemizedlist>
+</section>
+<section id="kgp.search">
+<?dbhtml filename="xml_processing/searching.html"?>
+<title>搜索元素</title>
+<abstract>
+<title/>
+<para>通过一步步访问每一个节点的方式遍历 &xml; 文档可能很乏味。如果你正在寻找些特别的东西，又恰恰它们深深埋入了你的 &xml; 文档，有个捷径让你可以快速找到它：&getelementsbytagname_functionname; 。</para>
+</abstract>
+<para>在这部分，将使用 &binaryxml_filename; 语法文件，它的内容如下：</para>
+<example>
+<title>&binaryxml_filename;</title>
+<screen><computeroutput>&lt;?xml version="1.0"?>
+&lt;!DOCTYPE grammar PUBLIC "-//diveintopython.org//DTD Kant Generator Pro v1.0//EN" "kgp.dtd">
+&lt;grammar>
+&lt;ref id="bit">
+  &lt;p>0&lt;/p>
+  &lt;p>1&lt;/p>
+&lt;/ref>
+&lt;ref id="byte">
+  &lt;p>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>\
+&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;/p>
+&lt;/ref>
+&lt;/grammar></computeroutput></screen>
+</example>
+<para>它有两个 &refnode;，<literal>'bit'</literal> (位) 和 <literal>'byte'</literal> (字节)。一个 <literal>bit</literal> 是 <literal>'0'</literal> 或者 <literal>'1'</literal>，而一个 <literal>byte</literal> 是 8 个 <literal>bit</literal>。</para>
+<example>
+<title>&getelementsbytagname_functionname; 介绍</title>
+<screen>
+&prompt;<userinput>from xml.dom import minidom</userinput>
+&prompt;<userinput>xmldoc = minidom.parse('binary.xml')</userinput>
+&prompt;<userinput>reflist = xmldoc.getElementsByTagName('ref')</userinput> <co id="kgp.search.1.1"/>
+&prompt;<userinput>reflist</userinput>
+<computeroutput>[&lt;DOM Element: ref at 136138108>, &lt;DOM Element: ref at 136144292>]</computeroutput>
+&prompt;<userinput>print reflist[0].toxml()</userinput>
+<computeroutput>&lt;ref id="bit">
+  &lt;p>0&lt;/p>
+  &lt;p>1&lt;/p>
+&lt;/ref></computeroutput>
+&prompt;<userinput>print reflist[1].toxml()</userinput>
+<computeroutput>&lt;ref id="byte">
+  &lt;p>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>\
+&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;/p>
+&lt;/ref>
+</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.search.1.1">
+<para>&getelementsbytagname_functionname; 接收一个参数，即要找的元素的名称。它返回一个 &element_classname; 对象的列表，列表中的对象都是有指定名称的 &xml; 元素。在本例中，你能找到两个 <literal>ref</literal> 元素。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>每个元素都是可搜索的</title>
+<screen>
+&prompt;<userinput>firstref = reflist[0]</userinput>                      <co id="kgp.search.2.1"/>
+&prompt;<userinput>print firstref.toxml()</userinput>
+<computeroutput>&lt;ref id="bit">
+  &lt;p>0&lt;/p>
+  &lt;p>1&lt;/p>
+&lt;/ref></computeroutput>
+&prompt;<userinput>plist = firstref.getElementsByTagName("p")</userinput> <co id="kgp.search.2.2"/>
+&prompt;<userinput>plist</userinput>
+<computeroutput>[&lt;DOM Element: p at 136140116>, &lt;DOM Element: p at 136142172>]</computeroutput>
+&prompt;<userinput>print plist[0].toxml()</userinput>                     <co id="kgp.search.2.3"/>
+<computeroutput>&lt;p>0&lt;/p></computeroutput>
+&prompt;<userinput>print plist[1].toxml()</userinput>
+<computeroutput>&lt;p>1&lt;/p></computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.search.2.1">
+<para>继续前面的例子，在 <varname>reflist</varname> 中的第一个对象是 <literal>'bit'</literal> &refnode;元素。</para>
+</callout>
+<callout arearefs="kgp.search.2.2">
+<para>你可以在这个 &element_classname; 上使用相同的 &getelementsbytagname_functionname; 方法来寻找所有在<literal>'bit'</literal> &refnode; 元素中的<sgmltag>&lt;p></sgmltag>元素。</para>
+</callout>
+<callout arearefs="kgp.search.2.3">
+<para>和前面一样，&getelementsbytagname_functionname; 方法返回一个找到元素的列表。在本例中，你有两个元素，每“位”各占一个。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>搜索实际上是递归的</title>
+<screen>
+&prompt;<userinput>plist = xmldoc.getElementsByTagName("p")</userinput> <co id="kgp.search.3.1"/>
+&prompt;<userinput>plist</userinput>
+<computeroutput>[&lt;DOM Element: p at 136140116>, &lt;DOM Element: p at 136142172>, &lt;DOM Element: p at 136146124>]</computeroutput>
+&prompt;<userinput>plist[0].toxml()</userinput>                         <co id="kgp.search.3.2"/>
+<computeroutput>'&lt;p>0&lt;/p>'</computeroutput>
+&prompt;<userinput>plist[1].toxml()</userinput>
+<computeroutput>'&lt;p>1&lt;/p>'</computeroutput>
+&prompt;<userinput>plist[2].toxml()</userinput>                         <co id="kgp.search.3.3"/>
+<computeroutput>'&lt;p>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>\
+&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;/p>'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.search.3.1">
+<para>仔细注意这个例子和前面例子之间的不同。前面，你是在 <varname>firstref</varname> 中搜索 &pnode; 元素，但是这里你是在 <varname>xmldoc</varname> 中搜索 &pnode; 元素，<varname>xmldoc</varname> 是代表了整个 &xml; 文档的根层对象。这样<emphasis>就会</emphasis> 找到嵌套在 &refnode; 元素 (它嵌套在根 &grammarnode; 元素中) 中的 &pnode; 元素。</para>
+</callout>
+<callout arearefs="kgp.search.3.2">
+<para>前两个 &pnode; 元素在第一个 &refnode; 内 (<literal>'bit'</literal> &refnode;)。</para>
+</callout>
+<callout arearefs="kgp.search.3.3">
+<para>后一个 &pnode; 元素在第二个 &refnode; 中 (<literal>'byte'</literal> &refnode;)。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section id="kgp.attributes">
+<?dbhtml filename="xml_processing/attributes.html"?>
+<title>访问元素属性</title>
+<abstract>
+<title/>
+<para>&xml; 元素可以有一个或者多个属性，只要已经解析了一个 &xml; 文档，访问它们就太简单了。</para>
+</abstract>
+<para>在这部分中，将使用 &binaryxml_filename; 语法文件，你在<link linkend="kgp.search">上一节</link>中已经看到过了。</para>
+<note>
+<title>&xml; 属性和&python; 属性</title>
+<para>这部分由于某个含义重叠的术语可能让人有点糊涂。在一个 &xml; 文档中，元素可以有属性，而 &python; 对象也有属性。当你解析一个 &xml; 文档时，你得到了一组 &python; 对象，它们代表 &xml; 文档中的所有片段，同时有些 &python; 对象代表 &xml; 元素的属性。但是表示 (&xml;) 属性的 (&python;) 对象也有 (&python;) 属性，它们用于访问对象表示的 (&xml;) 属性。我告诉过你它让人糊涂。我会公开提出关于如何更明显地区分这些不同的建议。
+</para>
+</note>
+<example>
+<title>访问元素属性</title>
+<screen>
+&prompt;<userinput>xmldoc = minidom.parse('binary.xml')</userinput>
+&prompt;<userinput>reflist = xmldoc.getElementsByTagName('ref')</userinput>
+&prompt;<userinput>bitref = reflist[0]</userinput>
+&prompt;<userinput>print bitref.toxml()</userinput>
+<computeroutput>&lt;ref id="bit">
+  &lt;p>0&lt;/p>
+  &lt;p>1&lt;/p>
+&lt;/ref></computeroutput>
+&prompt;<userinput>bitref.attributes</userinput>          <co id="kgp.attributes.1.1"/>
+<computeroutput>&lt;xml.dom.minidom.NamedNodeMap instance at 0x81e0c9c></computeroutput>
+&prompt;<userinput>bitref.attributes.keys()</userinput>   <co id="kgp.attributes.1.2"/> <co id="kgp.attributes.1.3"/>
+<computeroutput>[u'id']</computeroutput>
+&prompt;<userinput>bitref.attributes.values()</userinput> <co id="kgp.attributes.1.4"/>
+<computeroutput>[&lt;xml.dom.minidom.Attr instance at 0x81d5044>]</computeroutput>
+&prompt;<userinput>bitref.attributes["id"]</userinput>    <co id="kgp.attributes.1.5"/>
+<computeroutput>&lt;xml.dom.minidom.Attr instance at 0x81d5044></computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.attributes.1.1">
+<para>每个 &element_classname; 对象都有一个 <literal>attributes</literal> 属性，它是一个 &namednodemap_classname; 对象。听上去挺吓人的，其实不然，因为 &namednodemap_classname; 是一个<link linkend="fileinfo.userdict">行为像字典</link>的对象，所以你已经知道怎么使用它了。</para>
+</callout>
+<callout arearefs="kgp.attributes.1.2">
+<para>将 &namednodemap_classname; 视为一个字典，你可以通过 <function>attributes.keys()</function> 获得属性名称的一个列表。这个元素只有一个属性，<literal>'id'</literal>。</para>
+</callout>
+<callout arearefs="kgp.attributes.1.3">
+<para>属性名称，像其它 &xml; 文档中的文本一样，都是以 <link linkend="kgp.unicode">unicode</link> 保存的。</para>
+</callout>
+<callout arearefs="kgp.attributes.1.4">
+<para>再次将 &namednodemap_classname; 视为一个字典，你可以通过 <function>attributes.values()</function> 获取属性值的一个列表。这些值本身是 &attr_classname; 类型的对象。你将在下一个例子中看到如何获取对象的有用信息。</para>
+</callout>
+<callout arearefs="kgp.attributes.1.5">
+<para>仍然把 &namednodemap_classname; 视为一个字典，你可以通过常用的字典语法和名称访问单个的属性。(那些非常认真的读者将已经知道 &namednodemap_classname; 类是如何实现这一技巧的：通过定义一个 <link linkend="fileinfo.specialmethods">&getitem; 专用方法</link>。其它的读者可能乐意接受这一事实：他们不需要理解它是如何工作的就可以有效地使用它。)</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>访问单个属性</title>
+<screen>
+&prompt;<userinput>a = bitref.attributes["id"]</userinput>
+&prompt;<userinput>a</userinput>
+<computeroutput>&lt;xml.dom.minidom.Attr instance at 0x81d5044></computeroutput>
+&prompt;<userinput>a.name</userinput>  <co id="kgp.attributes.2.1"/>
+<computeroutput>u'id'</computeroutput>
+&prompt;<userinput>a.value</userinput> <co id="kgp.attributes.2.2"/>
+<computeroutput>u'bit'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.attributes.2.1">
+<para>&attr_classname; 对象完整代表了单个 &xml; 元素的单个 &xml; 属性。属性的名称 (与你在 <literal>bitref.attributes</literal> &namednodemap_classname; 伪字典中寻找的对象同名) 保存在<literal>a.name</literal>中。</para>
+</callout>
+<callout arearefs="kgp.attributes.2.2">
+<para>这个 &xml; 属性的真实文本值保存在 <literal>a.value</literal> 中。</para>
+</callout>
+</calloutlist>
+</example>
+<note>
+<title>属性没有顺序</title>
+<para>类似于字典，一个 &xml; 元素的属性没有顺序。属性可以以某种顺序<emphasis>偶然</emphasis> 列在最初的 &xml; 文档中，而在 &xml; 文档解析为 &python; 对象时，&attr_classname; 对象以某种顺序<emphasis>偶然</emphasis> 列出，这些顺序都是任意的，没有任何特别的含义。你应该总是使用名称来访问单个属性，就像字典的键一样。</para>
+</note>
+</section>
+<section id="kgp.segue">
+<?dbhtml filename="xml_processing/summary.html"?>
+<title>Segue <footnote><para>“Segue”是音乐术语，意为“继续演奏”。</para></footnote></title>
+<abstract>
+<title/>
+<para>以上就是 XML 的核心内容。下一章将使用相同的示例程序，但是焦点在于能使程序更加灵活的其它方面：使用输入流处理，使用 &getattr; 进行方法分发，并使用命令行标识允许用户重新配置程序而无需修改代码。</para>
+</abstract>
+<para>在进入下一章前，你应该没有困难的完成这些事情：</para>
+<itemizedlist>
+<listitem><para>使用 &minidom_modulename; <link linkend="kgp.parse">解析 &xml; 文档</link>，<link linkend="kgp.search">搜索已解析文档</link>，并以任意顺序访问<link linkend="kgp.attributes">元素属性</link>和<link linkend="kgp.child">元素子元素</link></para></listitem>
+<listitem><para>将复杂的库组织为<link linkend="kgp.packages">包</link></para></listitem>
+<listitem><para>将 <link linkend="kgp.unicode">unicode 字符串转换</link>为不同的字符编码</para></listitem>
+</itemizedlist>
+</section>
+</chapter>
+<chapter id="streams">
+<?dbhtml filename="scripts_and_streams/index.html"?>
+<!-- You can only enter the same stream once. -->
+<title>脚本和流</title>
+<titleabbrev id="streams.numberonly">第 10 章</titleabbrev>
+<section id="kgp.openanything">
+<?dbhtml filename="scripts_and_streams/input_sources.html"?>
+<title>抽象输入源</title>
+<abstract>
+<title/>
+<para>&python; 的最强大力量之一是它的动态绑定，而动态绑定最强大的用法之一是<emphasis>类文件(file-like)对象</emphasis>。</para>
+</abstract>
+<para>许多需要输入源的函数可以只接收一个文件名，并以读方式打开文件，读取文件，处理完成后关闭它。其实它们不是这样的，而是接收一个<emphasis>类文件对象</emphasis>。</para>
+<para>在最简单的例子中，<emphasis>类文件对象</emphasis> 是任意一个带有 &read; 方法的对象，这个方法带有一个可选的 <varname>size</varname> 参数，并返回一个字符串。调用时如果没有 <varname>size</varname> 参数，它从输入源中读取所有东西并将所有数据作为单个字符串返回；调用时如果指定了 <varname>size</varname> 参数，它将从输入源中读取 <varname>size</varname> 大小的数据并返回这些数据；再次调用的时候，它从余下的地方开始并返回下一块数据。</para>
+<para>这就是<link linkend="fileinfo.files">从真实文件读取数据</link>的工作方式；区别在于你不用把自己局限于真实的文件。输入源可以是任何东西：磁盘上的文件，甚至是一个硬编码的字符串。只要你将一个类文件对象传递给函数，函数只是调用对象的 &read; 方法，就可以处理任何类型的输入源，而不需要为处理每种类型分别编码。
+</para>
+<para>你可能会纳闷，这和 &xml; 处理有什么关系。其实 &minidomparse_functionname; 就是一个可以接收类文件对象的函数。</para>
+<example>
+<title>从文件中解析 &xml;</title>
+<screen>
+&prompt;<userinput>from xml.dom import minidom</userinput>
+&prompt;<userinput>fsock = open('binary.xml')</userinput>    <co id="kgp.openanything.1.1"/>
+&prompt;<userinput>xmldoc = minidom.parse(fsock)</userinput> <co id="kgp.openanything.1.2"/>
+&prompt;<userinput>fsock.close()</userinput>                 <co id="kgp.openanything.1.3"/>
+&prompt;<userinput>print xmldoc.toxml()</userinput>          <co id="kgp.openanything.1.4"/>
+<computeroutput>&lt;?xml version="1.0" ?>
+&lt;grammar>
+&lt;ref id="bit">
+  &lt;p>0&lt;/p>
+  &lt;p>1&lt;/p>
+&lt;/ref>
+&lt;ref id="byte">
+  &lt;p>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>\
+&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;/p>
+&lt;/ref>
+&lt;/grammar></computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.openanything.1.1">
+<para>首先，你要打开一个磁盘上的文件。这会提供给你一个<link linkend="fileinfo.files">文件对象</link>。</para>
+</callout>
+<callout arearefs="kgp.openanything.1.2">
+<para>将文件对象传递给 &minidomparse_functionname;，它调用 <varname>fsock</varname> 的 &read; 方法并从磁盘上的文件读取 &xml; 文档。</para>
+</callout>
+<callout arearefs="kgp.openanything.1.3">
+<para>确保处理完文件后调用 &close; 方法。&minidomparse_functionname;不会替你做这件事。</para>
+</callout>
+<callout arearefs="kgp.openanything.1.4">
+<para>在返回的 &xml; 文档上调用 <methodname>toxml()</methodname> 方法，打印出整个文档的内容。</para>
+</callout>
+</calloutlist>
+</example>
+<para>哦，所有这些看上去像是在浪费大量的时间。毕竟，你已经看到，&minidomparse_functionname; 可以只接收文件名，并自动执行所有打开文件和关闭无用文件的行为。不错，如果你知道正要解析的是一个本地文件，你可以传递文件名而且 &minidomparse_functionname; 可以足够聪明地做正确的事情 (<trademark>Do The Right Thing</trademark><footnote><para>这是一部著名的电影。――译注</para></footnote>)，这一切都不会有问题。但是请注意，使用类文件，会使分析直接从 Internet 上来的 &xml; 文档变得多么相似和容易！</para>
+<example id="kgp.openanything.urllib">
+<title>解析来自 &url; 的 &xml;</title>
+<screen>
+&prompt;<userinput>import urllib</userinput>
+&prompt;<userinput>usock = urllib.urlopen('http://slashdot.org/slashdot.rdf')</userinput> <co id="kgp.openanything.2.1"/>
+&prompt;<userinput>xmldoc = minidom.parse(usock)</userinput>                              <co id="kgp.openanything.2.2"/>
+&prompt;<userinput>usock.close()</userinput>                                              <co id="kgp.openanything.2.3"/>
+&prompt;<userinput>print xmldoc.toxml()</userinput>                                       <co id="kgp.openanything.2.4"/>
+<computeroutput>&lt;?xml version="1.0" ?>
+&lt;rdf:RDF xmlns="http://my.netscape.com/rdf/simple/0.9/"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+&lt;channel>
+&lt;title>Slashdot&lt;/title>
+&lt;link>http://slashdot.org/&lt;/link>
+&lt;description>News for nerds, stuff that matters&lt;/description>
+&lt;/channel>
+
+&lt;image>
+&lt;title>Slashdot&lt;/title>
+&lt;url>http://images.slashdot.org/topics/topicslashdot.gif&lt;/url>
+&lt;link>http://slashdot.org/&lt;/link>
+&lt;/image>
+
+&lt;item>
+&lt;title>To HDTV or Not to HDTV?&lt;/title>
+&lt;link>http://slashdot.org/article.pl?sid=01/12/28/0421241&lt;/link>
+&lt;/item>
+
+[...snip...]</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.openanything.2.1">
+<para>正如在<link linkend="dialect.extract.urllib">前一章</link>中所看到的，&urlopen; 接收一个 web 页面的 &url; 作为参数并返回一个类文件对象。最重要的是，这个对象有一个 &read; 方法，它可以返回 web 页面的 &html; 源代码。</para>
+</callout>
+<callout arearefs="kgp.openanything.2.2">
+<para>现在把类文件对象传递给 &minidomparse_functionname;，它顺从地调用对象的 &read; 方法并解析 &read; 方法返回的 &xml; 数据。这与 &xml; 数据现在直接来源于 web 页面的事实毫不相干。&minidomparse_functionname; 并不知道 web 页面，它也不关心 web 页面；它只知道类文件对象。</para>
+</callout>
+<callout arearefs="kgp.openanything.2.3">
+<para>到这里已经处理完毕了，确保将 &urlopen; 提供给你的类文件对象关闭。</para>
+</callout>
+<callout arearefs="kgp.openanything.2.4">
+<para>顺便提一句，这个 &url; 是真实的，它真的是一个 &xml;。它是 <ulink url="http://slashdot.org/">Slashdot</ulink> 站点 (一个技术新闻和随笔站点) 上当前新闻提要的 &xml; 表示。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>解析字符串 &xml; (容易但不灵活的方式)</title>
+<screen>
+&prompt;<userinput>contents = "&lt;grammar>&lt;ref id='bit'>&lt;p>0&lt;/p>&lt;p>1&lt;/p>&lt;/ref>&lt;/grammar>"</userinput>
+&prompt;<userinput>xmldoc = minidom.parseString(contents)</userinput> <co id="kgp.openanything.3.1"/>
+&prompt;<userinput>print xmldoc.toxml()</userinput>
+<computeroutput>&lt;?xml version="1.0" ?>
+&lt;grammar>&lt;ref id="bit">&lt;p>0&lt;/p>&lt;p>1&lt;/p>&lt;/ref>&lt;/grammar></computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.openanything.3.1">
+<para>&minidom_modulename; 有一个方法，&parsestring_functionname;，它接收一个字符串形式的完整 &xml; 文档作为参数并解析这个参数。如果你已经将整个 &xml; 文档放入一个字符串，你可以使用它代替 &minidomparse_functionname;。</para>
+</callout>
+</calloutlist>
+</example>
+<para>好吧，所以你可以使用 &minidomparse_functionname; 函数来解析本地文件和远端 &url;，但对于解析字符串，你使用……另一个函数。这就是说，如果你要从文件、&url; 或者字符串接收输入，就需要特别的逻辑来判断参数是否是字符串，然后调用 &parsestring_functionname;。多不让人满意。</para>
+<para>如果有一个方法可以把字符串转换成类文件对象，那么你只要这个对象传递给 &minidomparse_functionname; 就可以了。事实上，有一个模块专门设计用来做这件事：&stringio_modulename;。</para>
+<example id="kgp.openanything.stringio.example">
+<title>&stringio_modulename; 介绍</title>
+<screen>
+&prompt;<userinput>contents = "&lt;grammar>&lt;ref id='bit'>&lt;p>0&lt;/p>&lt;p>1&lt;/p>&lt;/ref>&lt;/grammar>"</userinput>
+&prompt;<userinput>import StringIO</userinput>
+&prompt;<userinput>ssock = StringIO.StringIO(contents)</userinput>   <co id="kgp.openanything.4.1"/>
+&prompt;<userinput>ssock.read()</userinput>                          <co id="kgp.openanything.4.2"/>
+<computeroutput>"&lt;grammar>&lt;ref id='bit'>&lt;p>0&lt;/p>&lt;p>1&lt;/p>&lt;/ref>&lt;/grammar>"</computeroutput>
+&prompt;<userinput>ssock.read()</userinput>                          <co id="kgp.openanything.4.3"/>
+<computeroutput>''</computeroutput>
+&prompt;<userinput>ssock.seek(0)</userinput>                         <co id="kgp.openanything.4.4"/>
+&prompt;<userinput>ssock.read(15)</userinput>                        <co id="kgp.openanything.4.5"/>
+<computeroutput>'&lt;grammar>&lt;ref i'</computeroutput>
+&prompt;<userinput>ssock.read(15)</userinput>
+<computeroutput>"d='bit'>&lt;p>0&lt;/p"</computeroutput>
+&prompt;<userinput>ssock.read()</userinput>
+<computeroutput>'>&lt;p>1&lt;/p>&lt;/ref>&lt;/grammar>'</computeroutput>
+&prompt;<userinput>ssock.close()</userinput>                         <co id="kgp.openanything.4.6"/></screen>
+<calloutlist>
+<callout arearefs="kgp.openanything.4.1">
+<para>&stringio_modulename; 模块只包含了一个类，也叫 &stringio_modulename;，它允许你将一个字符串转换为一个类文件对象。 &stringio_modulename; 类在创建实例时接收字符串作为参数。</para>
+</callout>
+<callout arearefs="kgp.openanything.4.2">
+<para> 现在你有了一个类文件对象，你可用它做类文件的所有事情。比如 &read; 可以返回原始字符串。</para>
+</callout>
+<callout arearefs="kgp.openanything.4.3">
+<para>再次调用 &read; 返回空字符串。真实文件对象的工作方式也是这样的；一旦你读取了整个文件，如果不显式定位到文件的开始位置，就不可能读取到任何其他数据。&stringio_classname; 对象以相同的方式进行工作。</para>
+</callout>
+<callout arearefs="kgp.openanything.4.4">
+<para>使用 &stringio_classname; 对象的 &seek; 方法，你可以显式地定位到字符串的开始位置，就像在文件中定位一样。</para>
+</callout>
+<callout arearefs="kgp.openanything.4.5">
+<para>将一个 <varname>size</varname> 参数传递给 &read; 方法，你还可以以块的形式读取字符串。</para>
+</callout>
+<callout arearefs="kgp.openanything.4.6">
+<para>任何时候，&read; 都将返回字符串的未读部分。所有这些严格地按文件对象的方式工作；这就是术语<emphasis>类文件对象</emphasis> 的来历。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>解析字符串 &xml; (类文件对象方式)</title>
+<screen>
+&prompt;<userinput>contents = "&lt;grammar>&lt;ref id='bit'>&lt;p>0&lt;/p>&lt;p>1&lt;/p>&lt;/ref>&lt;/grammar>"</userinput>
+&prompt;<userinput>ssock = StringIO.StringIO(contents)</userinput>
+&prompt;<userinput>xmldoc = minidom.parse(ssock)</userinput> <co id="kgp.openanything.5.1"/>
+&prompt;<userinput>ssock.close()</userinput>
+&prompt;<userinput>print xmldoc.toxml()</userinput>
+<computeroutput>&lt;?xml version="1.0" ?>
+&lt;grammar>&lt;ref id="bit">&lt;p>0&lt;/p>&lt;p>1&lt;/p>&lt;/ref>&lt;/grammar></computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.openanything.5.1">
+<para>现在你可以把类文件对象 (实际是一个 &stringio_classname;) 传递给 &minidomparse_functionname;，它将调用对象的 &read; 方法并高兴地开始解析，绝不会知道它的输入源自一个硬编码的字符串。</para>
+</callout>
+</calloutlist>
+</example>
+<para>那么现在你知道了如何使用同一个函数，&minidomparse_functionname;，来解析一个保存在 web 页面上、本地文件中或硬编码字符串中的 &xml; 文档。对于一个 web 页面，使用 &urlopen; 得到类文件对象；对于本地文件，使用 &open;；对于字符串，使用 &stringio_classname;。现在让我们进一步并归纳一下<emphasis>这些</emphasis> 不同。</para>
+<example id="kgp.openanything.example">
+<title>&openanything_functionname;</title>
+<programlisting>
+&tb_openanythingdef;      <co id="kgp.openanything.6.1"/>
+&tb_urllibcomment;
+&tb_importurllib;
+&tb_tryurllib;
+&tb_urlopen; <co id="kgp.openanything.6.2"/>
+&tb_excepturllib;
+&tb_urllibpass;
+
+&tb_nativecomment;
+&tb_trynative;
+&tb_native; <co id="kgp.openanything.6.3"/>
+&tb_exceptnative;
+&tb_nativepass;
+
+&tb_stringiocomment;
+&tb_importstringio;
+&tb_stringio; <co id="kgp.openanything.6.4"/></programlisting>
+<calloutlist>
+<callout arearefs="kgp.openanything.6.1">
+<para>&openanything_functionname; 函数接受单个参数，<varname>source</varname>，并返回类文件对象。<varname>source</varname> 是某种类型的字符串；它可能是一个 &url; (例如 <literal>'http://slashdot.org/slashdot.rdf'</literal>)，一个本地文件的完整或者部分路径名 (例如 <literal>'binary.xml'</literal>)，或者是一个包含了待解析 &xml; 数据的字符串。</para>
+</callout>
+<callout arearefs="kgp.openanything.6.2">
+<para>首先，检查 <varname>source</varname> 是否是一个 &url;。这里通过强制方式进行：尝试把它当作一个 &url; 打开并静静地忽略打开非 &url; 引起的错误。这样做非常好，因为如果 &urllib; 将来支持更多的 &url; 类型，不用重新编码就可以支持它们。如果 &urllib; 能够打开 <varname>source</varname>，那么 &return; 可以立刻把你踢出函数，下面的 <literal>try</literal> 语句将不会执行。</para>
+</callout>
+<callout arearefs="kgp.openanything.6.3">
+<para>另一方面，如果 &urllib; 向你呼喊并告诉你 <varname>source</varname> 不是一个有效的 &url;，你假设它是一个磁盘文件的路径并尝试打开它。再一次，你不用做任何特别的事来检查 <varname>source</varname> 是否是一个有效的文件名 (在不同的平台上，判断文件名有效性的规则变化很大，因此不管怎样做都可能会判断错)。反而，只要盲目地打开文件并静静地捕获任何错误就可以了。</para>
+</callout>
+<callout arearefs="kgp.openanything.6.4">
+<para>到这里，你需要假设 <varname>source</varname> 是一个其中有硬编码数据的字符串 (因为没有别的可以判断的了)，所以你可以使用 &stringio_classname; 从中创建一个类文件对象并将它返回。(实际上，由于使用了 &str; 函数，所以 <varname>source</varname> 没有必要一定是字符串；它可以是任何对象，你可以使用它的字符串表示形式，只要定义了它的 &strspecial; <link linkend="fileinfo.morespecial">专用方法</link>。)</para>
+</callout>
+</calloutlist>
+</example>
+<para>现在你可以使用这个 &openanything_functionname; 函数联合 &minidomparse_functionname; 构造一个函数，接收一个指向 &xml; 文档的 <varname>source</varname>，而且无需知道这个 <varname>source</varname> 的含义 (可以是一个 &url; 或是一个本地文件名，或是一个硬编码 &xml; 文档的字符串形式)，然后解析它。</para>
+<example>
+<title>在 &kgp_filename; 中使用 &openanything_functionname;</title>
+<programlisting>
+&kgp_classdef;
+&kgp_privateload;
+&kgp_loadopen;
+&kgp_loadparse;
+&kgp_loadclose;
+&kgp_loadreturn;</programlisting>
+</example>
+</section>
+<section id="kgp.stdio">
+<?dbhtml filename="scripts_and_streams/stdin_stdout_stderr.html"?>
+<title>标准输入、输出和错误</title>
+<abstract>
+<title/>
+<para>&unix; 用户已经对标准输入、标准输出和标准错误的概念非常熟悉了。这一节是为其他不熟悉的人准备的。</para>
+</abstract>
+<para>标准输入和标准错误 (通常缩写为 &stdout; 和 &stderr;) 是内建在每一个 &unix; 系统中的管道。当你 &print; 某些东西时，结果前往 &stdout; 管道；当你的程序崩溃并打印出调试信息 (例如 &python; 中的 traceback (错误跟踪)) 的时候，信息前往 &stderr; 管道。通常这两个管道只与你正在工作的终端窗口相联，所以当一个程序打印时，你可以看到输出，而当一个程序崩溃时，你可以看到调试信息。(如果你正在一个基于窗口的 &python; &ide; 上工作，&stdout; 和 &stderr; 缺省为你的<quote>交互窗口</quote>。)</para>
+<example>
+<title>&stdout; 和 &stderr; 介绍</title>
+<screen>
+&prompt;<userinput>for i in range(3):</userinput>
+&continuationprompt;<userinput>print 'Dive in'</userinput>             <co id="kgp.stdio.1.1"/>
+<computeroutput>Dive in
+Dive in
+Dive in</computeroutput>
+&prompt;<userinput>import sys</userinput>
+&prompt;<userinput>for i in range(3):</userinput>
+&continuationprompt;<userinput>sys.stdout.write('Dive in')</userinput> <co id="kgp.stdio.1.2"/>
+<computeroutput>Dive inDive inDive in</computeroutput>
+&prompt;<userinput>for i in range(3):</userinput>
+&continuationprompt;<userinput>sys.stderr.write('Dive in')</userinput> <co id="kgp.stdio.1.3"/>
+<computeroutput>Dive inDive inDive in</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.stdio.1.1">
+<para>正如在<xref linkend="fileinfo.for.counter"/>中看到的，你可以使用 &python; 内置的 &range; 函数来构造简单的计数循环，即重复某物一定的次数。</para>
+</callout>
+<callout arearefs="kgp.stdio.1.2">
+<para>&stdout; 是一个类文件对象；调用它的 &write; 函数可以打印出你给定的任何字符串。实际上，这就是 &print; 函数真正做的事情；它在你打印的字符串后面加上一个硬回车，然后调用 <function>sys.stdout.write</function> 函数。</para>
+</callout>
+<callout arearefs="kgp.stdio.1.3">
+<para>在最简单的例子中，&stdout; 和 &stderr; 把它们的输出发送到相同的地方：&python; &ide; (如果你在一个 &ide; 中的话)，或者终端 (如果你从命令行运行 &python; 的话)。和 &stdout; 一样，&stderr; 并不为你添加硬回车；如果需要，要自己加上。</para>
+</callout>
+</calloutlist>
+</example>
+<para>&stdout; 和 &stderr; 都是类文件对象，就像在<xref linkend="kgp.openanything"/>中讨论的一样，但是它们都是只写的。它们都没有 &read; 方法，只有 &write; 方法。然而，它们仍然是类文件对象，因此你可以将其它任何 (类) 文件对象赋值给它们来重定向其输出。</para>
+<example>
+<title>重定向输出</title>
+<screen>
+<prompt>[you@localhost kgp]$ </prompt><userinput>python stdout.py</userinput>
+<computeroutput>Dive in</computeroutput>
+<prompt>[you@localhost kgp]$ </prompt><userinput>cat out.log</userinput>
+<computeroutput>This message will be logged instead of displayed</computeroutput></screen>
+<para>(在 Windows 上，你要使用 <literal>type</literal> 来代替 <literal>cat</literal> 显示文件的内容。)</para>
+&para_download;
+<programlisting>
+#stdout.py
+import sys
+
+print 'Dive in'                                          <co id="kgp.stdio.2.1"/>
+saveout = sys.stdout                                     <co id="kgp.stdio.2.2"/>
+fsock = open('out.log', 'w')                             <co id="kgp.stdio.2.3"/>
+sys.stdout = fsock                                       <co id="kgp.stdio.2.4"/>
+print 'This message will be logged instead of displayed' <co id="kgp.stdio.2.5"/>
+sys.stdout = saveout                                     <co id="kgp.stdio.2.6"/>
+fsock.close()                                            <co id="kgp.stdio.2.7"/>
+</programlisting>
+<calloutlist>
+<callout arearefs="kgp.stdio.2.1">
+<para>打印输出到 &ide; <quote>交互窗口</quote> (或终端，如果从命令行运行脚本的话)。</para>
+</callout>
+<callout arearefs="kgp.stdio.2.2">
+<para>始终在重定向前保存 &stdout;，这样的话之后你还可以将其设回正常。</para>
+</callout>
+<callout arearefs="kgp.stdio.2.3">
+<para>打开一个新文件用于写入。如果文件不存在，将会被创建。如果文件存在，将被覆盖。</para>
+</callout>
+<callout arearefs="kgp.stdio.2.4">
+<para>所有后续的输出都会被重定向到刚才打开的新文件上。</para>
+</callout>
+<callout arearefs="kgp.stdio.2.5">
+<para>这样只会将输出结果<quote>打印</quote>到日志文件中；在 &ide; 窗口中或在屏幕上不会看到输出结果。</para>
+</callout>
+<callout arearefs="kgp.stdio.2.6">
+<para>在我们将 &stdout; 搞乱之前，让我们把它设回原来的方式。</para>
+</callout>
+<callout arearefs="kgp.stdio.2.7">
+<para>关闭日志文件。</para>
+</callout>
+</calloutlist>
+</example>
+<para>重定向 &stderr; 以完全相同的方式进行，只要把 <function>sys.stdout</function> 改为 <function>sys.stderr</function>。</para>
+<example>
+<title>重定向错误信息</title>
+<screen>
+<prompt>[you@localhost kgp]$ </prompt><userinput>python stderr.py</userinput>
+<prompt>[you@localhost kgp]$ </prompt><userinput>cat error.log</userinput>
+<computeroutput>Traceback (most recent line last):
+  File "stderr.py", line 5, in ?
+    raise Exception, 'this error will be logged'
+Exception: this error will be logged</computeroutput></screen>
+&para_download;
+<programlisting>
+#stderr.py
+import sys
+
+fsock = open('error.log', 'w')               <co id="kgp.stdio.3.1"/>
+sys.stderr = fsock                           <co id="kgp.stdio.3.2"/>
+raise Exception, 'this error will be logged' <co id="kgp.stdio.3.3"/> <co id="kgp.stdio.3.4"/>
+</programlisting>
+<calloutlist>
+<callout arearefs="kgp.stdio.3.1">
+<para>打开你要存储调试信息的日志文件。</para>
+</callout>
+<callout arearefs="kgp.stdio.3.2">
+<para>将新打开的日志文件的文件对象赋值给 &stderr; 以重定向标准错误。</para>
+</callout>
+<callout arearefs="kgp.stdio.3.3">
+<para>引发一个异常。从屏幕输出上可以注意到这个行为<emphasis>没有</emphasis> 在屏幕上打印出任何东西。所有正常的跟踪信息已经写进 <filename>error.log</filename>。</para>
+</callout>
+<callout arearefs="kgp.stdio.3.4">
+<para>还要注意你既没有显式关闭日志文件，也没有将 &stderr; 设回最初的值。这样挺好，因为一旦程序崩溃 (由于引发的异常)，&python; 将替我们清理并关闭文件，因此永远不恢复 &stderr; 不会造成什么影响。然而对于 &stdout;，恢复初始值相对更为重要――你可能会在后面再次操作标准输出。</para>
+</callout>
+</calloutlist>
+</example>
+<para>向标准错误写入错误信息是很常见的，所以有一种较快的语法可以立刻导出信息。</para>
+<example id="kgp.stdio.print.example">
+<title>打印到 &stderr;</title>
+<screen>
+&prompt;<userinput>print 'entering function'</userinput>
+<computeroutput>entering function</computeroutput>
+&prompt;<userinput>import sys</userinput>
+&prompt;<userinput>print >> sys.stderr, 'entering function'</userinput> <co id="kgp.stdio.6.1"/>
+<computeroutput>entering function</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="kgp.stdio.6.1">
+<para>&print; 语句的快捷语法可以用于写入任何打开的文件 (或者是类文件对象)。在这里，你可以将单个 &print; 语句重定向到 &stderr; 而且不用影响后面的 &print; 语句。</para>
+</callout>
+</calloutlist>
+</example>
+<para>另一方面，标准输入是一个只读文件对象，它表示从前一个程序到这个程序的数据流。这个对于老的 &macos; 用户和 &windows; 用户可能不太容易理解，除非你受到过 &dos; 命令行的影响。在 &dos; 命令行中，你可以使用一行指令构造一个命令的链，使得一个程序的输出就可以成为下一个程序的输入。第一个程序只是简单地输出到标准输出上 (程序本身没有做任何特别的重定向，只是执行了普通的 &print; 语句等)，然后，下一个程序从标准输入中读取，操作系统就把一个程序的输出连接到一个程序的输入。</para>
+<example>
+<title>链接命令</title>
+<screen>
+<prompt>[you@localhost kgp]$ </prompt><userinput>python kgp.py -g binary.xml</userinput>         <co id="kgp.stdio.4.1"/>
+<computeroutput>01100111</computeroutput>
+<prompt>[you@localhost kgp]$ </prompt><userinput>cat binary.xml</userinput>                      <co id="kgp.stdio.4.2"/>
+<computeroutput>&lt;?xml version="1.0"?>
+&lt;!DOCTYPE grammar PUBLIC "-//diveintopython.org//DTD Kant Generator Pro v1.0//EN" "kgp.dtd">
+&lt;grammar>
+&lt;ref id="bit">
+  &lt;p>0&lt;/p>
+  &lt;p>1&lt;/p>
+&lt;/ref>
+&lt;ref id="byte">
+  &lt;p>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>\
+&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;/p>
+&lt;/ref>
+&lt;/grammar></computeroutput>
+<prompt>[you@localhost kgp]$ </prompt><userinput>cat binary.xml | python kgp.py -g -</userinput> <co id="kgp.stdio.4.3"/> <co id="kgp.stdio.4.4"/>
+<computeroutput>10110001</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.stdio.4.1">
+<para>正如你在<xref linkend="kgp.divein"/>中看到的，该命令将只打印一个随机的八位字符串，其中只有 &zero; 或者 &one;。</para>
+</callout>
+<callout arearefs="kgp.stdio.4.2">
+<para>该处只是简单地打印出整个 &binaryxml_filename; 文档的内容。(&windows; 用户应该用 <literal>type</literal> 代替 <literal>cat</literal>。)</para>
+</callout>
+<callout arearefs="kgp.stdio.4.3">
+<para>该处打印 &binaryxml_filename; 的内容，但是<quote><literal>|</literal></quote>字符，称为<quote>管道</quote>符，说明内容不会打印到屏幕上；它们会成为下一个命令的标准输入，在这个例子中是你调用的 &python; 脚本。</para>
+</callout>
+<callout arearefs="kgp.stdio.4.4">
+<para>为了不用指定一个文件 (例如 &binaryxml_filename;)，你需要指定<quote><literal>-</literal></quote>，它会使得你的脚本从标准输入载入脚本，而不是从磁盘上的特定文件。 (下一个例子更多地说明了这是如何实现的)。所以效果和第一种语法是一样的，在那里你要直接指定语法文件，但是想想这里的扩展性。让我们把 <literal>cat binary.xml</literal> 换成别的什么东西――例如运行一个脚本动态生成语法――然后通过管道将它导入你的脚本。它可以来源于任何地方：数据库，或者是生成语法的元脚本，或者其他。你根本不需要修改你的 &kgp_filename; 脚本就可以并入这个功能。你要做的仅仅是从标准输入取得一个语法文件，然后你就可以将其他的逻辑分离出来，放到另一程序中去了。</para>
+</callout>
+</calloutlist>
+</example>
+<para>那么脚本是如何<quote>知道</quote>在语法文件是<quote><literal>-</literal></quote>时从标准输入读取? 其实不神奇；它只是代码。</para>
+<example>
+<title>在 &kgp_filename; 中从标准输入读取</title>
+<programlisting>
+def openAnything(source):
+    if source == "-":    <co id="kgp.stdio.5.1"/>
+        import sys
+        return sys.stdin
+
+    # try to open with urllib (if source is http, ftp, or file URL)
+    import urllib
+    try:
+
+[... snip ...]</programlisting>
+<calloutlist>
+<callout arearefs="kgp.stdio.5.1">
+<para>这是 &toolbox_filename; 中的 <function>openAnything</function> 函数，以前在<xref linkend="kgp.openanything"/>中你已经检视过了。所有你要做的就是在函数的开始加入 3 行代码来检测源是否是<quote><literal>-</literal></quote>；如果是，返回 <literal>sys.stdin</literal>。就这么简单！记住，&stdin; 是一个拥有 &read; 方法的类文件对象，所以其它的代码 (在 &kgp_filename; 中，在那里你调用了 <function>openAnything</function>) 一点都不需要改动。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section id="kgp.cache">
+<?dbhtml filename="scripts_and_streams/caching.html"?>
+<title>查询缓冲节点</title>
+<abstract>
+<title/>
+<para>&kgp_filename; 使用了多种技巧，在你进行 &xml; 处理时，它们或许能派上用场。第一个就是，利用输入文档的结构稳定特征来构建节点缓冲。</para>
+</abstract>
+<para>一个语法文件定义了一系列的 &refnode; 元素。每个 &refnode; 包含了一个或多个 &pnode; 元素，&pnode; 元素则可以包含很多不同的东西，包括 &xrefnode;。对于每个 &xrefnode;，你都能找到相对应的 &refnode; 元素 (它们具有相同的 &idattr; 属性)，然后选择 &refnode; 元素的子元素之一进行解析。(在下一部分中你将看到是如何进行这种随机选择的。)</para>
+<para>语法的构建方式如下：先为最小的片段定义 &refnode; 元素，然后使用 &xrefnode; 定义“包含”第一个 &refnode; 元素的 &refnode; 元素，等等。然后，解析“最大的”引用并跟着 &xrefnode; 跳来跳去，最后输出真实的文本。输出的文本依赖于你每次填充 &xrefnode; 时所做的 (随机) 决策，所以每次的输出都是不同的。</para>
+<para>这种方式非常灵活，但是有一个不好的地方：性能。当你找到一个 &xrefnode; 并需要找到相应的 &refnode; 元素时，会遇到一个问题。&xrefnode; 有 &idattr; 属性，而你要找拥有相同 &idattr; 属性的 &refnode; 元素，但是没有简单的方式做到这件事。较慢的方式是每次获取所有 &refnode; 元素的完整列表，然后手动遍历并检视每一个 &idattr; 属性。较快的方式是只做一次，然后以字典形式构建一个缓冲。</para>
+<example>
+<title><function>loadGrammar</function></title>
+<programlisting>
+&kgp_loadgrammardef;
+&kgp_loadgrammar;
+&kgp_initrefs; <co id="kgp.cache.1.1"/>
+&kgp_forref; <co id="kgp.cache.1.2"/>
+&kgp_refid; <co id="kgp.cache.1.3"/> <co id="kgp.cache.1.4"/></programlisting>
+<calloutlist>
+<callout arearefs="kgp.cache.1.1">
+<para>从创建一个空字典 &kgprefs; 开始。</para>
+</callout>
+<callout arearefs="kgp.cache.1.2">
+<para>正如你在<xref linkend="kgp.search"/>中看到的，&getelementsbytagname_functionname; 返回所有特定名称元素的一个列表。你可以很容易地得到所有 &refnode; 元素的一个列表，然后遍历这个列表。</para>
+</callout>
+<callout arearefs="kgp.cache.1.3">
+<para>正如你在<xref linkend="kgp.attributes"/>中看到的，使用标准的字典语法，你可以通过名称来访问个别元素。所以，&kgprefs; 字典的键将是每个 &refnode; 元素的 &idattr; 属性值。</para>
+</callout>
+<callout arearefs="kgp.cache.1.4">
+<para>&kgprefs; 字典的值将是 &refnode; 元素本身。如你在<xref linkend="kgp.parse"/>中看到的，已解析 &xml; 文档中的每个元素、节点、注释和文本片段都是一个对象。</para>
+</callout>
+</calloutlist>
+</example>
+<para>只要构建了这个缓冲，无论何时你遇到一个 &xrefnode; 并且需要找到具有相同 &idattr; 属性的 &refnode; 元素，都只需在 &kgprefs; 中查找它。</para>
+<example>
+<title>使用 &refnode; 元素缓冲</title>
+<programlisting>
+&kgp_doxrefdef;
+&kgp_id;
+&kgp_parsexref;</programlisting>
+</example>
+<para>你将在下一部分探究 &randomchildelement_functionname; 函数。</para>
+</section>
+<section id="kgp.child">
+<?dbhtml filename="scripts_and_streams/child_nodes.html"?>
+<title>查找节点的直接子节点</title>
+<abstract>
+<title/>
+<para>解析 &xml; 文档时，另一个有用的己技巧是查找某个特定元素的所有直接子元素。例如，在语法文件中，一个 &refnode; 元素可以有数个 &pnode; 元素，其中每一个都可以包含很多东西，包括其他的 &pnode; 元素。你只要查找作为 &refnode; 孩子的 &pnode; 元素，不用查找其他 &pnode; 元素的孩子 &pnode; 元素。</para>
+</abstract>
+<para>你可能认为你只要简单地使用 &getelementsbytagname_functionname; 来实现这点就可以了，但是你不可以这么做。&getelementsbytagname_functionname; 递归搜索并返回所有找到的元素的单个列表。由于 &pnode; 元素可以包含其他的 &pnode; 元素，你不能使用 &getelementsbytagname_functionname;，因为它会返回你不要的嵌套 &pnode; 元素。为了只找到直接子元素，你要自己进行处理。</para>
+<example>
+<title>查找直接子元素</title>
+<programlisting>
+&kgp_randomchildelementdef;
+&kgp_choices; <co id="kgp.child.1.1"/> <co id="kgp.child.1.2"/> <co id="kgp.child.1.3"/>
+&kgp_chosen; <co id="kgp.child.1.4"/>
+&kgp_returnchosen;</programlisting>
+<calloutlist>
+<callout arearefs="kgp.child.1.1">
+<para>正如你在<xref linkend="kgp.parse.gettingchildnodes.example"/>中看到的，&childnodes_attr; 属性返回元素所有子节点的一个列表。</para>
+</callout>
+<callout arearefs="kgp.child.1.2">
+<para>然而，正如你在<xref linkend="kgp.parse.childnodescanbetext.example"/>中看到的，&childnodes_attr; 返回的列表包含了所有不同类型的节点，包括文本节点。这并不是你在这里要查找的。你只要元素形式的孩子。</para>
+</callout>
+<callout arearefs="kgp.child.1.3">
+<para>每个节点都有一个 <varname>nodeType</varname> 属性，它可以是<literal>ELEMENT_NODE</literal>, <literal>TEXT_NODE</literal>, <literal>COMMENT_NODE</literal>，或者其它值。可能值的完整列表在 <classname>xml.dom</classname> 包的 <filename>__init__.py</filename> 文件中。(关于包的介绍，参见<xref linkend="kgp.packages"/>。) 但你只是对元素节点有兴趣，所以你可以过滤出一个列表，其中只包含 <varname>nodeType</varname> 是<literal>ELEMENT_NODE</literal>的节点。</para>
+</callout>
+<callout arearefs="kgp.child.1.4">
+<para>只要拥有了一个真实元素的列表，选择任意一个都很容易。&python; 有一个叫 &random_modulename; 的模块，它包含了好几个有用的函数。<function>random.choice</function> 函数接收一个任意数量条目的列表并随机返回其中的一个条目。比如，如果 &refnode; 元素包含了多个 &pnode; 元素，那么 <varname>choices</varname> 将会是 &pnode; 元素的一个列表，而 <varname>chosen</varname> 将被赋予其中的某一个值，而这个值是随机选择的。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section id="kgp.handler">
+<?dbhtml filename="scripts_and_streams/handlers_by_node_type.html"?>
+<title>根据节点类型创建不同的处理器</title>
+<abstract>
+<title/>
+<para>第三个有用的 &xml; 处理技巧是将你的代码基于节点类型和元素名称分散到逻辑函数中。解析后的 &xml; 文档是由各种类型的节点组成的，每一个都是通过 &python; 对象表示的。文档本身的根层次通过一个 <classname>Document</classname> 对象表示。<classname>Document</classname> 还包含了一个或多个 <classname>Element</classname> 对象 (表示 &xml; 标记)，其中的每一个可以包含其它的 <classname>Element</classname> 对象、<classname>Text</classname> 对象 (表示文本)，或者 <classname>Comment</classname> 对象 (表示内嵌注释)。使用 &python; 编写分离各个节点类型逻辑的分发器非常容易。</para>
+</abstract>
+<example>
+<title>已解析 &xml; 对象的类名</title>
+<screen>
+&prompt;<userinput>from xml.dom import minidom</userinput>
+&prompt;<userinput>xmldoc = minidom.parse('kant.xml')</userinput> <co id="kgp.handler.1.1"/>
+&prompt;<userinput>xmldoc</userinput>
+<computeroutput>&lt;xml.dom.minidom.Document instance at 0x01359DE8></computeroutput>
+&prompt;<userinput>xmldoc.__class__</userinput>                   <co id="kgp.handler.1.2"/>
+<computeroutput>&lt;class xml.dom.minidom.Document at 0x01105D40></computeroutput>
+&prompt;<userinput>xmldoc.__class__.__name__</userinput>          <co id="kgp.handler.1.3"/>
+<computeroutput>'Document'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.handler.1.1">
+<para>暂时假设 <filename>kant.xml</filename> 在当前目录中。</para>
+</callout>
+<callout arearefs="kgp.handler.1.2">
+<para>正如你在<xref linkend="kgp.packages"/>中看到的，解析 &xml; 文档返回的对象是一个 <classname>Document</classname> 对象，就像在 <filename>xml.dom</filename> 包的 <filename>minidom.py</filename> 中定义的一样。又如你在<xref linkend="fileinfo.create"/>中看到的，<literal>__class__</literal> 是每个 &python; 对象的一个内置属性。</para>
+</callout>
+<callout arearefs="kgp.handler.1.3">
+<para>此外，<literal>__name__</literal> 是每个 &python; 类的内置属性，是一个字符串。这个字符串并不神秘；它和你在定义类时输入的类名相同。(参见<xref linkend="fileinfo.class"/>。)</para>
+</callout>
+</calloutlist>
+</example>
+<para>好，现在你能够得到任何给定 &xml; 节点的类名了 (因为每个 &xml; 节点都是以一个 &python; 对象表示的)。你怎样才能利用这点来分离解析每个节点类型的逻辑呢？答案就是 &getattr;，你第一次见它是在<xref linkend="apihelper.getattr"/>中。</para>
+<example>
+<title><function>parse</function>，通用 &xml; 节点分发器</title>
+<programlisting>
+&kgp_parsedef; 
+&kgp_getparsemethod; <co id="kgp.handler.2.1"/> <co id="kgp.handler.2.2"/>
+&kgp_parsemethod; <co id="kgp.handler.2.3"/></programlisting>
+<calloutlist>
+<callout arearefs="kgp.handler.2.1">
+<para>首先，注意你正在基于传入节点 (<varname>node</varname> 参数) 的类名构造一个较大的字符串。所以如果你传入一个 <classname>Document</classname> 节点，你就构造了字符串 <literal>'parse_Document'</literal>，其它类同于此。</para>
+</callout>
+<callout arearefs="kgp.handler.2.2">
+<para>现在你可以把这个字符串当作一个函数名称，然后通过 &getattr; 得到函数自身的引用。</para>
+</callout>
+<callout arearefs="kgp.handler.2.3">
+<para>最后，你可以调用函数并将节点自身作为参数传入。下一个例子将展示每个函数的定义。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title><function>parse</function> 分发器调用的函数</title>
+<programlisting>
+&kgp_parsedocumentdef; <co id="kgp.handler.3.1"/>
+&kgp_parsedocument;
+
+&kgp_parsetextdef;<co id="kgp.handler.3.2"/>
+&kgp_text;
+&kgp_ifcapitalizenextword;
+&kgp_appendcapital;
+&kgp_appendrest;
+&kgp_resetcapital;
+&kgp_elsecapitalizenextword;
+&kgp_appendnormal;
+
+&kgp_parsecommentdef; <co id="kgp.handler.3.3"/>
+&kgp_pass;
+
+&kgp_parseelementdef;<co id="kgp.handler.3.4"/>
+&kgp_gethandlermethod;
+&kgp_handlermethod;</programlisting>
+<calloutlist>
+<callout arearefs="kgp.handler.3.1">
+<para><function>parse_Document</function> 只会被调用一次，因为在一个 &xml; 文档中只有一个 <classname>Document</classname> 节点，并且在已解析 &xml; 的表示中只有一个 <classname>Document</classname> 对象。在此它只是起到中转作用，转而解析语法文件的根元素。</para>
+</callout>
+<callout arearefs="kgp.handler.3.2">
+<para><function>parse_Text</function> 在节点表示文本时被调用。这个函数本身做某种特殊处理，自动将句子的第一个单词进行大写处理，而不是简单地将表示的文本追加到一个列表中。</para>
+</callout>
+<callout arearefs="kgp.handler.3.3">
+<para><function>parse_Comment</function> 只有一个 &pass;，因为你并不关心语法文件中嵌入的注释。但是注意，你还是要定义这个函数并显式地让它不做任何事情。如果这个函数不存在，通用 <function>parse</function> 函数在遇到一个注释的时候会执行失败，因为它试图找到并不存在的 <function>parse_Comment</function> 函数。为每个节点类型定义独立的函数――甚至你不要使用的――将会使通用 <function>parse</function> 函数保持简单和沉默。</para>
+</callout>
+<callout arearefs="kgp.handler.3.4">
+<para><function>parse_Element</function> 方法其实本身就是一个分发器，一个基于元素的标记名称的分发器。这个基本概念是相同的：使用元素的区别 (它们的标记名称) 然后针对每一个分发到一个独立的函数。你构建了一个类似于 <literal>'do_xref'</literal> 的字符串 (对 <sgmltag>&lt;xref&gt;</sgmltag> 标记而言)，找到这个名称的函数，并调用它。对其它的标记名称 (像<sgmltag>&lt;p&gt;</sgmltag> 和 <sgmltag>&lt;choice&gt;</sgmltag>) 在解析语法文件的时候都可以找到类似的函数。</para>
+</callout>
+</calloutlist>
+</example>
+<para>在这个例子中，分发函数 <function>parse</function> 和 <function>parse_Element</function> 只是找到相同类中的其它方法。如果你进行的处理过程很复杂 (或者你有很多不同的标记名称)，你可以将代码分散到独立的模块中，然后使用动态导入的方式导入每个模块并调用你需要的任何函数。动态导入将在<xref linkend="regression"/>中介绍。</para>
+</section>
+<section id="kgp.commandline">
+<?dbhtml filename="scripts_and_streams/command_line_arguments.html"?>
+<title>处理命令行参数</title>
+<abstract>
+<title/>
+<para>&python; 完全支持创建在命令行运行的程序，也支持通过命令行参数和短长样式来指定各种选项。这些并非是 &xml; 特定的，但是这样的脚本可以充分使用命令行处理，看来是时候提一下它了。</para>
+</abstract>
+<para>如果不理解命令行参数如何暴露给你的 &python; 程序，讨论命令行处理是很困难的，所以让我们先写个简单点的程序来看一下。</para>
+<example>
+<title><varname>sys.argv</varname> 介绍</title>
+&para_download;
+<programlisting>
+#argecho.py
+import sys
+
+for arg in sys.argv: <co id="kgp.commandline.0.1"/>
+    print arg</programlisting>
+<calloutlist>
+<callout arearefs="kgp.commandline.0.1">
+<para>每个传递给程序的命令行参数都在 <varname>sys.argv</varname> 中，而它仅仅是一个列表。这里我们在独立行中打印出每个参数。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title><varname>sys.argv</varname> 的内容</title>
+<screen>
+<prompt>[you@localhost py]$ </prompt><userinput>python argecho.py</userinput>             <co id="kgp.commandline.1.1"/>
+<computeroutput>argecho.py</computeroutput>
+<prompt>[you@localhost py]$ </prompt><userinput>python argecho.py abc def</userinput>     <co id="kgp.commandline.1.2"/>
+<computeroutput>argecho.py
+abc
+def</computeroutput>
+<prompt>[you@localhost py]$ </prompt><userinput>python argecho.py --help</userinput>      <co id="kgp.commandline.1.3"/>
+<computeroutput>argecho.py
+--help</computeroutput>
+<prompt>[you@localhost py]$ </prompt><userinput>python argecho.py -m kant.xml</userinput> <co id="kgp.commandline.1.4"/>
+<computeroutput>argecho.py
+-m
+kant.xml</computeroutput></screen>
+<calloutlist>
+<callout arearefs="kgp.commandline.1.1">
+<para>关于 <varname>sys.argv</varname> 需要了解的第一件事情就是：它包含了你正在调用的脚本的名称。你后面会实际使用这个知识，在<xref linkend="regression"/>中。现在不用担心。</para>
+</callout>
+<callout arearefs="kgp.commandline.1.2">
+<para>命令行参数通过空格进行分隔。在 <varname>sys.argv</varname> 列表中，每个参数都是一个独立的元素。</para>
+</callout>
+<callout arearefs="kgp.commandline.1.3">
+<para>命令行标志，像 <literal>--help</literal>，在 <varname>sys.argv</varname> 列表中还保存了它们自己的元素。</para>
+</callout>
+<callout arearefs="kgp.commandline.1.4">
+<para>为了让事情更有趣，有些命令行标志本身就接收参数。比如，这里有一个标记 (<literal>-m</literal>) 接收一个参数 (<literal>kant.xml</literal>)。标记自身和标记参数只是 <varname>sys.argv</varname> 列表中的一串元素。并没有试图将元素与其它元素进行关联；所有你得到的是一个列表。</para>
+</callout>
+</calloutlist>
+</example>
+<para>所以正如你所看到的，你确实拥有了命令行传入的所有信息，但是接下来要实际使用它似乎不那么容易。对于只是接收单个参数或者没有标记的简单程序，你可以简单地使用 <literal>sys.argv[1]</literal> 来访问参数。这没有什么羞耻的；我一直都是这样做的。对更复杂的程序，你需要 &getopt_modulename; 模块。</para>
+<example>
+<title>&getopt_modulename; 介绍</title>
+<programlisting>
+&kgp_maindef;
+&kgp_initmaingrammar; <co id="kgp.commandline.2.1"/>
+&kgp_trygetopt;
+&kgp_getopt; <co id="kgp.commandline.2.2"/>
+&kgp_exceptgetopt; <co id="kgp.commandline.2.3"/>
+&kgp_errorusage; <co id="kgp.commandline.2.4"/>
+&kgp_errorexit;
+
+...
+
+&kgp_ifmain;
+&kgp_main;</programlisting>
+<calloutlist>
+<callout arearefs="kgp.commandline.2.1">
+<para>首先，看一下例子的最后并注意你正在调用 <function>main</function> 函数，参数是 <literal>sys.argv[1:]</literal>。记住，<literal>sys.argv[0]</literal> 是你正在运行脚本的名称；在处理命令行时，你不用关心它，所以你可以砍掉它并传入列表的剩余部分。</para>
+</callout>
+<callout arearefs="kgp.commandline.2.2">
+<para>这里就是所有有趣处理发生的地方。&getopt_modulename; 模块的 &getopt_functionname; 函数接受三个参数：参数列表 (你从 <literal>sys.argv[1:]</literal> 得到的)、一个包含了程序所有可能接收到的单字符命令行标志，和一个等价于单字符的长命令行标志的列表。第一次看的时候，这有点混乱，下面有更多的细节解释。</para>
+</callout>
+<callout arearefs="kgp.commandline.2.3">
+<para>在解析这些命令行标志时，如果有任何事情错了，&getopt_modulename; 会抛出异常，你可以捕获它。你可以告诉 &getopt_modulename; 你明白的所有标志，那么这也意味着终端用户可以传入一些你不理解的命令行标志。</para>
+</callout>
+<callout arearefs="kgp.commandline.2.4">
+<para>和 &unix; 世界中的标准实践一样，如果脚本被传入了不能理解的标志，你要打印出正确用法的一个概要并友好地退出。注意，在这里我没有写出 <function>usage</function> 函数。你还是要在某个地方写一个，使它打印出合适的概要；它不是自动的。</para>
+</callout>
+</calloutlist>
+</example>
+<para>那么你传给 &getopt_functionname; 函数的参数是什么呢？好的，第一个只不过是一个命令行标志和参数的原始列表 (不包括第一个元素――脚本名称，你在调用 <function>main</function> 函数之前就已经将它砍掉了)。第二个是脚本接收的短命令行标志的一个列表。</para>
+<variablelist>
+<title><literal>"hg:d"</literal></title>
+<varlistentry>
+<term><literal>-h</literal></term>
+<listitem><para>打印用法概要</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><literal>-g ...</literal></term>
+<listitem><para>使用给定的语法文件或 URL</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><literal>-d</literal></term>
+<listitem><para>在解析时显示调试信息</para></listitem>
+</varlistentry>
+</variablelist>
+<para>第一个标志和第三个标志是简单的独立标志；你选择是否指定它们，它们做某些事情 (打印帮助) 或者改变状态 (打开调试)。但是，第二个标志 (<literal>-g</literal>) <emphasis>必须</emphasis> 跟随一个参数――进行读取的语法文件的名称。实际上，它可以是一个文件名或者一个 web 地址，这时还不知道 (后面会确定)，但是你要知道必须要<emphasis>有些东西</emphasis>。所以，你可以通过在 &getopt_functionname; 函数的第二个参数的 <literal>g</literal> 后面放一个冒号，来向 &getopt_modulename; 说明这一点。</para>
+<para>更复杂的是，这个脚本既接收短标志 (像 <literal>-h</literal>)，也接受长标志 (像 <literal>--help</literal>)，并且你要它们做相同的事。这就是 &getopt_functionname; 第三个参数存在的原因：它是指定长标志的一个列表，其中的长标志是和第二个参数中指定的短标志相对应的。</para>
+<variablelist>
+<title><literal>["help", "grammar="]</literal></title>
+<varlistentry>
+<term><literal>--help</literal></term>
+<listitem><para>打印用法概要</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><literal>--grammar ...</literal></term>
+<listitem><para>使用给定的语法文件或 URL</para></listitem>
+</varlistentry>
+</variablelist>
+<para>这里有三点要注意：</para>
+<orderedlist>
+<listitem><para>所有命令行中的长标志以两个短划线开始，但是在调用 &getopt_functionname; 时，你不用包含这两个短划线。它们是能够被理解的。</para></listitem>
+<listitem><para><literal>--grammar</literal> 标志的后面必须跟着另一个参数，就像 <literal>-g</literal> 标志一样。通过等于号标识出来：<literal>"grammar="</literal>。</para></listitem>
+<listitem><para>长标志列表比短标志列表更短一些，因为 <literal>-d</literal> 标志没有相应的长标志。这很好；只有 <literal>-d</literal> 才会打开调试。但是短标志和长标志的顺序必须是相同的，你应该先指定有长标志的短标志，然后才是剩下的短标志。</para></listitem>
+</orderedlist>
+<para>被搞昏没？让我们看一下真实的代码，看看它在上下文中是否起作用。</para>
+<example>
+<title>在 &kgp_filename; 中处理命令行参数</title>
+<programlisting>
+&kgp_maindef; <co id="kgp.commandline.3.0"/>
+&kgp_initmaingrammar;
+&kgp_trygetopt;
+&kgp_getopt;
+&kgp_exceptgetopt;
+&kgp_errorusage;
+&kgp_errorexit;
+&kgp_foropt; <co id="kgp.commandline.3.1"/>
+&kgp_ifh; <co id="kgp.commandline.3.2"/>
+&kgp_helpusage;
+&kgp_helpexit;
+&kgp_ifd; <co id="kgp.commandline.3.3"/>
+&kgp_globaldebug;
+&kgp_setdebug;
+&kgp_ifg; <co id="kgp.commandline.3.4"/>
+&kgp_setmaingrammar;
+
+&kgp_setdefaultsource; <co id="kgp.commandline.3.5"/>
+
+&kgp_createkantgenerator;
+&kgp_nowrap;</programlisting>
+<calloutlist>
+<callout arearefs="kgp.commandline.3.0">
+<para><varname>grammar</varname> 变量会跟踪你正在使用的语法文件。如果你没有在命令行指定它 (使用 <literal>-g</literal> 或者 <literal>--grammar</literal> 标志定义它)，在这里你将初始化它。</para>
+</callout>
+<callout arearefs="kgp.commandline.3.1">
+<para>你从 &getopt_functionname; 取回的 <varname>opts</varname> 变量是一个由元组 (<varname>flag</varname> 和 <varname>argument</varname>) 组成的列表。如果标志没有带任何参数，那么 <varname>arg</varname> 只是 &none;。这使得遍历标志更容易了。</para>
+</callout>
+<callout arearefs="kgp.commandline.3.2">
+<para>&getopt_functionname; 验证命令行标志是否可接受，但是它不会在短标志和长标志之间做任何转换。如果你指定 <literal>-h</literal> 标志，<varname>opt</varname> 将会包含 <literal>"-h"</literal>；如果你指定 <literal>--help</literal> 标志，<varname>opt</varname> 将会包含<literal>"--help"</literal> 标志。所以你需要检查它们两个。</para>
+</callout>
+<callout arearefs="kgp.commandline.3.3">
+<para>别忘了，<literal>-d</literal> 标志没有相应的长标志，所以你只需要检查短形式。如果你找到了它，你就可以设置一个全局变量来指示后面要打印出调试信息。(我习惯在脚本的开发过程中使用它。什么，你以为所有这些程序都是一次成功的？)</para>
+</callout>
+<callout arearefs="kgp.commandline.3.4">
+<para>如果你找到了一个语法文件，跟在 <literal>-g</literal> 或者 <literal>--grammar</literal> 标志后面，那你就要把跟在后面的参数 (<varname>arg</varname>) 保存到变量<varname>grammar</varname> 中，覆盖掉在 <function>main</function> 函数你初始化的默认值。</para>
+</callout>
+<callout arearefs="kgp.commandline.3.5">
+<para>就是这样。你已经遍历并处理了所有的命令行标志。这意味着所有剩下的东西都必须是命令行参数。它们由 &getopt_functionname; 函数的 <varname>args</varname> 变量返回。在这个例子中，你把它们当作了解析器源材料。如果没有指定命令行参数，<varname>args</varname> 将是一个空列表，而 <varname>source</varname> 将是空字符串。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section id="kgp.alltogether">
+<?dbhtml filename="scripts_and_streams/all_together.html"?>
+<title>全部放在一起</title>
+<abstract>
+<title/>
+<para>你已经了解很多基础的东西。让我们回来看看所有片段是如何整合到一起的。</para>
+</abstract>
+<para>作为开始，这里是一个<link linkend="kgp.commandline">接收命令行参数</link>的脚本，它使用 &getopt_modulename; 模块。</para>
+<informalexample>
+<programlisting>
+&kgp_maindef;
+...
+&kgp_trygetopt;
+&kgp_getopt;
+&kgp_exceptgetopt;
+...
+&kgp_foropt;
+...</programlisting>
+</informalexample>
+<para>创建 <classname>KantGenerator</classname> 类的一个实例，然后将语法文件和源文件传给它，可能在命令行没有指定。</para>
+<informalexample>
+<programlisting>
+&kgp_createkantgenerator;</programlisting>
+</informalexample>
+<para><classname>KantGenerator</classname> 实例自动加载语法，它是一个 &xml; 文件。你使用自定义的 &openanything_functionname; 函数打开这个文件 (<link linkend="kgp.openanything">可能保存在一个本地文件中或者一个远程服务器上</link>)，然后使用内置的 &minidom_modulename; 解析函数<link linkend="kgp.parse">将 &xml; 解析为一棵 &python; 对象树</link>。</para>
+<informalexample>
+<programlisting>
+&kgp_privateload;
+&kgp_loadopen;
+&kgp_loadparse;
+&kgp_loadclose;</programlisting>
+</informalexample>
+<para>哦，根据这种方式，你将使用到 &xml; 文档结构的知识<link linkend="kgp.cache">建立一个引用的小缓冲</link>，这些引用都只是 &xml; 文档中的元素。</para>
+<informalexample>
+<programlisting>
+&kgp_loadgrammardef;
+&kgp_forref;
+&kgp_refid;</programlisting>
+</informalexample>
+<para>如果你在命令行中指定了某些源材料，你可以使用它；否则你将打开语法文件查找“顶层”引用 (没有被其它的东西引用) 并把它作为开始点。</para>
+<informalexample>
+<programlisting>
+&kgp_defaultsourcedef;
+&kgp_initxrefs;
+&kgp_forxref;
+&kgp_xrefid;
+&kgp_xrefkeys;
+&kgp_standalonexrefs;
+&kgp_returndefaultsource;</programlisting>
+</informalexample>
+<para>现在你打开了了源材料。它是一个 &xml;，你每次解析一个节点。为了让代码分离并具备更高的可维护性，你可以使用<link linkend="kgp.handler">针对每个节点类型的独立处理方法</link>。</para>
+<informalexample>
+<programlisting>
+&kgp_parseelementdef;
+&kgp_gethandlermethod;
+&kgp_handlermethod;</programlisting>
+</informalexample>
+<para>你在语法里面跳来跳去，解析每一个 &pnode; 元素的<link linkend="kgp.child">所有孩子</link>，</para>
+<informalexample>
+<programlisting>
+&kgp_dopdef;
+...
+&kgp_ifdoit;
+&kgp_parsep;</programlisting>
+</informalexample>
+<para>用任意一个孩子替换 &choicenode; 元素，</para>
+<informalexample>
+<programlisting>
+&kgp_dochoicedef;
+&kgp_parsechoice;</programlisting>
+</informalexample>
+<para>并用对应 &refnode; 元素的任意孩子替换 &xrefnode;，前面你已经进行了缓冲。</para>
+<informalexample>
+<programlisting>
+&kgp_doxrefdef;
+&kgp_id;
+&kgp_parsexref;</programlisting>
+</informalexample>
+<para>就这样一直解析，最后得到普通文本。</para>
+<informalexample>
+<programlisting>
+&kgp_parsetextdef;
+&kgp_text;
+...
+&kgp_appendnormal;</programlisting>
+</informalexample>
+<para>把结果打印出来。</para>
+<informalexample>
+<programlisting>
+&kgp_maindef;
+...
+&kgp_createkantgenerator;
+&kgp_nowrap;</programlisting>
+</informalexample>
+</section>
+<section id="kgp.summary">
+<?dbhtml filename="scripts_and_streams/summary.html"?>
+<title>小结</title>
+<abstract>
+<title/>
+<para>&python; 带有解析和操作 &xml; 文档非常强大的库。&minidom_modulename; 接收一个 &xml; 文件并将其解析为 &python; 对象，并提供了对任意元素的随机访问。进一步，本章展示了如何利用 &python; 创建一个“真实”独立的命令行脚本，连同命令行标志、命令行参数、错误处理，甚至从前一个程序的管道接收输入的能力。</para>
+</abstract>
+<para>在继续下一章前，你应该无困难地完成所有这些事情：</para>
+<itemizedlist>
+<listitem><para>通过标准输入输出<link linkend="kgp.stdio">链接程序</link></para></listitem>
+<listitem><para>使用 &getattr; <link linkend="kgp.handler">定义动态分发器</link></para></listitem>
+<listitem><para>通过 &getopt_modulename; <link linkend="kgp.commandline">使用命令行标志</link>并进行验证</para></listitem>
+</itemizedlist>
+</section>
+</chapter>
+<!--
+* unicode
+* getElementsByTagName
+* accessing element attributes
+* sys.stderr, sys.stdout, sys.stdin (brief explanation for Windows weenies)
+* toolbox.openAnything (abstracting input sources)
+* tips and tricks
+  * caching ref nodes by name in a dictionary (name from id attribute)
+  * finding child elements (e.ELEMENT_NODE)
+  * separating handlers
+    * by node type (Document, Element, Comment, Text)
+    * by element name
+* handling command-line arguments
+  * printing usage help
+  * specifying a grammar
+  * specifying a source
+  X setting debug flag
+<prompt>[you@localhost kgp]$ </prompt><userinput>python kgp.py -d -g binary.xml</userinput>
+<computeroutput>1 available choices: [u'&lt;p>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;/p>']
+Chosen: &lt;p>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;xref id="bit"/>&lt;/p>
+2 available choices: [u'&lt;p>0&lt;/p>', u'&lt;p>1&lt;/p>']
+Chosen: &lt;p>0&lt;/p>
+2 available choices: [u'&lt;p>0&lt;/p>', u'&lt;p>1&lt;/p>']
+Chosen: &lt;p>1&lt;/p>
+2 available choices: [u'&lt;p>0&lt;/p>', u'&lt;p>1&lt;/p>']
+Chosen: &lt;p>1&lt;/p>
+2 available choices: [u'&lt;p>0&lt;/p>', u'&lt;p>1&lt;/p>']
+Chosen: &lt;p>0&lt;/p>
+2 available choices: [u'&lt;p>0&lt;/p>', u'&lt;p>1&lt;/p>']
+Chosen: &lt;p>0&lt;/p>
+2 available choices: [u'&lt;p>0&lt;/p>', u'&lt;p>1&lt;/p>']
+Chosen: &lt;p>0&lt;/p>
+2 available choices: [u'&lt;p>0&lt;/p>', u'&lt;p>1&lt;/p>']
+Chosen: &lt;p>1&lt;/p>
+2 available choices: [u'&lt;p>0&lt;/p>', u'&lt;p>1&lt;/p>']
+Chosen: &lt;p>1&lt;/p>
+01100011</computeroutput>
+ 
+* putting it all together
+* summary
+-->

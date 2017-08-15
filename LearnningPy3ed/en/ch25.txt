@@ -1,0 +1,521 @@
+Chapter 25
+Chapter 25
+25Designing with Classes
+So far in this part of the book, we've concentrated on using Python's OOP tool, the class. But OOP is also about design issues-i.e., how to use classes to model useful objects. This chapter will touch on a few core OOP ideas, and present some additional examples that are more realistic than those shown so far. Many of the design terms mentioned here (delegation, composition, factories, and more) require more explanation than I can provide in this book; if this material sparks your curiosity, I suggest exploring a text on OOP design, or design patterns as a next step.
+Python and OOP
+Python's implementation of OOP can be summarized by three ideas:
+Inheritance
+Inheritance is based on attribute lookup in Python (in X.name expressions).
+Polymorphism
+In X.method, the meaning of method depends on the type (class) of X.
+Encapsulation
+Methods and operators implement behavior; data hiding is a convention by default.
+By now, you should have a good feel for what inheritance is all about in Python. We've also talked about Python's polymorphism a few times already; it flows from Python's lack of type declarations. Because attributes are always resolved at runtime, objects that implement the same interfaces are interchangeable; clients don't need to know what sorts of objects are implementing the methods they call.
+Encapsulation means packaging in Python-that is, hiding implementation details behind an object's interface. It does not mean enforced privacy, as you'll see in Chapter 26. Encapsulation allows the implementation of an object's interface to be changed without impacting the users of that object.
+Overloading by Call Signatures (or Not)
+Some OOP languages also define polymorphism to mean overloading functions based on the type signatures of their arguments. But because there are no type declarations in Python, this concept doesn't really apply; polymorphism in Python is based on object interfaces, not types. 
+You can try to overload methods by their argument lists, like this:
+class C:
+    def meth(self, x):
+        ...
+    def meth(self, x, y, z):
+        ...
+This code will run, but because the def simply assigns an object to a name in the class' scope, the last definition of the method function is the only one that will be retained (it's just as if you say X = 1, and then X = 2; X will be 2).
+Type-based selections can always be coded using the type testing ideas we met in Chapters 4 and 9, or the argument list tools in Chapter 16:
+class C:
+    def meth(self, *args):
+        if len(args) == 1:
+            ...
+        elif type(arg[0]) == int:
+            ...
+You normally shouldn't do this, though-as described in Chapter 15, you should write your code to expect an object interface, not a specific data type. That way, it will be useful for a broader category of types and applications, both now and in the future:
+class C:
+    def meth(self, x):
+        x.operation(  )        # Assume x does the right thing
+It's also generally considered better to use distinct method names for distinct operations, rather than relying on call signatures (no matter what language you code in).
+Classes As Records
+Chapter 8 showed how to use dictionaries to record properties of entities in our programs. Let's explore this in more detail. Here is the example for dictionary-based records used earlier:
+>>> rec = {}
+>>> rec['name'] = 'mel'
+>>> rec['age']  = 40
+>>> rec['job']  = 'trainer/writer'
+>>>
+>>> print rec['name']
+mel
+This code emulates tools like records and structs in other languages. As we saw in Chapter 23, though, there are also multiple ways to do the same with classes. Perhaps the simplest is this:
+>>> class rec: pass
+...
+>>> rec.name = 'mel'
+>>> rec.age  = 40
+>>> rec.job  = 'trainer/writer'
+>>>
+>>> print rec.age
+40
+This code has substantially less syntax than the dictionary equivalent. It uses an empty class statement to generate an empty namespace object (notice the pass statement-we need a statement syntactically even though there is no logic to code in this case). Once we make the empty class, we fill it out by assigning to class attributes over time.
+This works, but a new class statement will be required for each distinct record we will need. Perhaps more typically, we can instead generate instances of an empty class to represent each distinct entity:
+>>> class rec: pass
+...
+>>> pers1 = rec(  )
+>>> pers1.name = 'mel'
+>>> pers1.job  = 'trainer'
+>>> pers1.age   = 40
+>>>
+>>> pers2 = rec(  )
+>>> pers2.name = 'dave'
+>>> pers2.job  = 'developer'
+>>>
+>>> pers1.name, pers2.name
+('mel', 'dave')
+Here, we make two records from the same class-instances start out life empty, just like classes. We then fill in the records by assigning to attributes. This time, though, there are two separate objects, and hence, two separate name attributes. In fact, instances of the same class don't even have to have the same set of attribute names; in this example, one has a unique age name. Instances really are distinct namespaces: each has a distinct attribute dictionary. Although they are normally filled out consistently by class methods, they are more flexible than you might expect.
+Finally, we might instead code a more full-blown class to implement the record:
+>>> class Person:
+...     def _  _init_  _(self, name, job):
+...         self.name = name
+...         self.job  = job
+...     def info(self):
+...         return (self.name, self.job)
+...
+>>> mark = Person('ml', 'trainer')
+>>> dave = Person('da', 'developer')
+>>>
+>>> mark.job, dave.info(  )
+('trainer', ('da', 'developer'))
+This scheme also makes multiple instances, but the class is not empty this time: we've added logic (methods) to initialize instances at construction time and collect attributes into a tuple. The constructor imposes some consistency on instances here by always setting name and job attributes.
+We could further extend this code by adding logic to compute salaries, parse names, and so on (see the end of Chapter 24 for an example that does this). Ultimately, we might link the class into a larger hierarchy to inherit an existing set of methods via the automatic attribute search of classes, or perhaps even store instances of the class in a file with Python object pickling to make them persistent (more on pickling and persistence in the sidebar "Why You Will Care: Classes and Persistence," and again later in the book). In the end, although types like dictionaries are flexible, classes allow us to add behavior to objects in ways that built-in types and simple functions do not directly support.
+OOP and Inheritance: "Is-a" Relationships
+We've explored the mechanics of inheritance in depth already, but I'd like to show you an example of how it can be used to model real-world relationships. From a programmer's point of view, inheritance is kicked off by attribute qualifications, which trigger searches for names in instances, their classes, and then any superclasses. From a designer's point of view, inheritance is a way to specify set membership: a class defines a set of properties that may be inherited and customized by more specific sets (i.e., subclasses).
+To illustrate, let's put that pizza-making robot we talked about at the start of this part of the book to work. Suppose we've decided to explore alternative career paths and open a pizza restaurant. One of the first things we'll need to do is hire employees to serve customers, prepare the food, and so on. Being engineers at heart, we've decided to build a robot to make the pizzas; but being politically and cybernetically correct, we've also decided to make our robot a full-fledged employee with a salary.
+Our pizza shop team can be defined by the four classes in the example file, employees.py. The most general class, Employee, provides common behavior such as bumping up salaries (giveRaise) and printing (_  _repr_  _). There are two kinds of employees, and so two subclasses of Employee: Chef and Server. Both override the inherited work method to print more specific messages. Finally, our pizza robot is modeled by an even more specific class: PizzaRobot is a kind of Chef, which is a kind of Employee. In OOP terms, we call these relationships "is-a" links: a robot is a chef, which is a(n) employee. Here's the employees.py file:
+class Employee:
+    def _  _init_  _(self, name, salary=0):
+        self.name   = name
+        self.salary = salary
+    def giveRaise(self, percent):
+        self.salary = self.salary + (self.salary * percent)
+    def work(self):
+        print self.name, "does stuff"
+    def _  _repr_  _(self):
+        return "<Employee: name=%s, salary=%s>" % (self.name, self.salary)
+
+class Chef(Employee):
+    def _  _init_  _(self, name):
+        Employee._  _init_  _(self, name, 50000)
+    def work(self):
+        print self.name, "makes food"
+
+class Server(Employee):
+    def _  _init_  _(self, name):
+        Employee._  _init_  _(self, name, 40000)
+    def work(self):
+        print self.name, "interfaces with customer"
+
+class PizzaRobot(Chef):
+    def _  _init_  _(self, name):
+        Chef._  _init_  _(self, name)
+    def work(self):
+        print self.name, "makes pizza"
+
+if __name__ == "_  _main_  _":
+    bob = PizzaRobot('bob')       # Make a robot named bob
+    print bob                     # Run inherited _  _repr_  _
+    bob.work(  )                        # Run type-specific action
+    bob.giveRaise(0.20)           # Give bob a 20% raise
+    print bob; print
+
+    for klass in Employee, Chef, Server, PizzaRobot:
+        obj = klass(klass._  _name_  _)
+        obj.work(  )
+When we run the self-test code included in this module, we create a pizza-making robot named bob, which inherits names from three classes: PizzaRobot, Chef, and Employee. For instance, printing bob runs the Employee._  _repr_  _ method, and giving bob a raise invokes Employee.giveRaise because that's where the inheritance search finds that method:
+C:\python\examples> python employees.py
+<Employee: name=bob, salary=50000>
+bob makes pizza
+<Employee: name=bob, salary=60000.0>
+
+Employee does stuff
+Chef makes food
+Server interfaces with customer
+PizzaRobot makes pizza
+In a class hierarchy like this, you can usually make instances of any of the classes, not just the ones at the bottom. For instance, the for loop in this module's self-test code creates instances of all four classes; each responds differently when asked to work because the work method is different in each. Really, these classes just simulate real-world objects; work prints a message for the time being, but it could be expanded to do real work later.
+OOP and Composition: "Has-a" Relationships
+The notion of composition was introduced in Chapter 22. From a programmer's point of view, composition involves embedding other objects in a container object, and activating them to implement container methods. To a designer, composition is another way to represent relationships in a problem domain. But, rather than set membership, composition has to do with components-parts of a whole. 
+Composition also reflects the relationships between parts, which is usually called a "has-a" relationship. Some OOP design texts refer to composition as aggregation (or distinguish between the two terms by using aggregation to describe a weaker dependency between container and contained); in this text, a "composition" simply refers to a collection of embedded objects. The composite class generally provides an interface all its own, and implements it by directing the embedded objects.
+Now that we've implemented our employees, let's put them in the pizza shop and let them get busy. Our pizza shop is a composite object: it has an oven, and it has employees like servers and chefs. When a customer enters and places an order, the components of the shop spring into action-the server takes the order, the chef makes the pizza, and so on. The following example (the file pizzashop.py) simulates all the objects and relationships in this scenario:
+from employees import PizzaRobot, Server
+
+class Customer:
+    def _  _init_  _(self, name):
+        self.name = name
+    def order(self, server):
+        print self.name, "orders from", server
+    def pay(self, server):
+        print self.name, "pays for item to", server
+
+class Oven:
+    def bake(self):
+        print "oven bakes"
+
+class PizzaShop:
+    def _  _init_  _(self):
+        self.server = Server('Pat')         # Embed other objects
+        self.chef   = PizzaRobot('Bob')     # A robot named bob
+        self.oven   = Oven(  )
+
+    def order(self, name):
+        customer = Customer(name)           # Activate other objects
+        customer.order(self.server)         # Customer orders from server
+        self.chef.work(  )
+        self.oven.bake(  )
+        customer.pay(self.server)
+
+if __name__ == "_  _main_  _":
+    scene = PizzaShop(  )                         # Make the composite
+    scene.order('Homer')                    # Simulate Homer's order
+    print '...'
+    scene.order('Shaggy')                   # Simulate Shaggy's order
+The PizzaShop class is a container and controller; its constructor makes and embeds instances of the employee classes we wrote in the last section, as well as an Oven class defined here. When this module's self-test code calls the PizzaShop order method, the embedded objects are asked to carry out their actions in turn. Notice that we make a new Customer object for each order, and we pass on the embedded Server object to Customer methods; customers come and go, but the server is part of the pizza shop composite. Also, notice that employees are still involved in an inheritance relationship; composition and inheritance are complementary tools. When we run this module, our pizza shop handles two orders-one from Homer, and then one from Shaggy:
+C:\python\examples> python pizzashop.py
+Homer orders from <Employee: name=Pat, salary=40000>
+Bob makes pizza
+oven bakes
+Homer pays for item to <Employee: name=Pat, salary=40000>
+...
+Shaggy orders from <Employee: name=Pat, salary=40000>
+Bob makes pizza
+oven bakes
+Shaggy pays for item to <Employee: name=Pat, salary=40000>
+Again, this is mostly just a toy simulation, but the objects and interactions are representative of composites at work. As a rule of thumb, classes can represent just about any objects and relationships you can express in a sentence; just replace nouns with classes, and verbs with methods, and you'll have a first cut at a design.
+Stream Processors Revisited
+For a more realistic composition example, recall the generic data stream processor function we partially coded in the introduction to OOP in Chapter 22:
+def processor(reader, converter, writer):
+    while 1:
+        data = reader.read(  )
+        if not data: break
+        data = converter(data)
+        writer.write(data)
+Rather than using a simple function here, we might code this as a class that uses composition to do its work to provide more structure and support inheritance. The following file, streams.py, demonstrates one way to code the class:
+class Processor:
+    def _  _init_  _(self, reader, writer):
+        self.reader = reader
+        self.writer = writer
+    def process(self):
+        while 1:
+            data = self.reader.readline(  )
+            if not data: break
+            data = self.converter(data)
+            self.writer.write(data)
+    def converter(self, data):
+        assert 0, 'converter must be defined'
+Coded this way, reader and writer objects are embedded within the class instance (composition), and we supply the converter logic in a subclass rather than passing in a converter function (inheritance). The file converters.py shows how:
+from streams import Processor
+
+class Uppercase(Processor):
+    def converter(self, data):
+        return data.upper(  )
+
+if _  _name_  _ == '_  _main_  _':
+    import sys
+    Uppercase(open('spam.txt'), sys.stdout).process(  )
+Here, the Uppercase class inherits the stream-processing loop logic (and anything else that may be coded in its superclasses). It needs to define only the thing that is unique about it-the data conversion logic. When this file is run, it makes and runs an instance, which reads from the file spam.txt, and writes the uppercase equivalent of that file to the stdout stream:
+C:\lp3e> type spam.txt
+spam
+Spam
+SPAM!
+
+C:\lp3e> python converters.py
+SPAM
+SPAM
+SPAM!
+To process different sorts of streams, pass in different sorts of objects to the class construction call. Here, we use an output file instead of a stream:
+C:\lp3e> python
+>>> import converters
+>>> prog = converters.Uppercase(open('spam.txt'), open('spamup.txt', 'w'))
+>>> prog.process(  )
+
+C:\lp3e> type spamup.txt
+SPAM
+SPAM
+SPAM!
+But, as suggested earlier, we could also pass in arbitrary objects wrapped up in classes that define the required input and output method interfaces. Here's a simple example that passes in a writer class that wraps up the text inside HTML tags:
+C:\lp3e> python
+>>> from converters import Uppercase
+>>>
+>>> class HTMLize:
+...     def write(self, line): 
+...         print '<PRE>%s</PRE>' % line[:-1]
+...
+>>> Uppercase(open('spam.txt'), HTMLize(  )).process(  )
+<PRE>SPAM</PRE>
+<PRE>SPAM</PRE>
+<PRE>SPAM!</PRE>
+If you trace through this example's control flow, you'll see that we get both uppercase conversion (by inheritance), and HTML formatting (by composition), even though the core processing logic in the original Processor superclass knows nothing about either step. The processing code only cares that writers have a write method, and that a method named convert is defined; it doesn't care what those calls do. Such polymorphism and encapsulation of logic is behind much of the power of classes.
+As is, the Processor superclass only provides a file-scanning loop. In more real work, we might extend it to support additional programming tools for its subclasses, and, in the process, turn it into a full-blown framework. Coding such a tool once in a superclass enables you to reuse it in all of your programs. Even in this simple example, because so much is packaged and inherited with classes, all we had to code was the HTML formatting step; the rest was free.
+For another example of composition at work, see exercise 9 at the end of Chapter 26 and its solution in Appendix B; it's similar to the pizza shop example. We've focused on inheritance in this book because that is the main tool that the Python language itself provides for OOP. But, in practice, composition is used as much as inheritance as a way to structure classes, especially in larger systems. As we've seen, inheritance and composition are often complementary (and sometimes alternative) techniques. Because composition is a design issue outside the scope of the Python language and this book, though, I'll defer to other resources for more on this topic.
+Why You Will Care: Classes and Persistence
+I've mentioned pickling a few times in this part of the book because it works especially well with class instances. For example, besides allowing us to simulate real-world interactions, the pizza shop classes developed here could also be used as the basis of a persistent restaurant database. Instances of classes can be stored away on disk in a single step using Python's pickle or shelve modules. The object pickling interface is remarkably easy to use:
+import pickle
+object = someClass(  )
+file   = open(filename, 'wb')     # Create external file
+pickle.dump(object, file)         # Save object in file
+
+import pickle
+file   = open(filename, 'rb')
+object = pickle.load(file)        # Fetch it back later
+Pickling converts in-memory objects to serialized byte streams, which may be stored in files, sent across a network, and so on; unpickling converts back from byte streams to identical in-memory objects. Shelves are similar, but they automatically pickle objects to an access-by-key database, which exports a dictionary-like interface:
+import shelve
+object = someClass(  )
+dbase  = shelve.open('filename')
+dbase['key'] = object             # Save under key
+
+import shelve
+dbase  = shelve.open('filename')
+object = dbase['key']             # Fetch it back later
+In our example, using classes to model employees means we can get a simple database of employees and shops with little extra work: pickling such instance objects to a file makes them persistent across Python program executions. See the standard library manual and later examples for more on pickling.
+
+OOP and Delegation
+Object-oriented programmers often also talk about something called delegation, which usually implies controller objects that embed other objects to which they pass off operation requests. The controllers can take care of administrative activities, such as keeping track of accesses, and so on. In Python, delegation is often implemented with the _  _getattr_  _ method hook; because it intercepts accesses to nonexistent attributes, a wrapper class (sometimes called a proxy class) can use _  _getattr_  _ to route arbitrary accesses to a wrapped object. The wrapper class retains the interface of the wrapped object, and may add additional operations of its own.
+Consider the file trace.py, for instance:
+class wrapper:
+    def _  _init_  _(self, object):
+        self.wrapped = object                    # Save object
+    def _  _getattr_  _(self, attrname):
+        print 'Trace:', attrname                 # Trace fetch
+        return getattr(self.wrapped, attrname)   # Delegate fetch
+Recall from Chapter 24 that _  _getattr_  _ gets the attribute name as a string. This code makes use of the getattr built-in function to fetch an attribute from the wrapped object by name string-getattr(X,N) is like X.N, except that N is an expression that evaluates to a string at runtime, not a variable. In fact, getattr(X,N) is similar to X._  _dict_  _[N], but the former also performs an inheritance search, like X.N, while the latter does not (see "Namespace Dictionaries" in Chapter 24 for more on the _  _dict_  _ attribute).
+You can use the approach of this module's wrapper class to manage access to any object with attributes-lists, dictionaries, and even classes and instances. Here, the wrapper class simply prints a trace message on each attribute access, and delegates the attribute request to the embedded wrapped object:
+>>> from trace import wrapper
+>>> x = wrapper([1,2,3])                         # Wrap a list
+>>> x.append(4)                                  # Delegate to list method
+Trace: append
+>>> x.wrapped                                    # Print my member
+[1, 2, 3, 4]
+
+>>> x = wrapper({"a": 1, "b": 2})                # Wrap a dictionary
+>>> x.keys(  )                                        # Delegate to dictionary method
+Trace: keys
+['a', 'b']
+The net effect is to augment the entire interface of the wrapped object, with additional code in the wrapper class. We can use this to log our method calls, route method calls to extra or custom logic, and so on. 
+We'll revive the notions of wrapped objects and delegated operations as one way to extend built-in types in Chapter 26. If you are interested in the delegation design pattern, also watch for the discussion of function decorators in Chapter 26-this is a strongly related concept, designed to augment a specific function or method call, rather than the entire interface of an object.
+Multiple Inheritance
+In a class statement, more than one superclass can be listed in parentheses in the header line. When you do this, you use something called multiple inheritance-the class and its instances inherit names from all listed superclasses.
+When searching for an attribute, Python searches superclasses in the class header from left to right until a match is found. Technically, the search proceeds depth-first all the way to the top of the inheritance tree, and then from left to right, as any of the superclasses may have superclasses of their own.
+In general, multiple inheritance is good for modeling objects that belong to more than one set. For instance, a person may be an engineer, a writer, a musician, and so on, and inherit properties from all such sets.
+Perhaps the most common way multiple inheritance is used is to "mix in" general-purpose methods from superclasses. Such superclasses are usually called mix-in classes-they provide methods you add to application classes by inheritance. For instance, Python's default way to print a class instance object isn't incredibly useful:
+>>> class Spam:
+...     def _  _init_  _(self):                        # No _  _repr_  _
+...         self.data1 = "food"
+...
+>>> X = Spam(  )
+>>> print X                                       # Default: class, address
+<_  _main_  _.Spam instance at 0x00864818>
+As seen in the previous section on operator overloading, you can provide a _  _repr_  _ method to implement a custom string representation of your own. But, rather than coding a _  _repr_  _ in each and every class you wish to print, why not code it once in a general-purpose tool class and inherit it in all your classes?
+That's what mix-ins are for. The following file, mytools.py, defines a mix-in class called Lister that overloads the _  _repr_  _ method for each class that includes Lister in its header line. It simply scans the instance's attribute dictionary (remember, it's exported in _  _dict_  _) to build up a string showing the names and values of all instance attributes. Because classes are objects, Lister's formatting logic can be used for instances of any subclass; it's a generic tool.
+Lister uses two special tricks to extract the instance's class name and address. Each instance has a built-in _  _class_  _ attribute that references the class from which it was created, and each class has a _  _name_  _ attribute that references the name in the header, so self._  _class_  _._  _name_  _ fetches the name of an instance's class. You get the instance's memory address by calling the built-in id function, which returns any object's address (by definition, a unique object identifier):
+###########################################
+# Lister can be mixed into any class to
+# provide a formatted print of instances
+# via inheritance of _  _repr_  _ coded here;
+# self is the instance of the lowest class.
+###########################################
+
+class Lister:
+   def _  _repr_  _(self):
+       return ("<Instance of %s, address %s:\n%s>" %
+                         (self.__class__._  _name_  _,     # My class's name
+                          id(self),                        # My address
+                          self.attrnames(  )) )            # name=value list
+   def attrnames(self):
+       result = ''
+       for attr in self._  _dict_  _.keys(  ):               # Instance namespace dict
+           if attr[:2] == '_  _':
+               result = result + "\tname %s=<built-in>\n" % attr
+           else:
+               result = result + "\tname %s=%s\n" % (attr, self._  _dict_  _ [attr])
+       return result
+Instances derived from this class display their attributes automatically when printed, giving a bit more information than a simple address:
+>>> from mytools import Lister
+>>> class Spam(Lister):
+...     def _  _init_  _(self):
+...         self.data1 = 'food'
+...
+>>> x = Spam(  )
+>>> x
+<Instance of Spam, address 8821568:
+        name data1=food
+>
+The Lister class is useful for any classes you write-even classes that already have a superclass. This is where multiple inheritance comes in handy: by adding Lister to the list of superclasses in a class header (mixing it in), you get its _  _repr_  _ for free while still inheriting from the existing superclass. The file testmixin.py demonstrates:
+from mytools import Lister            # Get tool class
+
+class Super:
+    def __init__(self):               # superclass _  _init_  _
+        self.data1 = "spam"
+
+class Sub(Super, Lister):             # Mix in a _  _repr_  _
+    def _  _init_  _(self):                 # Lister has access to self
+        Super._  _init_  _(self)
+        self.data2 = "eggs"           # More instance attrs
+        self.data3 = 42
+
+if __name__ == "_  _main_  _":
+    X = Sub(  )
+    print X                           # Mixed-in repr
+Here, Sub inherits names from both Super and Lister; it's a composite of its own names and names in both its superclasses. When you make a Sub instance and print it, you automatically get the custom representation mixed in from Lister:
+C:\lp3e> python testmixin.py
+<Instance of Sub, address 7833392:
+        name data3=42
+        name data2=eggs
+        name data1=spam
+>
+Lister works in any class it's mixed into because self refers to an instance of the subclass that pulls Lister in, whatever that may be. If you later decide to extend Lister's _  _repr_  _ to also print all the class attributes that an instance inherits, you're safe; because it's an inherited method, changing Lister._  _repr_  _ automatically updates the display of each subclass that imports the class and mixes it in.
+In a sense, mix-in classes are the class equivalent of modules-packages of methods useful in a variety of clients. Here is Lister working again in single-inheritance mode on a different class's instances:
+>>> from mytools import Lister
+>>> class x(Lister):
+...     pass
+...
+>>> t = x(  )
+>>> t.a = 1; t.b = 2; t.c = 3
+>>> t
+<Instance of x, address 7797696:
+        name b=2
+        name a=1
+        name c=3
+>
+OOP is all about code reuse, and mix-in classes are a powerful tool. Like almost everything else in programming, multiple inheritance can be a useful device when applied well; however, in practice, it is an advanced feature and can become complicated if used carelessly or excessively. We'll revisit this topic as a gotcha at the end of the next chapter. In that chapter, we'll also meet an option (new-style classes) that modifies the search order for one special multiple inheritance case.
+Classes Are Objects: Generic Object Factories
+Because classes are objects, it's easy to pass them around a program, store them in data structures, and so on. You can also pass classes to functions that generate arbitrary kinds of objects; such functions are sometimes called factories in OOP design circles. They are a major undertaking in a strongly typed language such as C++, but almost trivial to implement in Python. The apply function and newer alternative syntax we met in Chapter 17 can call any class with any number of constructor arguments in one step to generate any sort of instance:
+def factory(aClass, *args):                  # varargs tuple
+    return apply(aClass, args)               # Call aClass, or: aClass(*args)
+
+class Spam:
+    def doit(self, message):
+        print message
+
+class Person:
+    def _  _init_  _(self, name, job):
+        self.name = name
+        self.job  = job
+
+object1 = factory(Spam)                      # Make a Spam object
+object2 = factory(Person, "Guido", "guru")   # Make a Person object
+In this code, we define an object generator function called factory. It expects to be passed a class object (any class will do) along with one or more arguments for the class' constructor. The function uses apply to call the function and return an instance.
+The rest of the example simply defines two classes, and generates instances of both by passing them to the factory function. And that's the only factory function you'll ever need to write in Python; it works for any class, and any constructor arguments. 
+One possible improvement worth noting is that to support keyword arguments in constructor calls, the factory can collect them with a **args argument, and pass them as a third argument to apply:
+def factory(aClass, *args, **kwargs):        # +kwargs dict
+    return apply(aClass, args, kwargs)       # Call aClass
+By now, you should know that everything is an "object" in Python, including things like classes, which are just compiler input in languages like C++. However, as mentioned at the start of Part VI, only objects derived from classes are OOP objects in Python.
+Why Factories?
+So what good is the factory function (besides providing an excuse to illustrate class objects in this book)? Unfortunately, it's difficult to show applications of this design pattern without listing much more code than we have space for here. In general, though, such a factory might allow code to be insulated from the details of dynamically configured object construction.
+For example, recall the processor example presented in the abstract in Chapter 22, and then again as a has-a composition example in this chapter. It accepted reader and writer objects for processing arbitrary data streams. 
+The original version of this example manually passed in instances of specialized classes like FileWriter and SocketReader to customize the data streams being processed; later, we passed in hardcoded file, stream, and formatter objects. In a more dynamic scenario, external devices such as configuration files or GUIs might be used to configure the streams.
+In such a dynamic world, we might not be able to hardcode the creation of stream interface objects in our script, but might instead create them at runtime according to the contents of a configuration file. 
+For instance, the file might simply give the string name of a stream class to be imported from a module, plus an optional constructor call argument. Factory-style functions or code might come in handy here because they would allow us to fetch and pass in classes that are not hardcoded in our program ahead of time. Indeed, those classes might not even have existed at all when we wrote our code:
+classname = ...parse from config file...
+classarg  = ...parse from config file...
+
+import streamtypes                           # Customizable code
+aclass = getattr(streamtypes, classname)     # Fetch from module
+reader = factory(aclass, classarg)           # Or aclass(classarg)
+processor(reader, ...)
+Here, the getattr built-in is again used to fetch a module attribute given a string name (it's like saying obj.attr, but attr is a string). Because this code snippet assumes a single constructor argument, it doesn't strictly need factory or apply-we could make an instance with just aclass(classarg). They may prove more useful in the presence of unknown argument lists, however, and the general factory coding pattern can improve the code's flexibility. For more details on this topic, please consult books that cover OOP design and design patterns.
+Methods Are Objects: Bound or Unbound
+Methods are a kind of object, much like functions. Class methods can be accessed from an instance or a class, and hence, they actually come in two flavors in Python:
+Unbound class method objects: no self
+Accessing a function attribute of a class by qualifying a class returns an unbound method object. To call the method, you must provide an instance object explicitly as the first argument.
+Bound instance method objects: self + function pairs
+Accessing a function attribute of a class by qualifying an instance returns a bound method object. Python automatically packages the instance with the function in the bound method object, so you don't need to pass an instance to call the method.
+Both kinds of methods are full-fledged objects; they can be passed around, stored in lists, and so on. Both also require an instance in their first argument when run (i.e., a value for self). This is why we had to pass in an instance explicitly when calling superclass methods from subclass methods in the previous chapter; technically, such calls produce unbound method objects.
+When calling a bound method object, Python provides an instance for you automatically-the instance used to create the bound method object. This means that bound method objects are usually interchangeable with simple function objects, and makes them especially useful for interfaces originally written for functions (see the sidebar "Why You Will Care: Bound Methods and Callbacks" for a realistic example).
+To illustrate, suppose we define the following class:
+class Spam:
+    def doit(self, message):
+        print message
+Now, in normal operation, we make an instance, and call its method in a single step to print the passed-in argument:
+object1 = Spam(  )
+object1.doit('hello world')
+Really, though, a bound method object is generated along the way, just before the method call's parentheses. In fact, we can fetch a bound method without actually calling it. An object.name qualification is an object expression. In the following, it returns a bound method object that packages the instance (object1) with the method function (Spam.doit). We can assign this bound method to another name, and then call it as though it were a simple function:
+object1 = Spam(  )
+x = object1.doit        # Bound method object: instance+function
+x('hello world')        # Same effect as object1.doit('...')
+On the other hand, if we qualify the class to get to doit, we get back an unbound method object, which is simply a reference to the function object. To call this type of method, we must pass in an instance as the leftmost argument:
+object1 = Spam(  )
+t = Spam.doit           # Unbound method object
+t(object1, 'howdy')     # Pass in instance
+By extension, the same rules apply within a class' method if we reference self attributes that refer to functions in the class. A self.method expression is a bound method object because self is an instance object:
+class Eggs:
+    def m1(self, n):
+        print n
+    def m2(self):
+        x = self.m1     # Another bound method object
+        x(42)           # Looks like a simple function
+
+Eggs(  ).m2(  )              # Prints 42
+Most of the time, you call methods immediately after fetching them with qualification, so you don't always notice the method objects generated along the way. But if you start writing code that calls objects generically, you need to be careful to treat unbound methods specially-they normally require an explicit instance object to be passed in.
+Now that you understand the method object model, for other examples of bound methods at work, see this chapter's sidebar "Why You Will Care: Bound Methods and Callbacks," and the prior chapter's discussion of callback handlers in the section "_  _call_  _ Intercepts Calls."
+Documentation Strings Revisited
+Docstrings, which we covered in detail in Chapter 14, are string literals that show up at the top of various structures, and are automatically saved by Python in the corresponding objects' _  _doc_  _ attributes. This works for module files, function defs, and classes and methods. Now that we know more about classes and methods, the file docstr.py provides a quick but comprehensive example that summarizes the places where docstrings can show up in your code. All of these can be triple-quoted blocks:
+"I am: docstr._  _doc_  _"
+
+class spam:
+    "I am: spam.__doc__ or docstr.spam._  _doc_  _"
+
+    def method(self, arg):
+        "I am: spam.method.__doc__ or self.method._  _doc_  _"
+        pass
+
+def func(args):
+    "I am: docstr.func._  _doc_  _"
+    pass
+Why You Will Care: Bound Methods and Callbacks
+Because bound methods automatically pair an instance with a class method function, you can use them anywhere a simple function is expected. One of the most common places you'll see this idea put to work is in code that registers methods as event callback handlers in the Tkinter GUI interface. Here's the simple case:
+def handler(  ):
+    ...use globals for state...
+...
+widget = Button(text='spam', command=handler)
+To register a handler for button click events, we usually pass a callable object that takes no arguments to the command keyword argument. Function names (and lambdas) work here, and so do class methods, as long as they are bound methods:
+class MyWidget:
+    def handler(self):
+        ...use self.attr for state...
+    def makewidgets(self):
+        b = Button(text='spam', command=self.handler)
+Here, the event handler is self.handler-a bound method object that remembers both self and MyGui.handler. Because self will refer to the original instance when handler is later invoked on events, the method will have access to instance attributes that can retain state between events. With simple functions, state normally must be retained in global variables instead. See also the discussion of _  _call_  _ operator overloading in Chapter 24 for another way to make classes compatible with function-based APIs.
+
+The main advantage of documentation strings is that they stick around at runtime. Thus, if it's been coded as a docstring, you can qualify an object with its _  _doc_  _ attribute to fetch its documentation:
+>>> import docstr
+>>> docstr._  _doc_  _
+'I am: docstr._  _doc_  _'
+
+>>> docstr.spam._  _doc_  _
+'I am: spam.__doc__ or docstr.spam._  _doc_  _'
+
+>>> docstr.spam.method._  _doc_  _
+'I am: spam.method.__doc__ or self.method._  _doc_  _'
+
+>>> docstr.func._  _doc_  _
+'I am: docstr.func._  _doc_  _'
+A discussion of the PyDoc tool, which knows how to format all these strings in reports, appears in Chapter 14. 
+Documentation strings are available at runtime, but they are less flexible syntactically than # comments (which can appear anywhere in a program). Both forms are useful tools, and any program documentation is good (as long as it's accurate).
+Classes Versus Modules
+We'll wrap up this chapter by briefly comparing the topics of this book's last two parts: modules and classes. Because they're both about namespaces, the distinction can be confusing. In short:
+Modules
+	*	Are data/logic packages.
+	*	Are created by writing Python files or C extensions.
+	*	Are used by being imported.
+Classes
+	*	Implement new objects.
+	*	Are created by class statements.
+	*	Are used by being called.
+	*	Always live within a module.
+Classes also support extra features that modules don't, such as operator overloading, multiple instance generation, and inheritance. Although both classes and modules are namespaces, you should be able to tell by now that they are very different things.
+Chapter Summary
+In this chapter, we sampled common ways to use and combine classes to optimize their reusability and factoring benefits-what are usually considered design issues that are often independent of any particular programming language (though Python can make them easier to implement). We studied delegation (wrapping objects in proxy classes), composition (controlling embedded objects), inheritance (acquiring behavior from other classes), and some more esoteric concepts such as multiple inheritance, bound methods, and factories.
+The next chapter ends our look at classes and OOP by surveying more advanced class-related topics; some of its material may be of more interest to tool writers than application programmers, but it still merits a review by most people who will do OOP in Python. First, though, another quick chapter quiz.
+Brain Builder
+Chapter Quiz
+	1.	What is multiple inheritance?
+	2.	What is delegation?
+	3.	What is composition?
+	4.	What are bound methods?
+Quiz Answers
+	1.	Multiple inheritance occurs when a class inherits from more than one superclass; it's useful for mixing together multiple packages of class-based code.
+	2.	Delegation involves wrapping an object in a proxy class, which adds extra behavior, and passes other operations to the wrapped object. The proxy retains the interface of the wrapped object.
+	3.	Composition is a technique whereby a controller class embeds and directs a number of objects, and provides an interface all its own; it's a way to build up larger structures with classes.
+	4.	Bound methods combine an instance and a method function; you can call them without passing in an instance object explicitly because the original instance is still available.

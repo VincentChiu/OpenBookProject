@@ -1,0 +1,346 @@
+'''Python Standard Library'''
+
+''翻译: Python 江湖群''
+
+2008-03-28 13:33:35
+
+[[TableOfContents]]
+
+----
+
+[index.html 返回首页]
+
+----
+
+= 1. 多媒体相关模块 =
+  "Wot? No quote?"
+
+  - Guido van Rossum
+
+----
+
+== 1.1. 概览 ==
+Python 提供了一些用于处理图片和音频文件的模块.
+
+另请参阅 ''Pythonware Image Library'' ( PIL , [http://www.pythonware.com/products/pil/] ),
+以及 ''PythonWare Sound Toolkit'' (PST , [http://www.pythonware.com/products/pst/] ).
+
+译注: 别参阅 PST 了, 废了, 用 {{{pymedia}}} 代替吧.
+
+----
+
+== 1.2. imghdr 模块 ==
+{{{imghdr}}} 模块可识别不同格式的图片文件. 当前版本可以识别 {{{bmp}}} , {{{gif}}} , 
+{{{jpeg}}} , {{{pbm}}} , {{{pgm}}} , {{{png}}} , {{{ppm}}} , 
+{{{rast}}} (Sun raster), {{{rgb}}} (SGI), {{{tiff}}} , 以及 {{{xbm}}} 图像. 
+如 [#eg-9-1 Example 9-1] 所示.
+
+==== 1.2.0.1. Example 9-1. 使用 imghdr 模块 ====
+{{{
+File: imghdr-example-1.py
+
+import imghdr
+
+result = imghdr.what("samples/sample.jpg")
+
+if result:
+    print "file format:", result
+else:
+    print "cannot identify file"
+
+*B*file format: jpeg*b*
+}}}
+
+{{{
+# 使用 PIL 
+import Image
+
+im = Image.open("samples/sample.jpg")
+print im.format, im.mode, im.size
+}}}
+
+----
+
+== 1.3. sndhdr 模块 ==
+{{{sndhdr}}} 模块, 可来识别不同的音频文件格式, 并提取文件内容相关信息. 如 [#eg-9-2 Example 9-2] 所示.
+
+执行成功后, {{{what}}} 函数将返回一个由文件类型, 
+采样频率, 声道数, 音轨数和每个采样点位数组成的元组. 具体含义请参考 {{{help(sndhdr)}}} .
+
+==== 1.3.0.1. Example 9-2. 使用 sndhdr 模块 ====
+{{{
+File: sndhdr-example-1.py
+
+import sndhdr
+
+result = sndhdr.what("samples/sample.wav")
+
+if result:
+    print "file format:", result
+else:
+    print "cannot identify file"
+
+*B*file format: ('wav', 44100, 1, -1, 16)*b*
+}}}
+
+----
+
+== 1.4. whatsound 模块 ==
+(已废弃) {{{whatsound}}} 是 {{{sndhdr}}} 模块的一个别名. 如 [#eg-9-3 Example 9-3] 所示.
+
+==== 1.4.0.1. Example 9-3. 使用 whatsound 模块 ====
+{{{
+File: whatsound-example-1.py
+
+import whatsound # same as sndhdr
+
+result = whatsound.what("samples/sample.wav")
+
+if result:
+    print "file format:", result
+else:
+    print "cannot identify file"
+
+*B*file format: ('wav', 44100, 1, -1, 16)*b*
+}}}
+
+----
+
+== 1.5. aifc 模块 ==
+{{{aifc}}} 模块用于读写 AIFF 和 AIFC 音频文件(在 SGI 和 Macintosh 的计算机上使用). 如 
+[#eg-9-4 Example 9-4] 所示.
+
+==== 1.5.0.1. Example 9-4. 使用 aifc 模块 ====
+{{{
+File: SimpleAsyncHTTP.py
+
+import asyncore
+import string, socket
+import StringIO
+import mimetools, urlparse
+
+class AsyncHTTP(asyncore.dispatcher_with_send):
+    # HTTP requestor
+
+    def _ _init_ _(self, uri, consumer):
+        asyncore.dispatcher_with_send._ _init_ _(self)
+
+        self.uri = uri
+        self.consumer = consumer
+
+        # turn the uri into a valid request
+        scheme, host, path, params, query, fragment = urlparse.urlparse(uri)
+        assert scheme == "http", "only supports HTTP requests"
+        try:
+            host, port = string.split(host, ":", 1)
+            port = int(port)
+        except (TypeError, ValueError):
+            port = 80 # default port
+        if not path:
+            path = "/"
+        if params:
+            path = path + ";" + params
+        if query:
+            path = path + "?" + query
+
+        self.request = "GET %s HTTP/1.0\r\nHost: %s\r\n\r\n" % (path, host)
+
+        self.host = host
+        self.port = port
+
+        self.status = None
+        self.header = None
+
+        self.data = ""
+
+        # get things going!
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.connect((host, port))
+
+    def handle_connect(self):
+        # connection succeeded
+        self.send(self.request)
+
+    def handle_expt(self):
+        # connection failed; notify consumer (status is None)
+        self.close()
+        try:
+            http_header = self.consumer.http_header
+        except AttributeError:
+            pass
+        else:
+            http_header(self)
+
+    def handle_read(self):
+        data = self.recv(2048)
+        if not self.header:
+            self.data = self.data + data
+            try:
+                i = string.index(self.data, "\r\n\r\n")
+            except ValueError:
+                return # continue
+            else:
+                # parse header
+                fp = StringIO.StringIO(self.data[:i+4])
+                # status line is "HTTP/version status message"
+                status = fp.readline()
+                self.status = string.split(status, " ", 2)
+                # followed by a rfc822-style message header
+                self.header = mimetools.Message(fp)
+                # followed by a newline, and the payload (if any)
+                data = self.data[i+4:]
+                self.data = ""
+                # notify consumer (status is non-zero)
+                try:
+                    http_header = self.consumer.http_header
+                except AttributeError:
+                    pass
+                else:
+                    http_header(self)
+                if not self.connected:
+                    return # channel was closed by consumer
+
+        self.consumer.feed(data)
+
+    def handle_close(self):
+        self.consumer.close()
+        self.close()
+}}}
+
+----
+
+== 1.6. sunau 模块 ==
+sunau 模块用于读写 Sun AU 音频文件. 如 [#eg-9-5 Example 9-5] 所示.
+
+==== 1.6.0.1. Example 9-5. 使用 sunau 模块 ====
+{{{
+File: sunau-example-1.py
+
+import sunau
+
+w = sunau.open("samples/sample.au", "r")
+
+if w.getnchannels() == 1:
+    print "mono,",
+else:
+    print "stereo,",
+
+print w.getsampwidth()*8, "bits,",
+print w.getframerate(), "Hz sampling rate"
+
+*B*mono, 16 bits, 8012 Hz sampling rate*b*
+}}}
+
+----
+
+== 1.7. sunaudio 模块 ==
+{{{sunaudio}}} 模块用于识别 Sun AU 音频文件, 并提取其基本信息. 
+{{{sunau}}} 模块为 Sun AU 文件提供了更完成的支持. 如 Example 9-6 所示
+
+==== 1.7.0.1. Example 9-6. 使用 sunaudio 模块 ====
+{{{
+File: sunaudio-example-1.py
+
+import sunaudio
+
+file = "samples/sample.au"
+
+print sunaudio.gethdr(open(file, "rb"))
+
+*B*(6761, 1, 8012, 1, 'sample.au')*b*
+}}}
+
+----
+
+== 1.8. wave 模块 ==
+wave 模块用于读写 Microsoft WAV 音频文件, 如 Example 9-7 所示.
+
+==== 1.8.0.1. Example 9-7. 使用 wave 模块 ====
+{{{
+File: wave-example-1.py
+
+import wave
+
+w = wave.open("samples/sample.wav", "r")
+
+if w.getnchannels() == 1:
+    print "mono,",
+else:
+    print "stereo,",
+
+print w.getsampwidth()*8, "bits,",
+print w.getframerate(), "Hz sampling rate"
+
+*B*mono, 16 bits, 44100 Hz sampling rate*b*
+}}}
+
+----
+
+== 1.9. audiodev 模块 ==
+(只用于 Unix) {{{audiodev}}} 为 Sun 和 SGI 计算机提供了音频播放支持. 如 [#eg-9-8 Example 9-8] 所示.
+
+==== 1.9.0.1. Example 9-8. 使用 audiodev 模块 ====
+{{{
+File: audiodev-example-1.py
+
+import audiodev
+import aifc
+
+sound = aifc.open("samples/sample.aiff", "r")
+
+player = audiodev.AudioDev()
+
+player.setoutrate(sound.getframerate())
+player.setsampwidth(sound.getsampwidth())
+player.setnchannels(sound.getnchannels())
+
+bytes_per_frame = sound.getsampwidth() * sound.getnchannels()
+bytes_per_second = sound.getframerate() * bytes_per_frame
+
+while 1:
+    data = sound.readframes(bytes_per_second)
+    if not data:
+        break
+    player.writeframes(data)
+
+player.wait()
+}}}
+
+----
+
+== 1.10. winsound 模块 ==
+(只用于 Windows )  {{{winsound}}} 模块允许你在 Winodws 平台上播放 Wave 文件. 
+如 [#eg-9-9 Example 9-9] 所示.
+
+==== 1.10.0.1. Example 9-9. 使用 winsound 模块 ====
+{{{
+File: winsound-example-1.py
+
+import winsound
+
+file = "samples/sample.wav"
+
+winsound.PlaySound(
+    file,
+    winsound.SND_FILENAME|winsound.SND_NOWAIT,
+    )
+}}}
+
+flag 变量说明:
+
+ * SND_FILENAME - sound 是一个 wav 文件名
+ * SND_ALIAS - sound 是一个注册表中指定的别名
+ * SND_LOOP - 重复播放直到下一次 PlaySound ; 必须指定 SND_ASYNC
+ * SND_MEMORY - sound 是一个 wav 文件的内存映像
+ * SND_PURGE - 停止指定 sound 的所有实例
+ * SND_ASYNC - 异步播放声音, 声音开始播放后函数立即返回  
+ * SND_NODEFAULT - 找不到 sound 时不播放默认的 beep 声音
+ * SND_NOSTOP - 不打断当前播放中的任何 sound
+ * SND_NOWAIT - sound 驱动忙时立即返回
+
+----
+
+
+## moin code generated by txt2tags 2.4 (http://txt2tags.sf.net)
+## cmdline: txt2tags -t moin -o moin/chapter9.moin chapter9.t2t
+

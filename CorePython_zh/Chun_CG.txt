@@ -1,0 +1,99 @@
+Chapter Guide
+
+Part I: Core Python
+
+Chapter 1¡ªWelcome to Python!
+We begin by introducing Python to you, its history, features, benefits, and so on, as well as how to obtain and install Python on your system.
+
+Chapter 2¡ªGetting Started
+If you are an experienced programmer and just want to see ¡°how it¡¯s done¡± in Python, this is the right place to go. We introduce the basic Python concepts and statements, and because many of these will be familiar to you, you can simply learn the proper syntax in Python and get started right away on your projects without sacrificing too much reading time.
+
+Chapter 3¡ªSyntax and Style
+This section gives you a good overview of Python¡¯s syntax as well as style hints. You will also be exposed to Python¡¯s keywords and its memory management ability.
+
+
+Your first Python application will be presented at the end of the chapter to give you an idea of what real Python code looks like.
+
+
+Chapter 4¡ªPython Objects
+This  chapter  introduces  Python  objects.  In  addition  to  generic  object attributes, we will show you all of Python¡¯s data types and operators, as well as show you different ways to categorize the standard types. Built-in functions that apply to most Python objects will also be covered.
+
+
+Chapter 5¡ªNumbers
+In  this  chapter,  we  discuss  Python¡¯s  main  numeric  types:  integers,  floating point numbers, and complex numbers. We look at operators and built-in and factory functions which apply to all numbers, and we also briefly discuss a few other related types.
+
+
+Chapter 6¡ªSequences: Strings, Lists, and Tuples
+Your first meaty chapter will expose you to all of Python¡¯s powerful sequence types: strings, lists, and tuples. We will show you all the built-in functions, meth- ods, and special features, which apply to each type as well as all their operators.
+
+
+Chapter 7¡ªMapping and Set Types
+Dictionaries  are  Python¡¯s  mapping  or  hashing  type.  Like  other  data  types, dictionaries also have operators and applicable built-in functions and methods. We  also  cover  Python¡¯s  set  types  in  this  chapter,  discussing  their  operators, built-in and factory functions, and built-in methods.
+
+
+Chapter 8¡ªConditionals and Loops
+Like many other high-level languages, Python supports loops such as for and while, as well as if statements (and related). Python also has a built-in func- tion called range() which enables Python¡¯s for loop to behave more like a tra- ditional counting loop rather than the ¡°foreach¡± iterative type loop that it is. Also included is coverage of auxiliary statements such as  break, continue, and pass, as well as a discussion of newer constructs like iterators, list compre- hensions, and generator expressions.
+
+
+Chapter 9¡ªFiles and Input/Output
+In addition to standard file objects and input/output, this chapter introduces you to file system access, file execution, and persistent storage.
+
+
+Chapter 10¡ªErrors and Exceptions
+One  of  Python¡¯s  most  powerful  constructs  is  its  exception  handling  ability. You can see a full treatment of it here, instruction on how to raise or throw exceptions, and more importantly, how to create your own exception classes.
+
+
+Chapter 11¡ªFunctions and Functional Programming
+Creating and calling functions are relatively straightforward, but Python has many  other  features  that  you  will  find  useful,  such  as  default  arguments, named or keyword arguments, variable-length arguments, and some func- tional programming constructs. We also dip into variable scope and recursion briefly. We will also discuss some advanced features such as generators, deco- rators, inner functions, closures, and partial function application (a more gen- eralized form of currying).
+
+
+Chapter 12¡ªModules
+One of Python¡¯s key strengths is its ability to be extended. This feature allows for  ¡°plug-and-play¡±  access  as  well  as  promotes  code  reuse.  Applications written as modules can be imported for use by other Python modules with a single line of code. Furthermore, multiple module software distribution can be simplified by using packages.
+
+
+Chapter 13¡ªObject-Oriented Programming
+Python  is  a  fully  object-oriented  programming  language  and  was  designed that way from the beginning. However, Python does not require you to pro- gram in such a manner¡ªyou may continue to develop structural/procedural code  as  you  like,  and  can  transition  to  OO  programming  anytime  you  are ready to take advantage of its benefits. Likewise, this chapter is here to guide you through the concepts as well as advanced topics, such as operator over- loading, customization, and delegation. Also included is coverage of new fea- tures specific to new-style classes, including slots, properties, descriptors, and metaclasses.
+
+
+Chapter 14¡ªExecution Environment
+The  term  ¡°execution¡±  can  mean  many  different  things,  from  callable  and executable  objects  to  running  other  programs  (Python  or  otherwise).  We discuss these topics in this chapter, as well as controlling execution via the operating system interface and different ways of terminating execution.
+
+
+Part II: Advanced Topics
+
+Chapter 15¡ªRegular Expressions
+Regular expressions are a powerful tool used for pattern matching, extract- ing, and search-and-replace functionality. Learn about them here.
+
+Chapter 16¡ªNetwork Programming
+So many applications today need to be network-oriented. You have to start somewhere. In this chapter, you will learn to create clients and servers, using TCP/IP and UDP/IP, as well as get an introduction to SocketServer and Twisted.
+
+Chapter 17¡ªInternet Client Programming
+In  Chapter  16,  we  introduced  network  programming  using  sockets.  Most Internet protocols in use today were developed using sockets. In this chapter, we  explore  some  of  these  higher-level  libraries,  which  are  used  to  build clients  of  such  Internet  protocols.  In  particular,  we  focus  on  FTP,  NNTP, SMTP, and POP3 clients.
+
+Chapter 18¡ªMultithreaded Programming
+Multithreaded programming is a powerful way to improve the execution per- formance  of  many  types  of  application.  This  chapter  ends  the  drought  of written  documentation  on  how  to  do  threads  in  Python  by  explaining  the concepts  and  showing  you  how  to  correctly  build  a  Python  multithreaded application.
+
+Chapter 19¡ªGUI Programming
+Based on the Tk graphical toolkit, Tkinter is Python¡¯s default GUI develop- ment module. We introduce Tkinter to you by showing you how to build sim- ple sample GUI applications (say that ten times, real fast!). One of the best ways to learn is to copy, and by building on top of some of these applications, you will be on your way in no time. We conclude the chapter by presenting a more complex example, as well as take a brief look at Tix, Pmw, wxPython, and PyGTK.
+
+Chapter 20¡ªWeb Programming
+Web programming using Python takes three main forms: Web clients, Web servers, and the popular Common Gateway Interface applications that help Web servers deliver dynamically-generated Web pages. We will cover them
+
+
+all in this chapter: simple and advanced Web clients and CGI applications, as
+well as how to build your own Web server.
+
+
+Chapter 21¡ªDatabase Programming
+What Python does for application programming carries to database program- ming as well. It is simplified, and you will find it fun! We first review basic database  concepts,  then  introduce  you  to  the  Python  database  application programmer¡¯s interface (API). We then show you how you can connect to a relational database and perform queries and operations with Python. Finally,
+if you want hands-off using the Structured Query Language (SQL) and want
+to just work with objects without having to worry about the underlying data- base layer, we will introduce you to a few object-relational managers (ORMs), which simplify database programming to yet another level.
+
+
+Chapter 22¡ªExtending Python
+We mentioned earlier how powerful it is to be able to reuse code and extend the language. In pure Python, these extensions are modules, but you can also develop lower-level code in C, C++, or Java, and interface those with Python
+in a seamless fashion. Writing your extensions in a lower-level programming language  gives  you  added  performance  and  some  security  (because  the source code does not have to be revealed). This chapter walks you step-by- step through the extension building process.
+
+
+Chapter 23¡ªMiscellaneous
+This new chapter consists of bonus material that we would like to develop into full, individual chapters in the next edition. Topics covered here include Web Services, Microsoft Office (Win32 COM Client) Programming, and Java/ Jython.

@@ -1,0 +1,55 @@
+4.5API
+==============================================================================
+模型，控制器和视图被以下对象默认导入
+
+全局对象
+------------------------------------------------------------------------------
+request, response, session, cache
+
+Navigation
+------------------------------------------------------------------------------
+redirect, HTTP
+
+国际化
+------------------------------------------------------------------------------
+T
+
+Helpers
+------------------------------------------------------------------------------
+XML, URL, BEAUTIFY
+A, B, BODY, BR, CENTER, CODE, DIV, EM, EMBED, FIELDSET, FORM,
+H1, H3, H3, H4, H5, H6, HEAD, HR, HTML, IFRAME, IMG, INPUT,
+LABEL, LI, LINK, OL, UL, MENU, META, OBJECT, ON, OPTION, P, PRE,
+SCRIPT, SELECT, SPAN, STYLE, TABLE, TD, TAG, TBODY,
+TEXTAREA, TFOOT, TH, THEAD, TITLE, TR, TT, XHTML
+
+校验
+------------------------------------------------------------------------------
+IS_ALPHANUMERIC, IS_DATE, IS_DATETIME, IS_EMAIL,
+IS_EXPR, IS_FLOAT_IN_RANGE, IS_IMAGE, IS_INT_IN_RANGE, IS_IN_SET,
+IS_IPV4, IS_LENGTH, IS_LOWER, IS_MATCH, IS_NULL_OR, IS_NOT_EMPTY,
+IS_TIME, IS_URL, IS_UPLOAD_FILENAME, IS_LIST_OF, IS_UPPER,
+IS_STRONG, CLEANUP, CRYPT, IS_IN_DB, IS_NOT_IN_DB
+
+
+数据库
+------------------------------------------------------------------------------
+DAL, Field
+
+为了兼容SQLDB=DAL和SQLField=Field，我们建议您使用新的语法如DAL和Field而不是那些古老的写法。
+
+其他对象和模块不会被自动导入，因为它们并不常用
+
+WEB2PY中的核心API是request, response, session, cache, URL, HTTP, redirect 和T，我们将在下面的章节讨论。
+
+一些对象和模块，比如Auth, Crud, Service 在gluon/toos.py中被制造（定义），如果需要他们可以按下面的方法导入
+
+from gluon.tools import Auth, Crud, Service
+
+SVN状态::
+
+    __修订__  = "$JeanToe$"
+        __日期__  = "$20100419$"
+	    __版本__  = "$Rev$"
+	        __在线__  = "$URL$"
+

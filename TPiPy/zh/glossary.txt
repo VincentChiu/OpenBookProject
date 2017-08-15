@@ -1,0 +1,234 @@
+APPENDIX -- GLOSSARY
+附录 -- 术语
+-------------------------------------------------------------------
+
+  Asymmetrical Encryption:
+  非对称加密:
+      Encryption using a pair of keys--the first encrypts a
+      message that the second decrypts.  In the most common
+      protocol, the decryption key is kept secret but the
+      encryption key may be widely revealed.  For example, you
+      might publish your encryption--or "public"--key, which lets
+      anyone encrypt a message that only you can decrypt.  The
+      person who first creates the message, of course, has
+      initial access to it, but any third-party without the
+      decryption--or "private"--key cannot access the message.
+      See Section 2.2.4 for a discussion of cryptographic
+      capabilities.
+      加密使用一对键值--第一个密钥用于加密一条信息, 而第二个密钥用于对加密之后的信息进行解密. 在最常见的协议下, 解密密钥会一直保密, 而加密密钥会广泛分发. 例如, 你可以发布的加密密钥--或称为"公共密钥", 它可让任何人用来加密一条信息, 但这条信息只能由特定的你来解密. 新建信息的那个人, 当然, 能够访问这条信息, 但是任何没有解密密钥--"私钥"的第三方不能访问这个信息. 在章节2.2.4中关于加密有更多的讨论.
+
+  Big-O Notation, Complexity:
+  大O符号, 复杂度:
+      Big-O notation is a way of describing the governing
+      asymptotic complexity of an algorithm.  Often such
+      complexity is described using a capital "O" with an
+      expression on "n" following in parentheses.  Textbooks
+      often use a bold letter or a special typeface for the "O".
+      The "O" is originally associated with "order" of
+      complexity.
+      大O符号是一种衡量算法时间复杂度的渐进表示. 常常使用大写字母"O"外加一个其中包含一个"n"表达式的括号. 本书中常使用粗体表示这个"O", 这个"O"最原始时和复杂度的"order"有一定关联.
+
+      The insight behind big-O notation is that many problems
+      require a calculation time that can be expressed as a
+      formula involving the size of the data set or domain at
+      issue.  For the most important complexity orders, constant
+      startup times and even speed multipliers are -overpowered-
+      by the underlying complexity.  For example, suppose that
+      you have an algorithm that takes 100 seconds to initialize
+      some data structures and 10*(N^2) seconds to perform the
+      main calculation.  If you have N=4 objects, the total
+      runtime will be 260 seconds; saving that 100 seconds
+      initialization might seem worthwhile, if possible.
+      However, if you also need to deal with N=10 objects, you
+      are looking at 1,100 seconds in total, and the
+      initialization is a minor component.  Moreover, you might
+      think it significant to go from 10*(N^2) seconds to only
+      2*(N^2) seconds--say, by using a faster CPU or programming
+      language.  Once you consider the 100,100 seconds it will
+      take to calculate for N=100, even the multiplier is not all
+      that important.  In particular if you had a better
+      algorithm that took, for example, 50*N seconds (bigger
+      multiplier), you would be a lot better off only needing
+      50,000 seconds.
+      大O符号所代表的真正意义是许多问题需要一个计算时间方式, 它需随着数据集的大小或所在规模的不同而动态表示成一个公式形式. 针对最重要的复杂度顺序, 常数启动时间, 或甚至是加速乘法器可以被忽略?? 例如, 假设你有一个算法需要花费100秒来初始化一些数据结构, 而需要10*(N^2)秒执行主要的计算. 如果N为4, 总的运行时间是260秒, 那么, 就非常值得去节省初始化时的100秒. 但如果N为10, 总共的时间为1,100秒, 初始化的100秒相对的占了很少一部分. 此外, 如果将10*(N^2)秒减少到2*(N^2)秒--这可以使用一个更快的CPU或编程语言, 是具有非常大的意义的. 如果N为100, 这将需要100,100秒的运行时间时, 加快乘法器的速度也不会获得好的最终效果. 特别在, 如果你有一个好的算法, 例如, 50*N秒(速度更快的乘法器), 你会有一个很大的改善, 只需要50,000秒的时间.
+
+      In noting complexity orders, constants and multipliers are
+      conventionally omitted, leaving only the dominant factor.
+      Compexities one often sees are:
+      注意到下面的复杂度顺序中, 常数和乘法器都忽略考虑了, 只有规模大小这个因素. 常见的复杂度有:
+
+      #*------------- Common Big-O Complexities ---------------# 常见的复杂度
+      O(1)              constant 常数
+      O(log(n))         logarithmic 对数
+      O((log(n))^c)     polylogarithmic 对数-指数
+      O(n)              linear 线性
+      O(n*log(n))       frequent in sorts and other problems 这个复杂度在排序和一些其他问题上是很常见的
+      O(n^2)            quadratic 二次
+      O(n^c)            polynomial 多项式
+      O(c^n)            exponential (super-polynomial) 指数(超-多项式)
+
+  Birthday Paradox:
+  生日悖论:
+      The name "birthday paradox" comes from the fact--surprising
+      to many people--that in a room with just 23 people there is
+      a 50 percent chance of two of them sharing a birthday.  A
+      naive hunch is often that, since there are 365 days, it
+      should instead take something like 180 people to reach this
+      likelihood.
+      名词"生日悖论"来自于这样的一个事实---很多人可能会感到吃惊---在一个只有23个人的房间里, 这些人中至少有两个人的生日相同的概率要大于50%. 一个简单的直觉就是, 一年365天中, 180个人的生日都会有重复.
+      
+      In a broader sense the probability of collision of two
+      events, where N outcomes are possible, reaches 50 percent
+      when approximately sqrt(N) items are collected.  This is a
+      concern when you want hashes, random selections, and the
+      like to consist of only distinct values.
+      这广泛用于计算两个事件发生冲突的概率, 若给定N, 当大约经过sqrt(N)次时就能以50%的概率产生一个冲突. 这是在你哈希时需要关心的问题, 如何随机选取, 来尽可能让冲突次数减少.
+
+  Cryptographic Hash:
+  加密哈希:
+      A hash with a strong enough noncollision property that a
+      tamperer cannot produce a false message yielding the same
+      hash as does an authentic message.  See Section 2.2.4 for
+      a discussion of cryptographic capabilities.
+      一种哈希函数, 具有足够强的抗冲突特性, 一个篡改者不能产生一条和真实信息具有相同哈希值的虚假信息. 关于加密的详细讨论可见章节2.2.4.
+      
+
+  Cyclic Redundancy Check (CRC32):
+  循环冗余校验(CRC32):
+      See Hash.  Based on mod 2 polynomial operations, CRC32 produces a
+      32-bit "fingerprint" of a set of data.
+      参见哈希相关内容. 它主要基于模2操作, CRC32对一个数据集合产生一个32位的"指纹".
+
+  Digital Signatures:
+  数字签名:
+      A means of proving the authenticity of a message.  As with
+      asymmetric encryption, digital signatures involve two keys.
+      The signing key is kept secret, but a published validation
+      key can be used to show that the owner of the signing key
+      used it to authenticate a message.  See Section 2.2.4 for
+      a discussion of cryptographic capabilities.
+      一种消息认证方法. 和非对称加密类似, 数字签名包含两个密钥. 签名密钥是一个私钥, 而发布出去的校验密钥是用于显示已被信息拥有者使用签名密钥进行加密过后的信息. 关于加密的详细讨论可见章节2.2.4.
+
+  Hash:
+  哈希:
+      A short value that is used as a "fingerprint" of a larger
+      collection of data.  It should be unlikely that two data sets
+      will yield the same hash value.  Hashes can be used to check
+      for data errors, by comparing data to an indicated hash value
+      (mismatch suggests data error).  Some hashes have sufficient
+      noncollision properties to be used cryptographically.
+      一个长度较短的数值, 作为一个较大数据集合的"指纹". 两个数据集不应该产生相同的哈希值. 产生的哈希值可用来检测数据是否有错误, 通过比较原来的哈希和新产生的哈希值, 不一致表示数据有错误. 一些具有充分非冲突特性的哈希可进行加密使用.
+
+  Idempotent Function:
+  幂等函数:
+      The property that applying a function to its return value
+      returns an identical value.  That is, if and only if -F- is
+      idempotent then 'F(x)==F(F(x))', for every x.  In a nod to
+      Chaos Theory, we can observe that if some function defined
+      by finite repetitions of composition with F is idempotent,
+      then F has an attractor--that is, if G is idempotent for
+      'G=lambda x:F(F(F(...F(x)...)))'.   This interesting fact
+      is completely unnecessary to understand the rest of this
+      book.
+      是具有将该函数返回值作为参数再传入该函数, 返回的是同一个值的这种特性的函数. 即, -F- 是幂等的, 当且仅当, 对于任意的x, 都有'F(x)==F(F(x))'成立. 在nod和混沌理论中, 我们可以看到, 如果某个函数由有限个幂等函数F重复组成, 那么函数F拥有一个吸引子--即, 'G=lambda x:F(F(F(...F(x)...)))', 则G是幂等函数. 有趣的事实是知道这点之后, 你没有必要去理解书中剩下的部分了. 
+
+  Immutable:
+  非可变性:
+      Literally, "cannot be changed."  Some data collection
+      objects--notably tuples and strings, in Python--consist
+      of a set of items, and the membership cannot change over
+      the life of the object.  In contrast, mutable objects like
+      lists and dictionaries can continue to be the same object,
+      while changing their membership.  Since you generally
+      access objects in Python via names (and index positions),
+      it is sometimes easy to confuse the mere name--which can be
+      used at different times to point to different objects--with
+      the underlying objects.  For example, a pattern with tuples
+      like the one below is common:
+      字面意思就是, "不能被改变". 一些数据容器对象--尤其是Python中的元组和字符串--由一些项组成, 其间关系在对象的生命期中, 不能被改变. 相反的, 可变对象, 像列表和字典, 它们在改变关系是使用继续使用原来的对象. 一般可以通过名字(位置索引)访问Python对象, 这在有些时候, 通过名字访问很容易会对本质对象产生混淆--它可以在不同的时间内指向不同的对象. 例如, 下面的一个元组的例子:
+
+      >>> tup = (1,2,3)
+      >>> id(tup)
+      248684
+      >>> tup = tup+(4,5,6)
+      >>> tup
+      (1, 2, 3, 4, 5, 6)
+      >>> id(tup)
+      912076
+
+      Even though the name 'tup' is re-bound during the run, the
+      identity of the bound object changes.  Moreover, creating
+      a tuple with the same objects later produces the same
+      identity:
+      虽然都以"tup"命名, 但它们的id是不同的. 而且, 使用同一对象创建的元组也具有同样的id:
+
+      >>> tup2 = (1,2,3)
+      >>> id(tup2)
+      248684
+
+      Immutable objects are particularly useful as dictionary
+      keys, since they will continue to hash the same way over
+      program run.  However, "hashability" is a stricter
+      constraint than immutability--it is necessary that every
+      member of an immutable object itself be (recursively)
+      immutable in order to be hashable.
+      非可变对象在作为字典键时特别有用, 因为在程序运行时, 它们会以相同的方式进行哈希. 然而, 对于非可变对象的"hashability"是有严格限制的--非可变对象的每个成员需要是非可变对象才能进行哈希.
+
+  Mutable:
+  可变性:
+      Literally, "can be changed."  Data collection objects like
+      lists, dictionaries, and arrays from the [array] module are
+      mutable.  The identity of these objects stays the same,
+      even as their membership changes.  Mutable objects are not
+      (usually) suitable as dictionary keys, however.
+      Conceptually, lists are often used to hold -records- of a
+      data collection, where tuples are used to hold -fields-
+      within a record.  The insight underlying this distinction
+      is that if a record contained different field data, it
+      would not be the same record.  But individual
+      self-identical records can be added or subtracted from a
+      collection, depending on outside events and purposes.
+      字面上就是指"可以被改变". 数据容器对象, 像列表, 字典, 数组都是可变的. 这些对象的id会保持一致, 甚至在它们的成员关系改变时也一致. 可变对象不适合作为字典键. 从概念上看, 列表常用于保存一个数据集合的各个-记录-, 而元组常用于保存一条记录中的各个-域-. 两者的本质区别就是, 如果一条记录包含不同的数据域, 它们也不会是相同的记录. 但是对于独立的可自我识别的记录, 它们可以增加到某容器中或从容器中删除, 具体依赖特定的事件或目的.
+
+  Public-key Encryption:
+  公共密钥加密:
+      See Assymmetrical Encryption.
+      参见非对称加密.
+
+  Referential Transparency:
+  引用透明:
+      The property of a function or block construct such that it
+      will produce the same value every time it is called with
+      the same arguments.  Mathematical functions are
+      referentially transparent, by definition, but functions
+      whose results depend on global state, external context, or
+      local mutable values are -referentially opaque-.
+      一个函数或块的特点决定了在每次使用相同的参数去调用它时产生的值都是一样的. 数学上的函数是引用透明的, 这是由定义可知的, 但如果某个函数的结果依赖于全局状态, 外部上下文环境或者本地的可变变量值, 那么可以称这个函数是 -引用不透明的-.
+
+  Shared-key Encryption:
+  共享密钥加密:
+      See Symmetrical Encryption.
+      参见对称加密.
+
+  Structured Text Database:
+  结构化文本数据库:
+      A text file that is used to encode multiple records of
+      data, each record composed of the same fields.  Records and
+      fields are also often called rows and columns,
+      respectively.  A structured text database might be any
+      textual format that contains little or no explicit markup;
+      the most common variants are delimited files and
+      fixed-width files, both widely used on mainframes and
+      elsewhere.  Most of the time, structured text databases
+      are line oriented, with one conceptual record per line; but
+      at times, devices like indentation are used to indicate
+      dependent subrecords.
+      是指一个用于编码多条数据记录的文本文件, 其中每条记录都有相同的域. 记录和域又常被分别称为行和列. 一个结构化的文本数据库可能是任何文本格式, 包含一些或者没有任何标志; 最常见的是分隔符文件和定宽文件, 它们都被广泛地用于大型机和其他地方. 大多数情况下, 结构化文本数据库是面向行的, 每行代表一个概念记录, 但某些情况下, 行前缩进被用来指示子记录.
+
+  Symmetrical Encryption:
+  对称加密:
+      Encryption using a single "key" that must be shared between
+      parties.  See Section 2.2.4 for a discussion of
+      cryptographic capabilities.
+      加密时仅使用一个"key", 该"key"在多方被共享. 在章节2.2.4中关于加密有更多的讨论.
+

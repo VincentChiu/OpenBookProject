@@ -1,0 +1,22 @@
+致谢
+============================================
+
+web2py was originally developed by and copyrighted by Massimo Di Pierro. The first version (1.0) was released in October, 2007. Since then it has been adopted by many users, some of whom have also contributed bug reports, testing, debugging, patches, and proofreading of this book.
+
+Some of the major contributors are, in alphabetical order by first name:
+
+Alexandre Andrade, Alexey Nezhdanov (GAE and database performance), Alvaro Justen (dynamical translations), Andre Berthiaume, Andre Bossard, Attila Csipa (cron job), Bill Ferrett (modular DAL design), Boris Manojlovic (Ajax edit), Carsten Haese (Informix), Chris Baron, Christopher Smiga (In- formix), Clifford John Lazell (tester and JS), David H. Lee (OpenID), Denes Lengyel (validators, DB2 support), Douglas Soares de Andrade (2.4 and 2.6 compliance, docstrings), Felipe Barousse, Fran Boon (authorization and au- thentication), Francisco Gama (bug fixing), Fred Yankowski (XHTML com- pliance), Gabriele Carrettoni, Graham Dumpleton, Gregor Jovanovich, Hans Christian v. Stockhausen (OpenID), Hans Donner (GAE support, Google login, widgets, Sphinx documentation), Ivan Valev, Joe Barnhart, Jonathan Benn (validators and tests), Jonathan Lundell, Jose Jachuf (Firebird sup- port), Kacper Krupa, Kyle Smith (JavaScript), Limodou (winservice), Lucas Geiger,Marcel Leuthi (Oracle support), Mark Larsen (taskbar widget), Mark Moore (databases and daemon scripts), Markus Gritsch (bug fixing), Martin Hufsky (expressions in DAL), Mateusz Banach (stickers, validators, content- type), Michael Willis (shell), Milan Andric, Minor Gordon, Nathan Freeze (admin design, validators), Niall Sweeny (MSSQL support), Niccolo Polo (epydoc), Nicolas Bruxer (memcache support), Ondrej Such (MSSQL sup- port), Pai (internationalization), Phyo Arkar Lwin (web hosting and Jython tester), Ricardo Cardenes, Richard Gordon, Richard Baron Penman, Robin Bhattacharyya (Google App Engine support), Roman Goldmann, Ruijun Luo (windows binary), Scott Santarromana, Sergey Podlesnyi (Oracle and migra- tions tester), Shane McChesney, Sharriff Aina (tester and PyAMF integra- tion), Sterling Hankins (tester), Stuart Rackham (MSSQL support), Telman Yusupov (Oracle support), Tim Farrell, Tim Michelsen (Sphinx documen- tation), Timothy Farrell (Python 2.6 compliance, windows support), Tito Garrido, Yair Eshel (internationalizaiton), Yarko Tymciurak (design, Sphinx documentation), Ygao, Younghyun Jo (internationalization), Zoom Quiet
+
+I am sure I forgot somebody, so I apologize.
+
+I particularly thank Alvaro, Denes, Felipe, Graham, Jonathan, Hans, Kyle, Mark, Richard, Robin, Roman, Scott, Shane, Sharriff, Sterling, Stuart and Yarko for proofreading various chapters of this book. Their contribution was invaluable. If you find any errors in this book, they are exclusively my fault,probably introduced by a last-minute edit. I also thank Ryan Steffen of Wiley Custom Learning Solutions for help with publishing the first edition of this book.
+
+web2py contains code from the following authors, whom I would like to thank:
+
+Guido van Rossum for Python [2], Peter Hunt, Richard Gordon, Robert Brewer for the CherryPy [21] web server, Christopher Dolivet for EditArea [22], Brian Kirchoff for nicEdit [23], Bob Ippolito for simplejson [24], Simon Cusack and Grant Edwards for pyRTF [25], Dalke Scientific Software for pyRSS2Gen [26], Mark Pilgrim for feedparser [27], Trent Mick for mark- down2 [28], Allan Saddi for fcgi.py, Evan Martin for the Python memcache module [29], John Resig for jQuery [31].
+
+The logo used on the cover of this book was designed by Peter Kirchner at Young Designers.
+
+I thank Helmut Epp (provost of DePaul University), David Miller (Dean of the College of Computing and Digital Media of DePaul University), and Estia Eichten (Member of MetaCryption LLC), for their continuous trust and support.
+
+Finally, I wish to thank my wife, Claudia, and my son, Marco, for putting up with me during the many hours I have spent developing web2py, exchanging emails with users and collaborators, and writing this book. This book is dedicated to them.

@@ -1,0 +1,547 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Python Standard Library</TITLE>
+
+<!-- Included style.css -->
+<STYLE TYPE="text/css">
+body, td, {
+	font-family: verdana, sans-serif;
+	font-size: 12px;
+}
+
+body {
+	background-color: #FDFBFC;
+	margin:20px 20px 20px 20px;
+}
+
+
+p {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+a {font-weight:normal; text-decoration:underline;}
+a:link {color:#0000FF;}
+a:visited {color:#0000FF;}
+a:active {color:#0000FF;}
+a:hover {color:#700000;}
+
+strong a {
+    font-weight: bold;
+}
+
+.toc {
+	background-color: #EEEEFB;
+	border: 1px solid;
+	/*padding:10px 8px 10px 15px;*/
+	float : right ; width : 37%;
+	margin : 5px; padding: 5px;
+	margin: 5px;
+}
+
+.toc a:link , .toc a:visited  { color : #003399; }
+
+.toc a:hover { 
+	color : #EEEEFB;
+	text-decoration : none;
+	background-color: black;
+}
+
+.trailbold {
+	font-weight:bold;
+}
+
+.light {
+	background-color: #EFEFEF;
+}
+
+.dark {
+	background-color: #D2D2D2;
+}
+
+.smalllogo {
+	float:left;
+}
+
+.headerbar {
+	padding-bottom:60px;
+}
+	
+.header {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.smallheader {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.filelist {
+	font-size:14px;
+	margin: 10px 10px 10px 70px;
+	line-height:25px;
+}
+
+.dirheader {
+	font-size:13px;
+	margin: 10px 50px 10px 20px
+}
+
+.toolbar {
+	text-align:right;
+	margin: 0px 10px 0px 10px
+}
+
+.copyright {
+	padding-top: 30px;
+	text-align:center;
+	font-size:9px;
+	color: #5F5F5F;
+}
+
+.small {
+	font-size:9px;
+}
+
+.sforgelogo {
+	text-align:right;
+	height: 40px;
+}
+
+pre, .source {
+	width:auto;
+	border		: 1px solid #666;
+	background	: #eee;
+	margin		: 2em 4em;
+	padding		: 1em 2em;
+}
+
+/*code {
+	color		: #DB1416;
+	
+}*/
+code { 
+font-size: 1.2em;
+font-family:courier,courier new,monospace;
+background: #666666;
+border-top: 0.03em solid #000;
+border-right: 0.03em solid #000;
+border-bottom: 0.03em solid #ccc;
+border-left: 0.03em solid #ccc;
+color: white;
+}
+
+blockquote{
+  margin: 2em 5em ; 
+ } 
+
+
+</STYLE>
+
+</HEAD>
+<BODY BGCOLOR="green">
+<A NAME="toptop"></A>
+<DIV CLASS="header" ID="header">
+<H1>Python Standard Library</H1>
+<H2>翻译: Python 江湖群</H2>
+<H3>2008-03-28 13:35:32</H3>
+</DIV>
+
+<DIV CLASS="body" ID="body">
+<DIV CLASS="toc" ID="toc">
+  <OL>
+  <LI><A HREF="#toc1">前言</A>
+    <UL>
+    <LI><A HREF="#toc2">1.1. 关于本书</A>
+    <LI><A HREF="#toc3">1.2. 代码约定</A>
+    <LI><A HREF="#toc4">1.3. 关于例子</A>
+    <LI><A HREF="#toc5">1.4. 如何联系我们</A>
+    </UL>
+  <LI><A HREF="#toc6">模块索引</A>
+  <LI><A HREF="#toc7">后记</A>
+  </OL>
+
+</DIV>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<A NAME="toc1"></A>
+<H1><A href='#toptop'> 1. 前言 </A></H1>
+	<BLOCKQUOTE>
+	"We'd like to pretend that 'Fredrik' is a role, but even hundreds of volunteers 
+	couldn't possibly keep up. No, 'Fredrik' is the result of crossing an http server 
+	with a spam filter with an emacs whatsit and some other stuff besides."
+	</BLOCKQUOTE>
+<P></P>
+	<BLOCKQUOTE>
+	-Gordon McMillan, June 1998
+	</BLOCKQUOTE>
+<P></P>
+<P>
+Python 2.0发布附带了一个包含200个以上模块的可扩展的标准库. 
+本书简要地介绍每个模块并提供至少一个例子来说明如何使用它. 
+本书一共包含360个例子.
+</P>
+<A NAME="toc2"></A>
+<H2><A href='#toptop'> 1.1. 关于本书 </A></H2>
+	<BLOCKQUOTE>
+	"Those people who have nothing better to do than post on the Internet 
+	all day long are rarely the ones who have the most insights."
+	</BLOCKQUOTE>
+<P></P>
+	<BLOCKQUOTE>
+	- Jakob Nielsen, December 1998
+	</BLOCKQUOTE>
+<P></P>
+<P>
+五年前我偶然遇到了 Python, 开始了我的 Python 之旅, 我花费了大量的时间
+在 <CODE>comp.lang.python</CODE> 新闻组里回答问题. 也许某个人发现一个模块正是他想要的, 
+但是却不知道如何使用它. 也许某个人为他的任务挑选的不合适的模块. 也许某个人已经厌
+倦了发明新轮子. 大多时候, 一个简短的例子要比一份手册文档更有帮助.
+</P>
+<P>
+本书是超过3,000个新闻组讨论的精华部分, 当然也有很多的新脚本, 为了涵盖标准库的每个角落.
+</P>
+<P>
+我尽力使得每个脚本都易于理解, 易于重用代码. 我有意缩短注释的长度, 如果你想更深入地
+了解背景, 那么你可以参阅每个 Python 发布中的参考手册. 本书的重要之处在于范例代码.
+</P>
+<P>
+我们欢迎任何评论, 建议, 以及 bug 报告, 请将它们发送到 <A HREF="mailto:fredrik@pythonware.com">fredrik@pythonware.com</A>. 我将阅读尽我所能阅读所有的邮件, 但可能回复不是那么及时.
+</P>
+<P>
+本书的相关更新内容以及其他信息请访问 <A HREF="http://www.pythonware.com/people/fredrik/librarybook.htm">http://www.pythonware.com/people/fredrik/librarybook.htm</A>
+</P>
+<P>
+<B>为什么没有Tkinter?</B>
+</P>
+<P>
+本书涵盖了整个标准库, 除了(可选的)Tkinter ui(user-interface : 用户界面) 库. 有很多原因, 
+更多是因为时间, 本书的空间, 以及我正在写另一本关于 Tkinter 的书.
+</P>
+<P>
+关于这些书的信息, 请访问 <A HREF="http://www.pythonware.com/people/fredrik/tkinterbook.htm">http://www.pythonware.com/people/fredrik/tkinterbook.htm</A>. (不用看了,又一404)
+</P>
+<P>
+<B>产品细节</B>
+</P>
+<P>
+本书使用DocBook SGML编写, 我使用了一系列的工具, 包括Secret Labs' PythonWorks, 
+Excosoft Documentor, James Clark's Jade DSSSL processor, Norm Walsh's DocBook stylesheets, 
+当然,还有一些 Python 脚本.
+</P>
+<P>
+感谢帮忙校对的人们: Tim Peters, Guido van Rossum, David Ascher, Mark Lutz, 和 Rael Dornfest, 
+以及 PythonWare 成员: Matthew Ellis, Håkan Karlsson, 和 Rune Uhlin.
+</P>
+<P>
+感谢 Lenny Muellner, 他帮助我把SGML文件转变为你们现在所看到的这本书, 以及Christien Shangraw, 
+他将那些代码文件集合起来做成了随书CD (可以在 <A HREF="http://examples.oreilly.com/pythonsl">http://examples.oreilly.com/pythonsl</A> 找到, 
+竟然没有404, 奇迹).
+</P>
+<A NAME="toc3"></A>
+<H2><A href='#toptop'> 1.2. 代码约定 </A></H2>
+<P>
+本书使用以下习惯用法:
+</P>
+<P>
+<I>斜体</I>
+</P>
+	<BLOCKQUOTE>
+	用于文件名和命令. 还用于定义术语.
+	</BLOCKQUOTE>
+<P></P>
+<P>
+<CODE>等宽字体 e.g. Python</CODE>
+</P>
+	<BLOCKQUOTE>
+	用于代码以及方法,模块,操作符,函数,语句,属性等的名称. 
+	</BLOCKQUOTE>
+<P></P>
+<P>
+<B><CODE>等宽粗体</CODE></B>
+</P>
+	<BLOCKQUOTE>
+	用于代码执行结果.
+	</BLOCKQUOTE>
+<P></P>
+<A NAME="toc4"></A>
+<H2><A href='#toptop'> 1.3. 关于例子 </A></H2>
+<P>
+除非提到,所有例子都可以在 Python 1.5.2 和 Python 2.0 下运行. 能不能在 Python 2.4/2.5 下执行.....看参与翻译各位的了.
+</P>
+<P>
+除了一些平台相关模块的脚本, 所有例子都可以在 Windows, Solaris, 以及 Linux 下正常执行. 
+</P>
+<P>
+所有代码都是有版权的. 当然,你可以自由地使用这些这些模块,别忘记你是从哪得到(?学会)这些的.
+</P>
+<P>
+大多例子的文件名都包含它所使用的模块名称,后边是 "<CODE>-example-</CODE>" 以及一个唯一的"序号".
+ 注意有些例子并不是按顺序出现的, 这是为了匹配本书的较早版本 - 
+<I>(the eff-bot guide to) The Standard Python Library</I>.
+</P>
+<P>
+你可以在网上找到本书附带CD的内容 (参阅 <A HREF="http://examples.oreilly.com/pythonsl">http://examples.oreilly.com/pythonsl</A>). 更多信息以及更新内容参阅 <A HREF="http://www.pythonware.com/people/fredrik/librarybook.htm">http://www.pythonware.com/people/fredrik/librarybook.htm</A>. (ft, 又一404. 大家一定不要看~)
+</P>
+<A NAME="toc5"></A>
+<H2><A href='#toptop'> 1.4. 如何联系我们 </A></H2>
+<P>
+Python 江湖 QQ 群: 43680167
+</P>
+<P>
+Feather (校对) QQ: 85660100
+</P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<A NAME="toc6"></A>
+<H1><A href='#toptop'> 2. 模块索引 </A></H1>
+<OL>
+<LI><A HREF="chpt1.html">核心模块</A>
+ -  _ _builtin_ _ 模块
+ <UL>
+ <LI>exceptions 模块
+ <LI>os 模块
+ <LI>os.path 模块
+ <LI>stat 模块
+ <LI>string 模块
+ <LI>re 模块
+ <LI>math 模块
+ <LI>cmath 模块
+ <LI>operator 模块
+ <LI>copy 模块
+ <LI>sys 模块
+ <LI>atexit 模块
+ <LI>time 模块
+ <LI>types 模块
+ <LI>gc 模块
+ </UL>
+<LI><A HREF="chpt2.html">更多标准模块</A>
+ <UL>
+ <LI>fileinput 模块
+ <LI>shutil 模块
+ <LI>tempfile 模块
+ <LI>StringIO 模块
+ <LI>cStringIO 模块
+ <LI>mmap 模块
+ <LI>UserDict 模块
+ <LI>UserList 模块
+ <LI>UserString 模块
+ <LI>traceback 模块
+ <LI>errno 模块
+ <LI>getopt 模块
+ <LI>getpass 模块
+ <LI>glob 模块
+ <LI>fnmatch 模块
+ <LI>random 模块
+ <LI>whrandom 模
+ <LI>md5 模块
+ <LI>sha 模块
+ <LI>crypt 模块
+ <LI>rotor 模块
+ <LI>zlib 模块
+ <LI>code 模块
+ </UL>
+<LI><A HREF="chpt3.html">线程和进程</A>
+ <UL>
+ <LI>threading 模块
+ <LI>Queue 模块
+ <LI>thread 模块
+ <LI>commands 模块
+ <LI>pipes 模块
+ <LI>popen2 模块
+ <LI>signal 模块
+ </UL>
+<LI><A HREF="chpt4.html">数据表示</A>
+ <UL>
+ <LI>array 模块
+ <LI>struct 模块
+ <LI>xdrlib 模块
+ <LI>marshal 模块
+ <LI>pickle 模块
+ <LI>cPickle 模块
+ <LI>copy_reg 模块
+ <LI>pprint 模块
+ <LI>repr 模块
+ <LI>base64 模块
+ <LI>binhex 模块
+ <LI>quopri 模块
+ <LI>uu 模块
+ <LI>binascii 模块
+ </UL>
+<LI><A HREF="chpt5.html">文件格式</A>
+ <UL>
+ <LI>xmllib 模块
+ <LI>xml.parsers.expat 模块
+ <LI>sgmllib 模块
+ <LI>htmllib 模块
+ <LI>htmlentitydefs 模块
+ <LI>formatter 模块
+ <LI>ConfigParser 模块
+ <LI>netrc 模块
+ <LI>shlex 模块
+ <LI>zipfile 模块
+ <LI>gzip 模块
+ </UL>
+<LI><A HREF="chpt6.html">邮件和新闻消息处理</A>
+ <UL>
+ <LI>rfc822 模块
+ <LI>mimetools 模块
+ <LI>MimeWriter 模块
+ <LI>mailbox 模块
+ <LI>mailcap 模块
+ <LI>mimetypes 模块
+ <LI>packmail 模块
+ <LI>mimify 模块
+ <LI>multifile 模块
+ </UL>
+<LI><A HREF="chpt7.html">网络协议</A>
+ <UL>
+ <LI>socket 模块
+ <LI>select 模块
+ <LI>asyncore 模块
+ <LI>asynchat 模块
+ <LI>urllib 模块
+ <LI>urlparse 模块
+ <LI>cookie 模块
+ <LI>robotparser 模块
+ <LI>ftplib 模块
+ <LI>gopherlib 模块
+ <LI>httplib 模块
+ <LI>poplib 模块
+ <LI>imaplib 模块
+ <LI>smtplib 模块
+ <LI>telnetlib 模块
+ <LI>nntplib 模块
+ <LI>SocketServer 模块
+ <LI>BaseHTTPServer 模块
+ <LI>SimpleHTTPServer 模块
+ <LI>CGIHTTPServer 模块
+ <LI>cgi 模块webbrowser 模块
+ </UL>
+<LI><A HREF="chpt8.html">国际化</A>
+ <UL>
+ <LI>locale 模块
+ <LI>unicodedata 模块
+ <LI>ucnhash  模块
+ </UL>
+<LI><A HREF="chpt9.html">多媒体相关模块</A>
+ <UL>
+ <LI>imghdr 模块
+ <LI>sndhdr 模块
+ <LI>whatsound 模块
+ <LI>aifc 模块
+ <LI>sunau 模块
+ <LI>sunaudio 模块
+ <LI>wave 模块
+ <LI>audiodev 模块
+ <LI>winsound 模块
+ </UL>
+<LI><A HREF="chpt10.html">数据储存</A>
+ <UL>
+ <LI>anydbm 模块
+ <LI>whichdb 模块
+ <LI>shelve 模块
+ <LI>dbhash 模块
+ <LI>dbm 模块
+ <LI>dumbdbm 模块
+ <LI>gdbm 模块
+ </UL>
+<LI><A HREF="chpt11.html">工具和实用程序</A>
+ <UL>
+ <LI>dis 模块
+ <LI>pdb 模块
+ <LI>bdb 模块
+ <LI>profile 模块
+ <LI>pstats 模块
+ <LI>tabnanny 模块
+ </UL>
+<LI><A HREF="chpt12.html">其他模块</A>
+ <UL>
+ <LI>fcntl 模块
+ <LI>pwd 模块
+ <LI>grp 模块
+ <LI>nis 模块
+ <LI>curses 模块
+ <LI>termios 模块
+ <LI>tty 模块
+ <LI>resource 模块
+ <LI>syslog 模块
+ <LI>msvcrt 模块
+ <LI>nt 模块
+ <LI>_winreg 模块
+ <LI>posix 模块
+ </UL>
+<LI><A HREF="chpt13.html">执行支持模块</A>
+ <UL>
+ <LI>dospath 模块
+ <LI>macpath 模块
+ <LI>ntpath 模块
+ <LI>posixpath 模块
+ <LI>strop 模块
+ <LI>imp 模块
+ <LI>new 模块
+ <LI>pre 模块
+ <LI>sre 模块
+ <LI>py_compile 模块
+ <LI>compileall 模块
+ <LI>ihooks 模块
+ <LI>linecache 模块
+ <LI>macurl2path 模块
+ <LI>nturl2path 模块
+ <LI>tokenize 模块
+ <LI>keyword 模块
+ <LI>parser 模块
+ <LI>symbol 模块
+ <LI>token 模块
+ </UL>
+<LI><A HREF="chpt14.html">其他模块</A>
+ <UL>
+ <LI>pyclbr 模块
+ <LI>filecmp 模块
+ <LI>cmd 模块
+ <LI>rexec 模块
+ <LI>Bastion 模块
+ <LI>readline 模块
+ <LI>rlcompleter 模块
+ <LI>statvfs 模块
+ <LI>calendar 模块
+ <LI>sched 模块
+ <LI>statcache 模块
+ <LI>grep 模块
+ <LI>dircache 模块
+ <LI>dircmp 模块
+ <LI>cmp 模块
+ <LI>cmpcache 模块
+ <LI>util 模块
+ <LI>soundex 模块
+ <LI>timing 模块
+ <LI>posixfile 模块
+ <LI>bisect 模块
+ <LI>knee 模块
+ <LI>tzparse 模块
+ <LI>regex 模块
+ <LI>regsub 模块
+ <LI>reconvert 模块
+ <LI>regex_syntax 模块
+ <LI>find 模块
+ </UL>
+<LI><A HREF="chpt15.html">Py 2.0 后新增模块</A>
+ <UL>
+ <LI>本章将在以后的时间里慢慢完成, 更新.
+ </UL>
+</OL>
+
+<HR NOSHADE SIZE=5>
+<P></P>
+<A NAME="toc7"></A>
+<H1><A href='#toptop'> 3. 后记 </A></H1>
+</DIV>
+
+<!-- html code generated by txt2tags 2.4 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags chapter0.t2t -->
+</BODY></HTML>

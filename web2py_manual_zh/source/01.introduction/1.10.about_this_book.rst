@@ -1,0 +1,36 @@
+关于本书
+============================================
+
+This book includes the following chapters, besides this introduction:
+
+• Chapter 2 is a minimalist introduction to Python. It assumes knowl- edge of both procedural and object-oriented programming concepts such as loops, conditions, function calls and classes, and covers basic Python syntax. It also covers examples of Python modules that are used throughout the book. If you already know Python, you may skip Chapter 2.
+
+• Chapter 3 shows how to start web2py, discusses the administrative interface, and guides the reader through various examples of increasing complexity: an application that returns a string, a counter application, an image blog, and a full blown wiki application that allows image uploads and comments, provides authentication, authorization, web services and an RSS feed. While reading this chapter, you may need
+
+ABOUT THIS BOOK	17 to refer to Chapter 2 for general Python syntax and to the following
+
+chapters for a more detailed reference about the functions that are used.
+
+• Chapter 4 covers more systematically the core structure and libraries: URL mapping, request, response, sessions, cacheint, CRON, interna- tionalization and general workflow.
+
+• Chapter 5 is a reference for the template language used to build views. It shows how to embed Python code into HTML, and demonstrates the use of helpers (objects that can generate HTML).
+
+• Chapter 6 covers the Database Abstraction Layer, or DAL. The syntax of the DAL is presented through a series of examples.
+
+• Chapter 7 covers forms, form validation and form processing. FORM is the low level helper for form building. SQLFORM is the high level form builder. In Chapter 7 we also discuss the new Create/Read/Up- date/Delete (CRUD) API.
+
+• Chapter8coversauthentication,authorizationandtheextensibleRole- Based Access Control mechanism available in web2py. Mail config- uration and CAPTCHA are also discussed here, since they are used by authentication.
+
+• Chapter 9 is about creating web services in web2py. We provide examples of integration with the Google Web Toolkit via Pyjamas, and with Adobe Flash via PyAMF.
+
+• Chapter 10 is about web2py and jQuery recipes. web2py is designed mainly for server-side programming, but it includes jQuery, since we have found it to be the best open-source JavaScript library available for effects and Ajax. In this chapter, we discuss how to effectively use jQuery with web2py.
+
+• Chapter 11 is about production deployment of web2py applications. We mainly address three possible production scenarios: on a Linux web server or a set of servers (which we consider the main deployment alternative), running as a service on a Microsoft Windows environment, and deployment on the Google Applications Engine (GAE). In this chapter, we also discuss security and scalability issues.
+
+• Chapter 12 contains a variety of other recipes to solve specific tasks, inlcuding upgrades, gecoding, pagination, Twitter API, and more.
+
+This book only covers basic web2py functionalities and the API that ships with web2py. This book does not cover web2py appliances, for example KPAX, the web2py Content Management System. The appliance for Central Authentication Service is briefly discussed in Chapter 8.
+
+You can download web2py appliances from the corresponding web site [33].
+
+You can find additional topics discussed on AlterEgo [34], the interactive web2py FAQ.

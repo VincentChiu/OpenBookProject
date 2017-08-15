@@ -1,0 +1,3758 @@
+:- aruizen (dujunfly@gmail.com)已认领 
+
+
+Sequences: Strings, Lists, and Tuples
+序列：字符串、列表和元组
+
+Chapter Topics
+
+•	Introduction to Sequences
+
+•	Strings
+
+•	Lists
+
+•	Tuples
+
+本章主题
+ 序列简介
+ 字符串
+ 列表
+ 元组
+
+
+
+
+
+
+
+
+				6
+ he next family of Python types we will be exploring are those whose
+items are ordered sequentially and accessible via index offsets into its set of elements. This group, known as sequences, includes the follow-
+ing types: strings (regular and unicode), listgs, and tuples.
+
+接下来我们要研究这样一些Python的类型，它们的成员有序排列的，并且可以通过下标偏移量访问到它的一个或者几个成员，这类Python类型统称为序列，包括下面这些：
+字符串(普通字符串和unicode字符串)，列表，和元组类型。
+We call these sequences because they are made up of sequences of “items”
+making up the entire data structure. For example, a string consists of a sequence
+of characters (even though Python does not have an explicit character type), so the first character of a string "Hello" is'H', the second character is 'e', and so on. Likewise, lists and tuples are sequences of various Python objects.
+	因为这些类型其实都是由一些成员共同组成的一个序列整体，所以我们把它们统称为序列，比如说，一个字符串是由一些字符(尽管Python并没有显式的定义字符这个类型)组成的序列，那么“Hello”这个字符串的第一个字符就是“H"，第二个字符就是‘e’……,同样的，列表类型和元组类型就是其他一些Python对象所组成的序列。
+We will first introduce all operators and built-in functions (BIFs) that apply
+to all sequences, then cover each type individually. For each sequence type, we will detail the following:
+	首先我们来熟悉一下适用于所有序列类型的操作符和内建函数(BIFs)，
+
+•	Introduction
+•	Operators
+•	Built-in functions
+•	Built-in methods (if applicable)
+•	Special features (if applicable)
+•	Related modules (if applicable)
+	
+	简介
+	操作符
+	内建函数
+	内建函数(如果可用)
+	特性(如果可用)
+	相关模块(如果可用)
+
+We will conclude this chapter with a reference chart that summarizes all of the operators and functions applicable to all sequences. Let us begin by taking
+a high-level overview.
+  在本章的末尾我们会给出一个对于所有序列类型都适用的操作符和函数的参考图表，现在让我们概略看一下这些内容.
+  
+
+
+Sequence
+
+
+(有乱码，需要对照原书)
+
+
+N == length of sequence == len(sequence)
+Figure 6–1    How sequence elements are stored and accessed
+
+N == 序列的长度 == len(sequence)
+Figure 6-1    有多少可以保存并可以被访问的序列元素
+
+
+
+
+6.1  Sequences
+
+Sequence types all share the same access model: ordered set with sequentially indexed offsets to get to each element. Multiple elements may be selected by using the slice operators, which we will explore in this chapter. The numbering scheme used starts from zero (0) and ends with one less than the length of the sequence—the reason for this is because we began at 0. Figure 6–1 illustrates how sequence items are stored.
+
+6.1  序列
+序列类型有着相同的访问模式：它的每一个元素可以通过指定一个偏移量的方式得到。而多个元素可以通过切片操作的方式一次得到，切片操作会在接下来的内容中讲到。下标偏移量是从0开始到 总元素数-1 结束 -- 之所以要减一是因为我们是从0开始计数的。图6-1阐述了序列的元素是如何存储的。
+
+6.1.1  Standard Type Operators
+
+The  standard  type  operators  (see  Section  4.5)  generally  work  with  all sequence types. Of course, one must comparisons with a grain of salt when dealing with objects of mixed types, but the remaining operations will work
+as advertised.
+
+6.1.1  标准类型操作符
+标准类型操作符(参见4.5节)一般都能适用于所有的序列类型。当然，如果作复合类型的对象比较的话，这样说可能需要有所保留，不过其他的操作绝对是完全适用的。
+6.1.2  Sequence Type Operators
+
+A list of all the operators applicable to all sequence types is given in Table 6.1. The operators appear in hierarchical order from highest to lowest with the levels alternating between shaded and not.
+
+6.1.2  序列类型操作符
+表6.1列出了对所有序列类型都适用的操作符。操作符是按照优先级从高到底的顺序排列的。
+Membership (in, not in)
+
+Membership test operators are used to determine whether an element is in
+or is a member of a sequence. For strings, this test is whether a character is
+in a string, and for lists and tuples, it is whether an object is an element of those sequences. The in and not in operators are Boolean in nature; they return True if the membership is confirmed and False otherwise.
+The syntax for using the membership operators is as follows:
+
+obj [not] in sequence
+
+成员关系操作符 (in, not in)
+
+成员关系操作符使用来判断一个元素是否属于一个序列的。比如对字符串类型来说，就是判断一个字符是否属于这个字符串，对和元组类型来说，就代表了一个对象是否属于该对象序列。in/not in 操作符的返回值一般来讲就是True/False，满足成员关系就返回True，否则返回False。该操作符的语法如下：
+
+对象 [not] in 序列
+
+
+
+Table 6.1  Sequence Type Operators
+
+Sequence Operator   Function
+
+seq[ind]	Element located at index ind of seq
+
+seq[ind1:ind2]	Elements from ind1 up to but not including ind2 of seq
+
+seq * expr	seq repeated expr times
+
+seq1 + seq2	Concatenates sequences seq1 and seq2
+
+obj in seq	Tests if obj is a member of sequence seq
+
+obj not in  seq	Tests if obj is not a member of sequence seq
+
+
+表6.1 序列类型操作符
+
+序列操作符		作用
+seq[ind]		获得下标为ind的元素
+seq[ind1:ind2]	获得下标从ind1到ind2间的元素集合
+seq * expr		序列重复expr次
+seq1 + seq2		连接序列seq1和seq2
+obj in seq 		判断obj元素是否包含在seq中
+obj not in seq	判断obj元素是否不包含在seq中
+
+
+Concatenation ( + )
+
+This  operation  allows  us  to  take  one  sequence  and  join  it  with  another sequence of the same type. The syntax for using the concatenation operator
+is as follows:
+
+sequence1 + sequence2
+The  resulting  expression  is  a  new  sequence  that  contains  the  combined contents of sequences sequence1 and sequence2. Note, however, that although this appears to be the simplest way conceptually to merge the contents of two sequences together, it is not the fastest or most efficient.
+For strings, it is less memory-intensive to hold all of the substrings in a list
+or  可迭代对象  and  use  one  final  join() string  method  call  to  merge  them together. Similarly for lists, it is recommend that readers use the extend() list method instead of concatenating two or more lists together. Concatenation comes in handy when you need to merge two sequences together on the fly and cannot rely on mutable object built-in methods that do not have a return value (or more accurately, a return value of None). There is an exam-
+ple of this case in the section below on slicing.
+
+连接操作符( + )
+这个操作符允许我们把一个序列和另一个相同类型的序列做连接。语法如下:
+sequence1 + sequence2
+
+该表达式的结果是一个包含sequence1和sequence2的内容的新序列.注意，这种方式看起来似乎实现了把两个序列内容合并的概念，但是这个操作不是最快或者说最有效的。对字符串来说，这个操作不如把所有的子字符串放到一个列表或可迭代对象中，然后调用一个join方法来把所有的内容连接在一起节约内存;类似地，对列表来说，我们推荐读者用列表类型的extend()方法来把两个或者多个列表对象合并.当你需要简单地把两个对象的内容合并，或者说不能依赖于可变对象的那些没有返回值(实际上它返回一个None)的内建方法来完成的时候时，连接操作符还是很方便的一个选择。下面的切片操作可以视作这些情况的例子。
+
+Repetition ( * )
+
+The repetition operator is useful when consecutive copies of sequence ele ments are desired. The syntax for using the repetition operator is as follows:
+
+sequence * copies_int
+
+The number of copies, copies_int, must be an integer (prior to 1.6, long integers  were  not  allowed).  As  with  the  concatenation  operator,  the  object returned  is  newly  allocated  to  hold  the  contents  of  the  multiply  replicated objects.
+
+
+重复操作符 ( * )
+当你需要需要一个序列的多份拷贝时，重复操作符非常有用，它的语法如下：
+
+sequence * copies_int
+
+copies_int必须是一个整数(1.6节里面有讲到，不能是长整数).像连接操作符一样，该操作符返回一个新的包含多份原对象拷贝的对象。
+
+
+Slices ( [ ], [ : ], [ : : ] )
+
+To put it simply: sequences are data structures that hold objects in an ordered manner. You can get access to individual elements with an index and pair of brackets, or a consecutive group of elements with the brackets and colons giving the indices of the elements you want starting from one index and going up to but not including the ending index.
+Now  we  are  going  to  explain  exactly  what  we  just  said  in  full  detail. Sequences are structured data types whose elements are placed sequentially
+in an ordered manner. This format allows for individual element access by index offset or by an index range of indices to select groups of sequential ele- ments in a sequence. This type of access is called slicing, and the slicing oper- ators allow us to perform such access.
+The syntax for accessing an individual element is:
+
+切片操作符 ( [], [:], [::] )
+简单地讲，所谓序列类型就是包含一些顺序排列的对象的一个结构.你可以简单的用方括号加一个下标的方式访问它的每一个元素,或者通过在方括号中用冒号把开始下标和结束下标分开的方式来访问一组连续的元素.下面我们将详细的讲解提到的这两种方式.序列类型是其元素被顺序放置的一种数据结构类型,这种方式允许通过指定下标的方式来获得某一个数据元素，或者通过指定下标范围来获得一组序列的元素.这种访问序列的方式叫做切片，我们通过切片操作符就可以实现我们上面说到的操作。访问某一个数据元素的语法如下：
+
+
+sequence[index]
+
+sequence is the name of the sequence and index is the offset into the sequence where the desired element is located. Index values can be positive, ranging from 0 to the maximum index (which is length of the sequence less one). Using the len() function (which we will formally introduce in the next   section),   this   gives   an   index   with   the   range   0 <= index <= len(sequence)-1.
+Alternatively, negative indexes can be used, ranging from –1 to the nega- tive  length  of  the  sequence,  -len(sequence),  i.e.,  -len(sequence) <= index <= -1. The difference between the positive and negative indexes is that positive indexes start from the beginning of the sequences and negative indexes work backward from the end.
+Attempting to retrieve a sequence element with an index outside of the length of the sequence results in an IndexError exception:
+
+sequence是序列的名字，index是想要访问的元素对应的偏移量.偏移量可以是正值,范围从0到偏移最大值(比序列长度少一),用len()函数（下一节会讲），可以得到序列长度，实际的范围是 0 <= inde <= len(sequece)-1 .另外，也可以使用负索引，范围是 -1 到序列的负长度，-len(sequence), -len(sequence) <= index <= -1.正负索引的区别在于正索引以序列的开始为起点，负索引以序列的结束为起点.试图访问一个越界的索引会引发一个如下的异常:
+
+>>> names = ('Faye', 'Leanna', 'Daylen')
+>>> print names[4]
+Traceback (most recent call last): File "<stdin>", line 1, in ?
+IndexError: tuple index out of range
+
+Because Python is object oriented, you can also directly access an element
+of a sequence (without first having to assign it to a variable) like this:
+
+>>> print ('Faye', 'Leanna', 'Daylen')[1] Leanna
+
+因为Python是面向对象的，所以你可以像下面这样直接访问一个序列的元素(不用先把它赋值给一个变量):
+>>> print ('Faye', 'Leanna', 'Daylen')[1] Leanna
+
+
+This comes in handy especially in cases where you have called a function and know that you are going to get back a sequence as a return value but are only interested in one or more elements and not the whole thing. So how do we select multiple elements?
+Accessing  a  group  of  elements  is  similar  to  accessing  just  a  single  item. Starting and ending indexes may be given, separated by a colon ( : ). The syn- tax for accessing a group of elements is:
+
+这个特性在你调用一个返回值是序列类型的函数，并且你只对返回的序列中的一个或某几个元素感兴趣时特别有用.
+那么我们如何才能一次得到多个元素呢？其实这跟访问某一个单一元素一样简单，只要简单的给出开始和结束的索引值，并且用冒号分隔就可以了，其语法如下:
+
+sequence[starting_index:ending_index]
+
+
+Using this syntax, we can obtain a “slice” of elements in sequence from the   starting_index up   to   but   not   including   the   element   at   the ending_index index.  Both  starting_index and  ending_index are optional, and if not provided, or if None is used as an index, the slice will go from  the  beginning  of  the  sequence  or  until  the  end  of  the  sequence, respectively.
+In Figures 6–2 to 6–6, we take an entire sequence (of soccer players) of length 5, and explore how to take various slices of such a sequence.
+
+通过这种方式我们可以得到从起始索引到结束索引（不包括结束索引对应的元素）之间的一"片"元素.起始索引和结束索引都是可选的，如果没有提供或者用None作为索引值,切片操作会从序列的最开始处开始，或者直到序列的最末尾结束.在图6-2和6-6里面，我们以一个长度为5的序列为例，分别讲解了这几种切片方式。
+
+
+
+
+Figure 6–3    Sequence slice: sequence[0:3] or sequence[:3]
+图6-3  序列切片操作： sequence[0:3]或者sequence[:3]
+
+Extended Slicing with Stride Indices
+
+The final slice syntax for sequences, known as extended slicing, involves a third index known as a stride. You can think of a stride index like a “step” value as the third element of a call to the range()built-in function or a for loop in languages like C/C++, Perl, PHP, and Java.
+Extended slice syntax with stride indices has actually been around for a long time, built into the Python virtual machine but accessible only via extensions. This syntax was even made available in Jython (and its predecessor JPython)
+
+用步长索引来进行扩展的切片操作
+序列的最后一个切片操作是扩展切片操作，它多出来的第三个索引值被用做步长参数。你可以把这个参数看成跟内建函数range()里面的步长参数或者类似于C/C++，Perl，PHP和Java语言里面for语句中的步长参数一样来理解。 Python的虚拟机里面其实很早就有了扩展切片操作，只不过以前需要通过扩展的方式来使用。Jython也支持这个语法(以前叫JPython)
+
+
+
+
+
+
+Figure 6–4    Sequence slice: sequence[2:5] or sequence[2:]
+图	   6-4	  序列切片操作：  sequence[2:5]
+
+
+Figure 6–5    Sequence slice: sequence[1:3]
+图	   6-5	  序列切片操作：  sequence[1:3]
+
+
+long before version 2.3 of the C interpreter gave everyone else access to it. Here are a few examples:
+
+以下是几个例子:
+
+>>> s = 'abcdefgh'
+>>> s[::-1]	# 可以视作"翻转"操作
+'hgfedcba'
+>>> s[::2]	# 隔一个取一个的操作
+'aceg'
+
+
+
+
+
+
+Figure 6–6    Sequence slice: sequence[3]
+图	   6-6	  序列切片操作：  sequence[3]
+
+
+
+
+
+
+More on Slice Indexing
+
+The  slice  index  syntax  is  more  flexible  than  the  single  element  index.  The starting and ending indices can exceed the length of the string. In other words, the starting index can start off well left of 0, that is, an index of 100 does not exist, but does not produce an error. Similarly, an index of 100 as an ending index of a sequence with fewer than 100 elements is also okay, as shown here:
+
+切片索引的更多内容
+
+切片索引的语法要比简单的单一元素索引灵活的多。开始和结束素引值可以超过字符串的长度。换句话说，起始索引可以小于0,而对于结束索引，即使索引值为100的元素并不存在也不会报错，简单地说，即使用100来作为一个长度不到100的序列的结束索引也不会有什么问题，例子如下：
+>>> ('Faye', 'Leanna', 'Daylen')[-100:100]
+('Faye', 'Leanna', 'Daylen')
+
+
+
+Here is another problem: we want to take a string and display it in a loop. Each time through we would like to chop off the last character. Here is a snippet of code that does what we want:
+有这么一个问题：有一个字符串，我们想通过一个循环按照这样的形式显示它：每次都把位于最后的一个字符砍掉，下面是实现这个要求的一种方法：
+
+>>> s = 'abcde'
+>>> i = -1
+>>> for i in range(-1, -len(s), -1):
+...	print s[:i]
+... abcd abc ab
+a
+
+However, what if we wanted to display the entire string at the first iteration? Is there a way we can do it without adding an additional print s before our loop? What if we wanted to programmatically specify no index, meaning all the way to the end? There is no real way to do that with an index as we are using negative indices in our example, and -1 is the “smallest” index. We cannot use 0, as that would be interpreted as the first element and would not display anything:
+可是，该如何在第一次迭代的时候显示整个字符串呢？是否有一种方法可以不用在整个循环之前加入一个额外的print语句呢？我们该如何定义一个索引，来代表整个的序列呢？事实上在个以负数作为索引的例子里是没有一个真正能解决这个问题的方法的，因为-1已经是“最小”的索引了.我们不可能用0来作为索引值，因为这会切片到第一个元素之前而什么都不会显示:
+
+>>> s[:0]
+''
+Our solution is another tip: using None as an index has the same effect as a missing index, so you can get the same functionality programmatically, i.e., when you are using a variable to index through a sequence but also want to be able to access the first or last elements:
+我们的方案是使用另一个小技巧:用None作为索引值，这样一来就可以满足你的需要，比如说，在你想用一个变量作为索引来从第一个到遍历最后一个元素的时候：
+
+>>> s = 'abcde'
+>>> for i in [None] + range(-1, -len(s), -1):
+...	print s[:i]
+... abcde abcd abc
+ab a
+
+
+
+
+So it works the way we want now. Before parting ways for now, we wanted
+to point out that this is one of the places where we could have created a list [None] and used the extend() method to add the range() output, or create a list with the range() elements and inserted None at the beginning, but we are (horribly) trying to save several lines of code here. Mutable object built-in methods like extend() do not have a return value, so we could not have used:
+现在这个程序符合我们的要求了。在进行下面的内容之前，必须指出，似乎还可以先创建一个只包含None的列表,然后用extend()函数把range()的输出添加到这个列表,或者先建立range()输出组成的列表然后再把None插入到这个列表的最前面，然后对这个列表进行遍历，但是可变对象的内建函数extend()根本就没有返回值，所以这个方法是行不通的:
+
+>>> for i in [None].extend(range(-1, -len(s), -1)):
+...	print s[:i]
+...
+Traceback (most recent call last): File "<stdin>", line 1, in ?
+TypeError: iteration over non-sequence
+
+The reason for the error is that [None].extend(...) returns None, which
+is neither a sequence nor an 可迭代对象. The only way we could do it without
+adding extra lines of code is with the list concatenation above.
+
+这个错误发生的原因是[None].extend(...)函数返回None , None既不是序列类型也不是可迭代对象. 这种情况下使用上面提到的的列表连接操作来实现是唯一不需要添加额外代码的方法. 
+
+6.1.3  Built-in Functions (BIFs)
+
+Before we look at sequence type BIFs, we wanted to let you know that you will be seeing the term 可迭代对象 mixed in with sequence. The reason for this is that  可迭代对象s  are  more  generalized  and  include  data  types  like  sequences, iterators, or any object supporting iteration.
+Because Python’s for loops can iterate over any 可迭代对象 type, it will seem like iterating over a pure sequence, even if it isn’t one. Also, many of Python’s BIFs  that  previously  only  accepted  sequences  as  arguments  have  been upgraded to take iterators and iterator-like objects as well, hence the basket term, “可迭代对象.”
+We  will  discuss  in  detail  in  this  chapter  BIFs  that  have  a  strong  tie  to sequences. We will discuss BIFs that apply more specifically to iteration in loops in Chapter 8, “Conditionals and Loops.”
+
+6.1.3	  内建函数(BIFs)
+
+在讲解序列类型的内建函数之前，有一点需要说明,序列本身就内含了迭代的概念，之所以会这样，是因为迭代这个概念就是从序列，迭代器，或者其他支持迭代操作的对象中泛化得来的。由于Python的for循环可以遍历所有的可迭代类型，在(非纯序列对象上)执行for循环时就像在一个纯序列对象上执行一样。而且Python的很多原来只支持序列作为参数的内建函数现在也开始支持迭代器或者或类迭代器了.我们把这些类型统称为"可迭代对象".在这一章里我们会详细的讨论跟序列关系紧密的内建函数(BIF). 在第八章"条件判断和循环"里面将讨论针对"在循环中迭代"这种情况的内建函数(BIF).
+
+Conversion/Casting
+
+The  list(),  str(),  and  tuple()BIFs  are  used  to  convert  from  any sequence type to another. You can also think of them as casting if coming over from another language, but there really is no conversion or casting going on. These “converters” are really factory functions (introduced in Chapter 4) that take an object and (shallow) copy its contents into a newly generated object of the desired type. Table 6.2 lists the sequence type conversion functions.
+
+
+类型转换
+
+内建函数list(),str()和tuple()被用做在各种序列类型之间转换。你可以把它们理解成其他语言里面的类型转换，但是并没有进行任何的转换。这些转换实际上是工厂函数（在第4章介绍），将对象作为参数，并将其内容（浅）拷贝到新生成的对象中.表6.2列出了适用于序列类型的转换函数。
+
+
+Table 6.2  Sequence Type Conversion Factory Functions
+表	  6.2  序列类型转换工厂函数
+
+Function	Operation
+函数		含义
+
+list(iter)	Converts 可迭代对象 to a list
+list(iter)	把可迭代对象转换为列表
+
+str(obj)	Converts obj to string (a printable string representation) 
+unicode(obj)	Converts obj to a Unicode string (using default encoding) 
+basestring()	Abstract factory function serves only as parent class of str and unicode, so cannot be called/instantiated
+(see Section 6.2)
+tuple(iter)	Converts 可迭代对象 to a tuple
+
+
+str(obj)	 把obj对象转换成字符串(对象的字符串表示法)
+unicode(obj) 把对象转换成Unicode字符串(使用默认编码)
+basestring() 抽象工厂函数,其作用仅仅是为str和unicode函数提供父类，所以不能被实例化，也不能被调用(详见第6.2节)
+tuple(iter)	 把一个可迭代对象转换成一个元组对象
+
+
+Again, we use the term “convert” loosely. But why doesn’t Python just convert our argument object into another type? Recall from Chapter 4 that once Python objects are created, we cannot change their identity or their type. If you pass a list to list(), a (shallow) copy of the list’s objects will be made and inserted into the new list. This is also similar to how the concatenation and repetition operators that we have seen previously do their work.
+
+我们又用了一次“转换”这个词。不过，为什么Python里面不简单地把一个对象转换成另一个对象呢？回过头看一下第4章就会知道，一旦一个Python的对象被建立，我们就不能更改其身份或类型了.如果你把一个列表对象传给list（）函数，便会创建这个对象的一个浅拷贝，然后将其插入新的列表中。同样地，在做连接操作和重复操作时，我们也会这样处理。
+
+A shallow copy is where only references are copied … no new objects are made! If you also want copies of the objects (including recursively if you have container objects in containers), you will need to learn about deep copies. More information on shallow and deep copies is available toward the end of this chapter.
+所谓浅拷贝就是只拷贝了对对象的索引，而不是重新建立了一个对象！如果你想完全的拷贝一个对象(包括递归，如果你的对象是一个包含在容器中的容器),你需要用到深拷贝，关于浅拷贝和深拷贝的更多信息会在本章的末尾讲到。
+
+The str() function is most popular when converting an object into some- thing printable and works with other types of objects, not just sequences. The same thing applies for the Unicode version of str(), unicode(). The list() and tuple() functions are useful to convert from one to another (lists to tuples and vice versa). However, although those functions are applicable for strings as well since strings are sequences, using tuple() and list() to turn strings into tuples or lists (of characters) is not common practice.
+
+Operational
+
+Python  provides  the  following  operational  BIFs  for  sequence  types  (see Table 6.3 below). Note that len(), reversed(), and sum() can only accept sequences while the rest can take 可迭代对象s. Alternatively, max() and min() can also take a list of arguments
+
+
+str()函数在需要把一个对象的可打印信息输出时特别有用，不仅仅是对序列类型，对其他类型的对象同样如此.Unicode()是str()函数的unicode版本，它跟str()函数基本一样.list()和tuple()函数在列表类型和元组类型的互换时非常有用.不过，虽然这些函数也适用于string类型(因为string类型也是序列的一种),但是在string类型上应用tuple()和list()函数却得不到我们通常希望的结果.
+
+
+Operational
+
+Python为序列类型提供以下可操作BIFs(见表6.3).注意，len(),reversed()和sum()函数只能接受序列类型对象作为参数，而剩下的则还可以接受可迭代对象做为参数，另外，max()和min()函数也可以接受一个参数列表.
+
+
+
+Table 6.3  Sequence Type Operational Built-in Functions
+Function	Operation
+表 6.3		序列类型可用的内建函数
+
+函数名		功能
+
+enumerate(iter)a	Takes an 可迭代对象 and returns an enumerate object
+(also an iterator) which generates 2-tuple elements
+(index, item) of iter (PEP 279)
+
+len(seq)	Returns length (number of items) of seq
+
+max(iter, key=None)
+or max(arg0,
+arg1..., key=None)b
+Returns “largest” element in iter or returns “largest” of (arg0, arg1, . . .);
+if key is present, it should be a callback to pass to the sort() method for testing
+
+
+enumerate(iter)	接受一个可迭代对象作为参数，返回一个enumerate对象(同时也是一个迭代器),该对象生成由iter每个元素的index值和item值组成的元组(PEP 279)
+
+len(seq)		返回seq的长度
+
+max(iter,key=None) or max(arg0,arg1...,key=None)
+返回iter或(arg0,arg1,...)中的最大值，如果指定了key,这个key必须是一个可以传给sort()方法的,用于比较的回调函数.
+
+min(iter, key=None) or min(arg0, arg1.... key=None)
+
+Returns “smallest” element in iter;
+returns “smallest” of (arg0, arg1, . . .);
+if key is present, it should be a callback to pass to
+the sort() method for testing
+
+返回iter里面的最小值;
+或者返回(arg0,arg2,...)里面的最小值;
+如果指定了key,这个key必须是一个可以传给sort()方法的,用于比较的回调函数.
+
+reversed(seq)c	
+Takes sequence and returns an iterator that traverses that sequence in reverse order
+(PEP 322)
+接受一个序列作为参数,返回一个以逆序访问的迭代器(PEP 322)
+
+sorted(iter, func=None, key=None, reverse=False)c
+
+Takes an 可迭代对象 iter and returns a sorted list; optional arguments func, key, and reverse are the same as for the list.sort() built-in
+method
+
+接受一个可迭代对象作为参数，返回一个有序的列表;可选参数func,key和reverse的含义跟list.sort()内建函数的参数含义一样.
+
+sum(seq, init=0)a	
+Returns the sum of the numbers of seq and optional
+initial value; it is equivalent to reduce
+(operator.add, seq, init)
+
+返回seq和可选参数init的总和,其效果等同于reduce(operator.add,seq,init)
+
+zip([it0, it1,... itN])d
+
+Returns a list of tuples whose elements are members of each 可迭代对象 passed into it, i.e., [(it0[0], it1[0],... itN[0]), (it0[1], it1[1],... itN[1]),... (it0[n], it1[n],... itN[n])], where n is the minimum cardinality of all of the 可迭代对象s
+
+返回一个列表，其第一个元素是it0,it1,...这些元素的第一个元素组成的一个元组，第二个...,类推.
+
+
+a.	New in Python 2.3.
+	Python2.3新增
+
+b.	key argument new in Python 2.5. 
+	从Python2.5开始支持关键字参数
+
+c.	New in Python 2.4.
+	Python2.4开始支持
+	
+d.	New in Python 2.0; more flexibility added in Python 2.4.
+	Python2.0加入，Python2.4加强
+
+We will provide some examples of using these functions with each sequence type in their respective sections.
+我们将分别在每个序列的章节里面提供使用这些函数的例子.
+
+
+6.2  Strings
+
+Strings  are  among  the  most  popular  types  in  Python.  We  can  create  them simply  by  enclosing  characters  in  quotes.  Python  treats  single  quotes  the same  as  double  quotes.  This  contrasts  with  most  other  shell-type  scripting languages,  which  use  single  quotes  for  literal  strings  and  double  quotes  to allow escaping of characters. Python uses the “raw string” operator to create literal quotes, so no differentiation is necessary. Other languages such as C use single quotes for characters and double quotes for strings. Python does not  have  a  character  type;  this  is  probably  another  reason  why  single  and double quotes are treated the same.
+Nearly  every  Python  application  uses  strings  in  one  form  or  another. Strings are a literal or scalar type, meaning they are treated by the interpreter as  a  singular  value  and  are  not  containers  that  hold  other  Python  objects. Strings are immutable, meaning that changing an element of a string requires creating a new string. Strings are made up of individual characters, and such elements of strings may be accessed sequentially via slicing.
+
+
+6.2 字符串
+	字符串类型是Python里面最常见的类型.我们可以简单地通过在引号间包含字符的方式创建它.Python里面单引号和双引号的作用是相同的，这一点Python不同于其他类Shell的脚本语言，在这些脚本语言中，通常转义字符仅仅在双引号字符串中起作用，在单一号括起的字符串中不起作用。Python用"原始字符串"操作符来创建直接量字符串,所以再做区分就没什么意义了。其他的语言，比如C语言里面用单引号来标示字符，双引号标示字符串,而在Python里面没有字符这个类型.这可能是双引号和单引号在Python里面被视作一样的的另一个原因.几乎所有的Python应用程序都会某种方式用到字符串类型.字符串是一种直接量或者说是一种标量,这意味着Python解释器在处理字符串时是把它作为单一值并且不会包含其他Python类型的。字符串是不可变类型,就是说改变一个字符串的元素需要新建一个新的字符串.字符串是由独立的字符组成的，并且这些字符可以通过切片操作顺序地访问。
+
+
+With  the  unification  of  types  and  classes  in  2.2,  there  are  now  actually three  types  of  strings  in  Python.  Both  regular  string  (str)  and  Unicode string (unicode) types are actually subclassed from an abstract class called basestring. This class cannot be instantiated, and if you try to use the fac- tory function to make one, you get this:
+根据在2.2章节里面对类型和类的概念进行的统一，Python实际上有3类字符串.通常意义的字符串(str)和Unicode字符串(unicode)实际上都是抽象类basestring的子类.这个basestring是不能实例化的，如果你试图实例化一个basestring类,你会得到以下报错信息:
+
+>>> basestring('foo')
+Traceback (most recent call last): File "<stdin>", line 1, in <module>
+TypeError: The basestring type cannot be instantiated
+
+How to Create and Assign Strings
+
+Creating strings is as simple as using a scalar value or having the str() factory function make one and assigning it to a variable:
+字符串的创建和赋值
+
+创建一个字符串就像使用一个标量一样简单，当然你也可以把str()作为工厂方法来创建一个字符串并把它赋值给一个变量:
+
+>>> aString = 'Hello World!'	# 使用单引号
+>>> anotherString = "Python is cool!" # 使用双引号
+>>> print aString	# print 不带引号的 Hello World!
+>>> anotherString	# 不是进行print操作，带有引号
+'Python is cool!'
+
+>>> s = str(range(4))	# 把一个列表转换成一个字符串
+>>> s
+'[0, 1, 2, 3]'
+
+How to Access Values (Characters and Substrings) in Strings
+
+Python does not support a character type; these are treated as strings of length one,  thus  also  considered  a  substring.  To  access  substrings,  use  the  square brackets for slicing along with the index or indices to obtain your substring:
+
+如何访问字符串的值(字符和子串)
+Python里面没有字符这个类型,而是用长度为1的字符串来表示这个概念,当然，这其实也是一个子串。用方括号加一个或者多于一个索引的方式来获得子串:
+
+>>> aString = 'Hello World!'
+>>> aString[0]
+'H'
+>>> aString[1:5]
+'ello'
+>>> aString[6:]
+'World!'
+
+How to Update Strings
+
+You  can  “update”  an  existing  string  by  (re)assigning  a  variable  to  another string. The new value can be related to its previous value or to a completely different string altogether.
+
+如何改变字符串
+你可以通过给一个变量赋值（或者重赋值）的方式“更新”一个已有的字符串.新的值可能与原有值差不多，也可能跟原有串完全不同。
+
+>>> aString = aString[:6] + 'Python!'
+>>> aString
+'Hello Python!'
+>>> aString = 'different string altogether'
+>>> aString
+'different string altogether'
+
+Like numbers, strings are not mutable, so you cannot change an existing string without creating a new one from scratch. That means that you cannot update individual characters or substrings in a string. However, as you can see  above,  there  is  nothing  wrong  with  piecing  together  parts  of  your  old string into a new string.
+
+跟数字类型一样，字符串类型也是不可变的，所以你要改变一个字符串就必须通过创建一个新串的方式来实现。也就是说你不能只改变一个字符串的一个字符或者一个子串，然而，通过拼凑一个旧串的各个部分来得到一个新串是被允许的，正如上面你看到的那样.
+
+How to Remove Characters and Strings
+
+To  repeat  what  we  just  said,  strings  are  immutable,  so  you  cannot  remove individual characters from an existing string. What you can do, however, is to empty the string, or to put together another string that drops the pieces you were not interested in.
+Let us say you want to remove one letter from “Hello World!”… the (lower- case) letter “l,” for example:
+
+如何删除字符和字符串
+再重复一遍，字符串是不可变的,所以你不能仅仅删除一个字符串里的某个字符,你能做的是清空一个空字符串，或者是把剔除了不需要的部分后的字符串组合起来形成一个新串。假设你想要从"Hello World!"里面删除小写的'l'
+
+
+>>> aString = 'Hello World!'
+>>> aString = aString[:3] + aString[4:]
+>>> aString
+'Helo World!'
+To  clear  or  remove  a  string,  you  assign  an  empty  string  or  use  the  del
+statement, respectively:
+通过赋一个空字符串或者使用del语句来清空或者删除一个字符串:
+
+>>> aString = ''
+>>> aString
+''
+>>> del aString
+In most applications, strings do not need to be explicitly deleted. Rather, the code defining the string eventually terminates, and the string is eventually deallocated.
+在大部分应用程序里，没有必要显式的删除字符串。定义这个字符串的代码最终会结束，那时Python会自动释放这些字符串.
+
+
+6.3  Strings and Operators
+	 字符串和操作符
+6.3.1  Standard Type Operators
+	   标准类型操作符
+
+In Chapter 4, we introduced a number of operators that apply to most objects, including the standard types. We will take a look at how some of those apply to strings. For a brief introduction, here are a few examples using strings:
+
+ 
+在第4章里面，我们介绍了一些适用于包括标准类型在内的大部分对象的操作符，在这里再看一下这些其中的一些操作符是怎样作用于字符串类型的,下面是几个简单的例子:
+
+>>> str1 = 'abc'
+>>> str2 = 'lmn'
+>>> str3 = 'xyz'
+>>> str1 < str2
+True
+>>> str2 != str3
+True
+>>> str1 < str3 and str2 == 'xyz' False
+
+When using the value comparison operators, strings are compared lexico- graphically (ASCII value order).
+
+在做比较操作的时候，字符串是按照ASCII值的大小来比较的.
+
+6.3.2  Sequence Operators
+
+序列操作符
+切片( [ ] 和 [ : ] )
+
+Earlier  in  Section  6.1.1,  we  examined  how  we  can  access  individual  or  a group of elements from a sequence. We will apply that knowledge to strings
+in this section. In particular, we will look at:
+
+在早先地6.1.1章节里面我们展示了如何访问序列类型的一个或一组元素,接下来我们会把这些知识应用到字符串类型上，着重考察以下的操作:
+
+•	Counting forward
+•	Counting backward
+•	Default/missing indexes
+
+For  the  following  examples,  we  use  the  single string 'abcd'. Provided in the figure is a list of pos- itive and negative indexes that indicate the position in which each character is located within the string itself.
+Using  the  length  operator,  we  can  confirm  that its length is 4:
+
+•	正向索引
+•	反向索引
+•	默认索引
+
+接下来以字符串'abcd'为例子.表里面分别列出了使用正索引和负索引来定位字符的情况.
+可以用长度操作符来确认该字符串的长度是4:
+
+>>> aString = 'abcd'
+>>> len(aString)
+4
+
+When counting forward, indexes start at 0 to the left and end at one less than the length of the string (because we started from zero). In our example, the final index of our string is:
+
+正向索引时，索引值开始于0,结束于总长度减1(因为我们是从0开始索引的).本例中最后一个索引是:
+
+final_index	= len(aString) - 1
+= 4 - 1
+= 3
+
+We can access any substring within this range. The slice operator with a single argument will give us a single character, and the slice operator with a range, i.e., using a colon ( : ), will give us multiple consecutive characters. Again, for any ranges [start:end], we will get all characters starting at offset start up to, but not including, the character at end. In other words, for
+all characters x in the range[start:end], start <= x < end.
+
+在这个范围内，我们可以访问任意的子串。用一个参数来调用切片操作符结果是一个单一字符，而使用一个数值范围(用':')作为参数调用切片操作的参数会返回一串连续地字符.再强调一遍，对任何范围[start:end],我们可以访问到包括start在内到end(不包括end)的所有字符，换句话说，假设x是[start:end]中的一个索引值，那么有: start<= x < end.
+
+>>> aString[0]
+'a'
+>>> aString[1:3]
+'bc'
+>>> aString[2:4]
+'cd'
+>>> aString[4]
+Traceback (innermost last): File "<stdin>", line 1, in ?
+IndexError: string index out of range
+
+Any index outside our valid index range (in our example, 0 to 3) results in an error. Above, our access of aString[2:4] was valid because that returns characters at indexes 2 and 3, i.e., 'c' and 'd', but a direct access to the
+character at index 4 was invalid.
+
+When  counting  backward,  we  start  at  index  –1  and  move  toward  the beginning of the string, ending at negative value of the length of the string. The final index (the first character) is located at:
+
+	  使用不在允许范围(本例中是0到3)内的索引值会导致错误。上面的aString[2:4]却并没有出错，那是因为实际上它返回的是索引值2和3的值。但是直接拿4作为索引访问是不被允许的。
+	  在进行反向索引操作时,是从-1开始，向字符串的开始方向计数，到字符串长度的负数为索引的结束。最末一个索引(也就是第一个字符)是这样定位的：
+
+final_index	= -len(aString)
+= -4
+
+>>> aString[-1]
+'d'
+>>> aString[-3:-1]
+'bc'
+>>> aString[-4]
+'a'
+When either a starting or an ending index is missing, they default to the beginning or end of the string, respectively.
+	 如果开始索引或者结束索引没有被指定，则分别以字符串的第一个和最后一个索引值为默认值。
+>>> aString[2:]
+'cd'
+>>> aString[1:]
+'bcd'
+>>> aString[:-1]
+'abc'
+>>> aString[:]
+'abcd'
+Notice how the omission of both indices gives us a copy of the entire string.
+	 注意：起始/结束索引都没有指定的话会返回整个字符串.
+
+Membership (in, not in)
+
+The  membership  question  asks  whether  a  (sub)string  appears  in  a(nother) string. True is returned if that character appears in the string and False oth- erwise.  Note  that  the  membership  operation  is  not  used  to  determine  if  a substring is within a string. Such functionality can be accomplished by using the  string  methods  or  string  module  functions  find() or  index() (and their brethren rfind() and rindex()).
+Below are a few more examples of strings and the membership operators.
+Note that prior to Python 2.3, the in (and not in) operators for strings only allowed a single character check, such as the second example below (is 'n' a sub- string of ‘abcd’). In 2.3, this was opened up to all strings, not just characters.
+	 成员操作符(in ,not in)
+	 成员操作符用于判断一个字符或者一个子串(中的字符)是否出现在另一个字符串中。出现则返回True，否则返回False.注意，成员操作符不是用来判断一个字符串是否包含另一个字符串的，这样的功能由find()或者index()（还有它们的兄弟：rfind()和rindex())函数来完成.
+	 下面是一些字符串和成员操作符的例子.
+	 在Python2.3以前，in(和not in)操作符只允许用来判断一个单个字符是否属于一个字符串,就像下面第二个例子那样.2.3以后这个限制去掉了，所有的字符串都可以拿来判断.
+	 	 
+
+>>> 'bc' in 'abcd' True
+>>> 'n' in 'abcd' False
+>>> 'nm' not in 'abcd' True
+
+
+In Example 6.1, we will be using the following predefined strings found in
+the string module:
+
+
+	在例6.1里面，我们会用到下面这些string模块预定义的字符串:
+>>> import string
+>>> string.ascii_uppercase
+'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+>>> string.ascii_lowercase
+'abcdefghijklmnopqrstuvwxyz'
+>>> string.ascii_letters
+'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+>>> string.digits
+'0123456789'
+
+Example 6.1 is a small script called idcheck.py which checks for valid Python identifiers. As we now know, Python identifiers must start with an alphabetic  character.  Any  succeeding  characters  may  be  alphanumeric.
+
+	例6.1是一个用来检查Python有效标识符的小脚本,名字是idcheck.py.我们知道，Python标识符必须以字母或下划线开头，后面跟字母,下划线或者数字.
+
+例 6.1  标识符检查 (idcheck.py)
+
+Tests for identifier validity. First symbol must be alphabetic and remaining symbols must be alphanumeric. This tester program only checks identifiers that are at least two characters in length.
+
+	标识符合法性检查，首先要以字母或者下划线开始，后面要跟字母,下划线或者或数字.这个小例子只检查长度大于等于2的标识符.
+1	#!usr/bin/env python
+2
+3	import string
+4
+5	alphas = string.letters + '_'
+6	nums = string.digits
+7
+8	print 'Welcome to the Identifier Checker v1.0'
+9	print 'Testees must be at least 2 chars long.'
+10	inp = raw_input('Identifier to test? ')
+11
+12  if len(myInput) > 1:
+13
+14	if myInput[0] not in alphas:
+15	print '''invalid: first symbol must be
+16	alphabetic'''
+17	else:
+18	for otherChar in myInput[1:]:
+19
+20	if otherChar not in alphas + nums:
+21	print '''invalid: remaining
+22	symbols must be alphanumeric'''
+23	break
+24	else:
+25	print "okay as an identifier"
+
+The example also shows use of the string concatenation operator ( + ) introduced later in this section.
+Running this script several times produces the following output:
+
+	这个例子还展示了字符串连接符( + )的使用,本章的后面会讲到字符串连接符.运行几次后得到下面的输出：
+
+$ python idcheck.py
+Welcome to the Identifier Checker v1.0
+Testees must be at least 2 chars long. Identifier to test? counter
+okay as an identifier
+$
+$ python idcheck.py
+Welcome to the Identifier Checker v1.0
+Testees must be at least 2 chars long. Identifier to test? 3d_effects
+invalid: first symbol must be alphabetic
+
+Let us take apart the application line by line.
+	让我们逐行解释这个应用程序 。
+
+Lines 3–6
+Import the string module and use some of the predefined strings to put together  valid  alphabetic  and  numeric  identifier  strings  that  we  will  test against.
+	   3-6行导入string 模块并且预定义了两个字符串，用于后面的判断.	   
+
+Lines 8–12
+Print the salutation and prompt for user input. The if statement on line 12
+filters out all identifiers or candidates shorter than two characters in length.
+	  8-12行 输出提示信息，第12行的if语句过滤掉长度小于2的标识符或者候选标识符.
+	  
+Lines 14–16
+Check to see if the first symbol is alphabetic. If it is not, display the output indicating the result and perform no further processing.
+	  14-16行 检查第一个符号是不是字母或下划线，如果不是，输出结果并退出。
+
+Lines 17–18
+Otherwise, loop to check the other characters, starting from the second sym- bol to the end of the string.
+	  17-18行
+	  否则，从第二个字符开始到最后一个字符，循环检查剩余的字符.
+
+Lines 20–23
+Check to see if each remaining symbol is alphanumeric. Note how we use the concatenation operator (see below) to create the set of valid characters. As soon as we find an invalid character, display the result and perform no further processing by exiting the loop with break.
+
+	  20-23行
+	  检查剩余的符号是否都是字母,下划线或者数字.注意我们是如何使用连接操作符来创建合法字符集合的。只要发现一个非法字符，就显示结果并通过break语句退出。
+
+
+CORE TIP: Performance
+
+In general, repeat performances of operations or functions as arguments in
+a loop are unproductive as far as performance is concerned.
+
+核心提示: 性能
+一般来说，从性能的的角度来考虑，把重复操作作为参数放到循环里面进行是非常低效的. 
+while i < len(myString):
+print 'character %d is:', myString[i]
+
+The loop above wastes valuable time recalculating the length of string myString. This function call occurs for each loop iteration. If we simply save this value once, we can rewrite our loop so that it is more productive.
+
+上面的循环操作把大把的时间都浪费到了重复计算字符串myString的长度上了.每次循环迭代都要运行一次这个函数.如果把这个值做一次保存，我们就可以用更为高效的方式重写我们的循环操作.
+
+length = len(myString)
+while i < length:
+print 'character %d is:', myString[i]
+
+The same idea applies for this loop above in Example 6.1.
+这个方法同样适用于上面的例6.1
+
+for otherChar in myInput[1:]:
+if otherChar not in alphas + nums:
+:
+The for loop beginning on line 18 contains an if statement that concatenates a pair of strings.These strings do not change throughout the course of the application, yet this calculation must be performed for each loop iteration. If we save the new string first, we can then reference that string rather than make the same calculations over and over again:
+
+	第18行的for循环包含了一个if语句，在这个if里面执行了合并两个字符串的操作。被合并的这两个字符串从始至终就没变过，而每次都会重新进行一次计算.如果先把这两个字符串存为一个新字符串，我们就可以直接引用这个字符串而不用进行重复计算了。
+
+alphnums = alphas + nums
+for otherChar in myInput[1:]:
+if otherChar not in alphnums:
+:
+
+
+
+Lines 24–25
+It may be somewhat premature to show you a for-else loop statement, but we are going to give it a shot anyway. (For a full treatment, see Chapter 8). The else statement for a for loop is optional and, if provided, will execute if the loop finished in completion without being “broken” out of by break. In our application, if all remaining symbols check out okay, then we have a valid iden- tifier name. The result is displayed to indicate as such, completing execution.
+   24-25行
+   或许现在就向你展示for-else循环语句有点儿早，可是我们必需先看一看这个语句(在第8章有详细的介绍).for循环的else语句是一个可选项，它只在for循环完整的结束,没有遇到break时执行。在我们的例子中，如果所有的符号都检查合格，那么我们就得到了一个合法的标识符，程序会返回一个这样的结果，然后执行完毕。
+This application is not without its flaws, however. One problem is that the identifiers tested must have length greater than 1. Our application “as is” is not reflective of the true range of Python identifiers, which may be of length 1. Another problem with our application is that it does not take into consideration Python keywords, which are reserved names that cannot be used for identifiers. We leave these two tasks as exercises for the reader (see Exercise 6–2).
+	 其实，这段程序并不是完美的，一个问题就是标识符的长度必须大于1.我们的程序几乎是，但还并没有真正定义出Python标识符的范围，Python标识符长度可以是1.另一个问题是这段程序并没有考虑到Python的关键字，而这些都是作为保留字,不允许用做标识符的.我们把这两个问题作为课后练习留给读者(见练习6-2)。	 
+
+Concatenation ( + )
+
+	连接符( + )
+Runtime String Concatenation
+We can use the concatenation operator to create new strings from existing ones.  We  have  already  seen  the  concatenation  operator  in  action  above  in Example 6–1. Here are a few more examples:
+运行时刻字符串连接
+   我们可以通过连接操作符来从原有字符串获得一个新的字符串.我们已经在前面的例6-1里面见识过连接符了，下面是一些更多的例子：
+
+>>> 'Spanish' + 'Inquisition'
+'SpanishInquisition'
+>>>
+>>> 'Spanish' + ' ' + 'Inquisition'
+'Spanish Inquisition'
+>>>
+>>> s = 'Spanish' + ' ' + 'Inquisition' + ' Made Easy'
+>>> s
+'Spanish Inquisition Made Easy'
+>>>
+>>> import string
+>>> string.upper(s[:3] + s[20])	# archaic (see below)
+'SPAM'
+
+The last example illustrates using the concatenation operator to put together
+a pair of slices from string s, the “Spa” from “Spanish” and the “M” from
+“Made.”   The   extracted   slices   are   concatenated   and   then   sent   to   the
+string.upper() function to convert the new string to all uppercase letters. String methods were added to Python back in 1.6 so such examples can be replaced  with  a  single  call  to  the  final  string  method  (see  example  below). There is really no longer a need to import the string module unless you are trying to access some of the older string constants which that module defines. Note:  Although  easier  to  learn  for  beginners,  we  recommend  not  using string concatenation when performance counts. The reason is that for every string that is part of a concatenation, Python has to allocate new memory for all strings involved, including the result. Instead, we recommend you either use the string format operator ( % ), as in the examples below, or put all of the sub- strings in a list, and using one join() call to put them all together:
+
+	最后一个例子展示了用一个字符串s的两个切片来构成一个新串的操作,从"Spanish"里面切出"Spa"加上从"Made"里面切出来的"M".将抽取出来字符串切片连接后作为参数传给了string.upper()方法，该方法负责把字符串的所有字符都变为大写。String模块的方法是在Python1.6里面添加进来的，所以这个操作也可以用最后一个字符串的一个单一方法调用来完成(见下面的例子)。现在已经没有必要导入string模块了，除非你需要访问该模块自己定义的字符串常量。注意:虽然对初学者来说string模块的方式更便于理解，但出于性能方面的考虑，我们还是建议你不要用string模块。原因是Python必须为每一个参加连接操作的字符串分配新的内存，包括新产生的字符串。取而代之，我们推荐你像下面介绍的那样使用字符串格式化操作符(%)，或者把所有的字符串放到一个列表中去，然后用一个join()方法来把它们连接在一起。
+
+>>> '%s %s' % ('Spanish', 'Inquisition')
+'Spanish Inquisition'
+>>>
+>>> s = ' '.join(('Spanish', 'Inquisition', 'Made Easy'))
+>>> s
+'Spanish Inquisition Made Easy'
+>>>
+>>> # no need to import string to use string.upper():
+>>> ('%s%s' % (s[:3], s[20])).upper()
+'SPAM'
+
+
+Compile-Time String Concatenation
+The above syntax using the addition operator performs the string concatena- tion at runtime, and its use is the norm. There is a less frequently used syntax that  is  more  of  a  programmer  convenience  feature.  Python’s  syntax  allows you to create a single string from multiple string literals placed adjacent to each other in the body of your source code:
+
+	编译时字符串连接
+	上面的语法在运行时字符串连接的加法操作，这个用法是非常标准的。Python中还有一种并不是经常用到，更像是一种程序员的习惯用法的语法.Python的语法允许你在源码中把几个字符串连在一起写，以此来构建新字符串:
+>>> foo = "Hello" 'world!'
+>>> foo
+'Helloworld!'
+It is a convenient way to split up long strings without unnecessary back- slash escapes. As you can see from the above, you can mix quotation types on the same line. Another good thing about this feature is that you can add com- ments too, like this example:
+   通过这种方法，你可以把长的字符串分成几部分来写，而不用加反斜杠。如上所示，你可以在一行里面混用两种分号。这种写法的好处是你可以把注释也加进来，如下:
+
+>>> f = urllib.urlopen('http://'	# protocol
+... 'localhost'	# hostname
+... ':8000'	# port
+... '/cgi-bin/friends2.py')	# file
+As you can imagine, here is what urlopen() really gets as input:
+   如你所想，下面就是urlopen()方法所得到的真实输入:
+
+>>> 'http://' 'localhost' ':8000' '/cgi-bin/friends2.py'
+'http://localhost:8000/cgi-bin/friends2.py'
+
+Regular String Coercion to Unicode
+When  concatenating  regular  and  Unicode  strings,  regular  strings  are  con- verted to Unicode first before the operation occurs:
+	普通字符串转化为Unicode字符串
+	如果把一个普通字符串和一个Unicode字符串做连接处理，Python会在连接操作前先把普通字符串转化为Unicode字符串:
+
+>>> 'Hello' + u' ' + 'World' + u'!'
+u'Hello World!'
+
+Repetition ( * )
+	重复操作符( * )
+
+The repetition operator creates new strings, concatenating multiple copies of the same string to accomplish its functionality:
+	重复操作符创建一个包含了原有字符串的多个拷贝的新串:
+
+>>> 'Ni!' * 3
+'Ni!Ni!Ni!'
+>>>
+>>> '*'*40
+'****************************************'
+>>>
+>>> print '-' * 20, 'Hello World!', '-' * 20
+-------------------- Hello World! --------------------
+>>> who = 'knights'
+>>> who * 2
+'knightsknights'
+
+>>> who
+'knights'
+
+As with any standard operator, the original variable is unmodified, as indicated in the final dump of the object above.
+   像其他的标准操作符一样，原变量是不被修改的，就像上面最后一个例子所示。
+
+6.4  String-Only Operators
+	 6.4只适用于字符串的操作符
+
+6.4.1  Format Operator ( % )
+	 6.4.1 格式化操作符( % )
+Python features a string format operator. This operator is unique to strings and makes up for the lack of having functions from C’s printf() family. In fact, it even uses the same symbol, the percent sign (%), and supports all the printf() formatting codes.
+The syntax for using the format operator is as follows:
+	Python风格的字符串格式化操作符。只适用于字符串类型，非常类似于C语言里面的printf()函数的字符串格式化,甚至所用的符号都一样，都用百分号(%)，并且支持所有printf()式的格式化操作.语法如下:
+
+format_string % (arguments_to_convert)
+The format_string on the left-hand side is what you would typically find as the first
+argument to printf(), the format string with any of the embedded % codes. The set of valid codes is given in Table6.4. The arguments_to_convert parameter matches the remaining arguments you would send to printf(), namely the set of variables to convert and display.
+
+	  左边的format_string里面同通常会在printf()函数的第一个参数里面见到的一样:包含%的格式化字符串.表6.4列出了可用的各种符号.arguments_to_convert参数是你要转化、显示的变量,对应于你送给prinf 的其他参数.
+
+Table 6.4  Format Operator Conversion Symbols
+      表6.4 字符串格式化符号
+
+Format Symbol	Conversion
+格式化字符	转换方式
+
+%c	Character (integer [ASCII value] or string of length 1)
+	转换成字符(ASCII码值，或者长度为一的字符串)
+
+%ra	String conversion via repr() prior to formatting
+	优先用repr()函数进行字符串转换
+
+%s	String conversion via str() prior to formatting
+	优先用str()函数进行字符串转换
+
+%d / %i	Signed decimal integer
+     	转成有符号十进制数
+
+%ub	Unsigned decimal integer
+	转成无符号十进制数
+
+%ob	(Unsigned) octal integer
+	转成无符号八进制数
+
+%xb/%Xb	(Unsigned) hexadecimal integer (lower/UPPERcase letters)
+        转成无符号十六进制数(x/X代表转换后的十六进制字符的大小写)
+
+%e/%E	Exponential notation (with lowercase ‘e’/UPPERcase ‘E’)
+	转成科学计数法(e/E控制输出e/E)
+
+%f/%F	Floating point real number (fraction truncates naturally)
+     	转成浮点数(小数部分自然截断)
+
+%g/%G	The shorter of %e and %f/%E% and %F% 
+	%e和%f/%E和%F的简写
+
+%%	Percent character ( % ) unescaped
+	输出%
+
+a.	New in Python 2.0; likely unique only to Python.
+	Python2.0新增;而且好像只有Python里面有.
+
+b.	%u/%o/%x/%X of negative int will return a signed string in Python 2.4.
+	Python2.4里面%u/%o/%x/%X在遇到负数的时候会返回一个有符号字符串
+
+Python supports two formats for the input arguments. The first is a tuple (introduced in
+Section 2.8, formally in 6.15), which is basically the set of arguments to convert, just like for
+C's printf(). The second format which Python supports is a dictionary (Chapter 7). A
+dictionary is basically a set of hashed key-value pairs. The keys are requested in the
+format_string, and the corresponding values are provided when the string is formatted.
+
+Converted strings can either be used in conjunction with the print statement to display out
+to the user or saved into a new string for future processing or displaying to a graphical user
+interface.
+Other supported symbols and functionality are listed in Table 6.5.
+
+Python支持两种格式的输入参数。第一种是元组(见2.8节,6.15节),这基本上是一种的C printf()风格的转换参数集;
+Python支持的第二种形式是字典形式(详见第7章).字典其实是一个哈希键-值对的集合。
+这种形式里面，key是作为格式字符串出现，相对应的value值作为参数在进行转化时提供给格式字符串.
+	格式字符串既可以跟print语句一起用来向终端用户输出数据，又可以用来合并字符串形成新字符串，而且还可以直接显示到GUI(Graphical User Interface)界面上去.
+	其他的格式字符和方法见表6.5
+
+
+Table 6.5  Format Operator Auxiliary Directives
+	  表6.5 格式化操作符辅助指令
+
+Symbol	Functionality
+符号	作用
+
+*	Argument specifies width or precision
+	定义宽度或者小数点精度
+
+-	Use left justification
+	用做左对齐
+
++	Use a plus sign ( + ) for positive numbers
+	在正数前面显示加号( + )
+
+<sp>	Use space-padding for positive numbers
+	在正数前面显示空格
+
+#	Add the octal leading zero (‘0’) or hexadecimal leading ‘0x’ or
+‘0X’, depending on whether ‘x’ or ‘X’ were used.
+	在八进制数前面显示零('0')，在十六进制前面显示'0x'或者'0X'(取决于用的是'x'还是'X')
+
+0	Use zero-padding (instead of spaces) when formatting numbers
+	显示的数字前面填充‘0’而不是默认的空格
+
+%	‘%%’ leaves you with a single literal ‘%’
+	'%%'输出一个单一的'%'
+
+(var)	Mapping variable (dictionary arguments)
+	映射变量(字典参数)
+
+m.n	m is the minimum total width and n is the number of digits to display after the decimal point (if applicable)
+	m是显示的最小总宽度,n是小数点后的位数(如果可用的话)
+
+
+Here are some examples using the string format operator:
+	 以下是一些使用格式字符串的例子:
+
+Hexadecimal Output
+十六进制输出:
+
+>>> "%x" % 108
+'6c'
+>>>
+>>> "%X" % 108
+'6C'
+>>>
+>>> "%#X" % 108
+'0X6C'
+>>>
+>>> "%#x" % 108
+'0x6c'
+
+Floating Point and Exponential Notation Output
+浮点数和科学记数法形式输出:
+
+>>>
+>>> '%f' % 1234.567890
+'1234.567890'
+>>>
+>>> '%.2f' % 1234.567890
+'1234.57'
+>>>
+>>> '%E' % 1234.567890
+'1.234568E+03'
+>>>
+>>> '%e' % 1234.567890
+'1.234568e+03'
+>>>
+>>> '%g' % 1234.567890
+'1234.57'
+>>>
+>>> '%G' % 1234.567890
+'1234.57'
+>>>
+>>> "%e" % (1111111111111111111111L)
+'1.111111e+21'
+
+Integer and String Output
+整数和字符串输出:
+
+>>> "%+d" % 4
+'+4'
+>>>
+
+
+>>> "%+d" % -4
+'-4'
+>>>
+>>> "we are at %d%%" % 100
+'we are at 100%'
+>>>
+>>> 'Your host is: %s' % 'earth'
+'Your host is: earth'
+>>>
+>>> 'Host: %s\tPort: %d' % ('mars', 80)
+'Host: mars	Port: 80'
+>>>
+>>> num = 123
+>>> 'dec: %d/oct: %#o/hex: %#X' % (num, num, num)
+'dec: 123/oct: 0173/hex: 0X7B'
+>>>
+>>> "MM/DD/YY = %02d/%02d/%d" % (2, 15, 67)
+'MM/DD/YY = 02/15/67'
+>>>
+>>> w, p = 'Web', 'page'
+>>> 'http://xxx.yyy.zzz/%s/%s.html' % (w, p)
+'http://xxx.yyy.zzz/Web/page.html'
+
+The previous examples all use tuple arguments for conversion. Below, we show how to use a dictionary argument for the format operator:
+
+上面的例子都是使用的元组类型的参数作转换.下面我们将把字典类型的参数提供给格式化操作符.
+
+>>> 'There are %(howmany)d %(lang)s Quotation Symbols' % \
+...	{'lang': 'Python', 'howmany': 3}
+'There are 3 Python Quotation Symbols'
+
+
+Amazing Debugging Tool
+令人称奇的调试工具
+
+The string format operator is not only a cool, easy-to-use, and familiar feature,  but  a  great  and  useful  debugging  tool  as  well.  Practically  all  Python objects have a string presentation (either evaluatable from repr() or ‘‘, or printable  from  str()).  The  print statement  automatically  invokes  the str() function for an object. This gets even better. When you are defining your own objects, there are hooks for you to create string representations of your  object  such  that  repr() and  str() (and  ‘‘ and  print)  return  an appropriate  string  as  output.  And  if  worse  comes  to  worst  and  neither repr() or str() is able to display an object, the Pythonic default is at least to give you something of the format:
+	字符串格式化操作符不仅很酷，易用，上手快,而且是一个非常有用的调试工具。事实上,所有的Python对象都有一个字符串表示形式
+（通过repr()函数,'' 或str()函数来展现）.print语句自动为每个对象调用str()函数.  更好的是,在定义自己的对象时，你可以利用"钩子"为你的对象创建字符串表达形式. 这样, repr()，str()或`` 或者print 被调用时，就可以获得一个适当的字符串描述信息.即使在坏的不能再坏的情况下，repr()或者str()也不能显示一个对象的信息时，Pythonic方式的默认做法最起码能给你返回想如下格式的信息:
+
+<... something that is useful ...>.
+
+
+6.4.2  String Templates: Simpler Substitution
+	   字符串模板: 更简单的替代品	   
+
+The string format operator has been a mainstay of Python and will continue
+to be so. One of its drawbacks, however, is that it is not as intuitive to the new Python programmer not coming from a C/C++ background. Even for current developers using the dictionary form can accidentally leave off the type format symbol, i.e., %(lang) vs. the more correct %(lang)s. In addition to remembering  to  put  in  the  correct  formatting  directive,  the  programmer must also know the type, i.e., is it a string, an integer, etc.
+   字符串格式化操作符是Python里面处理这类问题的主要手段，而且以后也是如此。然而它也不是完美的，其中的一个缺点是它不是那么直观，尤其对刚从C/C++转过来的Python新手来说更是如此，即使是现在使用字典形式转换的程序员也会偶尔出现遗漏转换类型符号的错误，比如说，用了%(lang)而不是正确的%(lang)s.为了保证字符串被正确的转换，程序员必须明确的记住转换类型参数，比如到底是要转成字符串，整数还是其他什么类型.
+
+The justification of the new string templates is to do away with having to remember such details and use string substitution much like those in current shell-type scripting languages, the dollar sign ( $ ).
+	新式的字符串模板的优势是不用去记住所有的相关细节的,而是像现在shell风格的脚本语言里面那样使用美元符号($).
+	
+The string module is temporarily resurrected from the dead as the new
+Template class has been added to it. Template objects have two methods,
+substitute() and safe_substitute(). The former is more strict, throw-
+ing KeyError exceptions for missing keys while the latter will keep the sub-
+stitution string intact when there is a missing key:
+	由于新式的字符串Template对象的引进使得string模块又重新活了过来，Template对象有两个方法,substitute()和safe_substitute().前者更为严谨,在key缺少的情况下它会报一个KeyError的异常出来，而后者在缺少key时，直接原封不动的把字符串显示出来.
+
+>>> from string import Template
+>>> s = Template('There are ${howmany} ${lang} Quotation Symbols')
+>>>
+>>> print s.substitute(lang='Python', howmany=3) There are 3 Python Quotation Symbols
+>>>
+>>> print s.substitute(lang='Python') Traceback (most recent call last):
+File "<stdin>", line 1, in ?
+File "/usr/local/lib/python2.4/string.py", line 172, in substitute
+return self.pattern.sub(convert, self.template)
+File "/usr/local/lib/python2.4/string.py", line 162, in convert val = mapping[named]
+KeyError: 'howmany'
+>>>
+>>> print s.safe_substitute(lang='Python') There are ${howmany} Python Quotation Symbols
+The new string templates were added to Python in version 2.4. More infor- mation about them can be found in the Python Library Reference Manual and PEP 292.
+	新式的字符串模板是从Python2.4开始加入的，更多信息请查阅Python类库手册和PEP 292.
+
+
+6.4.3  Raw String Operator ( r / R )
+	   原始字符串操作符( r/R )
+
+The purpose of raw strings, introduced back in version 1.5, is to counteract the behavior of the special escape characters that occur in strings (see the subsec- tion below on what some of these characters are). In raw strings, all characters are taken verbatim with no translation to special or non-printed characters.
+	关于原始字符串的目的，在Python1.5里面已经有说明，是为了对付那些在字符串中出现的特殊字符(下面的小节会介绍这些特殊字符)。在原始字符串里，所有的字符都是直接按照字面的意思来使用，没有转义特殊或不能打印的字符。
+
+This feature makes raw strings absolutely convenient when such behavior is desired, such as when composing regular expressions (see the re module documentation). Regular expressions (REs) are strings that define advanced search patterns for strings and usually consist of special symbols to indicate characters, grouping and matching information, variable names, and charac- ter classes. The syntax for REs contains enough symbols already, but when you have to insert additional symbols to make special characters act like nor- mal characters, you end up with a virtual “alphanumersymbolic” soup! Raw strings lend a helping hand by not requiring all the normal symbols needed when composing RE patterns.
+	 原始字符串的这个特性让一些工作变得非常的方便,比如正则表达式的创建(详见文档的re模块).正则表达式是一些定义了高级搜索匹配方式的字符串，通常是由代表字符,分组、匹配信息、变量名、和字符类等的特殊符号组成。正则表达式模块已经包含了足够用的符号。但当你必须插入额外的符号来使特殊字符表现的像普通字符的时候，你就陷入了“字符数字”的泥潭！这时原始字符串就会派上用场了. 
+The syntax for raw strings is exactly the same as for normal strings with the exception of the raw string operator, the letter “r,” which precedes the quotation marks. The “r” can be lowercase (r) or uppercase (R) and must be placed immediately preceding the first quote mark.
+In the first of our three examples, we really want a backslash followed by an 'n' as opposed to a NEWLINE character:
+   除了原始字符串符号(引号前面的字母"r")以外,原始字符串跟普通字符串有着几乎完全相同的语法.
+   这个'r'可以是小写也可以是大写，唯一的要求是必须紧靠在第一个引号前.
+   在三个例子的第一个例子里面，我们需要一个反斜杠加一个'n'来而不是一个换行符.：
+
+>>> '\n'
+'\n'
+>>> print '\n'
+
+>>> r'\n'
+'\\n'
+>>> print r'\n'
+\n
+
+Next, we cannot seem to open our README file. Why not? Because the \t and \r are taken as special symbols which really are not part of our filename, but are four individual characters that are part of our file path- name.
+   接下来的例子里，我们打不开我们的README文件了，为什么？因为'\t'和'\r'被当成不在我们的文件名中的特殊符号，但它们实际上文件路径的中4个独立的字符.
+
+>>> f = open('C:\windows\temp\readme.txt', 'r') 
+Traceback (most recent call last):
+File "<stdin>", line 1, in ?
+f = open('C:\windows\temp\readme.txt', 'r')
+IOError: [Errno 2] No such file or directory: 'C:\\win- dows\\temp\readme.txt'
+>>> f = open(r'C:\windows\temp\readme.txt', 'r')
+>>> f.readline()
+'Table of Contents (please check timestamps for last update!)\n'
+>>> f.close()
+
+Finally, we are (ironically) looking for a raw pair of characters \n and not NEWLINE. In order to find it, we are attempting to use a simple regular expression  that  looks  for  backslash-character  pairs  that  are  normally  single special whitespace characters:
+    最后我们要找一对原始的\n字符而不是换行。为了找到它，我们使用了一个简单的正则表达式，它的作用是查找通常被用来表示空白字符的反斜线-字符对(backslash-character  pairs)。
+
+>>> import re
+>>> m = re.search('\\[rtfvn]', r'Hello World!\n')
+>>> if m is not None: m.group()
+...
+>>> m = re.search(r'\\[rtfvn]', r'Hello World!\n')
+>>> if m is not None: m.group()
+...
+'\\n'
+
+6.4.4  Unicode String Operator ( u / U )
+	   Unicode字符串操作符( u/U )
+
+The  Unicode  string  operator,  uppercase  (U)  and  lowercase  (u),  introduced with Unicode string support in Python 1.6, takes standard strings or strings with Unicode characters in them and converts them to a full Unicode string object.  More  details  on  Unicode  strings  are  available  in  Section  6.7.4.  In addition, Unicode support is available via string methods (Section 6.6) and the regular expression engine. Here are some examples:
+Unocide字符串操作符，大写的(U)和小写的(u)是在Python1.6中 和 Unicode 字符串一起被引入的. 它用来把标准字符串或者是包含Unicode字符的字符串转换成完全地Unicode字符串对象。关于Unicode字符串的进一步信息在6.7.4节有详细介绍.另外,字符串方法(见6.6节)和正则表达式引擎也支持Unicode.下面是几个例子:
+
+u'abc'	U+0061 U+0062	U+0063
+u'\u1234'	U+1234		
+u'abc\u1234\n' U+0061 U+0062 U+0063 U+1234 U+0012
+The Unicode operator can also accept raw Unicode strings if used in con- junction with the raw string operator discussed in the previous section. The Unicode operator must precede the raw string operator.
+Unicode操作符也可以接受原始Unicode字符串, 只要我们将Unicode操作符和前面讨论过的原始字符串操作符连接在一起就可以了. 注意:Unicode操作符必须出现在原始字符串操作符前面.
+
+ur'Hello\nWorld!'
+
+
+6.5  Built-in Functions
+	 内建函数
+
+6.5.1  Standard Type Functions
+	 标准类型函数
+
+cmp()
+
+As with the value comparison operators, the cmp() built-in function also per- forms a lexicographic (ASCII value-based) comparison for strings.
+    同比较操作符一样，内建的cmp()函数也根据字符串的ASCII码值进行比较.
+
+>>> str1 = 'abc'
+>>> str2 = 'lmn'
+>>> str3 = 'xyz'
+
+>>> cmp(str1, str2)
+-11
+>>> cmp(str3, str1)
+23
+>>> cmp(str2, 'lmn')
+0
+
+6.5.2  Sequence Type Functions
+	   序列类型函数
+len()
+
+>>> str1 = 'abc'
+>>> len(str1)
+3
+>>> len('Hello World!')
+12
+The len() built-in function returns the number of characters in the string
+as expected.
+   正如您期望的那样,内建函数len()返回字符串的字符数.
+
+max() and min()
+
+>>> str2 = 'lmn'
+>>> str3 = 'xyz'
+>>> max(str2)
+'n'
+>>> min(str3)
+'x'
+Although more useful with other sequence types, the max() and min() built-in functions do operate as advertised, returning the greatest and least characters (lexicographic order), respectively. Here are a few more examples:
+虽然max()和min()函数对其他的序列类型可能更有用，但对于string类型它们能很好地运行，返回最大或者最小的字符，(按照ASCII码值排列),下面是几个例子:
+>>> min('ab12cd')
+'1'
+>>> min('AB12CD')
+'1'
+>>> min('ABabCDcd')
+'A'
+
+enumerate()
+
+>>> s = 'foobar'
+>>> for i, t in enumerate(s):
+...	print i, t
+...
+
+
+0 f
+1 o
+2 o
+3 b
+4 a
+5 r
+
+zip()
+
+>>> s, t = 'foa', 'obr'
+>>> zip(s, t)
+[('f', 'o'), ('o', 'b'), ('a', 'r')]
+
+
+6.5.3  String Type Functions
+	   字符串类型函数
+
+raw_input()
+
+The built-in raw_input()function prompts the user with a given string and accepts   and   returns   a   user-input   string.   Here   is   an   example   using raw_input():
+	内建的raw_input()函数使用给定字符串提示用户输入并将这个输入返回，下面是一个使用raw_input()的例子:
+
+
+>>> user_input = raw_input("Enter your name: ")
+ Enter your name: John Doe
+>>>
+>>> user_input
+'John Doe'
+>>>
+>>> len(user_input)
+8
+
+Earlier,  we  indicated  that  strings  in  Python  do  not  have  a  terminating NUL character like C strings. We added in the extra call to len() to show you that what you see is what you get.
+    Python里面没有C风格的结束字符NUL,你输入多少个字符，len()函数的返回值就是多少.
+
+str() and unicode()
+
+Both str()and unicode()are factory functions, meaning that they pro- duce new objects of their type respectively. They will take any object and cre- ate a printable or Unicode string representation of the argument object. And, along  with  basestring,  they  can  also  be  used  as  arguments  along  with objects in isinstance() calls to verify type:
+str()和unicode()函数都是工厂函数，就是说产生所对应的类型的对象.它们接受一个任意类型的对象，然后创建该对象的可打印的或者Unicode的字符串表示. 它们和basestring都可以作为参数传给isinstance()函数来判断一个对象的类型.
+
+>>> isinstance(u'\0xAB', str) False
+
+>>> not isinstance('foo', unicode) True
+>>> isinstance(u'', basestring) True
+>>> not isinstance('foo', basestring) False
+
+
+chr(), unichr(), and ord()
+
+chr()takes a single integer argument in range(256) (e.g., between 0 and
+255)  and  returns  the  corresponding  character.  unichr() does  the  same
+thing but for Unicode characters. The range for unichr(), added in Python
+2.0, is dependent on how your Python was compiled. If it was configured for
+UCS2   Unicode,   then   a   valid   value   falls   in   range(65536)or   0x0000-
+0xFFFF; for UCS4, the value should be in range(1114112)or 0x000000-
+0x110000. If a value does not fall within the allowable range(s), a ValueError
+exception will be raised.
+ord() is the inverse of chr() (for 8-bit ASCII strings) and unichr() (for Unicode  objects)—it  takes  a  single  character  (string  of  length  1)  and returns  the  corresponding  character  with  that  ASCII  code  or  Unicode code point, respectively. If the given Unicode character exceeds the size specified  by  your  Python  configuration,  a  TypeError exception  will  be thrown.
+    chr()函数用一个范围在range(256)内的(就是0到255)整数做参数,返回一个对应的字符.unichr()跟它一样，只不过返回的是Unicode字符，这个从Python2.0才加入的unichr()的参数范围依赖于你的Python是如何被编译的.如果是配置为USC2的Unicode，那么它的允许范围就是range(65536)或者说0x0000-0xFFFF;如果配置为UCS4，那么这个值应该是range(1114112)或者0x000000-0x110000.如果提供的参数不在允许的范围内,则会报一个ValueError的异常。
+ord()函数是chr()函数(对于8位的ASCII字符串)或unichr()函数(对于Unicode对象)的配对函数,它以一个字符(长度为1的字符串)作为参数,返回对应的ASCII数值，或者Unicode数值，如果所给的Unicode字符超出了你的Python定义范围,则会引发一个TypeError的异常。
+
+>>> chr(65)
+'A'
+>>> ord('a')
+97
+>>> unichr(12345)
+u'\u3039'
+>>> chr(12345)
+Traceback (most recent call last): File "<stdin>", line 1, in ?
+chr(12345)
+ValueError: chr() arg not in range(256)
+>>> ord(u'\ufffff')
+Traceback (most recent call last): File "<stdin>", line 1, in ?
+ord(u'\ufffff')
+TypeError: ord() expected a character, but string of length 2 found
+>>> ord(u'\u2345')
+9029
+
+6.6  String Built-in Methods
+	 字符串内建函数
+String methods were added to Python in the 1.6 to 2.0 timeframe—they also were added to Jython. These methods replace most of the functionality in the string module as well as to add new functionality. Table 6.6 shows all the current methods for strings. All string methods should fully support Unicode strings. Some are applicable only to Unicode strings.
+    字符串方法是从Python1.6到2.0慢慢加进来的--它们也被加到了Jython中.这些方法实现了string模块中的大部分方法,表6.6列出了目前字符串内建支持的方法，所有这些方法都包含了对Unicode的支持，有一些甚至是专门用于Unicode的.
+
+
+
+Table 6.6  String Type Built-in Methods
+表6.6 字符串类型内建方法
+
+Method Name	Description
+方法   描述
+
+string.capitalize()	Capitalizes first letter of string 
+					把字符串的第一个字符大写
+string.center(width)	Returns a space-padded string with the original string centered to a total of width columns
+						返回一个原字符串居中,并使用空格填充至长度width的新字符串
+
+string.count(str, beg=0,end=len(string))
+				  返回str在string里面出现的次数，如果beg或者end指定则返回指定范围内str出现的次数
+
+string.decode(encoding='UTF-8',errors='strict')
+		以encoding指定的编码格式解码string，如果出错默认报一个ValueError的异常，除非errors指定的是'ignore'或者'replace'
+
+string.encode(encoding='UTF-8',errors='strict')
+		以encoding指定的编码格式编码string，如果出错默认报一个ValueError的异常，除非errors指定的是'ignore'或者'replace'
+
+string.endswith(obj, beg=0,end=len(string))
+		检查字符串是否以obj结束，如果beg或者end指定则检查指定的范围内是否以obj结束，如果是，返回True,否则返回False.
+
+string.expandtabs(tabsize=8)	Expands tabs in string to multiple spaces; defaults to 8 spaces per tab if tabsize not provided
+		把字符串string中的tab符号转为空格，默认的空格数tabsize是8.
+
+string.find(str, beg=0,end=len(string))
+		检测str是否包含在string中，如果beg和end指定范围，则检查是否包含在指定范围内，如果是返回开始的索引值，否则返回-1
+
+string.index(str, beg=0,end=len(string))
+	   跟find()方法一样，只不过如果str不在string中会报一个异常.
+
+string.isalnum()a, b, c	Returns True if string has at least 1 character and all characters are alphanu- meric and False otherwise
+如果string至少有一个字符并且所有字符都是字母或数字则返回True,否则返回False
+string.isalpha()a, b, c	Returns True if string has at least 1 character and all characters are alphabetic and False otherwise
+		如果string至少有一个字符并且所有字符都是字母则返回True,否则返回False
+string.isdecimal()b, c, d	Returns True if string contains only decimal digits and False otherwise
+		如果string只包含十进制数字则返回True否则返回False.
+
+string.isdigit()b, c	Returns True if string contains only digits and False otherwise
+		如果string只包含数字则返回True否则返回False.
+string.islower()b, c	Returns True if string has at least 1 cased character and all cased characters are in lowercase and False otherwise
+		如果string中包含至少一个区分大小写的字符，并且所有这些(区分大小写的)字符都是小写，则返回True，否则返回False
+		
+string.isnumeric()b, c, d	Returns True if string contains only numeric characters and False otherwise
+		如果string中只包含数字字符，则返回True，否则返回False
+
+string.isspace()b, c	Returns True if string contains only whitespace characters and False otherwise
+		如果string中只包含空格，则返回True，否则返回False.
+string.istitle()b, c	Returns True if string is properly“titlecased” (see title()) and False
+otherwise
+		如果string是标题化的(见title())则返回True，否则返回False
+
+string.isupper()b, c	Returns True if string has at least one cased character and all cased characters are in uppercase and False otherwise
+如果string中包含至少一个区分大小写的字符，并且所有这些(区分大小写的)字符都是大写，则返回True，否则返回False
+
+string.join(seq)	Merges (concatenates) the string represen- tations of elements in sequence seq into a string, with separator string
+以string作为分隔符，将seq中所有的元素(的字符串表示)合并为一个新的字符串
+
+string.ljust(width)	Returns a space-padded string with the original string left-justified to a total of width columns
+
+返回一个原字符串左对齐,并使用空格填充至长度width的新字符串
+string.lower()	Converts all uppercase letters in string to lowercase
+		转换string中所有大写字符为小写.   
+
+string.lstrip()	Removes all leading whitespace in string
+		截掉string左边的空格
+
+string.partition(str)e	Like a combination of find() and split(), splits string into a 3-tuple
+(string_pre_str , str,string_post_str ) on the first occurrence of str; if not found,string_pre_str == string
+		有点像find()和split()的结合体,从str出现的第一个位置起,把字符串string分成一个3元素的元组 (string_pre_str,str,string_post_str),如果string中不包含str则string_pre_str == string.
+
+string.replace(str1, str2, num=string.count(str1))
+		把string中的str1替换成str2,如果num指定，则替换不超过num次.
+
+
+string.rfind(str, beg=0,end=len(string))
+		类似于find()函数，不过是从右边开始查找.
+
+string.rindex( str, beg=0,end=len(string))
+		类似于index()，不过是从右边开始.
+string.rjust(width)	Returns a space-padded string with the original string right-justified to a total of width columns
+返回一个原字符串右对齐,并使用空格填充至长度width的新字符串
+
+string.rpartition(str)e	Same as partition(), but search back- wards in string
+		类似于partition()函数,不过是从右边开始查找.
+
+string.rstrip()	Removes all trailing whitespace of string
+		删除string字符串末尾的空格.
+
+string.split(str="", num=string.count(str))
+		以str为分隔符切片string，如果num有指定值，则仅分隔num个子字符串
+
+string.splitlines(num=string.count('\n'))b, c
+		按照行分隔，返回一个包含各行作为元素的列表，如果num指定则仅切片num个行.
+											
+string.startswith(obj, beg=0,end=len(string))b, e
+		检查字符串是否是以obj开头，是则返回True，否则返回False。如果beg和end指定值，则在指定范围内检查.
+
+string.strip([obj])	Performs both lstrip() and rstrip() on string
+		在string上执行lstrip()和rstrip()
+string.swapcase()	Inverts case for all letters in string 
+		翻转string中的大小写
+string.title()b, c		Returns “titlecased” version of string, thatis, all words begin with uppercase, and the rest are lowercase (also see istitle())
+返回"标题化"的string,就是说所有单词都是以大写开始，其余字母均为小写(见istitle())
+
+string.translate(str, del="")	Translates string according to translation table str (256 chars), removing those in the del string
+		根据str给出的表(包含256个字符)转换string的字符,要过滤掉的字符放到del参数中
+
+string.upper()	Converts lowercase letters in string to uppercase
+		转换string中的小写字母为大写
+string.zfill(width)	Returns original string left-padded with zeros to a total of width characters; intended for numbers, zfill() retains any sign given (less one zero)
+		返回长度为width的字符串，原字符串string右对齐，前面填充0
+
+a.	Applicable to Unicode strings only in 1.6, but to all string types in 2.0. 
+	Python1.6中只适用于Unicode字符串，2.0中适用于所有字符串
+b.	Not available as a string module function in 1.5.2.
+	1.5.2版本中string模块没有该方法
+c.	New in Jython 2.1.
+	在Jython2.1有
+d.	Applicable to Unicode strings only. 
+	仅对Unicode字符串有效，
+e.	New or updated in Python 2.5.
+	Python2.5或者以上版本
+
+
+Some examples of using string methods:
+几个使用字符串方法的例子:
+
+>>> quest = 'what is your favorite color?'
+>>> quest.capitalize()
+'What is your favorite color?'
+>>>
+>>> quest.center(40)
+'	what is your favorite color?	'
+>>>
+>>> quest.count('or')
+2
+>>>
+>>> quest.endswith('blue') False
+>>>
+>>> quest.endswith('color?') True
+>>>
+>>> quest.find('or', 30)
+-1
+>>>
+>>> quest.find('or', 22)
+25
+>>
+>>> quest.index('or', 10)
+16
+
+>>>
+>>> ':'.join(quest.split())
+'what:is:your:favorite:color?'
+>>> quest.replace('favorite color', 'quest')
+>>>
+'what is your quest?'
+>>>
+>>> quest.upper()
+'WHAT IS YOUR FAVORITE COLOR?'
+
+
+The  most  complex  example  shown  above  is  the  one  with  split() and join(). We first call split() on our string, which, without an argument, will break apart our string using spaces as the delimiter. We then take this list of words and call join() to merge our words again, but with a new delim- iter, the colon. Notice that we used the  split() method for our string to turn it into a list, and then, we used the join() method for ':' to merge together the contents of the list.
+	 上面最复杂的例子是有split()和join()函数的那个.首先我们在string上调用split()函数,没有用参数，也就是说以空格作为分隔符分隔字符串，然后我们以这个包含单词的列表做参数调用join()方法把这些单词用一个新的分隔符冒号重新串在一起，注意，我们首先用split()函数把string切片成一个列表,然后我们在字符串':'上应用join()方法把这个列表重新连接成一个字符串.
+
+
+6.7  Special Features of Strings
+	 字符串的独特特性
+
+6.7.1  Special or Control Characters
+	   特殊字符串和控制字符
+
+Like  most  other  high-level  or  scripting  languages,  a  backslash  paired  with another single character indicates the presence of a “special” character, usually a nonprintable character, and that this pair of characters will be substituted by the special character. These are the special characters we discussed above that will not be interpreted if the raw string operator precedes a string containing these characters.
+	  像其他高级语言和脚本语言一样，一个反斜线加一个单一字符可以表示一个特殊字符,通常是一个不可打印的字符，这就是我们上面讨论的特殊字符，如果这些特殊字符是包含在一个原始字符串中的，那么它就失去了转义的功能.
+In addition to the well-known characters such as NEWLINE (  \n ) and
+(horizontal) tab ( \t ), specific characters via their ASCII values may be used
+as well: \OOO or \xXX where OOO and XX are their respective octal and hexa-
+decimal ASCII values. Here are the base 10, 8, and 16 representations of 0,
+65, and 255:
+
+	除了通常用的特殊字符，比如换行符(\n),tab符(\t)之外，也可以直接用ASCII码值来标示特殊字符:\000或者\xXX，分别对应字符的八进制和十六进制ASCII码值，下面分别是十进制，八进制和十六进制的0,65,和255:
+
+
+	ASCII	ASCII	ASCII
+Decimal	0	65	255
+Octal	\000	\101	\177
+Hexadecimal	\x00	\x41	\xFF
+
+Special characters, including the backslash-escaped ones, can be stored in
+Python strings just like regular characters.
+
+	   特殊字符，包括反斜杠转义的那些都可以像普通字符一样存储到Python的字符串中.
+
+Another  way  that  strings  in  Python  are  different  from  those  in  C  is  that
+Python strings are not terminated by the NUL (\000) character (ASCII value 0). NUL characters are just like any of the other special backslash-escaped char- acters. In fact, not only can NUL characters appear in Python strings, but there can be any number of them in a string, not to mention that they can occur anywhere within the string. They are no more special than any of the other control characters. Table 6.7 represents a summary of the escape char- acters supported by most versions of Python.
+	   跟C字符串的另一个不同之处是Python的字符串并不是以NUL(\000)作为结束符的.NUL跟其他的反斜杠转义字符没什么两样.事实上，一个字符串中不仅可以出现NUL字符，而且还可以出现不止一次，在字符串的任意位置都可以。表6.7列出了被大部分Python版本支持的转义字符.
+As mentioned before, explicit ASCII octal or hexadecimal values can be given, as well as escaping a NEWLINE to continue a statement to the next line.  All  valid  ASCII  character  values  are  between  0  and  255  (octal  0177, hexadecimal 0XFF).
+   如上所述，就像使用连字符来让一行的内容持续到下一行一样，可以用显式定义八进制或者十六进制的ASCII码的方式定义特殊字符,合法的ASCII码值范围是从0到255(八进制的是0177,十六进制是0XFF).
+
+Table 6.7  String Literal Backslash Escape Characters 反斜杠开头的转义字符
+
+/X	Oct	Dec	Hex	Char	Description 八进制 十进制 十六进制 字符 说明
+
+\0	000	0	0x00	NUL	Null character	空字符Nul
+\a	007	7	0x07	BEL	Bell 			响铃字符
+\b	010	8	0x08	BS	Backspace		退格
+\t	011	9	0x09	HT	Horizontal		横向制表符
+					tab
+\n	012	10	0x0A	LF	Linefeed/		换行
+					Newline				
+\v	013	11	0x0B	VT	Vertical tab	纵向制表符
+\f	014	12	0x0C	FF	Form feed		换页
+\r	015	13	0x0D	CR	Carriage		回车
+					return
+\e	033	27	0x1B	ESC	Escape			转义
+\"	042	34	0x22	"	Double quote	双引号
+\'	047	39	0x27	'	Single quote/	单引号
+					apostrophe
+\\	134	92	0x5C	\	Backslash		反斜杠
+
+\OOO	Octal value OOO (range is 0000 to 0177)
+		八进制值(范围是000到0177)
+\xXX	'x' plus hexadecimal value XX (range is 0X00 to 0xFF)
+		x打头的十六进制值(范围是0x00到0xFF)
+\	escape NEWLINE for statement continuation
+	连字符，将本行和下一行的内容连接起来.
+
+One use of control characters in strings is to serve as delimiters. In database or Internet/Web processing, it is more than likely that most printable characters are allowed as data items, meaning that they would not make good delimiters.
+	控制字符的一个作用是用做字符串里面的定界符，在数据库或者web应用中，大多数的可打印字符都是被允许用在数据项里面的，就是说可打印的字符不适合做定界符.
+It becomes difficult to ascertain whether or not a character is a delimiter or a data item, and by using a printable character such as a colon ( : ) as a delimiter,  you  are  limiting  the  number  of  allowed  characters  in  your  data, which may not be desirable.
+   用可打印的字符串比如冒号(:)来作定界符，将会很难分辨一个字符到底是数据还是定界符.而且还会限定你能用在数据项里面的字符数量，而这不是你想要的.
+One popular solution is to employ seldomly used, nonprintable ASCII val- ues as delimiters. These make the perfect delimiters, freeing up the colon and the other printable characters for more important uses.
+	一个通常的解决方案是，使用那些不经常使用的，不可打印的ASCII码值来作为定界符,它们是非常完美的定界符，这样一来诸如冒号这样的可打印字符就可以解脱出来用在数据项中了.
+
+6.7.2  Triple Quotes
+	   三引号
+
+Although strings can be represented by single or double quote delimitation,
+it is often difficult to manipulate strings containing special or nonprintable characters, especially the NEWLINE character. Python’s triple quotes comes to the rescue by allowing strings to span multiple lines, including verbatim NEWLINEs, tabs, and any other special characters.The syntax for triple quotes consists of three consecutive single or double quotes (used in pairs, naturally):
+   虽然你可以用单引号或者双引号来定义字符串，但是如果你需要包含诸如换行符这样的特殊字符时，单引号或者双引号就不是那么方便了。Python的三引号就是为了解决这个问题的，它允许一个字符串跨多行，字符串中可以包含换行符、制表符以及其他特殊字符.
+   三引号的语法是一对连续的单引号或者双引号(通常都是成对的用):
+
+>>> hi = '''hi there'''
+>>> hi	# repr()
+'hi\nthere'
+>>> print hi	# str()
+hi there
+
+Triple quotes lets the developer avoid playing quote and escape character games, all the while bringing at least a small chunk of text closer to WYSIWIG (what you see is what you get) format.
+	   三引号让程序员从引号和特殊字符串的泥潭里面解脱出来，自始至终保持一小块字符串的格式是所谓的WYSIWYG(所见即所得)格式的。
+The most powerful use cases are when you have a large block of HTML or SQL  that  would  be  completely  inconvenient  to  use  by  concanentation  or wrapped with backslash escapes:
+	一个典型的用例是，当你需要一块HTML或者SQL时，这时用字符串组合，特殊字符串转义将会非常的繁琐.
+
+errHTML = '''
+<HTML><HEAD><TITLE>
+Friends CGI Demo</TITLE></HEAD>
+
+<BODY><H3>ERROR</H3>
+<B>%s</B><P>
+<FORM><INPUT TYPE=button VALUE=Back
+ONCLICK="window.history.back()"></FORM>
+</BODY></HTML>
+'''
+
+cursor.execute('''
+CREATE TABLE users (
+login VARCHAR(8), uid INTEGER,
+prid INTEGER)
+''')
+
+
+
+6.7.3  String Immutability
+	   字符串不变性
+
+In Section 4.7.2, we discussed how strings are immutable data types, mean- ing that their values cannot be changed or modified. This means that if you do  want  to  update  a  string,  either  by  taking  a  substring,  concatenating another  string  on  the  end,  or  concatenating  the  string  in  question  to  the end of another string, etc., a new string object must be created for it.
+   在第4.7.2节里面，我们讨论了字符串是一种不可变数据类型，就是说它的值是不能被改变或修改的。这就意味着如果你想修改一个字符串，或者截取一个子串，或者在字符串的末尾连接另一个字符串等等，你必须新建一个字符串。
+This  sounds  more  complicated  than  it  really  is.  Since  Python  manages memory for you, you won’t really notice when this occurs. Any time you mod- ify a string or perform any operation that is contrary to immutability, Python will allocate a new string for you. In the following example, Python allocates space for the strings, 'abc' and 'def'. But when performing the addition operation to create the string 'abcdef', new space is allocated automatically for the new string.
+	  这听起来要比实际情况复杂.因为Python替你管理内存，你根本不需要知道到底发生了什么，每次你修改一个字符串或者做一些改变字符串内容的操作时，Python都会自动为你分配一个新串.在下面的例子里面，Python分别为"abc"和"def"分配了空间,当进行连接操作时，Python自动为新的字符串"abcdef"分配了空间.
+
+>>> 'abc' + 'def'
+'abcdef'
+Assigning values to variables is no different:
+给变量赋值是没什么不同:
+
+>>> s = 'abc'
+>>> s = s + 'def'
+>>> s
+'abcdef'
+
+In the above example, it looks like we assigned the string 'abc' to string, then  appended  the  string  'def' to  string.  To  the  naked  eye,  strings  look mutable. What you cannot see, however, is the fact that a new string was created when the operation “s + 'def'” was performed, and that the new object was then assigned back to s. The old string of 'abc'was deallocated.
+   上面的例子里，看起来是我们先把"abc"赋给了s，然后在s的末尾添加了"def".这样看起来字符串似乎是可变的,其实事实是在"s+'def""这个操作进行的时候，新建了一个新字符串,然后这个新的对象被赋给了s，原来的字符串'abc'被析构掉了.
+
+Once again, we can use the id() built-in function to help show us exactly what happened. If you recall, id() returns the “identity” of an object. This value is as close to a “memory address” as we can get in Python.
+	 我们可以用id()函数来更明显的显示出来到底发生了什么.复习一下，id()函数返回一个对象的身份,这个概念有点类似于"内存地址"。
+
+>> s = 'abc'
+>>>
+>>> id(s)
+135060856
+>>>
+>>> s += 'def'
+>>> id(s)
+135057968
+
+Note how the identities are different for the string before and after the update. Another test of mutability is to try to modify individual characters or substrings of a string. We will now show how any update of a single character or a slice is not allowed:
+	 注意修改前后的身份是不同的.另一个测试是针对字符串的一个字符或者一个子串所做的修改.我们现在将展示对字符串的一个字符或者一片字符的改动都是不被允许的:
+
+>>> s
+'abcdef'
+>>>
+>>> s[2] = 'C'
+Traceback (innermost last): File "<stdin>", line 1, in ? AttributeError: __setitem__
+>>>
+>>> s[3:6] = 'DEF'
+Traceback (innermost last): File "<stdin>", line 1, in ?
+AttributeError: __setslice__
+
+Both operations result in an error. In order to perform the actions that we want,  we  will  have  to  create  new  strings  using  substrings  of  the  existing string, then assign those new strings back to string:
+两个操作都抛出了异常.为了实现要求，我们需要用现有字符串的子串来构建一个新串,然后把这个新串赋给原来的变量:
+
+>>> s
+'abcdef'
+>>>
+>>> s = '%sC%s' % (s[0:2], s[3:])
+>>> s
+'abCdef'
+>>>
+>>> s[0:3] + 'DEF'
+'abCDEF'
+
+So for immutable objects like strings, we make the observation that only valid expressions on the left-hand side of an assignment (to the left of the equals sign [ = ]) must be the variable representation of an entire object such as a string, not single characters or substrings. There is no such restriction for the expression on the right-hand side.
+   对像字符串这样的不可变对象，我们探究了它在赋值操作中所为左值的限制,左值必须是一个完整的对象，比如说一个字符串对象，不能是字符串的一部分.对赋值操作的右值没有这个限制.
+
+6.8  Unicode
+
+Unicode string support, introduced to Python in version 1.6, is used to con- vert  between  multiple  double-byte  character  formats  and  encodings,  and includes as much functionality as possible to manage these strings. With the addition  of  string  methods  (see  Section  6.6),  Python  strings  and  regular expressions are fully featured to handle a wide variety of applications requir- ing  Unicode  string  storage,  access,  and  manipulation.  We  will  do  our  best here to give an overview of Unicode support in Python. But first, let us take a look at some basic terminology and then ask ourselves, just what is Unicode?
+		从Python1.6起引进的Unicode字符串支持,是用来在多种双字节字符的格式、编码进行转换的,其中包括一些对这类字符串的操作管理功能。内建的字符串和正则表达式对Unicode字符串的支持，再加上string模块的辅助，Python已经可以应付大部分应用对Unicode的存储、访问、操作的需要了。我们会尽最大的努力把Python对Unicode的支持说清楚，但在这之前，让我们先讨论一些基本的术语，然后问一下自己，到底什么是Unicode?
+
+6.8.1  Terminology
+	   术语
+
+Table 6.8  Unicode Terminology
+	  Unicode 术语
+
+
+Term	Meaning
+名词	意思
+
+ASCII	American Standard Code for Information Interchange
+		美国标准信息交换码
+
+BMP	Basic Multilingual Plane (plane 0)
+	基本多文种平面(第零平面)
+BOM	 Byte Order Mark (character that denotes byte-ordering)
+	 字节顺序标记(标识字节顺序的字符)
+CJK/CJKV	Abbreviation for Chinese-Japanese-Korean (and -Vietnamese)
+			中文-日文-韩文(和越南语)的缩写
+Code point	 Similar to an ASCII value, represents any value in the Unicode codespace, e.g., within range(1114112) or integers from 0x000000 to 0x10FFFF.
+	类似于ASCII值，代表Unicode字符的值，范围在range(1114112)或者说从0x000000到0x10FFFF.
+
+Octet	Ordered sequence of eight bits as a single unit, aka (8-bit) byte
+		八位二进制数的位组
+
+UCS	Universal Character Set
+	通用字符集
+
+UCS2	Universal Character Set coded in 2 octets (also see UTF-16)
+		UCS的双字节编码方式(见UTF-16)
+
+UCS4	Universal Character Set coded in 4 octets
+		UCS的四字节编码方式.
+		
+UTF	Unicode or UCS Transformation Format
+	Unicode或者UCS的转换格式.
+UTF-8	8-bit UTF Transformation Format (unsigned byte sequence one to four bytes in length)
+		八位UTF转换格式(无符号字节序列， 长度为一到四个字节)
+
+UTF-16	16-bit UTF Transformation Format (unsigned byte sequence usually one 16-bit word [two bytes] in length; also see UCS2)
+		16位UTF转换格式(无符号字节序列，通常是16位长[两个字节],见UCS2)
+
+6.8.2  What Is Unicode?
+	   什么是Unicode?
+
+Unicode is the miracle and the mystery that makes it possible for computers to support virtually any language on the planet. Before Unicode, there was ASCII, and ASCII was simple. Every English character was stored in the  computer  as  a  seven  bit  number  between  32  and  126.  When  a  user entered the letter A into a text file, the computer would write the letter A to  disk  as  the  number  65.  Then  when  the  computer  opened  that  file  it would translate that number 65 back into an A when it displayed the file contents on the screen.
+		Unicode是计算机可以支持这个星球上多种语言的秘密武器.在Unicode之前，用的都是ASCII，ASCII码非常简单，每个英文字符都是以七位二进制数的方式存贮在计算机内,其范围是32到126.当用户在文件中键入一个大写字符A时，计算机会把A的ASCII码值65
+写入磁盘,然后当计算机读取该文件时，它会首先把65转化成字符A然后显示到屏幕上.
+
+ASCII files were compact and easy to read. A program could just read in each byte from a file and convert the numeric value of the byte into the corre- sponding letter. But ASCII only had enough numbers to represent 95 printable characters. Later software manufacturers extended ASCII to 8 bits, which provided an additional 128 characters, but 223 characters still fell far short of the thousands required to support all non-European languages.
+	  ASCII编码的文件小巧易读。一个程序只需简单地把文件的每个字节读出来，把对应的数值转换成字符显示出来就可以了.但是ASCII字符只能表示95个可打印字符.后来的软件厂商把ASCII码扩展到了8位，这样一来它就可以多标识128个字符,可是223个字符对需要成千上万的字符的非欧洲语系的语言来说仍然太少
+Unicode overcomes the limitations of ASCII by using one or more bytes to represent each character. Using this system, Unicode can currently represent over 90,000 characters.
+Unicode 通过使用一个或多个字节来表示一个字符的方法突破了ASCII的限制. 在这样机制下, Unicode 可以表示超过90,000 个字符. 
+
+6.8.3  How Do You Use Unicode?
+	   你是怎么用Unicode的？
+
+In the early days, Python could only handle 8-bit ASCII. Strings were simple data types. To manipulate a string, a user had to create a string and then pass it to one of the functions in the string module. Then in 2000, we saw the releases  of  Python  1.6  (and  2.0),  the  first  time  Unicode  was  supported  in Python.
+   早先，Python只能处理8位的ASCII值,字符串就是简单的数据类型，为了处理一个字符串，用户必须首先创建一个字符串，然后把它作为参数传给string模块的一个函数来处理.2000年，Python1.6(和2.0)版释出,Unicode第一次在Python里面得到了支持.
+
+In order to make Unicode strings and ASCII strings look as similar as pos- sible,  Python  strings  were  changed  from  being  simple  data  types  to  real objects.  ASCII  strings  became  StringTypes  and  Unicode  strings  became UnicodeTypes. Both behave very similarly. Both have string methods that correspond to functions in the string module. The string module was not updated and remained ASCII only. It is now deprecated and should never be used in any Unicode-compliant code. It remains in Python just to keep legacy code from breaking.
+   为了让Unicode和ASCII码值的字符串看起来尽可能的相像,Python的字符串从原来的简单数据类型改成了真正的对象.ASCII字符串成了StringType，而Unicode字符串成了UnicodeType类型.它们的行为是非常相近的.string模块里面都有相应的处理函数.string模块已经停止了更新，只保留了ASCII码的支持,string模块已经不推荐使用,在任何需要跟Unicode兼容的代码里都不要再用该模块，Python保留该模块仅仅是为了向后兼容。
+
+Handling  Unicode  strings  in  Python  is  not  that  different  from  handling ordinary  ASCII  strings.  Python  calls  hard-coded  strings  string  literals.  By default all string literals are treated as ASCII. This can be changed by adding the  prefix  u to  a  string  literal.  This  tells  Python  that  the  text  inside  of  the string should be treated as Unicode.
+	Python里面处理Unicode字符串跟处理ASCII字符串没什么两样.Python把硬编码的字符串叫做字面上的字符串,默认所有字面上的字符串都用ASCII编码，可以通过在字符串前面加一个'u'前缀的方式声明Unicode字符串，这个'u'前缀告诉Python后面的字符串要编码成Unicode字符串 .
+
+>>> "Hello World"	# ASCII string
+>>> u"Hello World"	# Unicode string
+
+The built-in functions str()and chr()were not updated to handle Unicode. They only work with regular ASCII strings. If a Unicode string is passed to str() it  will  silently  convert  the  Unicode  string  to  ASCII.  If  the  Unicode string contains any characters that are not supported by ASCII, str() will raise an exception. Likewise, chr() can only work with numbers 0 to 255. If you pass it a numeric value (of a Unicode character, for example) outside of that range, it will raise an exception.
+	内建的str()函数和chr()函数并没有升级成可以处理Unicode.它们只能处理常规的ASCII编码字符串,如果一个Unicode字符串被作作为参数传给了str()函数，它会首先被转换成ASCII字符串然后在交给str()函数.如果该Unicode字符串中包含任何不被ASCII字符串支持的字符，会导致str()函数报异常.同样地,chr()函数只能以0到255作为参数工作.如果你传给它一个超出此范围的值(比如说一个Unicode字符),它会报异常.
+New BIFs unicode()and unichr()were added that act just like str() and chr() but work with Unicode strings. The function unicode() can con- vert any Python data type to a Unicode string and any object to a Unicode rep- resentation  if  that  object  has  an  __unicode__() method.  For  a  review  of these functions, see Sections 6.1.3 and 6.5.3.
+	新的内建函数unicode()和unichar()可以看成Unicode版本的str()和chr().Unicode()函数可以把任何Python的数据类型转换成一个Unicode字符串,如果是对象，并且该对象定义了__unicode__()方法，它还可以把该对象转换成相应的Unicode字符串.具体内容见6.1.3和6.5.3章节.
+
+6.8.4  What Are Codecs?
+	   Codecs是什么?
+
+The  acronym  codec  stands  for  COder/DECoder.  It  is  a  specification  for encoding text as byte values and decoding those byte values into text. Unlike ASCII, which used only one byte to encode a character into a number, Uni- code  uses  multiple  bytes.  Plus  Unicode  supports  several  different  ways  of encoding characters into bytes. Four of the best-known encodings that these codecs can convert are: ASCII, ISO 8859-1/Latin-1, UTF-8, and UTF-16.
+	 codec是COder/DECoder的首字母组合.它定义了文本跟二进制值的转换方式,跟ASCII那种用一个字节把字符转换成数字的方式不同,Unicode用的是多字节.这导致了Unicode支持多种不同的编码方式.比如说codec支持的四种耳熟能详的编码方式是 :ASCII,ISO 8859-1/Latin-1,UTF-8和UTF-16.
+
+The most popular is UTF-8, which uses one byte to encode all the charac- ters in ASCII. This makes it easier for a programmer who has to deal with both ASCII and Unicode text since the numeric values of the ASCII charac- ters are identical in Unicode.
+	其中最著名的是UTF-8编码，它也用一个字节来编码ASCII字符，这让那些必须同时处理ASCII码和Unicode码文本的程序员的工作变得非常轻松，因为ASCII字符的UTF-8编码跟ASCII编码完全相同。
+
+For other characters, UTF-8 may use one or four bytes to represent a let- ter,  three  (mainly)  for  CJK/East  Asian  characters,  and  four  for  some  rare, special use, or historic characters. This makes it more difficult for program- mers who have to read and write the raw Unicode data since they cannot just read in a fixed number of bytes for each character. Luckily for us, Python hides all of the details of reading and writing the raw Unicode data for us, so we don’t have to worry about the complexities of reading multibyte charac- ters in text streams. All the other codecs are much less popular than UTF-8. In fact, I would say most Python programmers will never have to deal with them, save perhaps UTF-16.
+	UTF-8编码可以用1个到4个字节来表示其他语言的字符,CJK/East这样的东亚文字一般都是用3个字节来表示，那些少用的、特殊的、或者历史遗留的字符用4个字节来表示.这给那些需要直接处理Unicode数据的程序员带来了麻烦，因为他们没有办法按照固定长度逐一读出各个字符.幸运的是我们不需要掌握直接读写Unicode数据的方法，Python已经替我们完成了相关细节，我们无须为处理多字节字符的复杂问题而担心.Python里面的其他编码不是很常用，事实上，我们认为大部分的Python程序员根本就用不着去处理其他的编码，UTF-16可能是个例外.
+	
+UTF-16 is probably the next most popular codec. It is simpler to read and write its raw data since it encodes every character as a single 16-bit word rep- resented by two bytes. Because of this, the ordering of the two bytes matters. The regular UTF-16 code requires a Byte Order Mark (BOM), or you have to specifically use UTF-16-LE or UTF-16-BE to denote explicit little endian and big endian ordering.
+	UTF-16可能是以后大行其道的一种编码格式，它容易读写，因为它把所有的字符都是用单独的一个16位字,两个字节来存储的，正因为此,这两个字节的顺序需要定义一下，一般的UTF-16编码文件都需要一个BOM(Byte Order Mark)，或者你显式地定义UTF-16-LE（小端）或者UTF-16-BE(大端)字节序.
+
+UTF-16  is  technically  also  variable-length  like  UTF-8  is,  but  this  is uncommon usage. (People generally do not know this or simply do not even care about the rarely used code points in other planes outside the Basic Mul- tilingual Plane (BMP). However, its format is not a superset of ASCII and makes  it  backward-incompatible  with  ASCII.  Therefore,  few  programs implement it since most need to support legacy ASCII text.
+	从技术上讲，UTF-16也是一种变长编码,但它不是很常用(人们一般不会知道或者根本不在意除了基本多文种平面BMP之外到底使用的是那种平面),尽管如此，UTF-16并不向后兼容ASCII,因此，实现它的程序很少，因为大家需要对ASCII进行支持。
+
+
+6.8.5  Encoding and Decoding
+	   编码解码
+
+Unicode support for multiple codecs means additional hassle for the devel- oper. Each time you write a string to a file, you have to specify the codec (also called an “encoding”) that should be used to translate its Unicode characters to bytes.  Python minimizes this hassle for us by providing a Unicode string method called encode() that reads the characters in the string and outputs the right bytes for the codec we specify.
+	Unicode支持多种编码格式，这为程序员带来了额外的负担,每当你向一个文件写入字符串的时候，你必须定义一个编码(encoding参数)用于把对应的Unicode内容转换成你定义的格式,Python通过Unicode字符串的encode()函数解决了这个问题，该函数接受字符串中的字符为参数，输出你指定的编码格式的内容。
+
+So every time we write a Unicode string to disk we have to “encode” its characters as a series of bytes using a particular codec. Then the next time we read the bytes from that file, we have to “decode” the bytes into a series of Unicode characters that are stored in a Unicode string object.
+   所以，每次我们写一个Unicode字符串到磁盘上我们都要用指定的编码器给他"编码"一下,相应地，当我们从这个文件读取数据时,我们必须"解码"该文件,使之成为相应的Unicode字符串对象.
+
+Simple Example
+	简单的例子
+
+The script below creates a Unicode string, encodes it as some bytes using the UTF-8 codec, and saves it to a file. Then it reads the bytes back in from disk and decodes them into a Unicode string. Finally, it prints the Unicode string so we can see that the program worked correctly.
+	下面的代码创建了一个Unicode字符串,用UTF-8编码器将它编码，然后写入到一个文件中去.接着把数据从文件中读回来,解码成Unicode字符串对象.最后，打印出Unicode字符串，用以确认程序正确地运行.
+
+Line-by-Line Explanation
+逐行解释
+
+Lines 1–7
+The usual setup plus a doc string and some constants for the codec we are using and the name of the file we are going to store the string in.
+第1-7行
+	像通常一样，首先定义了doc字符串和用以表示解码器的常量，还有用以存储字符串的文件名.
+
+Lines 9–19
+Here we create a Unicode string literal, encode it with our codec, and write it out to disk (lines 9–13). Next, we read the data back in from the file, decode
+it,  and  display  it  to  the  screen,  suppressing  the  print statement’s  NEW- LINE because we are using the one saved with the string (lines 15–19).
+第9-19行
+	我们创建了一个Unicode字符串，用我们指定的编码格式对其进行编码,然后把它写入到文件中去,(9-13行),接着我们把内容从文件中重新读出来, 解码，显示到屏幕上，输出的时候去掉print的自动换行，因为我们已经在字符串中写了一个换行符(15-19行).
+
+Example 6.2  Simple Unicode String Example (uniFile.py)
+例6.2	简单Unicode字符串例子(uniFile.py)
+
+This simple script writes a Unicode string to disk and reads it back in for display. It encodes it into UTF-8 for writing to disk, which it must then decode in to display it.
+	 这个简单的例子中，我们把一个Unicode字符串写入到磁盘文件，然后再把它读出并显示出来。写入的时候用UTF-8编码,读出也一样，用UTF-8.
+
+1	#!/usr/bin/env python
+2	'''
+3	An example of reading and writing Unicode strings:
+Writes
+4	a Unicode string to a file in utf-8 and reads it
+ back in.
+
+
+
+8
+9	hello_out = u"Hello world\n"
+10   bytes_out = hello_out.encode(CODEC)
+11   f =
+open(FILE, "w")
+12   f.write(bytes_out)
+13   f.close()
+14
+15   f =
+open(FILE, "r")
+16   bytes_in
+17   f.close()
+= f.read()
+18   hello_in = bytes_in.decode(CODEC)
+
+When we run the program we get the following output:
+运行该程序，我们得到如下的输出:
+
+$ unicode_example.py
+Hello World
+
+We also find a file called unicode.txt on the file system that contains the same string the program printed out.
+   在文件系统中也会发现一个叫unicode.txt的文件，里面包含跟输出的内容一致的数据.
+
+$ cat unicode.txt
+Hello World!
+
+Simple Web Example
+简单Web例子
+
+We  show  a  similar  and  simple  example  of  using  Unicode  with  CGI  in  the Web Programming chapter (Chapter 20).
+	在第20章Web编程里面我们展示了一个简单的在CGI应用中使用Unicode的例子.
+
+
+6.8.6  Using Unicode in Real Life
+   把Unicode应用到实际应用中
+
+Examples like this make it look deceptively easy to handle Unicode in your code, and it is pretty easy, as long as you follow these simple rules:
+	这些处理Unicode字符串的例子简单到让人感到有点假，事实上，只要你遵守以下的规则，处理Unicode就是这么简单:
+
+•	Always prefix your string literals with u.
+	程序中出现字符串时一定要加个前缀u.
+•	Never use str()… always use unicode() instead.
+	不要用str()函数，用unicode()代替.
+•	Never use the outdated string module—it blows up when you pass it any non-ASCII characters.
+	不要用过时的string模块 -- 如果传给它的是非ASCII字符，它会把一切搞砸。
+•	Avoid unnecessary encoding and decode of Unicode strings in your program. Only call the encode() method right before you write your text to a file, database, or the network, and only call the decode() method when you are reading it back in.
+	不到必须时不要在你的程序里面编解码Unicod字符.只在你要写入文件或数据库或者网络时，才调用encode()函数;相应地，只在你需要把数据读回来的时候才调用decode()函数.
+
+These rules will prevent 90 percent of the bugs that can occur when handling Unicode  text.  The  problem  is  that  the  other  10  percent  of  the  bugs  are beyond your control. The greatest strength of Python is the huge library of modules that exist for it. They allow Python programmers to write a program in ten lines of code that might require a hundred lines of code in another lan- guage.  But  the  quality  of  Unicode  support  within  these  modules  varies widely from module to module.
+	这些规则可以规避90%由于Unicode字符串处理引起的bug.现在的问题是剩下的10%的问题却让你处理不了，幸亏Python提供了大量的模块、库来替你处理这些问题.它们可以让你用10行Python语句写出其他语言需要100行语句才能完成的功能，但是相应地，对Unicode支持的质量也完全取决于这些模块、库.
+
+Most of the modules in the standard Python library are Unicode compli- ant. The biggest exception is the pickle module. Pickling only works with ASCII  strings.  If  you  pass  it  a  Unicode  string  to  unpickle,  it  will  raise  an exception. You have to convert your string to ASCII first. It is best to avoid using  text-based  pickles.  Fortunately,  the  binary  format  is  now  the  default and it is better to stick with it. This is especially true if you are storing your pickles in a database. It is much better to save them as a BLOB than to save them  as  a  TEXT  or  VARCHAR  field  and  then  have  your  pickles  get  cor- rupted when someone changes your column type to Unicode.
+	Python标准库里面的绝大部分模块都是兼容Unicode的.除了pickle模块！pickle模块只支持ASCII字符串。如果你把一个Unicode字符串交给pickle模块来unpickle,它会报异常.你必须先把你的字符串转换成ASCII字符串才可以.所以最好是避免基于文本的pickle操作.幸运地是现在二进制格式已经作为pickle的默认格式了，pickle的二进制格式支持不错.这点在你向数据库里面存东西是尤为突出，把它们作为BLOB字段存储而不是作为TEXT或者VARCHAR字段存储要好很多.万一有人把你的字段改成了Unicode类型，这可以避免pickle的崩溃.
+
+If your program uses a bunch of third-party modules, then you will probably run into a number of frustrations as you try to get all of the programs to speak Unicode to each other. Unicode tends to be an all-or-nothing proposition.  Each  module  in  your  system  (and  all  systems  your  program  interfaces with) has to use Unicode and the same Unicode codec. If any one of these systems does not speak Unicode, you may not be able to read and save strings properly.
+   如果你的程序里面用到了很多第三方模块，那么你很可能在各个模块统一使用Unicode通讯方面遇到麻烦，Unicode还没成为一项必须的规定，在你系统里面的第三方模块(包括你的应用要面对的平台\系统)需要用相同的Unicode编码，否则，可能你就不能正确的读写数据.
+As an example, suppose you are building a database-enabled Web applica- tion that reads and writes Unicode. In order to support Unicode you need the following pieces to all support Unicode:
+   作为一个例子，假设你正在构建一个用数据库来读写Unicode数据的Web应用.为了支持Unicode，你必须确保以下方面对Unicode的支持:
+
+•	Database server (MySQL, PostgreSQL, SQL Server, etc.)
+	数据库服务器(MySQL,PostgreSQL,SQL Server,等等)
+•	Database adapter (MySQLdb, etc.)
+	数据库适配器(MySQLdb等等)
+•	Web framework (mod_python, cgi, Zope, Plane, Django etc.)
+	Web开发框架(mod_python,cgi,Zope,Plane,Django等等)
+
+The database server is often the easiest part. You just have to make sure that all of your tables use the UTF-8 encoding.
+	数据库方面最容易对付，你只要确保每张表都用UTF-8编码就可以了。
+
+The database adapter can be trickier. Some database adapters support Unicode, some do not. MySQLdb, for instance, does not default to Unicode mode. You have to use a special keyword argument  use_unicode in the connect() method to get Unicode strings in the result sets of your queries.
+ Enabling Unicode is very simple to do in mod_python. Just set the text- encoding field to "utf-8" on the request object and mod_python handles the rest. Zope and other more complex systems may require more work.
+	数据库适配器可能有点麻烦，有些适配器支持Unicode有些不支持,比如说MySQLdb,它并不是默认就支持Unicode模式,你必须在connect()方法里面用一个特殊的关键字use_unicode来确保你得到的查询结果是Unicode字符串.
+	mod_python里面开启对Unicode的支持相当简单,只要在request对象里面把text-encoding一项设成"utf-8"就行了，剩下的mod_python都会替你完成，Zope等其他复杂的系统可能需要更多的工作来支持Unicode.
+
+6.8.7  Real-Life Lessons Learned
+	   从现实中得来的教训
+
+Mistake  #1:  You  have  a  large  application  to  write  under  significant  time pressure. Foreign language support was a requirement, but no specifics are made available by the product manager. You put off Unicode-compliance until the project is mostly complete … it is not going to be that much effort to add Unicode support anyway, right?
+	失误 #1: 你必须在一个极有限的时间内写出一个大型的应用，而且需要其他语言的支持，但是产品经理并没有明确定义这一点。你并没有考虑Unicode的兼容，直到项目快要结束... ,这时候再添加Unicode的支持几乎不太可能，不是吗？
+
+Result #1: Failure to anticipate the foreign-language needs of end-users
+as well as integration of Unicode support with the other foreign language– oriented applications that they used. The retrofit of the entire system would be extremely tedious and time-consuming.
+结果 #1: 没能预测到最终用户对其他语言界面的需求，在集成他们用的面向其他语种的应用时又没有使用Unicode支持.更新整个系统既让让人觉得枯燥和更是浪费时间。
+Mistake  #2:  Using  the  string module  everywhere  including  calling str() and chr() in many places throughout the code.
+	失误 #2:在源码中到处使用string模块或者str()和chr()函数.
+
+Result  #2:  Convert  to  string  methods  followed  by  global  search-and- replace  of  str() and  chr() with  unicode() and  unichr().  The  latter breaks all pickling. The pickling format has to be changed to binary. This in turn breaks the database schema, which needs to be completely redone.
+	结果 #2:通过全局的查找替换把str()和chr()替换成unicode()和unichr()，但是这样一来很可能就不能再用pickle模块，要用只能把所有要pickle处理的数据存成二进制形式，这样一来就必须修改数据库的结构，而修改数据库结构就意味着全部推倒重来.
+
+Mistake #3: Not confirming that all auxiliary systems support Unicode fully. 
+	失误 #3: 不能确定所有的辅助系统都完全地支持Unicode.
+
+Result #3: Having to patch those other systems, some of which may not be under your source control. Fixing Unicode bugs everywhere leads to code instability and the distinct possibility of introducing new bugs.
+	结果 #3: 不得不去为那些系统打补丁，而其中有些系统可能你根本就没有源码.修复对Unicode支持的bug可能会降低代码的可靠性，而且非常有可能引入新的bug.
+
+Summary: Enabling full Unicode and foreign-language compliance of your application  is  a  project  on  its  own.  It  needs  to  be  well  thought  out  and planned carefully. All software and systems involved must be “checked off,” including the list of Python standard library and/or third-party external mod- ules that are to be used. You may even have to bring onboard an entire team with internationalization (or “I18N”) experience.
+	总结: 使应用程序完全支持Unicode，兼容其他的语言本身就是一个工程.
+它需要详细的考虑、计划.所有涉及到的软件、系统都需要检查,包括Python的标准库和其他将要用到的第三方扩展模块.你甚至有可能需要组建一个经验丰富的团队来专门负责国际化(I18N)问题.
+
+
+6.8.8  Unicode Support in Python
+	   Python的Unicode支持
+
+unicode() Built-in Function
+内建的unicode()函数
+
+The Unicode factory function should operate in a manner similar to that of the
+Unicode string operator ( u / U ). It takes a string and returns a Unicode string.
+Unicode的工厂方法，同Unicode字符串操作符(u / U)的工作方式很类似，它接受一个string做参数，返回一个Unicode字符串.
+
+decode()/encode() Built-in Methods
+内建的decode()/encode()方法
+
+The decode() and encode() built-in methods take a string and return an equivalent decoded/encoded string. decode() and encode() work for both regular and Unicode strings.  decode() was added to Python in 2.2.
+	decode()和encode()内建函数接受一个字符串做参数返回该字符串对应的解码后/编码后的字符串.decode()和encode()都可以应用于常规字符串和Unicode字符串.decode()方法是在Python2.2以后加入的.
+
+
+Unicode Type
+Unicode 类型
+
+A Unicode string object is subclassed from basestring and an instance is cre- ated by using the unicode() factory function, or by placing a u or U in front of the quotes of a string. Raw strings are also supported. Prepend a ur or UR to your string literal.
+  Unicode字符串对象是basestring的子类、用Unicode()工厂方法或直接在字符串前面加一个u或者U来创建实例.支持Unicode原始字符串,只要在你的字符串前面加一个ur或者UR就可以了.
+
+Unicode Ordinals
+Unicode 序数
+
+The  standard  ord()built-in  function  should  work  the  same  way.  It  was enhanced recently to support Unicode objects. The unichr()built-in func- tion returns a Unicode object for a character (provided it is a 32-bit value); otherwise, a ValueError exception is raised.
+标准内建函数ord()工作方式相同，最近已经升级到可以支持Unicode对象了。内建的unichr()函数返回一个对应的Unicode字符(需要一个32位的值);否则就产生一个ValueError异常.
+
+Coercion
+强制类型转换
+
+Mixed-mode  string  operations  require  standard  strings  to  be  converted  to Unicode objects.
+混合类型字符串操作需要把普通字符串转换成Unicode对象.
+
+Exceptions
+异常
+
+UnicodeError is defined in the exceptions module as a subclass of Val- ueError.  All  exceptions  related  to  Unicode  encoding/decoding  should  be subclasses of UnicodeError. See also the string encode() method.
+	UnicodeError异常是在exceptions模块中定义的，ValueError的子类.所有关于Unicode编解码的异常都要继承自UnicodeError.详见encode()函数.
+
+Standard Encodings
+标准编码
+
+Table  6.9  presents  an  extremely  short  list  of  the  more  common  encodings used in Python. For a more complete listing, please see the Python Docu- mentation. Here is an online link:
+	表6.9简洁地列出了Python中常用的编码方式.更详细、完全的列表见Python的文档，下面是它的链接:
+http://docs.python.org/lib/standard-encodings.html
+
+RE Engine Unicode-Aware
+RE 引擎对Unicode的支持
+
+The regular expression engine should be Unicode aware. See the  re Code
+Module sidebar in Section 6.9.
+	正则表达式引擎需要Unicode支持.详见6.9节的re模块.
+
+
+Table 6.9  Common Unicode Codecs/Encodings
+表6.9 常用Unicode编辑码
+
+Codec	Description
+编码	描述
+
+utf-8	8-bit variable length encoding (default encoding) 
+		变量长度为8的编码(默认编码)
+utf-16	16-bit variable length encoding (little/big endian) 
+		变量长度为16的编码(大/小端)
+utf-16-le	UTF-16 but explicitly little endian
+			小端UTF-16编码
+utf-16-be	UTF-16 but explicitly big endian
+			大端UTF-16编码
+ascii	7-bit ASCII codepage
+		7位ASCII码表
+
+iso-8859-1	ISO 8859-1 (Latin-1) codepage
+			ISO 8859-1 (Latin-1) 码表
+
+unicode-escape	(See Python Unicode Constructors for a definition)
+				(定义见Python Unicode构造函数)
+
+raw-unicode-escape	(See Python Unicode Constructors for a definition)
+					(定义见Python Unicode 构造函数)
+
+native	Dump of the internal format used by Python
+		Python用的内部格式	
+
+String Format Operator
+字符串格式化操作符
+
+For Python format strings: %s performs str(u) for Unicode objects embedded in Python strings, so the output will be u.encode(<default encoding>). If the format string is a Unicode object, all parameters are coerced to Unicode first  and  then  put  together  and  formatted  according  to  the  format  string. Numbers are first converted to strings and then to Unicode. Python strings are  interpreted  as  Unicode  strings  using  the  <default  encoding>.  Unicode objects are taken as is. All other string formatters should work accordingly. Here is an example:
+	对于Python的格式化字符串的操作符,%s 把Python字符串中的Unicode对象执行了str(u)操作,所以，输出的应该是u.encode(默认编码).如果格式化字符串是Unicode对象,所有的参数都将首先强制转换成Unicode然后根据对应的格式串一起进行格式转换.数字首先被转换成普通字符串，然后在转换成Unicode.Python字符串通过默认编码格式转化成Unicode.Unicode对象不变，所有其他格式字符串都需要像上面这样转化，下面是例子:
+
+u"%s %s" % (u"abc", "abc")   u"abc abc"
+
+
+
+6.9  Related Modules
+	 相关模块
+
+Table 6.10 lists the key related modules for strings that are part of the Python standard library.
+表6.10列出了Python标准库里面与字符串有关的主要模块.
+
+Table 6.10  Related Modules for String Types
+	  与字符串类型有关的模块
+
+Module	Description
+模块	描述
+
+string           String manipulation and utility functions, i.e., Template class
+
+		字符串操作相关函数和工具，比如Template类.
+re           Regular expressions: powerful string pattern matching
+		 正则表达式:强大的字符串模式匹配模块
+struct           Convert strings to/from binary data format
+		 字符串和二进制之间的转换				 
+c/StringIO           String buffer object that behaves like a file
+		字符串缓冲对象，操作方法类似于file对象.
+base64           Base 16, 32, and 64 data encoding and decoding
+		Base 16,32,64数据编解码
+codecs           Codec registry and base classes
+		解码器注册和基类
+
+crypt	Performs one-way encryption cipher
+		进行单方面加密
+
+diffliba	Various “differs” for sequences
+			找出序列间的不同
+
+hashlibb	API to many different secure hash and message digest algorithms
+			多种不同安全哈希算法和信息摘要算法的API
+
+hmac	Keyed-hashing for message authentication
+		HMAC信息鉴权算法的Python实现	
+
+md5d	RSA’s MD5 message digest authentication
+		RSA的MD5信息摘要鉴权
+
+rotor	Provides multi-platform en/decryption services
+		提供多平台的加解密服务
+
+shad	NIST’s secure hash algorithm SHA
+		NIAT的安全哈希算法SHA
+
+stringprepe	Prepares Unicode strings for use in Internet protocols
+			提供用于IP协议的Unicode字符串
+
+textwrape	Text-wrapping and filling
+			文本打包和填充
+
+unicodedata Unicode database
+			Unicode数据库
+
+a.	New in Python 2.1.
+	Python2.1新加
+b.	New in Python 2.5. 
+	Python2.5新加
+c.	New in Python 2.2.
+	Python2.2新加
+d.	Obsoleted in Python 2.5 by hashlib module. 
+	Python2.5的hashlib中废除
+e.	New in Python 2.3.
+	Python2.3新加
+
+CORE MODULE: re
+核心模块： re
+Regular expressions (REs) provide advanced pattern matching scheme for strings. Using a separate syntax that describes these patterns, you can effectively use them as “filters” when passing in the text to perform the searches on.These filters allow you to extract the matched patterns as well as perform find-and-replace or divide up strings based on the patterns that you describe.
+正则表达式(RE)提供了高级的字符串模式匹配方案.通过描述这些模式的语法，你可以像使用“过滤器”一样高效地查找传进来的文本。这些过滤器允许你基于自定义的模式字符串抽取匹配模式、执行查找-替换或分割字符串.
+
+The re module, introduced in Python 1.5, obsoletes the original regex and regsub modules from earlier releases. It represented a major upgrade in terms of Python’s support for regular expressions, adopting the complete Perl syntax for REs. In Python 1.6, a completely new engine was written (SRE), which added support for Unicode strings as well as significant performance improvements. SRE replaces the old PCRE engine, which had been under the covers of the regular expression modules.
+    Python1.5中加入的re模块代替了早期的regex和regsub模块,全面采用了Perl正则表达式语法,使得Python在对正则表达式的支持方面前进了一大步. Python1.6里面重写了正则表达式引擎(SRE),增加了对Unicode字符串的支持并对性能进行了重大的升级.SRE引擎取代了原有正则表达式的模块下的PCRE引擎.
+Some of the key functions in the re module include: compile()— compiles an RE expression into a reusable RE object; match()— attempts to match a pattern from the beginning of a string; search()— searches for any matching pattern in the string; and sub()— performs a search-and-replace of matches. Some of these functions return match objects with which you can access saved group matches (if any were found). All of Chapter 15 is dedicated to regular expressions.
+     该模块中包含的关键函数有:compile() - 将一个RE表达式编译成一个可重用的RE对象;match() - 试图从字符串的开始匹配一个模式;
+search() - 找出字符串中所有匹配的项;sub() - 进行查找替换操作。其中的一些函数返回匹配到的对象，你可以通过组匹配来访问（如果找到的话）。15章的整章内容都是讲述正则表达式。
+
+6.10  Summary of String Highlights
+      字符串关键点总结
+
+Characters Delimited by Quotation Marks
+	一些引号分隔的字符
+
+You can think of a string as a Python data type that you can consider as an array or contiguous set of characters between any pair of Python quotation symbols, or quotes. The two most common quote symbols for Python are the single  quote,  a  single  forward  apostrophe  (  ' ),  and  the  double  quotation mark  (  " ).  The  actual  string  itself  consists  entirely  of  those  characters  in between and not the quote marks themselves.
+你可以把字符串看成是Python的一种数据类型,在Python单引号或者双引号之间的字符数组或者是连续的字符集合.在Python中最常用两个引号是单引号（'）和双引号（"）。字符串的实际内容是这些单引号(')或者双引号(")之间的字符,不包括引号本身.
+Having the choice between two different quotation marks is advantageous because it allows one type of quote to serve as a string delimiter while the other can be used as characters within the string without the need for special escape  characters.  Strings  enclosed  in  single  quotes  may  contain  double quotes as characters and vice versa.
+可以用两种引号来创建字符串是很有益处的，因为是当你的字符串中包含单引号时,如果用单引号创建字符串,那么字符串中的双引号就不需要转义。反之亦然.
+
+
+No Separate Character Type
+不可分字符类型
+
+Strings are the only literal sequence type, a sequence of characters. However, characters are not a type, so strings are the lowest-level primitive for charac- ter storage and manipulation. Characters are simply strings of length one.
+	字符串是唯一的字面上的字符序列类型.不过,字符本身并不是一种类型,所以,字符串是字符存储操作的最基本单位.字符应该视为长度为1的字符串.
+
+String Format Operator ( % ) Provides printf()-like Functionality
+	字符串格式化操作符 ( % )提供类似于printf()那样的功能.
+
+The string format operator (see Section 6.4.1) provides a flexible way to cre- ate a custom string based on variable input types. It also serves as a familiar interface to formatting data for those coming from the C/C++ world.
+字符串格式化操作符(见6.4.1节)提供了一种基于多种输入类型的创建自定义字符串的灵活方式.它也提供了类似于C/C++世界里的格式化操作的接口.
+
+Triple Quotes
+	三引号
+
+In Section 6.7.2, we introduced the notion of triple quotes, which are strings that  can  have  special  embedded  characters  like  NEWLINEs  and  tabs. Triple-quoted strings are delimited by pairs of three single (' ' ') or double ( " " ") quotation marks.
+   在6.7.2节里面,我们介绍了三引号,在三引号字符串中可以包含诸如换行回车或者tab键这样的特殊字符.三引号字符串是用两边各三个单引号(''')或者两边各三个双引号(""")来定义的.
+Raw Strings Takes Special Characters Verbatim
+原始字符串对每个特殊字符串都使用它的原意
+
+In Section 6.4.2, we introduced raw strings and discussed how they do not interpret  special  characters  escaped  with  the  backslash.  This  makes  raw strings ideal for situations where strings must be taken verbatim, for example, when describing regular expressions.
+   第6.4.2节中,我们讲述了原始字符串,并且讨论了它们并不通过反斜线转义特殊字符的特性.这个特性使得原始字符串非常适用于那些需要字符串原意的场合,比如在定义一个正则表达式时.
+
+Python Strings Do Not End with NUL or '\0'
+Python字符串不是通过NUL或者'\0'来结束的
+
+One major problem in C is running off the end of a string into memory that does not belong to you. This occurs when strings in C are not properly termi- nated with the NUL or ‘ \0’ character (ASCII value of zero). Along with man- aging memory for you, Python also removes this little burden or annoyance. Strings in Python do not terminate with NUL, and you do not have to worry about  adding  them  on.  Strings  consist  entirely  of  the  characters  that  were designated and nothing more.
+	C编程的一个主要问题是你访问了一个字符串后面的本不属于你的空间,这种情况发生在你没有在字符串末尾添加终结符,NUL或者'\0'(ASCII值为0)的时候.Python不仅为你自动管理内存,而且也把C的这个负担或者说是小麻烦去掉了.Python中的字符串不是以NUL结束的,所以你不需要为是否已经添加终结符担心.字符串中只包含你所定义的东西,没有别的.
+
+
+
+6.11  Lists
+	  列表
+
+Like  strings,  lists  provide  sequential  storage  through  an  index  offset  and access to single or consecutive elements through slices. However, the comparisons usually end there. Strings consist only of characters and are immutable  (cannot  change  individual  elements),  while  lists  are  flexible  container objects that hold an arbitrary number of Python objects. Creating lists is sim- ple; adding to lists is easy, too, as we see in the following examples.
+	像字符串类型一样,列表类型也是序列式的数据类型,可以通过下标或者切片操作来访问某一个或者某一块连续的元素.然而,相同的方面也就这些,字符串只能由字符组成,而且是不可变的(不能单独改变它的某个值),而列表则是能保留任意数目的Python对象的灵活的容器。就像我们将要看到的例子中所示,创建列表非常简单,向列表中添加元素也是如此.
+The  objects  that  you  can  place  in  a  list  can  include  standard  types  and objects  as  well  as  user-defined  ones.  Lists  can  contain  different  types  of objects  and  are  more  flexible  than  an  array  of  C  structs  or  Python  arrays (available through the external array module) because arrays are restricted to containing objects of a single type. Lists can be populated, empty, sorted, and reversed. Lists can be grown and shrunk. They can be taken apart and put together  with  other  lists.  Individual  or  multiple  items  can  be  inserted, updated, or removed at will.
+	列表不仅可以包含Python的标准类型,而且可以用用户定义的对象作为自己的元素.列表可以包含不同类型的对象,而且要比C或者Python自己的数组类型(包含在array扩展包中)都要灵活.因为数组类型所有的元素只能是一种类型.列表可以执行pop,empt,sort,reverse等操作.列表也可以添加或者减少元素.还可以跟其他的列表结合或者把一个列表分成几个.可以对单独一个元素或者多个元素执行insert,update,或者remove操作.
+
+Tuples  share  many  of  the  same  characteristics  of  lists  and  although  we have a separate section on tuples, many of the examples and list functions are applicable to tuples as well. The key difference is that tuples are immutable, i.e., read-only, so any operators or functions that allow updating lists, such as using the slice operator on the left-hand side of an assignment, will not be valid for tuples.
+	元组类型在很多操作上都跟列表一样,许多用在列表上的例子在元组上照样能跑,我们有一节内容专门讲解元组类型.它们的主要不同在于元组是不可变的,或者说是只读的,所以那些用于更新列表的操作,比如用切片操作来更新一部分元素的操作,就不能用于元组类型.
+
+How to Create and Assign Lists
+如何创建列表类型数据并给它赋值
+
+Creating lists is as simple as assigning a value to a variable. You handcraft a list (empty or with elements) and perform the assignment. Lists are delimited  by  surrounding  square  brackets  (  [  ] ).  You  can  also  use  the  factory function.
+	创建一个列表就像给一个变量赋值一样的简单.你手工写一个列表(空的或者有值的都行)然后赋给一个变量,列表是由方括号([])来定义的,当然,你也可以用工厂方法来创建它.
+
+>>> aList = [123, 'abc', 4.56, ['inner', 'list'], 7-9j]
+>>> anotherList = [None, 'something to see here']
+>>> print aList
+[123, 'abc', 4.56, ['inner', 'list'], (7-9j)]
+>>> print anotherList
+[None, 'something to see here']
+>>> aListThatStartedEmpty = []
+>>> print aListThatStartedEmpty
+[]
+>>> list('foo')
+['f', 'o', 'o']
+
+How to Access Values in Lists
+如何访问列表中的值
+
+Slicing works similar to strings; use the square bracket slice operator ( [ ] )
+along with the index or indices.
+列表的切片操作就像字符串中一样;切片操作符([])和索引值或索引值范围一起使用
+
+>>> aList[0]
+123
+>>> aList[1:4]
+['abc', 4.56, ['inner', 'list']]
+>>> aList[:3]
+[123, 'abc', 4.56]
+>>> aList[3][1]
+'list'
+
+How to Update Lists
+如何更新列表
+
+You can update single or multiple elements of lists by giving the slice on the left-hand side of the assignment operator, and you can add to elements in a list with the append() method:
+你可以通过在等号的左边指定一个索引或者索引范围的方式来更新一个或几个元素,你也可以用append()方法来追加元素到列表中去.
+
+>>> aList
+[123, 'abc', 4.56, ['inner', 'list'], (7-9j)]
+>>> aList[2]
+4.56
+>>> aList[2] = 'float replacer'
+>>> aList
+[123, 'abc', 'float replacer', ['inner', 'list'], (7-9j)]
+>>>
+>>> anotherList.append("hi, i'm new here")
+>>> print anotherList
+[None, 'something to see here', "hi, i'm new here"]
+>>> aListThatStartedEmpty.append('not empty anymore')
+>>> print aListThatStartedEmpty
+['not empty anymore']
+
+How to Remove List Elements and Lists
+如何删除列表中的元素或者列表(本身)
+
+To remove a list element, you can use either the del statement if you know exactly which element(s) you are deleting or the remove() method if you do not know.
+要删除列表中的元素,如果你确切的知道要删除元素的素引可以用del语句,否则可以用remove()方法.
+
+>>> aList
+[123, 'abc', 'float replacer', ['inner', 'list'], (7-9j)]
+>>> del aList[1]
+>>> aList
+[123, 'float replacer', ['inner', 'list'], (7-9j)]
+>>> aList.remove(123)
+>>> aList
+['float replacer', ['inner', 'list'], (7-9j)]
+
+You can also use the pop() method to remove and return a specific object from a list.
+	你还可以通过pop()方法来删除并从列表中返回一个特定对象.
+Normally, removing an entire list is not something application program- mers do. Rather, they tend to let it go out of scope (i.e., program termination, function  call  completion,  etc.)  and  be  deallocated,  but  if  they  do  want  to explicitly remove an entire list, they use the del statement:
+一般来说,程序员不需要去删除一个列表对象。列表对象出了作用域(比如程序结束,函数调用完成等等)后它会自动被析构,但是如果你想明确的删除一整个列表,你可以用del语句:
+
+del aList
+
+
+6.12  Operators
+	  操作符
+
+6.12.1  Standard Type Operators
+		标准类型操作符
+
+In  Chapter  4,  we  introduced  a  number  of  operators  that  apply  to  most objects,  including  the  standard  types.  We  will  take  a  look  at  how  some  of those apply to lists.
+	在第4章里,我们介绍了一些适用于包括标准类型在内的大部分对象的操作符,现在我们来看一下这些操作符如何作用在列表上:
+
+>>> list1 = ['abc', 123]
+>>> list2 = ['xyz', 789]
+>>> list3 = ['abc', 123]
+>>> 1ist1 < list2
+True
+>>> list2 < list3
+False
+>>> list2 > list3 and list1 == list3
+True
+
+When  using  the  value  comparison  operators,  comparing  numbers  and strings is straightforward, but not so much for lists, however. List compari- sons  are  somewhat  tricky,  but  logical.  The  comparison  operators  use  the same algorithm as the cmp() built-in function. The algorithm basically works like this: the elements of both lists are compared until there is a determina- tion of a winner. For example, in our example above, the output of  'abc' versus 'xyz' is determined immediately, with 'abc' < 'xyz', resulting in list1 < list2 and list2 >= list3. Tuple comparisons are performed in the same manner as lists.
+
+	在使用比较操作符时,比较数字和字符串是很明了的,但是用在列表上时就不是那么简单了,列表比较操作有些狡猾,但是合乎逻辑.比较列表时也是用的内建的cmp()函数,基本的比较逻辑是这样的:两个列表的元素分别比较,直到有一方的元素胜出,比如我们上面的例子,'abc'和'xyz'的比较直接决定了比较结果,在'abc'<'xyz'时,list1<list2,list2>=list3,元组类型在进行比较操作时跟列表遵循相同的逻辑.
+
+6.12.2  Sequence Type Operators
+		序列类型操作符
+
+Slices ( [ ] and [ : ] )
+切片([] 和[:])
+
+Slicing  with  lists  is  very  similar  to  strings,  but  rather  than  using  individual characters or substrings, slices of lists pull out an object or a group of objects that are elements of the list operated on. Focusing specifically on lists, we make the following definitions:
+	列表的切片操作跟字符串的切片操作很像,不过列表的切片操作返回的是一个对象或者是几个对象的集合,而不是像字符串那样,返回一个字符或者一个子串.我们定义以下几个列表用来做例子:
+
+>>> num_list = [43, -1.23, -2, 6.19e5]
+>>> str_list = ['jack', 'jumped', 'over', 'candlestick']
+>>> mixup_list = [4.0, [1, 'x'], 'beef', -1.9+6j]
+
+Slicing  operators  obey  the  same  rules  regarding  positive  and  negative indexes,  starting  and  ending  indexes,  as  well  as  missing  indexes,  which default to the beginning or to the end of a sequence.
+	列表的切片操作也遵从正负索引规则,也有开始索引值,结束索引值,如果这两个值为空,默认也会分别指到序列的开始和结束位置.
+>>> num_list[1]
+-1.23
+>>>
+>>> num_list[1:]
+[-1.23, -2, 619000.0]
+>>>
+>>> num_list[2:-1]
+[-2]
+>>>
+>>> str_list[2]
+'over'
+>>> str_list[:2]
+['jack', 'jumped']
+>>>
+>>> mixup_list
+[4.0, [1, 'x'], 'beef', (-1.9+6j)]
+>>> mixup_list[1]
+[1, 'x']
+Unlike strings, an element of a list might also be a sequence, implying that you can perform all the sequence operations or execute any sequence built-in functions on that element. In the example below, we show that not only can we take a slice of a slice, but we can also change it, and even to an object of a dif- ferent type. You will also notice the similarity to multidimensional arrays.
+	跟字符串类型只能用字符为元素不同,列表类型的元素可以是另一个序列类型,这就意味着你在列表的元素上也可以使用所有的序列操作符或者在其之上执行序列类型内建的各种操作.在下面的例子中,我们将会展示,不仅可以在一个切片操作的结果之上再进行切片,而且还可以改变这个切片的结果,即使新对象的类型跟原对象不同也可以.你会注意到,这跟多维数组有一些类似.
+
+>>> mixup_list[1][1]
+'x'
+>>> mixup_list[1][1] = -64.875
+>>> mixup_list
+[4.0, [1, -64.875], 'beef', (-1.9+6j)]
+Here is another example using num_list:
+这时用num_list来做的另一个例子:
+>>> num_list
+[43, -1.23, -2, 6.19e5]
+>>>
+>>> num_list[2:4] = [16.0, -49]
+>>>
+>>> num_list
+[43, -1.23, 16.0, -49]
+>>>
+>>> num_list[0] = [65535L, 2e30, 76.45-1.3j]
+>>>
+>>> num_list
+[[65535L, 2e+30, (76.45-1.3j)], -1.23, 16.0, -49]
+Notice how, in the last example, we replaced only a single element of the list, but we replaced it with a list. So as you can tell, removing, adding, and replacing things in lists are pretty freeform. Keep in mind that in order to splice elements of a list into another list, you have to make sure that the left- hand side of the assignment operator ( = ) is a slice, not just a single element.
+注意在最后一个例子中,我们是如何把列表的单一元素替换成一个列表.在列表中进行诸如remove,add,和replace的操作是多么的自由了吧!还有一点要注意,如果你想以子列表的形式得到一个列表中的一个切片,那需要确保在赋值时等号的左边也是一个列表而不是一个列表的元素.
+Membership ( in, not in )
+成员关系操作( in ,not in)
+
+With lists (and tuples), we can check whether an object is a member of a list
+(or tuple).
+列表中(同样适用于元组),我们可以检查一个对象是否是一个列表(或者元组)的成员.
+
+>>> mixup_list
+[4.0, [1, 'x'], 'beef', (-1.9+6j)]
+>>>
+>>> 'beef' in mixup_list
+True
+>>>
+>>> 'x' in mixup_list
+False
+>>>
+>>> 'x' in mixup_list[1] True
+>>> num_list
+
+[[65535L, 2e+030, (76.45-1.3j)], -1.23, 16.0, -49]
+>>>
+>>> -49 in num_list
+True
+>>>
+>>> 34 in num_list
+False
+>>>
+>>> [65535L, 2e+030, (76.45-1.3j)] in num_list
+True
+
+Note how 'x' is not a member of mixup_list. That is because 'x' itself
+is  not  actually  a  member  of  mixup_list.  Rather,  it  is  a  member  of
+mixup_uplist[1], which itself is a list. The membership operator is appli-
+cable in the same manner for tuples.
+	注意,'x'并不属于mixup_list,因为'x'本身并不是mixup_list的一个成员,而是mixup_list[1]的,mixup_list[1]也是一个列表类型.成员关系操作运算同样适用于元组类型.
+
+Concatenation ( + )
+连接接操作符( + )
+
+The concatenation operator allows us to join multiple lists together. Note in the examples below that there is a restriction of concatenating like objects. In other words, you can concatenate only objects of the same type. You cannot concatenate two different types even if both are sequences.
+	连接操作符允许我们把多个列表对象合并在一起.注意,列表类型的连接操作也只能在同类型之间进行,换句话说,你不能把两个不同类型的对象连接在一起,即便他们都是序列类型也不行.
+
+>>> num_list = [43, -1.23, -2, 6.19e5]
+>>> str_list = ['jack', 'jumped', 'over', 'candlestick']
+>>> mixup_list = [4.0, [1, 'x'], 'beef', -1.9+6j]
+>>>
+>>> num_list + mixup_list
+[43, -1.23, -2, 619000.0, 4.0, [1, 'x'], 'beef', (-1.9+6j)]
+>>>
+>>> str_list + num_list
+['jack', 'jumped', 'over', 'candlestick', 43, -1.23, -2, 619000.0]
+
+As we will discover in Section 6.13, starting in Python 1.5.2, you can use the extend() method in place of the concatenation operator to append the con- tents of a list to another. Using extend() is advantageous over concatenation because it actually appends the elements of the new list to the original, rather than  creating  a  new  list  from  scratch  like    does.  extend() is  also  the method used by the augmented assignment or in-place concatenation opera- tor (), which debuted in Python 2.0.
+   在6.23节里面我们会讲到,从Python1.5.2起,我们可以用extend()方法来代替连接操作符把一个列表的内容添加到另一个中去.使用extend()方法比连接操作的一个优点是它实际上是把新列表添加到了原有的列表里面,而不是像连接操作那样新建一个列表。list.extend()方法也被用来做复合赋值运算,也就是Python2.0中添加的替换连接操作(+=).
+
+We  would  also  like  to  point  out  that  the  concatenation  operator  does not facilitate adding individual elements to a list. The upcoming example illustrates a case where attempting to add a new item to the list results in failure.
+	必须指出,连接操作符并不能实现向列表中添加新元素的操作.在接下来的例子中,我们展示了一个试图用连接操作向列表中添加新元素报错的例子.
+
+>>> num_list + 'new item' Traceback (innermost last):
+File "<stdin>", line 1, in ?
+TypeError: illegal argument type for built-in operation
+
+This example fails because we had different types to the left and right of the concatenation operator. A combination of (list  string) is not valid. Obvi- ously, our intention was to add the ’new item’ string to the list, but we did not go about it the proper way. Fortunately, we have a solution:
+	这个例子之所以是错误的,是因为我们在连接操作符的左右两边使用了不同类型的值,列表类型 + 字符串类型这样的操作是非法的.显然,我们的初衷是把一个字符串作为一个新元素添加到列表中去,不过我们的方法不正确.幸运的是,我们有一个正确的方法:
+
+Use  the  append() list  built-in  method  (we  will  formally  introduce append() and all other built-in methods in Section 6.13):
+	使用内建函数append() (我们会在6.13节里面正是地介绍append()和其他内建函数)
+
+>>> num_list.append('new item')
+
+Repetition ( *)
+重复操作符( * )
+
+Use  of  the  repetition  operator  may  make  more  sense  with  strings,  but  as  a sequence type, lists and tuples can also benefit from this operation, if needed:
+	重复操作符可能更多的应用在字符串类型中,不过,列表和元组跟字符串同属序列类型,所以需要的时候也可以使用这一操作.
+
+>>> num_list * 2
+[43, -1.23, -2, 619000.0, 43, -1.23, -2, 619000.0]
+>>>
+>>> num_list * 3
+[43, -1.23, -2, 619000.0, 43, -1.23, -2, 619000.0, 43,
+-1.23, -2, 619000.0]
+Augmented assignment also works, beginning in Python 2.0:
+Python2.0起,也开始支持复合赋值运算:
+
+>>> hr = '-'
+>>> hr *= 30
+>>> hr
+'------------------------------'
+
+6.12.3  List Type Operators and List Comprehensions
+6.12.3	列表类型操作符和列表解析
+
+There are really no special list-only operators in Python. Lists can be used with most object and sequence operators. In addition, list objects have their own methods. One construct that lists do have however, are list comprehensions. These are a combination of using list square brackets and a for-loop inside, a piece of logic that dictates the contents of the list object to be created. We cover list comprehensions in Chapter 8, but we present a simple example here as well as a few more throughout the remainder of the the chapter:
+	其实Python中没有专门用于列表类型的操作符.列表可以使用大部分的对象和序列类型的操作符.此外，列表类型有属于自己的方法.列表才有的构建--列表解析.这种方法是结合了列表的方括弧和for循环,在逻辑上描述要创建的列表的内容.我们在第八章讨论列表解析,这里仅仅向本章其他地方所做的那样,展示一个简单的例子:
+
+>>> [ i * 2 for i in [8, -2, 5] ]
+[16, -4, 10]
+>>> [ i for i in range(8) if i % 2 == 0 ]
+[0, 2, 4, 6]
+
+6.13  Built-in Functions
+	  内建函数
+
+6.13.1  Standard Type Functions
+		标准类型函数
+
+cmp()
+
+In Section 4.6.1, we introduced the cmp() built-in function with examples of comparing numbers and strings. But how would cmp()work with other objects such as lists and tuples, which can contain not only numbers and strings, but other objects like lists, tuples, dictionaries, and even user-created objects?
+在4.6.1章节里，我们通过比较数字和字符串介绍了内建cmp()函数.但我们还不知道cmp()函数是如何跟其他的比如列表和元组类型合作的,这些类型不仅含有数字和字符串,而且还有列表,元组,字典之类的其他对象,甚至可以是用户自定义的对象.这种情况下cmp()函数是如何工作的呢?
+
+>>> list1, list2 = [123, 'xyz'], [456, 'abc']
+>>> cmp(list1, list2)
+-1
+>>>
+>>> cmp(list2, list1)
+1
+>>> list3 = list2 + [789]
+>>> list3
+[456, 'abc', 789]
+>>>
+>>> cmp(list2, list3)
+-1
+
+Compares are straightforward if we are comparing two objects of the same type. For numbers and strings, the direct values are compared, which is trivial. For sequence types, comparisons are somewhat more complex, but similar in manner. Python tries its best to make a fair comparison when one cannot be made, i.e., when there is no relationship between the objects or when types do not even have compare functions, then all bets are off as far as obtaining a “logical” decision.
+	如果我们比较的是两个同类的对象,比较操作是非常直观的.比如数字和字符串,直接比较它们的值就行了。对于序列类型，比较操作稍微有点复杂了，但是方式上有相似Python在两个对象基本不能比较的时候尽量做出公平的结果,比如当两个对象没有关系时或者两种类型根本就没有用于比较的函数时,这时Python只能根据"逻辑"来做出结论.
+
+Before such a drastic state is arrived at, more safe-and-sane ways to deter- mine an inequality are attempted. How does the algorithm start? As we men- tioned briefly above, elements of lists are iterated over. If these elements are of the same type, the standard compare for that type is performed. As soon as an inequality is determined in an element compare, that result becomes the result of the list compare. Again, these element compares are for elements of the same type. As we explained earlier, when the objects are different, per- forming an accurate or true comparison becomes a risky proposition.
+	除了这种极端的情况之外,安全又健全的比较方法是如果有不相等的情况出现,比较操作就结束.这种算法是如何工作的呢?像我们前面简短的提到过的,列表的元素是可以无限迭代的.如果它的元素都是相同类型,则用标准的比较方法来作比较.否则,如果要比较的元素类型不一致,就像我们前面提到过的那样,如果比较的对象不一致,那么要得到一个准确的或者说绝对的比较结果就有些冒险.
+
+When  we  compare  list1 with  list2,  both  lists  are  iterated  over.  The first true comparison takes place between the first elements of both lists, i.e., 123 vs. 456. Since 123 < 456, list1 is deemed “smaller.” 
+	当我们较list1和list2时,list1和list2进行逐项比较.第一个比较操作发生在两个列表的第一个元素之间,比如说,123跟456比较,因为123<456,所以list1被认为小于list2.
+
+If both values are the same, then iteration through the sequences continues until either a mismatch is found, or the end of the shorter sequence is reached.  In  the  latter  case,  the  sequence  with  more  elements  is  deemed “greater.”  That  is  the  reason  why  we  arrived  above  at  list2  <  list3. Tuples are compared using the same algorithm. We leave this section with a summary of the algorithm highlights:
+   如果比较的值相等,那么两个序列的下一个值继续比较,直到不相等的情况出现,或者到达较短的一个序列的末尾,在这种情况下,长的序列被认为是"较大"的.这就是为什么上面的list2<list3的原因.元组类型比较也是用这种算法.最后我们以这种算法的关键点作为本节的结束:	
+
+1.   Compare elements of both lists.
+	 对两个列表的元素进行比较.
+2.   If elements are of the same type, perform the compare and return the result.
+	 如果比较的元素是同类型的,则比较其值,返回结果.
+3.   If elements are different types, check to see if they are numbers.
+	 如果两个元素不是同一种类型,则检查它们是否是数字.
+	 a.  If numbers, perform numeric coercion if necessary and compare.
+	 	 如果是数字,执行必要的数字强制类型转换,然后比较.
+	 b.  If either element is a number, then the other element is “larger” (numbers are “smallest”).
+	 	 如果有一方的元素是数字,则另一方的元素"大"(数字是"最小的")
+	 c.  Otherwise, types are sorted alphabetically by name.
+	 	 否则,通过类型名字的字母顺序进行比较.
+4.   If we reach the end of one of the lists, the longer list is “larger.”
+	 如果有一个列表首先到达末尾,则另一个长一点的列表"大".
+5.   If we exhaust both lists and share the same data, the result is a tie, meaning that 0 is returned.
+	 如果我们用尽了两个列表的元素而且所有元素都是相等的,那么结果就是个平局,就是说返回一个0.
+
+6.13.2  Sequence Type Functions
+		序列类型函数
+
+len()
+
+For strings, len() gives the total length of the string, as in the number of characters. For lists (and tuples), it will not surprise you that len() returns the number of elements in the list (or tuple). Container objects found within count  as  a  single  item.  Our  examples  below  use  some  of  the  lists  already defined above in previous sections.
+	对字符串来说len()返回字符串的长度,就是字符串包含的字符个数.对列表或者元组来说,它会像你想像的那样返回列表或者元组的元素个数,容器里面的每个对象被作为一个项来处理.我们下面的例子用了上面已经定义的列表.
+
+>>> len(num_list)
+4
+>>>
+>>> len(num_list*2)
+8
+
+max() and min()
+
+max() and  min() did  not  have  a  significant  amount  of  usage  for  strings since all they did was to find the “largest” and “smallest” characters (lexicographically) in the string. For lists (and tuples), their functionality is more defined. Given a list of like objects, i.e., numbers or strings only, max() and min()could come in quite handy. Again, the quality of return values diminishes as mixed objects come into play. However, more often than not, you will  be  using  these  functions  in  a  situation  where  they  will  provide  the results you are seeking. We present a few examples using some of our earlier- defined lists.
+	max()和min()函数在字符串操作里面用处不大,因为它们能对字符串做的只能是找出字符串中"最大"和"最小"的字符(按词典序),而对列表和元组来说,它们被定义了更多的用处.比如对只包含数字和字符串对象的列表,max()和min()函数就非常有用,重申一遍,混合对象的结构越复杂返回的结构准确性就越差.然而,在有些情况下(虽然很少),这样的操作可以返回你需要的结果.我们展示了一些使用上面定义好的列表的例子.
+
+>>> max(str_list)
+'park'
+>>> max(num_list)
+[65535L, 2e+30, (76.45-1.3j)]
+>>> min(str_list)
+'candlestick'
+>>> min(num_list)
+-49
+
+sorted() and reversed()
+
+>>> s = ['They', 'stamp', 'them', 'when', "they're", 'small']
+>>> for t in reversed(s):
+...	print t,
+...
+small they're when them stamp They
+>>> sorted(s)
+['They', 'small', 'stamp', 'them', "they're", 'when']
+
+For beginners using strings, notice how we are able to mix single and double quotes together in harmony with the contraction “they’re.” Also to those new to strings, this is a note reminding you that all string sorting is lexicographic and not alphabetic (the letter “T” comes before the letter “a” in the ASCII table.)
+初学者使用字符串，应该注意是如何把单引号和双引号的使用矛盾和谐掉.同时还要注意字符串排序使用的是字典序,而不是字母序(字母'T'的ASCII码值要比字母'a'的还要靠前)
+
+enumerate() and zip()
+
+>>> albums = ['tales', 'robot', 'pyramid']
+>>> for i, album in enumerate(albums):
+...	print i, album
+...
+0 tales
+1 robot
+2 pyramid
+>>>
+>>> fn = ['ian', 'stuart', 'david']
+>>> ln = ['bairnson', 'elliott', 'paton']
+>>>
+>>> for i, j in zip(fn, ln):
+...	print ('%s %s' % (i,j)).title()
+...
+Ian Bairnson Stuart Elliott David Paton
+
+sum()
+
+>>> a = [6, 4, 5]
+>>> reduce(operator.add, a)
+15
+>>> sum(a)
+15
+
+>>> sum(a, 5)
+20
+>>> a = [6., 4., 5.]
+>>> sum(a)
+15.0
+
+list() and tuple()
+
+The  list() and  tuple() factory  functions  take  可迭代对象s  like  other sequences and make new lists and tuples, respectively, out of the (just shallow-copied)  data.  Although  strings  are  also  sequence  types,  they  are  not commonly  used  with  list() and  tuple().  These  built-in  functions  are used more often to convert from one type to the other, i.e., when you have a tuple that you need to make a list (so that you can modify its elements) and vice versa.
+list()函数和tuple()函数接受可迭代对象(比如另一个序列)作为参数,并通过浅拷贝数据来创建一个新的列表或者元组.虽然字符串也是序列类型的,但是它们并不是经常用于list()和tuple(). 更多的情况下,它们用于在两种类型之间进行转换,比如你需要把一个已有的元组转成列表类型的(然后你就可以修改它的元素了),或者相反.
+
+>>> aList = ['tao', 93, 99, 'time']
+>>> aTuple = tuple(aList)
+>>> aList, aTuple
+(['tao', 93, 99, 'time'], ('tao', 93, 99, 'time'))
+>>> aList == aTuple
+False
+>>> anotherList = list(aTuple)
+>>> aList == anotherList
+True
+>>> aList is anotherList
+False
+>>> [id(x) for x in aList, aTuple, anotherList]
+[10903800, 11794448, 11721544]
+
+As we already discussed at the beginning of the chapter, neither list() nor  tuple() performs  true  conversions  (see  also  Section  6.1.2).  In  other words, the list you passed to tuple() does not turn into a list, and the tuple you give to list() does not really become a list. Although the data set for both (the original and new object) is the same (hence satisfying ==), neither variable  points  to  the  same  object  (thus  failing  is).  Also  notice  that,  even though their values are the same, a list cannot “equal” a tuple.
+   正如我们在本章的开头所讨论的,无论list()还是tuple()都不可能做完全的转换(见6.1.2节).也就是说,你传给tuple()的一个列表对象不可能变成一个元组,而你传给list()的对象也不可能真正的变成一个列表.虽然前后两个对象(原来的和新的对象)有着相同的数据集合(所以相等 == ),但是变量指向的却不是同一个对象了(所以执行 is 操作会返回false).还要注意,即使它们的所有的值都相同,一个列表也不可能"等于"一个元组.
+6.13.3  List Type Built-in Functions
+		列表类型内建函数
+
+There  are  currently  no  special  list-only  built-in  functions  in  Python  unless you consider range() as one—its sole function is to take numeric input and generate a list that matches the criteria. range() is covered in Chapter 8. Lists can be used with most object and sequence built-in functions. In addi- tion, list objects have their own methods.
+	如果你不考虑range()函数的话,Python中没有特定用于列表的内建函数.range()函数接受一个数值作为输入,输出一个符合标准的列表.第8章里面详细讨论了range()函数.列表类型对象可以使用大多数的对象和序列的内建函数,并且,列表对象有属于它们自己的方法.
+
+6.14  List Type Built-in Methods
+	  列表类型的内建函数
+
+Lists in Python have methods. We will go over methods more formally in an introduction  to  object-oriented  programming  in  Chapter  13,  but  for  now think  of  methods  as  functions  or  procedures  that  apply  only  to  specific objects. So the methods described in this section behave just like built-in functions  except  that  they  operate  only  on  lists.  Since  these  functions involve the mutability (or updating) of lists, none of them is applicable for tuples.
+	Python中的列表类型有自己的方法.我们会在第13章面向对象编程里面正式而详细的介绍方法这一概念,现在你只需要把方法视为特定对象的函数或者过程就好.本节讨论的方法就像内建的函数一样,除了它们只对列表类型进行操作之外.因为这些函数涉及到对列表更改(或者说更新),所以它们都不适应于元组.
+
+You may recall our earlier discussion of accessing object attributes using the dotted attribute notation: object.attribute. List methods are no dif- ferent,  using  list.method().  We  use  the  dotted  notation  to  access  the attribute (here it is a function), then use the function operators ( ( ) ) in a functional notation to invoke the methods.
+	你可以重温以下我们前面讲到的用点号的方式访问对象的属性:object.attribute.列表的方法也是这样:list.method().我们用点号来访问一个对象的属性(在这里是一个函数),然后用函数操作符( () )来调用这个方法.
+We  can  use  dir() on  a  list  object  to  get  its  attributes  including  its methods:
+	我们可以在一个列表对象上应用dir()方法来得到它所有的方法和属性:
+
+>>> dir(list)	# or dir([])
+['__add__', '__class__', '__contains__', '__delattr__',
+'__delitem__', '__delslice__', '__doc__', '__eq__',
+'__ge__', '__getattribute__', '__getitem__',
+'__getslice__', '__gt__', '__hash__', '__iadd__',
+'__imul__', '__init__', '__iter__', '__le__', '__len__',
+'__lt__', '__mul__', '__ne__', '__new__', '__reduce__',
+'__reduce_ex__', '__repr__', '__reversed__', '__rmul__',
+'__setattr__', '__setitem__', '__setslice__', '__str__',
+'append', 'count', 'extend', 'index', 'insert', 'pop',
+'remove', 'reverse', 'sort']
+
+
+Table 6.11  shows all the methods currently available for lists. Some exam- ples of using various list methods are shown later.
+	  表6.11列出了目前列表类型支持的所有方法,稍后我们给出使用这些方法的例子.
+Table 6.11  List Type Built-in Methods
+表6.11		列表类型内建函数
+
+List Method	Operation
+list.append(obj)	Adds obj to the end of list 
+					向列表中添加一个对象obj
+list.count(obj)	Returns count of how many times obj occurs in list
+				返回一个对象obj在列表中出现的次数
+list.extend(seq)a	Appends contents of seq to list
+					把序列seq的内容添加到列表中
+list.index(obj, i=0, j=len(list))		Returns lowest index k where list[k] == obj and i <= k < j; otherwise ValueError raised
+		返回list[k] == obj的k值,并且k的范围在 i<=k<j;否则引发ValueError异常.
+list.insert(index, obj)	Inserts obj into list at offset index 
+				   在索引量为index的位置插入对象obj.
+list.pop(index=-1)a	Removes and returns obj at given or last index from list
+					删除并返回指定位置的对象,默认是最后一个对象
+list.remove(obj)	Removes object obj from list 
+					从列表中删除对象obj
+list.reverse()	Reverses objects of list in place
+				原地翻转列表
+list.sort(func=None,key=None,reverse=False)b  Sorts list members with optional comparison function; key is a callback when extracting elements for sorting, and if reverse flag is True, then list is sorted in reverse order
+	以指定的方式排序列表中的成员,如果func和key参数指定,则按照指定的方式比较各个元素,如果reverse标志被置为True,则列表以反序排列.
+a.	New in Python 1.5.2.
+	Python1.5.2加入的特性.
+b.	Support for key and reverse added in Python 2.4.
+	key和reverse特性在Python2.4中新添.
+
+>>> music_media = [45]
+>>> music_media
+[45]
+>>>
+>>> music_media.insert(0, 'compact disc')
+>>> music_media
+['compact disc', 45]
+>>>
+>>> music_media.append('long playing record')
+>>> music_media
+['compact disc', 45, 'long playing record']
+>>>
+>>> music_media.insert(2, '8-track tape')
+>>> music_media
+['compact disc', 45, '8-track tape', 'long playing record']
+
+In the preceding example, we initiated a list with a single element, then checked the list as we either inserted elements within the list, or appended new items at the end. Let’s now determine if elements are in a list and how to find out the location of where items are in a list. We do this by using the in operator and index() method.
+   在前面的例子中,我们用一个元素初始化了一个列表,然后当向列表插入元素，或在尾部追加新的元素后，都会去检查这个列表.现在确认一下一个值是否在我们的列表中,并看看如何找出元素在列表中的索引值.我们用in操作符和index()方法实现这两个需求.
+>>> 'cassette' in music_media
+False
+>>> 'compact disc' in music_media
+True
+>>> music_media.index(45)
+1
+>>> music_media.index('8-track tape')
+2
+>>> music_media.index('cassette') Traceback (innermost last):
+File "<interactive input>", line 0, in ? ValueError: list.index(x): x not in list
+
+Oops!  What  happened  in  that  last  example?  Well,  it  looks  like  using index() to check if items are in a list is not a good idea, because we get an error. It would be safer to check using the membership operator in (or not in) first, and then using index() to find the element’s location. We can put the last few calls to index() in a single for loop like this:
+噢！最后一个例子怎么出错了?呃，看起来用index()来检查一个元素是否存在于一个list中并不是个好主意,因为我们出错了.应该先用in成员关系操作符(或者是not in)检查一下,然后在用index()找到这个元素的位置。我们可以把最后几个对index()调用放到一个单独的for循环里面,像这样:
+
+for eachMediaType in (45, '8-track tape', 'cassette'):
+if eachMediaType in music_media:
+print music_media.index(eachMediaType)
+
+This  solution  helps  us  avoid  the  error  we  encountered  above  because index() is not called unless the object was found in the list. We will find out later how we can take charge if the error occurs, instead of bombing out as we did above.
+	 这个方案避免了我们上面犯的错误,因为在确认一个元素属于该列表之前index()方法是不会被调用的.稍后我们将会发现该如何处理这种错误,而不是这样的一出错，程序就崩溃了。
+We will now test drive sort() and reverse(), methods that will sort and reverse the elements of a list, respectively.
+接下来我们测试sort()和reverse()方法,它们会把列表中的元素排序,然后翻转.
+
+>>> music_media
+['compact disc', 45, '8-track tape', 'long playing record']
+>>> music_media.sort()
+>>> music_media
+[45, '8-track tape', 'compact disc', 'long playing record']
+>>> music_media.reverse()
+>>> music_media
+['long playing record', 'compact disc', '8-track tape', 45]
+
+CORE NOTE: Mutable object methods that alter the object have no return value!
+	 核心笔记:那些可以改变对象值的可变对象的方法是没有返回值的!
+
+One very obvious place where new Python programmers get caught is when using methods that you think should return a value. The most obvious one sort():
+	Python初学者经常会陷入一个误区:调用一个方法就返回一个值.最明显的例子就是sort():
+
+>>> music_media.sort()	# where is the output?!?
+						# 没有输出?
+>>>
+The caveat about mutable object methods like sort(), extend(), and reverse() is that these will perform their operation on a list in place, meaning that the contents of the existing list will be changed, but return None! Yes, it does fly in the face of string methods that do return values:
+在使用可变对象的方法如sort(),extend()和reverse()的时候要注意,这些操作会在列表中原地执行操作,也就是说现有的列表内容会被改变,但是没有返回值!是的,与之相反,字符串方法确实有返回值:
+
+>>> 'leanna, silly girl!'.upper()
+'LEANNA, SILLY GIRL!'
+Recall that strings are immutable—methods of immutable objects cannot modify them, so they do have to return a new object. If returning an object is a necessity for you, then we recommend that you look at the reversed() and sorted() built-in functions introduced in Python 2.4.
+	温习一下,字符串是不可变的 -- 不可变对象的方法是不能改变它们的值的,所以它们必须返回一个新的对象.如果你确实需要返回一个对象,那么我们建议你看一下Python2.4以后加入的reversed()和sorted()内建函数.
+
+These work just like the list methods only they can be used in expressions because they do return objects. However, obviously the original list object is left as is, and you are getting a new object back.
+	它们像列表的方法一样工作,不同的是它们可以用做表达式,因为它们返回一个对象.同时原来的那个列表还是那个列表,没有改变,而你得到的是一个新的对象.
+
+Going back to the sort() method, the default sorting algorithm employed by the sort() method is a derivative of MergeSort (modestly named “timsort”),which is O(lg(n!)). We defer all other explanation to the build files where you can  get  all  the  details—source  code:  Objects/listobject.c and  algo- rithm description: Objects/listsort.txt.
+	回到sort()方法,它默认的排序算法是归并排序(或者说"timsort")的衍生算法,时间复杂度是O(lg(n!)).关于这个算法我们不做进一步的讲解,可以通过源码查看它们的详情 -- Objects/listobject.c,还有算法描述: Objects/listsort.txt.
+
+The extend() method will take the contents of one list and append its elements to another list:
+	extend()方法接受一个列表的内容然后把它的所有元素追加到另一个列表中去:
+
+>>> new_media = ['24/96 digital audio disc', 'DVD Audio disc', 'Super Audio CD']
+>>> music_media.extend(new_media)
+>>> music_media
+['long playing record', 'compact disc', '8-track tape',
+45, '24/96 digital audio disc', 'DVD Audio disc', 'Super
+Audio CD']
+
+The argument to extend() can be any 可迭代对象, starting with 2.2. Prior to that, it had to be a sequence object, and prior to 1.6, it had to be a list.With  an  可迭代对象  (instead  of  a  sequence),  you  can  do  more  interesting things like:
+	从2.2开始,extend()方法的参数支持任何可迭代对象,在2.2之前,它的参数必须是序列对象,而在1.6之前它的参数必须是列表对象.通过可迭代对象(而不是一个序列对象),你能做更多有趣的事情,比如:
+
+>>> motd = []
+>>> motd.append('MSG OF THE DAY')
+>>> f = open('/etc/motd', 'r')
+>>> motd.extend(f)
+>>> f.close()
+>>> motd
+['MSG OF THE DAY', 'Welcome to Darwin!\n']
+
+pop(), introduced in 1.5.2, will either return the last or requested item from a list and return it to the caller. We will see the pop() method in Sec- tion 6.15.1 as well as in the Exercises.
+	   1.5.2中加入的pop()方法会从列表中把最后的或指定的元素返回调用者.我们会在6.15.1节和练习中看到pop()方法,
+
+6.15  Special Features of Lists
+	  列表的特殊特性
+
+6.15.1  Creating Other Data Structures Lists
+		用列表构建其他数据结构
+
+Because of their container and mutable features, lists are fairly flexible and it is not very difficult to build other kinds of data structures using lists. Two that we can come up with rather quickly are stacks and queues.
+	列表有容器和可变的特性,这使得它非常灵活,用它来构建其他的数据结构不是件难事.我们马上能想到的是堆栈和队列.
+Stack
+堆栈
+
+A stack is a last-in-first-out (LIFO) data structure that works similarly to a cafeteria dining plate spring-loading mechanism. Consider the plates as objects. The first object off the stack is the last one you put in. Every new object gets “stacked” on top of the newest objects. To “push” an item on a stack is the terminology used to mean you are adding onto a stack. Likewise, to remove an element, you “pop” it off the stack. Example 6.3 shows a menu-driven pro- gram that implements a simple stack used to store strings.
+堆栈是一个后进先出(LIFO)的数据结构,其工作方式就像自助餐厅里面用于放盘子的弹簧支架.把盘子想像成对象,第一个离开堆栈的是你最后放上的那个.在栈上"push"元素是个常用术语,意思是把一个对象添加到堆栈中.反之,要删除一个元素，你可以把它"pop"出堆栈,例6.3展示了一个菜单驱动的程序,它实现了一个简单的、用于存储字符串的堆栈.
+
+Line-by-Line Explanation
+逐行解释
+
+Lines 1–3
+In  addition  to  the  Unix  startup  line,  we  take  this  opportunity  to  clear  the stack (a list).
+1-3 行
+	一开始是Unix的起始行,然后我们初始化堆栈(其实是个列表).
+Example 6.3  Using Lists as a Stack (stack.py)
+例6.3	用列表模拟堆栈(stack.py)
+
+This simple script uses lists as a stack to store and retrieve strings entered through this menu-driven text application using only the append() and pop() list methods.
+	这个简单的脚本把列表做为堆栈用于存储和取回输入的字符串,这个菜单驱动驱动的程序仅使用了列表的append()和pop()方法.
+
+1	#!/usr/bin/env python
+2
+3	stack = []
+ 4
+
+new string: ').strip())
+
+
+
+10	print 'Cannot pop from an empty stack!'
+11	else:
+12	print 'Removed [', ‘stack.pop()‘, ']'
+13
+14    def viewstack():
+15	print stack	# calls str() internally
+16
+17    CMDs = {'u': pushit, 'o': popit, 'v': viewstack}
+ 18
+
+
+21    p(U)sh
+22    p(O)p
+23    (V)iew
+24    (Q)uit
+25
+26    Enter choice: """
+27
+28	while True:
+29	while True:
+30	try:
+31	choice = raw_input(pr).strip()[0].lower()
+32	except (EOFError,KeyboardInterrupt,IndexError):
+33	choice = 'q'
+34
+ 35	print '\nYou picked: [%s]' % choice
+not in 'uovq':
+'Invalid option, try again'
+38	else:
+39	break
+40
+41	if choice == 'q':
+42	break
+43	CMDs[choice]()
+44
+45    if __name__ == '__main__':
+46	showmenu()
+
+Lines 5–6
+The pushit() function adds an element (a string prompted from the user) to the stack.
+5-6 行
+pushit()函数添加一个元素(通过提示由用户输入)到堆栈中.
+
+Lines 8–12
+The  popit() function  removes  an  element  from  the  stack  (the  more recent  one).  An  error  occurs  when  trying  to  remove  an  element  from  an empty stack. In this case, a warning is sent back to the user. When an object is popped from the stack, the user sees which element was removed. We use single backquotes or backticks ( ‘ ) to symbolize the repr() command, showing the string complete with quotes, not just the contents of the string.
+8-12 行
+	popit()函数从堆栈中移除一个元素(最新的那个).试图从一个空的堆栈中移除元素会引发一个错误.这种情况下，用户会得到一个警告提示.当一个元素从堆栈中pop出来时,用户可以看到到底是哪个元素被移除了.我们用反单引号(`)来代替repr()函数,,把字符串的内容用引号括起来显示而不是单单显示字符串的内容.
+
+Lines 14–15
+The viewstack() function displays the current contents of the stack.
+14-15 行
+viewstack()方法显示堆栈现有的内容.
+
+Line 17
+Although we cover dictionaries formally in the next chapter, we wanted to give you a really small example of one here, a command vector (CMDs). The contents of the dictionary are the three “action” functions defined above, and they are accessed through the letter that the user must type to execute that command. For example, to push a string onto the stack, the user must enter 'u', so  'u' is how access the  pushit() from the dictionary. The chosen function is then executed on line 43.
+	虽然我们下一章才会正式讲解字典类型,但是这里我们还是希望给你展示一个小例子,一个包含命令的矢量(CMDs).这个字典的内容是前面定义的三个"动作"函数,它们可以通过字母进行访问,用户必须输入这些字母来执行相应的命令.比如说,要进栈一个字符串,用户就必须输入'u',那么字母'u'是如何从字典里面访问到pushit()函数的呢?在第43行执行了选择的函数.
+
+Lines 19–43
+The  entire  menu-driven  application  is  controlled  from  the  showmenu() function. Here, the user is prompted with the menu options. Once the user makes  a  valid  choice,  the  proper  function  is  called.  We  have  not  covered exceptions and try-except statement in detail yet, but basically that section of the code allows a user to type ^D (EOF, which generates an EOFError) or ^C (interrupt to quit, which generates a KeyboardInterrupt error), both of which will be processed by our script in the same manner as if the user had typed the 'q' to quit the application. This is one place where the exception- handling feature of Python comes in extremely handy. The outer while loop lets the user continue to execute commands until they quit the application while  the  inner  one  prompts  the  user  until  they  enter  a  valid  command option.
+19-43 行
+    整个菜单驱动的应用都是由showmenu()函数控制的.它首先向用户提供一个选单,如果用户输入了合法选项就调用相应的函数.我们还没有详细的涉及到异常的处理，try-except语句,但本节里面的代码允许用户输入^D(EOF,产生一个EOF 错误)或者^C(中断退出,产生一个KeyboardInterrupt异常),这两种操作在我们的脚本里面都会得到处理,结果等同于用户输入'q'退出应用程序.这是对Python异常处理特性的一次应用,说明了Python的异常处理机制是多么方便.外循环用来执行用户输入的指令直到用户退出应用,内循环提示用户输入一个合法的命令项.
+
+Lines 45–46
+This part of the code starts up the program if invoked directly. If this script were  imported  as  a  module,  only  the  functions  and  variables  would  have been  defined,  but  the  menu  would  not  show  up.  For  more  information regarding line 45 and the __name__ variable, see Section 3.4.1.
+45-46行
+如果调用文件，这部分的代码就会启动程序.如果该脚本只是被作为一个模块导入,则仅仅是导入定义的函数和变量,而菜单也就不会显示.关于第45行和 __name__ 变量,请查阅第3.4.1节 . 
+Here is a sample execution of our script:
+下面简单的执行了一下该脚本:
+
+$ stack.py p(U)sh
+p(O)p
+(V)iew
+(Q)uit
+
+Enter choice: u
+
+You picked: [u]
+Enter new string: Python
+
+p(U)sh p(O)p
+(V)iew
+(Q)uit
+
+Enter choice: u
+
+You picked: [u]
+Enter new string: is
+
+p(U)sh p(O)p
+(V)iew
+(Q)uit
+
+Enter choice: u
+
+You picked: [u]
+Enter new string: cool!
+
+p(U)sh p(O)p
+(V)iew
+(Q)uit
+
+Enter choice: v
+
+You picked: [v]
+['Python', 'is', 'cool!']
+
+p(U)sh p(O)p
+(V)iew
+(Q)uit
+
+Enter choice: o
+
+You picked: [o] Removed [ 'cool!' ]
+p(U)sh p(O)p
+(V)iew
+(Q)uit
+
+Enter choice: o
+
+You picked: [o] Removed [ 'is' ]
+p(U)sh p(O)p
+(V)iew
+(Q)uit
+
+Enter choice: o
+
+You picked: [o] Removed [ 'Python' ]
+p(U)sh p(O)p
+(V)iew
+(Q)uit
+
+Enter choice: o
+
+You picked: [o]
+Cannot pop from an empty stack!
+
+p(U)sh p(O)p
+(V)iew
+(Q)uit
+
+Enter choice: ^D You picked: [q]
+
+Queue
+队列
+
+A  queue  is  a  first-in-first-out  (FIFO)  data  structure,  which  works  like  a single-file supermarket or bank teller line. The first person in line is the first one served (and hopefully the first one to exit). New elements join by being “enqueued” at the end of the line, and elements are removed from the front by being “dequeued.” The following code shows how, with a little modification from our stack script, we can implement a simple queue using lists.
+   队列是一种先进先出(FIFO)的数据类型,它的工作原理类似于超市中排队交钱或者银行里面的排队,队列里的第一个人首先接受服务(
+满心想第一个出去).新的元素通过"入队"的方式添加进队列的末尾,"出队"就是从队列的头部删除.下面的例子里面展示了这种操作,我们把上面的堆栈的例子进行了改造,用列表实现了一个简单的队列.
+Example 6.4  Using Lists as a Queue (queue.py)
+例6.4	把列表用做队列(queue.py)
+This simple script uses lists as a queue to store and retrieve strings entered through this menu-driven text application, using only the append() and pop() list methods.
+     这个例子中,我们把列表用做队列来存储和取回菜单驱动应用里面输入的字符串,只用到了列表的append()和pop()方法.
+
+1	#!/usr/bin/env python
+2
+3	queue = []
+ 4
+
+
+
+
+
+new string: ').strip())
+
+
+
+10	print 'Cannot pop from an empty queue!'
+11	else:
+12	print 'Removed [', ‘queue.pop(0)‘, ']'
+13
+14    def viewQ():
+15	print queue	# calls str() internally
+16
+17    CMDs = {'e': enQ, 'd': deQ, 'v': viewQ}
+ 18
+
+20
+21    (E)nqueue
+22    (D)equeue
+23    (V)iew
+24    (Q)uit
+25
+26    Enter choice: """
+27
+28	while True:
+29	while True:
+30	try:
+31	choice = raw_input(pr).strip()[0].lower()
+32	except (EOFError,KeyboardInterrupt,IndexError):
+33	choice = 'q'
+34
+ 35	print '\nYou picked: [%s]' % choice
+not in 'devq':
+'Invalid option, try again'
+38	else:
+39	break
+40
+41	if choice == 'q':
+42	break
+43	CMDs[choice]()
+44
+45    if __name__ == '__main__':
+46	showmenu()
+
+
+Line-by-Line Explanation
+逐行解释
+Because of the similarities of this script with the  stack.py script, we will describe in detail only the lines which have changed significantly:
+	该脚本跟上面的stack.py非常相似,所以我们只讲解一下有显著不同的行:
+
+Lines 1–7
+The usual setup plus some constants for the rest of the script to use.
+1-7 行
+定义了几个后面脚本要用到的常量.
+
+Lines 5–6
+The enQ() function works exactly like pushit(), only the name has been changed.
+enQ()方法跟pushit()方法非常相近,只不过名字改变了.
+
+Lines 8–12
+The key difference between the two scripts lies here. The deQ() function, rather than taking the most recent item as popit() did, takes the oldest item on the list, the first element.
+8-12行
+	两个脚本的主要差别就在于此,deQ()函数不像popit()函数那样把列表的最后一个元素弹出来,而是第一个元素.
+
+Lines 17, 21–24, 36
+The options have been changed, so we need to reflect that in the prompt string and our validator.
+17,21-24,36 行
+	选项改变了,所以我们也需要重写原来的提示信息和输入检查.
+
+We present some output here as well:
+还是在这里列举一些输出:
+
+$ queue.py
+(E)nqueue
+(D)equeue
+(V)iew
+(Q)uit
+
+Enter choice: e
+
+You picked: [e]
+Enter new queue element: Bring out
+
+(E)nqueue
+(D)equeue
+(V)iew
+(Q)uit
+
+Enter choice: e
+
+You picked: [e]
+Enter new queue element: your dead!
+
+(E)nqueue
+(D)equeue
+(V)iew
+(Q)uit
+
+Enter choice: v
+
+You picked: [v]
+['Bring out', 'your dead!']
+
+(E)nqueue
+(D)equeue
+(V)iew
+(Q)uit
+
+Enter choice: d
+
+You picked: [d]
+Removed [ 'Bring out' ]
+
+(E)nqueue
+(D)equeue
+(V)iew
+(Q)uit
+
+Enter choice: d
+
+You picked: [d]
+Removed [ 'your dead!' ]
+
+(E)nqueue
+(D)equeue
+(V)iew
+(Q)uit
+
+Enter choice: d
+
+You picked: [d]
+Cannot dequeue from empty queue!
+
+(E)nqueue
+(D)equeue
+(V)iew
+(Q)uit
+
+Enter choice: ^D You picked: [q]
+
+6.16  Tuples
+      元组
+Tuples are another container type extremely similar in nature to lists. The only visible difference between tuples and lists is that tuples use parentheses and lists use square brackets. Functionally, there is a more significant differ- ence, and that is the fact that tuples are immutable. Because of this, tuples can do something that lists cannot do . . . be a dictionary key. Tuples are also the default when dealing with a group of objects.
+实际上元组是跟列表非常相近的另一种容器类型.元组和列表看起来不同的一点是元组用的是圆括号而列表用的是方括号。而功能上,元组和列表相比有一个很重要的区别,元组是一种不可变类型.正因为这个原因,元组能做一些列表不能做的事情... 用做一个字典的key.另外当处理一组对象时,这个组默认是元组类型.
+Our usual modus operandi is to present the operators and built-in func- tions for the more general objects, followed by those for sequences and conclude  with  those  applicable  only  for  tuples,  but  because  tuples  share  so many  characteristics  with  lists,  we  would  be  duplicating  much  of  our description from the previous section. Rather than providing much repeated information, we will differentiate tuples from lists as they apply to each set of operators and functionality, then discuss immutability and other features unique to tuples.
+通常情况下,我们会先介绍可用于大部分对象的操作符和内建函数,然后是介绍针对序列类型的, 最后是总结一下仅适用于元组类型的操作符和内建函数.不过,由于元组类型跟列表类型有着如此多的共同之处,按照这种讲法我们会重复非常多的上一节的内容.为了避免太多重复信息,我们会讲解元组和列表在应用于每一组操作符和内建函数上时的区别,然后讨论一下元组的不变性以及其他独特的特性.
+
+How to Create and Assign Tuples
+如何创建一个元组并给它赋值
+Creating and assigning tuples are practically identical to creating and assign- ing lists, with the exception of empty tuples—these require a trailing comma ( , ) enclosed in the tuple delimiting parentheses ( ( ) ) to prevent them from being confused with the natural grouping operation of parentheses. Do not forget the factory function!
+	创建一个元组并给他赋值实际上跟创建一个列表并给它赋值完全一样,除了一点,只有一个元素的元组需要在元组分割符里面加一个逗号(,)用以防止跟普通的分组操作符混淆.不要忘了它是一个工厂方法!
+
+>>> aTuple = (123, 'abc', 4.56, ['inner', 'tuple'], 7-9j)
+>>> anotherTuple = (None, 'something to see here')
+>>> print aTuple
+(123, 'abc', 4.56, ['inner', 'tuple'], (7-9j))
+>>> print anotherTuple
+(None, 'something to see here')
+>>> emptiestPossibleTuple = (None,)
+>>> print emptiestPossibleTuple
+(None,)
+>>> tuple('bar')
+('b', 'a', 'r')
+
+How to Access Values in Tuples
+如何访问元组中的值
+Slicing works similarly to lists. Use the square bracket slice operator ( [ ] ) along with the index or indices.
+	元组的切片操作跟列表一样,用方括号作为切片操符([]),里面写上索引值或者索引范围.
+
+>>> aTuple[1:4]
+('abc', 4.56, ['inner', 'tuple'])
+
+>>> aTuple[:3]
+(123, 'abc', 4.56)
+>>> aTuple[3][1]
+'tuple'
+
+How to Update Tuples
+如何更新元组
+
+Like numbers and strings, tuples are immutable, which means you cannot update them or change values of tuple elements. In Sections 6.2 and 6.3.2, we were able to take portions of an existing string to create a new string. The same applies for tuples.
+     跟数字和字符串一样,元组也是不可变类型,就是说你不能更新或者改变元组的元素,在6.2和6.3.2节里面,我们是通过现有字符串的片段再构造一个新字符串的方式解决的,对元组同样需要这样.
+
+>>> aTuple = aTuple[0], aTuple[1], aTuple[-1]
+>>> aTuple
+(123, 'abc', (7-9j))
+>>> tup1 = (12, 34.56)
+>>> tup2 = ('abc', 'xyz')
+>>> tup3 = tup1 + tup2
+>>> tup3
+(12, 34.56, 'abc', 'xyz')
+
+How to Remove Tuple Elements and Tuples
+如何移除一个元组的元素以及元组本身
+
+Removing individual tuple elements is not possible. There is, of course, noth- ing wrong with putting together another tuple with the undesired elements discarded. 
+	删除一个单独的元组元素是不可能的,当然,把不需要的元素丢弃后, 重新组成一个元组是没有问题的.
+To  explicitly  remove  an  entire  tuple,  just  use  the  del statement  to reduce an object’s reference count. It will be deallocated when that count is zero. Keep in mind that most of the time one will just let an object go out of scope  rather  than  using  del,  a  rare  occurrence  in  everyday  Python  pro- gramming.
+要显示地删除一整个元组,只要用del语句减少对象引用计数.当这个引用计数达到0的时候,该对象就会被析构.记住,大多数时候,我们不需要显式的用del删除一个对象,一出它的作用域它就会被析构,Python编程里面用到显式删除元组的情况非常之少.
+
+del aTuple
+
+
+6.17  Tuple Operators and Built-in Functions
+      元组操作符和内建函数
+
+6.17.1  Standard and Sequence Type Operators and Built-in Functions
+	标准类型操作符,序列类型操作符和内建函数.
+
+Object  and  sequence  operators  and  built-in  functions  act  the  exact  same way toward tuples as they do with lists. You can still take slices of tuples, concatenate and make multiple copies of tuples, validate membership, and compare tuples.
+	元组的对象和序列类型操作符还有内建函数跟列表的完全一样.你仍然可以对元组进行切片操作,合并操作,以及多次拷贝一个元组,还可以检查一个对象是否属于一个元组,进行元组之间的比较等.
+
+Creation, Repetition, Concatenation
+创建,重复,连接操作
+
+>>> t = (['xyz', 123], 23, -103.4)
+>>> t
+(['xyz', 123], 23, -103.4)
+>>> t * 2
+(['xyz', 123], 23, -103.4, ['xyz', 123], 23, -103.4)
+>>> t = t + ('free', 'easy')
+>>> t
+(['xyz', 123], 23, -103.4, 'free', 'easy')
+
+Membership, Slicing
+成员关系操作,切片操作
+
+>>> 23 in t
+True
+>>> 123 in t
+False
+>>> t[0][1]
+123
+>>> t[1:]
+(23, -103.4, 'free', 'easy')
+
+Built-in Functions
+内建函数
+
+>>> str(t)
+(['xyz', 123], 23, -103.4, 'free', 'easy')
+>>> len(t)
+5
+>>> max(t)
+'free'
+>>> min(t)
+-103.4
+>>> cmp(t, (['xyz', 123], 23, -103.4, 'free', 'easy'))
+0
+>>> list(t)
+[['xyz', 123], 23, -103.4, 'free', 'easy']
+
+Operators
+操作符
+
+>>> (4, 2) < (3, 5) False
+>>> (2, 4) < (3, -1) True
+>>> (2, 4) == (3, -1) False
+>>> (2, 4) == (2, 4) True
+
+6.17.2  Tuple Type Operators and Built-in Functions and Methods
+	元组类型操作符和内建函数,内建方法
+Like lists, tuples have no operators or built-in functions for themselves. All of the  list  methods  described  in  the  previous  section  were  related  to  a  list object’s  mutability,  i.e.,  sorting,  replacing,  appending,  etc.  Since  tuples  are immutable, those methods are rendered superfluous, thus unimplemented.
+     像列表一样 元组也没有它自己专用的运算符和内建函数.上一节中描述的列表方法都跟列表对象的可变性有关,比如说排序,替换,添加等等,因为元组是不可变的,所以这些操作对元组来说就是多余的,这些方法没有被实现.
+
+
+6.18  Special Features of Tuples
+      元组的特殊特性.
+
+6.18.1  How Are Tuples Affected by Immutability?
+	不可变性给元组带来了什么影响?
+
+Okay, we have been throwing around this word “immutable” in many parts of the text. Aside from its computer science definition and implications, what is the bottom line as far as applications are concerned? What are all the consequences of an immutable data type?
+      是的,我们在好多地方使用到了"不可变性"这个单词,除了这个词的计算机学科定义和实现,从应用的角度来考虑，这个词的底线是什么?一个数据类型成为不可变的到底意味着什么?
+Of  the  three  standard  types  that  are  immutable—numbers,  strings,  and tuples—tuples are the most affected. A data type that is immutable simply means that once an object is defined, its value cannot be updated, unless, of course,  a  completely  new  object  is  allocated.  The  impact  on  numbers  and strings is not as great since they are scalar types, and when the sole value they represent  is  changed,  that  is  the  intended  effect,  and  access  occurs  as desired. The story is different with tuples, however. 
+    Because tuples are a container type, it is often desired to change single or multiple elements of that container. Unfortunately, this is not possible. Slice  operators  cannot  show  up  on  the  left-hand  side  of  an  assignment. Recall this is no different for strings, and that slice access is used for read access only.
+    在三个标准不可变类型里面--数字，字符串和元组字符串--元组是受到影响最大的,一个数据类型是不可变的,简单来讲,就意味着一旦一个对象被定义了,它的值就不能再被更新,除非重新创建一个新的对象.对数字和字符串的影响不是很大,因为它们是标量类型,当它们代表的值改变时，这种结果是有意义的，是按照你所想要的方式进行访问的，而对于元组，事情就不是这样了。
+    因为元组是容器对象，很多时候你想改变的只是这个容器中的一个或者多个元素，不幸的是这是不可能的，切片操作符不能用作左值进行赋值。这和字符串没什么不同，切片操作只能用于只读的操作。
+Immutability does not necessarily mean bad news. One bright spot is that if we pass in data to an API with which we are not familiar, we can be certain that our data will not be changed by the function called. Also, if we receive a tuple as a return argument from a function that we would like to manipulate, we can use the list() built-in function to turn it into a mutable list.
+不可变并不是坏事，比如我们把数据传给一个不了解的API时，可以确保我们的数据不会被修改。同样地，如果我们操作从一个函数返回的元组，可以通过内建list()函数把它转换成一个列表.
+
+6.18.2  Tuples Are Not Quite So “Immutable”
+	元组也不是那么“不可变”
+
+Although tuples are defined as immutable, this does not take away from their flexibility.  Tuples  are  not  quite  as  immutable  as  we  made  them  out  to  be. What do we mean by that? Tuples have certain behavioral characteristics that make them seem not as immutable as we had first advertised.
+	虽然元组是被定义成不可变的，但这并不影响它的灵活性。元组并不像我们想的那么不可变，这是什么意思？其实元组几个特定的行为让它看起来并不像我们先前声称的那么不可变.
+For example, we can join strings together to form a larger string. Simi- larly,  there  is  nothing  wrong  with  putting  tuples  together  to  form  a  larger tuple,  so  concatenation  works.  This  process  does  not  involve  changing  the smaller individual tuples in any way. All we are doing is joining their elements together. Some examples are presented here:
+    比如说，既然我们可以把字符串组合在一起形成一个大字符串。那么把元组组合在一起形成一个大的元组也没什么不对，所以，连接操作可用，这个操作一点都没有改变那些小元组。我们所作的是把它们的元素结合在一起.这里有几个例子:
+
+>>> s = 'first'
+>>> s = s + ' second'
+>>> s
+'first second'
+>>>
+>>> t = ('third', 'fourth')
+>>> t
+('third', 'fourth')
+>>>
+>>> t = t + ('fifth', 'sixth')
+>>> t
+('third', 'fourth', 'fifth', 'sixth')
+The same concept applies for repetition. Repetition is just concatenation of multiple copies of the same elements. In addition, we mentioned in the previous section that one can turn a tuple into a mutable list with a simple function call. Our final feature may surprise you the most. You can “modify” certain tuple elements. Whoa. What does that mean? 
+    同样的概念也适用于重复操作。重复操作只不过是多次复制同样的元素，再有，我们前面提到过可以用一个简单的函数调用把一个元组变成一个可变的列表。我们的最后一个特性可能会吓到你。你可以“修改”特定的元组元素，哇！这意味着什么？
+Although tuple objects themselves are immutable, this fact does not preclude tuples from containing mutable objects that can be changed.
+    虽然元组对象本身是不可变的，但这并不意味着元组包含的可变对象也不可变了。
+
+>>> t = (['xyz', 123], 23, -103.4)
+>>> t
+(['xyz', 123], 23, -103.4)
+>>> t[0][1]
+123
+>>> t[0][1] = ['abc', 'def']
+>>> t
+(['xyz', ['abc', 'def']], 23, -103.4)
+In the above example, although t is a tuple, we managed to “change” it by replacing an item in the first tuple element (a list). We replaced  t[0][1], formerly an integer, with a list ['abc', 'def']. Although we modified only a mutable object, in some ways, we also “modified” our tuple.
+   在上面的例子中，虽然t是一个元组类型变量，但是我们设法通过替换它的第一个元素（一个列表对象）的项来“改变”了它。我们替换了t[0][1],原来是个整数，我们把它替换成了一个列表对象 ['abc','def'].虽然我们只是改变了一个可变对象，但在某种意义上讲，我们也“改变”了我们的元组类型变量。
+
+6.18.3  Default Collection Type
+	默认集合类型
+
+Any  set  of  multiple  objects,  comma-separated,  written  without  identifying symbols, i.e., brackets for lists, parentheses for tuples, etc., defaults to tuples,as indicated in these short examples:
+     所有的多对象的，逗号分隔的，没有明确用符号定义的，比如说像用方括号表示列表和用圆括号表示元组一样，等等这些集合默认的类型都是元组，下面是一个简单的示例：
+
+>>> 'abc', -4.24e93, 18+6.6j, 'xyz'
+('abc', -4.24e+093, (18+6.6j), 'xyz')
+>>>
+>>> x, y = 1, 2
+>>> x, y
+(1, 2)
+Any function returning multiple objects (also no enclosing symbols) is a tuple. Note that enclosing symbols change a set of multiple objects returned to a single container object. For example:
+    所有函数返回的多对象（不包括有符号封装的）都是元组类型。注意，有符号封装的多对象集合其实是返回的一个单一的容器对象，比如：
+
+def foo1():
+:
+return obj1, obj2, obj3
+
+def foo2():
+:
+return [obj1, obj2, obj3]
+
+def foo3():
+:
+return (obj1, obj2, obj3)
+In the above examples, foo1() calls for the return of three objects, which come back as a tuple of three objects, foo2() returns a single object, a list containing three objects, and foo3() returns the same thing as foo1(). The only difference is that the tuple grouping is explicit.
+   上面的例子中，foo1()返回3个对象，默认的作为一个包含3个对象的元组类型，foo2()返回一个单一对象,一个包含3个对象的列表,还有foo3()返回一个跟foo1()相同的对象.唯一不同的是这里的元组是显式定义的.
+Explicit grouping of parentheses for expressions or tuple creation is always recommended to avoid unpleasant side effects:
+	 为了避免令人讨厌的副作用,建议总是显式的用圆括号表达式表示元组或者创建一个元组.
+
+>>> 4, 2 < 3, 5	# int, comparison, int
+(4, True, 5)
+>>> (4, 2) < (3, 5) # tuple comparison
+False
+In the first example, the less than ( < ) operator took precedence over the comma delimiter intended for the tuples on each side of the less than sign. The result of the evaluation of 2 < 3 became the second element of a tuple. Properly enclosing the tuples enables the desired result.
+   在第一个例子中小于号的优先级高于逗号，2<3 的结果成了元组变量的第二个元素，适当的封装元组就会得到希望得到的结果.
+
+6.18.4  Single-Element Tuples
+	单元素元组
+
+Ever try to create a tuple with a single element? You tried it with lists, and it worked, but then you tried and tried with tuples, but you cannot seem to do it.
+     曾经试过创建一个只有一个元素的元组？你在列表上试过，它可以完成，但是无论你怎么在元组上试验，你都不能得到想要的结果。
+
+>>> ['abc']
+['abc']
+
+>>> type(['abc'])	# a list
+<type 'list'>
+>>>
+>>> ('xyz')
+'xyz'
+>>> type(('xyz'))	# a string, not a tuple
+<type 'str'>
+
+It  probably  does  not  help  your  case  that  the  parentheses  are  also  overloaded as the expression grouping operator. Parentheses around a single ele- ment take on that binding role rather than serving as a delimiter for tuples. The workaround is to place a trailing comma (,) after the first element to indicate that this is a tuple and not a grouping.
+或许你忘记了圆括号被重载了，它也被用作分组操作符。由圆括号包裹的一个单一元素首先被作为分组操作，而不是作为元组的分界符。一个变通的方法是在第一个元素后面添一个逗号(,)来表明这是一个元组而不是在做分组操作.
+
+>>> ('xyz',)
+('xyz',)
+
+6.18.5  Dictionary Keys
+	字典的关键字
+
+Immutable objects have values that cannot be changed. That means that they will  always  hash  to  the  same  value.  That  is  the  requirement  for  an  object being a valid dictionary key. As we will find out in the next chapter, keys must be hashable objects, and tuples meet that criteria. Lists are not eligible.
+	 不可变对象的值是不可改变的。这就意味着它们通过hash算法得到的值总是一个值。这是作为字典键值的一个必备条件。在下一章节里面我们会讨论到，键值必须是可哈希的对象，元组变量符合这个标准，而列表变量就不行。
+
+CORE NOTE: Lists versus Tuples
+核心笔记：列表 VS 元组
+
+One of the questions in the Python FAQ asks, “Why are there separate tuple and list data types?” That question can also be rephrased as, “Do we really need two similar sequence types?” One reason why having lists and tuples is a good thing occurs in situations where having one is more advantageous than having the other.
+    一个经常会被问到的问题是，"为什么我们要区分元组和列表变量？"这个问题也可以被表述为“我们真的需要两个相似的序列类型吗？”，一个原因是在有些情况下，使用其中的一种类型要优于使用另一种类型。
+One case in favor of an immutable data type is if you were manipulating sensitive data and were passing a mutable object to an unknown function (perhaps an API that you didn’t even write!). As the engineer developing your piece of the software, you would definitely feel a lot more secure if you knew that the function you were calling could not alter the data.
+    最好使用不可变类型变量的一个情况是，如果你在维护一些敏感的数据，并且需要把这些数据传递给一个并不了解的函数(或许是一个根本不是你写的API),作为一个只负责一个软件某一部分的工程师，如果你确信你的数据不会被调用的函数篡改，你会觉得安全了许多。
+An argument for a mutable data type is where you are managing dynamic data sets.You need to be able to create them on the fly, slowly or arbitrarily adding to them, or from time to time, deleting individual elements.This is definitely a case where the data type must be mutable.The good news is that with the list() and tuple() built-in conversion functions, you can convert from one type to the other relatively painlessly.
+   一个需要可变类型参数的例子是，如果你在管理动态数据集合时。你需要先把它们创建出来，逐渐地或者不定期的添加它们，或者有时还要移除一些单个的元素。这是一个必须使用可变类型对象的典型例子。幸运的是，通过内建的list()和tuple()转换函数,你可以非常轻松的在两者之间进行转换.
+
+list() and tuple() are functions that allow you to create a tuple from a list and vice versa.When you have a tuple and want a list because you need to update its objects, the list() function suddenly becomes your best buddy. When you have a list and want to pass it into a function, perhaps an API, and you do not want anyone to mess with the data, the tuple() function comes in quite useful.
+   list()和tuple()函数允许你用一个列表来创建一个元组,反之亦然.如果你有一个元组变量,但你需要一个列表变量因为你要更新一下它的对象,这时list()函数就是你最好的帮手.如果你有一个列表变量,并且想把它传递给一个函数,或许一个API,而你又不想让任何人弄乱你的数据,这时tuple()函数就非常有用。
+
+6.19  Related Modules
+      相关模块
+
+Table 6.12 lists the key related modules for sequence types. This list includes the array module to which we briefly alluded earlier. These are similar to lists except for the restriction that all elements must be of the same type. The copy module (see optional Section 6.20  below) performs shallow and deep
+      表6.12列出了与序列类型相关的关键模块，这个列表包含了前面我们间接提到的数组模块，它就像列表类型，不过它要求所有的元素都是同一类型。copy模块(可以参考下面的6.20节)负责处理对象的浅拷贝和深拷贝。
+
+
+Table 6.12  Related Modules for Sequence Types
+      与序列类型相关的模块
+
+Module	Contents
+模块	内容
+
+array	Features the array restricted mutable sequence type, which requires all of its elements to be of the same type
+数组	一种受限制的可变序列类型,要求所有的元素必须都是相同的类型。
+
+copy	Provides functionality to perform shallow and deep copies of objects (see 6.20 below for more information)
+		提供浅拷贝和深拷贝的能力(详见6.20)
+
+operator	Contains sequence operators available as function calls, e.g., operator.concat(m, n) is equivalent to the concatena- tion (m + n) for sequences m and n
+		包含函数调用形式的序列操作符，比如operator.concat(m,n)就相当于连接操作(m+n)。
+
+re	Perl-style regular expression search (and match); see Chapter 15
+	Perl风格的正则表达式查找(和匹配);见第15章
+
+
+StringIO/ Treats long strings just like a file object, i.e., read(), seek(), etc.; C-compiled version is faster but cannot be           subclassed 
+cStringIO
+		把长字符串作为文件来操作，比如read(),seek()函数等,C版的更快一些,但是它不能被继承.
+
+textwrapa Utility functions for wrapping/filling text fields; also has a class
+		  用作包裹/填充文本的函数，也有一个类
+
+types	Contains type objects for all supported Python types
+		包含Python支持的所有类型
+
+collectionsb High-performance container data types
+			 高性能容器数据类型
+
+a.	New in Python 2.3.
+	Python2.3新加
+b.	New in Python 2.4.
+	Python2.4新加
+
+copies of objects. The operator module, in addition to the functional equiv- alents to numeric operators, also contains the same four sequence types. The types module is a reference of type objects representing all types that Python supports, including sequence types. Finally, the UserList module contains a full class implementation of a list object. Because Python types cannot be sub- classed, this module allows users to obtain a class that is list-like in nature, and to derive new classes or functionality. If you are unfamiliar with object-ori- ented programming, we highly recommend reading Chapter 13.
+operator模块除了提供与数字操作符相同的功能外，还提供了与序列类型操作符相同的功能.types模块是代表python支持的全部类型的type对象的引用。最后，UserList模块包含了list对象的完全的类实现。因为Python类型不能作为子类，所以这个模块允许用户获得类似list的类，也可以派生出新的类或功能。如果你熟悉面向对象编程的话，我们强烈推荐你阅读第13章
+
+6.20  *Copying Python Objects 
+and Shallow and Deep Copies
+	拷贝Python对象
+		浅拷贝和深拷贝
+
+Earlier  in  Section  3.5,  we  described  how  object  assignments  are  simply object references. This means that when you create an object, then assign that object to another variable, Python does not copy the object. Instead, it copies only a reference to the object.
+	在前面的3.5节里面我们讲过对象赋值实际上是简单的对象引用。也就是说当你创建一个对象，然后把它赋给另一个变量的时候，Python并没有拷贝这个对象，而是拷贝了这个对象的引用。
+For  example,  let  us  say  that  you  want  to  create  a  generic  profile  for  a young couple; call it person. Then you copy this object for both of them. In the example below, we show two ways of copying an object, one uses slices and the other a factory function. To show we have three unrelated objects, we use the id() built-in function to show you each object’s identity. (We can also use the is operator to do the same thing.)
+比如，假设你想创建一对小夫妻的通用档案，名为person.然后你分别为他俩拷贝一份。在下面的例子中，我们展示了两种拷贝对象的方式，一种使用了切片操作，另一种用了工厂方法，为了区分出三个不同的对象，我们使用id()内建函数来显示每个对象的标识符。(我们还可以用is操作符来做相同的事情)
+
+>>> person = ['name', ['savings', 100.00]]
+>>> hubby = person[:]	# slice copy
+>>> wifey = list(person)	# fac func copy
+>>> [id(x) for x in person, hubby, wifey]
+[11826320, 12223552, 11850936]
+Individual savings accounts are created for them with initial $100 deposits. The names are changed to customize each person’s object. But when the hus- band withdraws $50.00, his actions affected his wife’s account even though separate copies were made. (Of course, this is assuming that we want them to have separate accounts and not a single, joint account.) Why is that?
+为他们创建了初始有$100的个人存款帐户。用户名改为定制的名字。但是，当丈夫取走$50后，他的行为影响到了他妻子的账户，虽然我们进行了分开的拷贝作(当然，前提是我们希望他们每个人都拥有自己单独的帐号，而不是一个单一的联合帐号。)为什么会这样呢？
+
+>>> hubby[0] = 'joe'
+>>> wifey[0] = 'jane'
+>>> hubby, wifey
+(['joe', ['savings', 100.0]], ['jane', ['savings', 100.0]])
+>>> hubby[1][1] = 50.00
+>>> hubby, wifey
+(['joe', ['savings', 50.0]], ['jane', ['savings', 50.0]])
+
+The reason is that we have only made a shallow copy. A shallow copy of an object is defined to be a newly created object of the same type as the original object whose contents are references to the elements in the original object. In other words, the copied object itself is new, but the contents are not. Shallow copies of sequence objects are the default type of copy and can be made in any number of ways: (1) taking a complete slice [:], (2) using a factory function, e.g.,  list(),  dict(),  etc.,  or  (3)  using  the  copy() function  of  the  copy module.
+原因是我们仅仅做了一个浅拷贝。对一个对象进行浅拷贝其实是新创建了一个类型跟原对象一样,其内容是原来对象元素的引用,换句话说,这个拷贝的对象本身是新的,但是它的内容不是.序列类型对象的浅拷贝是默认类型拷贝,并可以以下几种方式实施:(1)完全切片操作[:],(2)利用工厂函数,比如list(),dict()等,(3)使用copy模块的copy函数.
+
+Your next question should be: When the wife’s name is assigned, how come it  did  not  affect  the  husband’s  name?  Shouldn’t  they  both  have  the  name 'jane' now? The reason why it worked and we don’t have duplicate names is because of the two objects in each of their lists, the first is immutable (a string) and the second is mutable (a list). Because of this, when shallow copies are made, the string is explicitly copied and a new (string) object created while the list only has its reference copied, not its members. So changing the names is not an issue but altering any part of their banking information is. Here, let us take a look at the object IDs for the elements of each list. Note that the bank- ing object is exactly the same and the reason why changes to one affects the other.  Note  how,  after  we  change  their  names,  that  the  new  name  strings replace the original 'name' string:
+	 你的下一个问题可能是:当妻子的名字被赋值,为什么丈夫的名字没有受到影响?难道它们的名字现在不应该都是'jane'了吗?为什么名字没有变成一样的呢?怎么会是这样呢?这是因为在这两个列表的两个对象中,第一个对象是不可变的(是个字符串类型),而第二个是可变的(一个列表).正因为如此,当进行浅拷贝时,字符串被显式的拷贝,并新创建了一个字符串对象,而列表元素只是把它的引用复制了一下,并不是它的成员.所以改变名字没有任何问题,但是更改他们银行账号的任何信息都会引发问题.现在,让我们分别看一下每个列表的元素的对象ID值,注意,银行账号对象是同一个对象,这也是为什么对一个对象进行修改会影响到另一个的原因.注意在我们改变他们的名字后,新的名字字符串是如何替换原有'名字'字符串的.
+
+BEFORE:
+
+>>> [id(x) for x in hubby]
+[9919616, 11826320]
+>>> [id(x) for x in wifey]
+[9919616, 11826320]
+
+AFTER:
+
+>>> [id(x) for x in hubby]
+[12092832, 11826320]
+>>> [id(x) for x in wifey]
+[12191712, 11826320]
+If the intention was to create a joint account for the couple, then we have a great solution, but if we want separate accounts, we need to change something.In order to obtain a full or deep copy of the object—creating a new container but  containing  references  to  completely  new  copies  (references)  of  the  ele- ment in the original object—we need to use the copy.deepcopy() function. Let us redo the entire example but using deep copies instead:
+假设我们要给这对夫妻创建一个联合账户,那这是一个非常棒的方案,但是,如果需要的是两个分离账户,就需要作些改动了.要得到一个完全拷贝或者说深拷贝--创建一个新的容器对象,包含原有对象元素（引用）全新拷贝的引用--需要copy.deepcopy()函数.我们使用深拷贝来重写整个例子.
+
+>>> person = ['name', ['savings', 100.00]]
+>>> hubby = person
+
+>>> import copy
+>>> wifey = copy.deepcopy(person)
+>>> [id(x) for x in person, hubby, wifey]
+[12242056, 12242056, 12224232]
+>>> hubby[0] = 'joe'
+>>> wifey[0] = 'jane'
+>>> hubby, wifey
+(['joe', ['savings', 100.0]], ['jane', ['savings', 100.0]])
+>>> hubby[1][1] = 50.00
+>>> hubby, wifey
+(['joe', ['savings', 50.0]], ['jane', ['savings', 100.0]])
+
+Now it is just the way we want it. For kickers, let us confirm that all four objects are different:
+这就是我们想要的方式,作为验证,让我们确认一下所有四个对象都是不同的.
+
+>>> [id(x) for x in hubby]
+[12191712, 11826280]
+>>> [id(x) for x in wifey]
+[12114080, 12224792]
+
+There are a few more caveats to object copying. The first is that non- container types (i.e., numbers, strings, and other “atomic” objects like code, type, and xrange objects) are not copied. Shallow copies of sequences are all done using complete slices. Finally, deep copies of tuples are not made if they contain only atomic objects. If we changed the banking information to a tuple, we would get only a shallow copy even though we asked for a deep copy:
+以下有几点关于拷贝操作的警告。第一,非容器类型(比如数字,字符串和其他"原子"类型的对象,像代码,类型和xrange对象等)没有被拷贝一说,浅拷贝是用完全切片操作来完成的.第二,如果元组变量只包含原子类型对象,对它的深拷贝将不会进行.如果我们把账户信息改成元组类型,那么即便按我们的要求使用深拷贝操作也只能得到一个浅拷贝:
+
+>>> person = ['name', ('savings', 100.00)]
+>>> newPerson = copy.deepcopy(person)
+>>> [id(x) for x in person, newPerson]
+[12225352, 12226112]
+>>> [id(x) for x in person]
+[9919616, 11800088]
+>>> [id(x) for x in newPerson]
+[9919616, 11800088]
+
+
+
+CORE MODULE: copy
+核心模块: copy
+The shallow and deep copy operations that we just described are found in the copy module.There are really only two functions to use from this module: copy() creates shallow copy, and deepcopy() creates a deep copy.
+	我们刚才描述的浅拷贝和深拷贝操作都可以在copy模块中找到.其实copy模块中只有两个函数可用:copy()进行浅拷贝操作,而deepcopy()进行深拷贝操作.
+
+6.21  Summary of Sequences
+	  序列类型小结
+
+Sequence  types  provide  various  mechanisms  for  ordered  storage  of  data. Strings are a general medium for carrying data, whether it be displayed to a user, stored on a disk, transmitted across the network, or be a singular container for multiple sources of information. Lists and tuples provide container storage that allows for simple manipulation and access of multiple objects, whether  they  be  Python  data  types  or  user-defined  objects.  Individual  or groups of elements may be accessed as slices via sequentially ordered index offsets.  Together,  these  data  types  provide  flexible  and  easy-to-use  storage tools  in  your  Python  development  environment.  We  conclude  this  chapter with a summary of operators, built-in functions and methods for sequence types given in Table 6.13.
+序列类型为数据的顺序存储提供了几种机制.字符串是最常用的数据载体,无论是用于给用户显示,存贮到硬盘,通过网络传输,还是作为一个多源信息的容器.列表和元组提供了容器存储能力,允许简单的操作和访问多个对象,无论它们是Python的对象还是用户自定义的对象.单一元素或一组元素可以通过持续有序地索引偏移进行切片操作来访问.总之,这些数据类型为你的Python开发环境提供了灵活而易用的存贮工具.我们用表6.13--序列类型的操作符,内建函数和方法的摘要列表来总结本章.
+
+
+Table 6.13  Sequence Type Operators, Built-in Functions and Methods
+	  		序列类型操作符,内建函数和方法
+
+Operator, Built-in Function or Method	String	List	Tuple
+操作符,内建函数或方法		字符串		列表	元组
+
+[] (list creation)	•
+
+()	•
+
+““	•
+
+append()	•
+
+capitalize()	• center()	• chr()	•
+cmp()	•	•	•
+
+count()	•	•
+
+decode()	• encode()	• endswith()	•
+(continued)
+
+
+expandtabs()	•			
+extend()		•		
+find()	•			
+hex()	•			
+index()	•	•		
+insert()		•		
+isdecimal()	•			
+isdigit()	•			
+islower()	•			
+
+isnumeric()	
+•			
+isspace()	•			
+istitle()	•			
+isupper()	•			
+join()	•			
+len()	•	•	•
+list()	•	•	•
+ljust()	•			
+lower()	•			
+lstrip()	•			
+max()	•	•	•
+min()	•	•	•
+oct()	•			
+
+ord()	
+•			
+
+pop()		•		
+
+raw_input()	
+•			
+
+remove()		
+•		
+
+replace()	
+•			
+
+repr()	
+•	
+•	
+•
+
+reverse()		
+•		
+
+rfind()	
+•			
+rindex()	•			
+
+rjust()	
+•			
+
+rstrip()	
+•			
+
+sort()		
+•		
+
+split()	
+•			
+
+splitlines()	
+•			
+
+startswith()	
+•			
+
+str()	
+•	
+•	
+•
+
+strip()	
+•			
+
+swapcase()	
+•			
+
+split()	
+•			
+
+title()	
+•			
+
+tuple()	
+•	
+•	
+•
+
+type()	
+•	
+•	
+•
+
+upper()	•			
+
+zfill()	
+•			
+. (attributes)	
+•		
+•			
+
+[] (slice)	•		•		•	
+
+[:]	•	•	•
+*	•	•	•
+
+%	
+•			
++		•		•		•	
+in	•	•	•
+
+not in	
+•	
+•	
+•
+
+
+
+
+6.22  Exercises
+	  练习
+6–1.   Strings. Are there any string methods or functions in the string module that will help me determine if a string is part of a larger string?
+	   字符串.string模块中是否有一种字符串方法或者函数可以帮我鉴定一下一个字符串是否是另一个大字符串的一部分?
+
+6–2.   String Identifiers. Modify the idcheck.py script in Example 6–1 such that it will determine the validity of identifiers of length 1 as well as be able to detect if an identifier is a keyword. For the latter part of the exercise, you may use the keyword module (specifically the keyword.kwlist list) to aid in your cause.
+	   字符串标识符.修改例6-1的idcheck.py脚本,使之可以检测长度为一的标识符,并且可以识别Python关键字,对后一个要求,你可以使用keyword模块(特别是keyword.kelist)来帮你.
+
+6–3.   Sorting.
+(a) Enter a list of numbers and sort the values in largest-to- smallest order.
+(b) Do the same thing, but for strings and in reverse alphabetical (largest-to-smallest lexicographic) order.
+	排序
+	(a) 输入一串数字,从大到小排列之.
+	(b)	跟a一样,不过要用字典序从大到小排列之.
+
+6–4.   Arithmetic. Update your solution to the test score exercise in the previous chapter such that the test scores are entered into a list. Your code should also be able to come up with an aver- age score. See Exercises 2–9 and 5–3.
+	   算术. 更新上一章里面你的得分测试练习方案,把测试得分放到一个列表中去.你的代码应该可以计算出一个平均分,见练习2-9和练习5-3.
+
+6–5.   Strings.
+	   字符串
+(a) Update your solution to Exercise 2–7 so that you display a string one character at a time forward and backward.
+	更新你在练习2-7里面的方案,使之可以每次向前向后都显示一个字符串的一个字符.
+(b) Determine if two strings match (without using comparison operators or the cmp() built-in function) by scanning each string. Extra credit: Add case-insensitivity to your solution.
+	通过扫描来判断两个字符串是否匹配(不能使用比较操作符或者cmp()内建函数)。附加题：在你的方案里加入大小写区分.
+(c) Determine if a string is palindromic (the same backward as it is forward). Extra credit: Add code to suppress symbols and whitespace if you want to process anything other than strict palindromes.
+	判断一个字符串是否重现(后面跟前面的一致).附加题：在处理除了严格的回文之外,加入对例如控制符号和空格的支持。
+(d) Take a string and append a backward copy of that string, making a palindrome.
+	接受一个字符,在其后面加一个反向的拷贝,构成一个回文字符串.
+
+6–6.   Strings. Create the equivalent to string.strip(): Take a string and remove all leading and trailing whitespace. (Use of string.*strip() defeats the purpose of this exercise.) 
+	   字符串.创建一个string.strip()的替代函数:接受一个字符串,去掉它前面和后面的空格(如果使用string.*strip()函数那本练习就没有意义了)
+
+6–7.   Debugging. Take a look at the code we present in Example 6.4 (buggy.py).
+	   调试.看一下在例6.5中给出的代码(buggy.py)
+(a) Study the code and describe what this program does. Add a comment to every place you see a comment sign ( # ). Run the program.
+	研究这段代码并描述这段代码想做什么.在所有的(#)处都要填写你的注释.
+(b) This problem has a big bug in it. It fails on inputs of 6, 12,20, 30, etc., not to mention any even number in general. What is wrong with this program?
+	这个程序有一个很大的问题,比如输入6,12,20,30,等它会死掉,实际上它不能处理任何的偶数,找出原因.
+(c) Fix the bug in (b).
+	修正(b)中提出的问题.
+
+6–8.   Lists. Given an integer value, return a string with the equiva- lent English text of each digit. For example, an input of 89 results in “eight-nine” being returned. Extra credit: Return English text with proper usage, i.e., “eighty-nine.” For this part of the exercise, restrict values to be between 0 and 1,000.
+	   列表.给出一个整数值,返回代表该值的英文，比如输入89返回"eight-nine"。附加题：能够返回符合英文语法规则的形式，比如输入“89”返回“eighty-nine”。本练习中的值限定在家0到1,000.
+
+6–9.   Conversion. Create a sister function to your solution for Exercise 5–13 to take the total number of minutes and return the same time interval in hours and minutes, maximizing on the total number of hours.
+	   转换.为练习5-13 写一个姊妹函数, 接受分钟数, 返回小时数和分钟数. 总时间不变,并且要求小时数尽可能大. 
+
+6–10. Strings. Create a function that will return another string similar to the input string, but with its case inverted. For example, input of “Mr. Ed” will result in “mR. eD” as the output string.
+	  字符串.写一个函数,返回一个跟输入字符串相似的字符串,要求字符串的大小写反转.比如,输入"Mr.Ed",应该返回"mR.eD"作为输出.
+
+Example 6.4   Buggy Program (buggy.py)
+		有bug的程序(buggy.py)
+
+This is the program listing for Exercise 6–7.You will determine what this program does, add comments where you see “#”s, determine what is wrong with it, and provide a fix for it.
+	 这是一个用于练习6-7的程序,判断这个程序是干什么的,在"#"处添加你的注释,找出其中的错误,并修改之.
+
+1	#!/usr/bin/env python
+2
+3	#
+4	num_str = raw_input('Enter a number: ')
+5
+6	#
+7	num_num = int(num_str)
+8
+9	#
+10   fac_list = range(1, num_num+1)
+11   print "BEFORE:", 'fac_list'
+12
+13   #
+14   i = 0
+15
+16   #
+17   while i < len(fac_list):
+18
+19	#
+20	if num_num % fac_list[i] == 0:
+21	del fac_list[i]
+22
+23	#
+24	i = i + 1
+ 25
+
+
+
+
+6–11. Conversion.
+	  转换
+(a) Create a program that will convert from an integer to an Internet Protocol (IP) address in the four-octet format of WWW.XXX.YYY.ZZZ.
+	创建一个从整数到IP地址的转换程序,如下格式: WWW.XXX.YYY.ZZZ.
+(b) Update your program to be able to do the vice versa of the above.
+	更新你的程序,使之可以逆转换.
+
+6–12. Strings.
+	  字符串
+(a) Create a function called findchr(), with the following declaration: 
+def findchr(string, char)
+findchr() will look for character char in string and return the index of the first occurrence of char, or -1 if that char is not part of string. You cannot use string.*find() or string.*index() functions or methods.
+	创建一个名字为findchr()的函数,函数声明如下:
+	def findchr(string, char)
+	findchr()要在字符串string中查找字符char,找到就返回该值的索引,否则返回-1.不能用string.*find()或者string.*index()函数和方法
+(b) Create another function called rfindchr() that will find the last occurrence of a character in a string. Naturally this works similarly to findchr(), but it starts its search from the end of the input string.
+	创建另一个叫rfindchr()的函数,查找字符char最后一次出现的位置.它跟findchr()工作类似,不过它是从字符串的最后开始向前查找的.
+(c) Create a third function called subchr() with the following declaration:
+def subchr(string, origchar, newchar)
+subchr() is similar to findchr() except that whenever origchar is found, it is replaced by newchar. The modi- fied string is the return value.
+	创建第三个函数,名字叫subchr(),声明如下:
+		def subchr(string, origchar, newchar)
+	subchr()跟findchr()类似,不同的是,如果找到匹配的字符就用新的字符替换原先字符.返回修改后的字符串.
+
+6–13. Strings. The string module contains three functions, atoi(), atol(), and atof(), that convert strings to inte- gers, long integers, and floating point numbers, respectively. As of Python 1.5, the Python built-in functions int(), long(), and float() can also perform the same tasks, in addition to complex(), which can turn a string into a com- plex number. (Prior to 1.5, however, those built-in functions converted only between numeric types.)
+An atoc() was never implemented in the string module, so that is your task here. atoc() takes a single string as input, a string representation of a complex number, e.g., ‘-1.23e+4-5.67j’, and returns the equivalent complex number object with the given value. You cannot use eval(), but complex() is available. However, you can only use  complex() with the following restricted syntax: complex(real, imag) where real and imag are floating point values.
+  
+   字符串.string模块包含三个函数,atoi(),atol(),和atof(),它们分别负责把字符串转换成整数,长整型,和浮点型数字.从Python1.5起,Python的内建函数int(),long(),float()也可以做相同的事了, complex()函数可以把字符串转换成复数.(然而1,5之前,这些转换函数只能工作于数字之上)
+   string模块中并没有实现一个atoc()函数,那么你来实现一个,atoc(),接受单个字符串做参数输入,一个表示复数的字符串,例如,'-1.23e+4-5.67j',返回相应的复数对象.你不能用eval()函数,但可以使用complex()函数,而且你只能在如下的限制之下使用complex():complex(real,imag)的real和imag都必须是浮点值.
+
+6–14.
+Random Numbers. Design a “rock, paper, scissors” game, sometimes called “Rochambeau,” a game you may have played as a kid. Here are the rules. At the same time, using specified hand motions, both you and your opponent have to pick from one of the following: rock, paper, or scissors. The winner is determined by these rules, which form some- what of a fun paradox:
+	随机数.设计一个"石头,剪子,布"游戏,有时又叫"Rochambeau",你小时候可能玩过,下面是规则.你和你的对手,在同一时间做出特定的手势,必须是下面一种手势:石头,剪子,布.胜利者从下面的规则中产生,这个规则本身是个悖论.
+(a) the paper covers the rock,
+	布包石头.
+(b) the rock breaks the scissors,
+	石头砸剪子,
+(c) the scissors cut the paper. In your computerized version, the user enters his/her guess, the computer randomly chooses, and your program should indicate a winner or draw/tie. Note: The most algorithmic solutions use the fewest number of if statements.
+	剪子剪破布.在你的计算机版本中,用户输入她/他的选项,计算机找一个随机选项,然后由你的程序来决定一个胜利者或者平手.注意:最好的算法是尽量少的使用if语句.
+
+6–15. Conversion.
+	  转换
+(a) Given a pair of dates in some recognizable standard for- mat such as MM/DD/YY or DD/MM/YY, determine the total number of days that fall between both dates.
+	给出两个可识别格式的日期,比如 MM/DD/YY 或者 DD/MM/YY 格式,计算出两个日期间的天数.
+(b) Given a person’s birth date, determine the total number of days that person has been alive, including all leap days.
+	给出一个人的生日,计算从此人出生到现在的天数,包括所有的闰月.
+(c) Armed with the same information from (b) above, deter- mine the number of days remaining until that person’s next birthday.
+	还是上面的例子,计算出到此人下次过生日还有多少天.
+
+6–16. Matrices. Process the addition and multiplication of a pair of M by N matrices.
+	  矩阵.处理矩阵M和N的加和乘操作.
+
+6–17. Methods. Implement a function called myPop(), which is similar to the list pop() method. Take a list as input, remove the last object from the list and return it.
+方法.实现一个叫myPop()的函数,功能类似于列表的pop()方法,用一个列表作为输入,移除列表的最新一个元素,并返回它.
+	  
+6–18. In the zip() example of Section 6.12.2, what does zip(fn,ln) return?
+	  zip() 内建函数  在6.13.2节里面关于zip()函数的例子中,zip(fn,ln)返回的是什么?
+
+6–19. Multi-Column Output. Given any number of items in a sequence or other container, display them in equally-distributed number of columns. Let the caller provide the data and the output format.  For example, if you pass in a list of 100 items destined for three columns, display the data in the requested format. In this case, two columns would have 33 items while the last would have 34. You can also let the user choose hori- zontal or vertical sorting.
+	  多列输出.有任意项的序列或者其他容器,把它们等距离分列显示.由调用者提供数据和输出格式.例如,如果你传入100个项并定义3列输出,按照需要的模式显示这些数据.这种情况下,应该是两列显示33个项,最后一列显示34个.你可以让用户来选择水平排序或者垂直排序.
+

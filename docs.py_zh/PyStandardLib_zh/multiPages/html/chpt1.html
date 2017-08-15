@@ -1,0 +1,3543 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Python Standard Library</TITLE>
+
+<!-- Included style.css -->
+<STYLE TYPE="text/css">
+body, td, {
+	font-family: verdana, sans-serif;
+	font-size: 12px;
+}
+
+body {
+	background-color: #FDFBFC;
+	margin:20px 20px 20px 20px;
+}
+
+
+p {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+a {font-weight:normal; text-decoration:underline;}
+a:link {color:#0000FF;}
+a:visited {color:#0000FF;}
+a:active {color:#0000FF;}
+a:hover {color:#700000;}
+
+strong a {
+    font-weight: bold;
+}
+
+.toc {
+	background-color: #EEEEFB;
+	border: 1px solid;
+	/*padding:10px 8px 10px 15px;*/
+	float : right ; width : 37%;
+	margin : 5px; padding: 5px;
+	margin: 5px;
+}
+
+.toc a:link , .toc a:visited  { color : #003399; }
+
+.toc a:hover { 
+	color : #EEEEFB;
+	text-decoration : none;
+	background-color: black;
+}
+
+.trailbold {
+	font-weight:bold;
+}
+
+.light {
+	background-color: #EFEFEF;
+}
+
+.dark {
+	background-color: #D2D2D2;
+}
+
+.smalllogo {
+	float:left;
+}
+
+.headerbar {
+	padding-bottom:60px;
+}
+	
+.header {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.smallheader {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.filelist {
+	font-size:14px;
+	margin: 10px 10px 10px 70px;
+	line-height:25px;
+}
+
+.dirheader {
+	font-size:13px;
+	margin: 10px 50px 10px 20px
+}
+
+.toolbar {
+	text-align:right;
+	margin: 0px 10px 0px 10px
+}
+
+.copyright {
+	padding-top: 30px;
+	text-align:center;
+	font-size:9px;
+	color: #5F5F5F;
+}
+
+.small {
+	font-size:9px;
+}
+
+.sforgelogo {
+	text-align:right;
+	height: 40px;
+}
+
+pre, .source {
+	width:auto;
+	border		: 1px solid #666;
+	background	: #eee;
+	margin		: 2em 4em;
+	padding		: 1em 2em;
+}
+
+/*code {
+	color		: #DB1416;
+	
+}*/
+code { 
+font-size: 1.2em;
+font-family:courier,courier new,monospace;
+background: #666666;
+border-top: 0.03em solid #000;
+border-right: 0.03em solid #000;
+border-bottom: 0.03em solid #ccc;
+border-left: 0.03em solid #ccc;
+color: white;
+}
+
+blockquote{
+  margin: 2em 5em ; 
+ } 
+
+
+</STYLE>
+
+</HEAD>
+<BODY BGCOLOR="green">
+<A NAME="toptop"></A>
+<DIV CLASS="header" ID="header">
+<H1>Python Standard Library</H1>
+<H2>翻译: Python 江湖群</H2>
+<H3>2008-03-28 13:35:32</H3>
+</DIV>
+
+<DIV CLASS="body" ID="body">
+<DIV CLASS="toc" ID="toc">
+  <OL>
+  <LI><A HREF="#toc1">核心模块</A>
+    <UL>
+    <LI><A HREF="#toc2">1.1. 介绍</A>
+    <LI><A HREF="#toc3">1.2. _ _builtin_ _ 模块</A>
+    <LI><A HREF="#toc4">1.3. exceptions 模块</A>
+    <LI><A HREF="#toc5">1.4. os 模块</A>
+    <LI><A HREF="#toc6">1.5. os.path 模块</A>
+    <LI><A HREF="#toc7">1.6. stat 模块</A>
+    <LI><A HREF="#toc8">1.7. string 模块</A>
+    <LI><A HREF="#toc9">1.8. re 模块</A>
+    <LI><A HREF="#toc10">1.9. math 模块</A>
+    <LI><A HREF="#toc11">1.10. cmath 模块</A>
+    <LI><A HREF="#toc12">1.11. operator 模块</A>
+    <LI><A HREF="#toc13">1.12. copy 模块</A>
+    <LI><A HREF="#toc14">1.13. sys 模块</A>
+    <LI><A HREF="#toc15">1.14. atexit 模块</A>
+    <LI><A HREF="#toc16">1.15. time 模块</A>
+    <LI><A HREF="#toc17">1.16. types 模块</A>
+    <LI><A HREF="#toc18">1.17. gc 模块</A>
+    </UL>
+  </OL>
+
+</DIV>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<P>
+<A HREF="index.html">返回首页</A>
+</P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<A NAME="toc1"></A>
+<H1><A href='#toptop'> 1. 核心模块 </A></H1>
+	<BLOCKQUOTE>
+	"Since the functions in the C runtime library are not part of the Win32 API, 
+	we believe the number of applications that will be affected by this bug to 
+	be very limited."
+	</BLOCKQUOTE>
+<P></P>
+	<BLOCKQUOTE>
+	- Microsoft, January 1999
+	</BLOCKQUOTE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc2"></A>
+<H2><A href='#toptop'> 1.1. 介绍 </A></H2>
+<P>
+Python 的标准库包括了很多的模块, 从 Python 语言自身特定的类型和声明, 到一些只用于少数程序的不著名的模块. 
+</P>
+<P>
+本章描述了一些基本的标准库模块. 任何大型 Python 程序都有可能直接或间接地使用到这类模块的大部分. 
+</P>
+<H3><A href='#toptop'> 1.1.1. 内建函数和异常 </A></H3>
+<P>
+下面的这两个模块比其他模块加在一起还要重要: 定义内建函数(例如 len, int, range ...)的 
+<CODE>_ _builtin_ _</CODE> 模块, 以及定义所有内建异常的 <CODE>exceptions</CODE> 模块. 
+</P>
+<P>
+Python 在启动时导入这两个模块, 使任何程序都能够使用它们. 
+</P>
+<H3><A href='#toptop'> 1.1.2. 操作系统接口模块 </A></H3>
+<P>
+Python 有许多使用了 POSIX 标准 API 和标准 C 语言库的模块. 它们为底层操作系统提供了平台独立的接口. 
+</P>
+<P>
+这类的模块包括: 提供文件和进程处理功能的 <CODE>os</CODE> 模块; 提供平台独立的文件名处理
+(分拆目录名, 文件名, 后缀等)的 <CODE>os.path</CODE> 模块; 以及时间日期处理相关的 <CODE>time/datetime</CODE> 模块. 
+</P>
+<PRE>
+[!Feather注: datetime 为 Py2.3 新增模块, 提供增强的时间处理方法 ]
+</PRE>
+<P></P>
+<P>
+延伸一点说, 网络和线程模块同样也可以归为这一个类型. 不过 Python 并没有在所有的平台/版本实现这些. 
+</P>
+<H3><A href='#toptop'> 1.1.3. 类型支持模块 </A></H3>
+<P>
+标准库里有许多用于支持内建类型操作的库. <CODE>string</CODE> 模块实现了常用的字符串处理. 
+<CODE>math</CODE> 模块提供了数学计算操作和常量(pi, e都属于这类常量), <CODE>cmath</CODE> 模块为复数提供了和 
+<CODE>math</CODE> 一样的功能. 
+</P>
+<H3><A href='#toptop'> 1.1.4. 正则表达式 </A></H3>
+<P>
+<CODE>re</CODE> 模块为 Python 提供了正则表达式支持. 正则表达式是用于匹配字符串或特定子字符串的
+有特定语法的字符串模式. 
+</P>
+<H3><A href='#toptop'> 1.1.5. 语言支持模块 </A></H3>
+<P>
+sys 模块可以让你访问解释器相关参数,比如模块搜索路径,解释器版本号等. 
+<CODE>operator</CODE> 模块提供了和内建操作符作用相同的函数. <CODE>copy</CODE> 模块允许
+你复制对象, Python 2.0 新加入的 <CODE>gc</CODE> 模块提供了对垃圾收集的相关控制功能. 
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc3"></A>
+<H2><A href='#toptop'> 1.2. _ _builtin_ _ 模块 </A></H2>
+<P>
+这个模块包含 Python 中使用的内建函数. 一般不用手动导入这个模块; Python会帮你做好一切. 
+</P>
+<H3><A href='#toptop'> 1.2.1. 使用元组或字典中的参数调用函数 </A></H3>
+<P>
+Python允许你实时地创建函数参数列表. 只要把所有的参数放入一个元组中，
+然后通过内建的 <CODE>apply</CODE> 函数调用函数. 如 <A HREF="#eg-1-1">Example 1-1</A>. 
+</P>
+<A NAME="eg-1-1"></A>
+<H4><A href='#toptop'> 1.2.1.1. Example 1-1. 使用 apply 函数 </A></H4>
+<PRE>
+File: builtin-apply-example-1.py
+
+def function(a, b):
+    print a, b
+
+apply(function, ("whither", "canada?"))
+apply(function, (1, 2 + 3))
+
+*B*whither canada?
+1 5*b*
+</PRE>
+<P></P>
+<P>
+要想把关键字参数传递给一个函数, 你可以将一个字典作为 <CODE>apply</CODE> 函数的第 3 个参数, 
+参考 <A HREF="#eg-1-2">Example 1-2</A>. 
+</P>
+<A NAME="eg-1-2"></A>
+<H4><A href='#toptop'> 1.2.1.2. Example 1-2. 使用 apply 函数传递关键字参数 </A></H4>
+<PRE>
+File: builtin-apply-example-2.py
+
+def function(a, b):
+    print a, b
+
+apply(function, ("crunchy", "frog"))
+apply(function, ("crunchy",), {"b": "frog"})
+apply(function, (), {"a": "crunchy", "b": "frog"})
+
+*B*crunchy frog
+crunchy frog
+crunchy frog*b*
+</PRE>
+<P></P>
+<P>
+<CODE>apply</CODE> 函数的一个常见用法是把构造函数参数从子类传递到基类, 
+尤其是构造函数需要接受很多参数的时候. 如 <A HREF="#eg-1-3">Example 1-3</A> 所示. 
+</P>
+<A NAME="eg-1-3"></A>
+<H4><A href='#toptop'> 1.2.1.3. Example 1-3. 使用 apply 函数调用基类的构造函数 </A></H4>
+<PRE>
+File: builtin-apply-example-3.py
+
+class Rectangle:
+    def _ _init_ _(self, color="white", width=10, height=10):
+        print "create a", color, self, "sized", width, "x", height
+
+class RoundedRectangle(Rectangle):
+    def _ _init_ _(self, **kw):
+        apply(Rectangle._ _init_ _, (self,), kw)
+
+rect = Rectangle(color="green", height=100, width=100)
+rect = RoundedRectangle(color="blue", height=20)
+
+*B*create a green &lt;Rectangle instance at 8c8260&gt; sized 100 x 100
+create a blue &lt;RoundedRectangle instance at 8c84c0&gt; sized 10 x 20*b*
+</PRE>
+<P></P>
+<P>
+Python 2.0 提供了另个方法来做相同的事. 你只需要使用一个传统的函数调用 , 
+使用 <CODE>*</CODE> 来标记元组, <CODE>**</CODE> 来标记字典. 
+</P>
+<P>
+下面两个语句是等价的:
+</P>
+<PRE>
+result = function(*args, **kwargs)
+result = apply(function, args, kwargs)
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.2.2. 加载和重载模块 </A></H3>
+<P>
+如果你写过较庞大的 Python 程序, 那么你就应该知道 <CODE>import</CODE> 语句是用来导入外部模块的 
+(当然也可以使用 <CODE>from-import</CODE> 版本). 不过你可能不知道 <CODE>import</CODE> 其实是靠调用内建
+函数 <CODE>_ _import_ _</CODE> 来工作的. 
+</P>
+<P>
+通过这个戏法你可以动态地调用函数. 当你只知道模块名称(字符串)的时候, 这将很方便. 
+<A HREF="#eg-1-4">Example 1-4</A> 展示了这种用法, 动态地导入所有以 "<CODE>-plugin</CODE>" 结尾的模块. 
+</P>
+<A NAME="eg-1-4"></A>
+<H4><A href='#toptop'> 1.2.2.1. Example 1-4. 使用 _ _import_ _ 函数加载模块 </A></H4>
+<PRE>
+File: builtin-import-example-1.py
+
+import glob, os
+
+modules = []
+
+for module_file in glob.glob("*-plugin.py"):
+    try:
+        module_name, ext = os.path.splitext(os.path.basename(module_file))
+        module = _ _import_ _(module_name)
+        modules.append(module)
+    except ImportError:
+        pass # ignore broken modules
+
+# say hello to all modules
+for module in modules:
+    module.hello()
+
+*B*example-plugin says hello*b*
+</PRE>
+<P></P>
+<P>
+注意这个 plug-in 模块文件名中有个 "-" (hyphens). 这意味着你不能使用普通的 <CODE>import</CODE> 命令, 因为 Python 的辨识符不允许有 "-" .
+</P>
+<P>
+<A HREF="#eg-1-5">Example 1-5</A> 展示了 <A HREF="#eg-1-4">Example 1-4</A> 中使用的 plug-in .
+</P>
+<A NAME="eg-1-5"></A>
+<H4><A href='#toptop'> 1.2.2.2. Example 1-5. Plug-in 例子 </A></H4>
+<PRE>
+File: example-plugin.py
+
+def hello():
+    print "example-plugin says hello"
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-1-6">Example 1-6</A> 展示了如何根据给定模块名和函数名获得想要的函数对象.
+</P>
+<A NAME="eg-1-6"></A>
+<H4><A href='#toptop'> 1.2.2.3. Example 1-6. 使用 _ _import_ _ 函数获得特定函数 </A></H4>
+<PRE>
+File: builtin-import-example-2.py
+
+def getfunctionbyname(module_name, function_name):
+    module = _ _import_ _(module_name)
+    return getattr(module, function_name)
+
+print repr(getfunctionbyname("dumbdbm", "open"))
+
+*B*&lt;function open at 794fa0&gt;*b*
+</PRE>
+<P></P>
+<P>
+你也可以使用这个函数实现延迟化的模块导入 (lazy module loading). 例如在 <A HREF="#eg-1-7">Example 1-7</A> 中
+的 <CODE>string</CODE> 模块只在第一次使用的时候导入.
+</P>
+<A NAME="eg-1-7"></A>
+<H4><A href='#toptop'> 1.2.2.4. Example 1-7. 使用 _ _import_ _ 函数实现 延迟导入 </A></H4>
+<PRE>
+File: builtin-import-example-3.py
+
+class LazyImport:
+    def _ _init_ _(self, module_name):
+        self.module_name = module_name
+        self.module = None
+    def _ _getattr_ _(self, name):
+        if self.module is None:
+            self.module = _ _import_ _(self.module_name)
+        return getattr(self.module, name)
+
+string = LazyImport("string")
+
+print string.lowercase
+
+*B*abcdefghijklmnopqrstuvwxyz*b*
+</PRE>
+<P></P>
+<P>
+Python 也提供了重新加载已加载模块的基本支持. [Example 1-8 #eg-1-8 会加载 3 次 <I>hello.py</I> 文件.
+</P>
+<A NAME="eg-1-8"></A>
+<H4><A href='#toptop'> 1.2.2.5. Example 1-8. 使用 reload 函数 </A></H4>
+<PRE>
+File: builtin-reload-example-1.py
+
+import hello
+reload(hello)
+reload(hello)
+
+*B*hello again, and welcome to the show
+hello again, and welcome to the show
+hello again, and welcome to the show*b*
+</PRE>
+<P></P>
+<P>
+reload 直接接受模块作为参数.
+</P>
+<PRE>
+[!Feather 注:  ^ 原句无法理解, 稍后讨论.]
+</PRE>
+<P></P>
+<P>
+注意，当你重加载模块时, 它会被重新编译, 新的模块会代替模块字典里的老模块. 但是, 已经用原模块里的类建立的实例仍然使用的是老模块(不会被更新). 
+</P>
+<P>
+同样地, 使用 <CODE>from-import</CODE> 直接创建的到模块内容的引用也是不会被更新的.
+</P>
+<H3><A href='#toptop'> 1.2.3. 关于名称空间 </A></H3>
+<P>
+<CODE>dir</CODE> 返回由给定模块, 类, 实例, 或其他类型的所有成员组成的列表. 这可能在交互式 Python 解释器下很有用, 也可以用在其他地方. <A HREF="#eg-1-9">Example 1-9</A>展示了 <CODE>dir</CODE> 函数的用法. 
+</P>
+<A NAME="eg-1-9"></A>
+<H4><A href='#toptop'> 1.2.3.1. Example 1-9. 使用 dir 函数 </A></H4>
+<PRE>
+File: builtin-dir-example-1.py
+
+def dump(value):
+    print value, "=&gt;", dir(value)
+
+import sys
+
+dump(0)
+dump(1.0)
+dump(0.0j) # complex number
+dump([]) # list
+dump({}) # dictionary
+dump("string")
+dump(len) # function
+dump(sys) # module
+
+*B*0 =&gt; []
+1.0 =&gt; []
+0j =&gt; ['conjugate', 'imag', 'real']
+[] =&gt; ['append', 'count', 'extend', 'index', 'insert',
+    'pop', 'remove', 'reverse', 'sort']
+{} =&gt; ['clear', 'copy', 'get', 'has_key', 'items',
+    'keys', 'update', 'values']
+string =&gt; []
+&lt;built-in function len&gt; =&gt; ['_ _doc_ _', '_ _name_ _', '_ _self_ _']
+&lt;module 'sys' (built-in)&gt; =&gt; ['_ _doc_ _', '_ _name_ _',
+    '_ _stderr_ _', '_ _stdin_ _', '_ _stdout_ _', 'argv',
+    'builtin_module_names', 'copyright', 'dllhandle',
+    'exc_info', 'exc_type', 'exec_prefix', 'executable',
+...*b*
+</PRE>
+<P></P>
+<P>
+在例子 <A HREF="#eg-1-10">Example 1-10</A>中定义的 <CODE>getmember</CODE> 函数返回给定类定义的所有类级别的属性和方法.
+</P>
+<A NAME="eg-1-10"></A>
+<H4><A href='#toptop'> 1.2.3.2. Example 1-10. 使用 dir 函数查找类的所有成员 </A></H4>
+<PRE>
+File: builtin-dir-example-2.py
+
+class A:
+    def a(self):
+        pass
+    def b(self):
+        pass
+
+class B(A):
+    def c(self):
+        pass
+    def d(self):
+        pass
+
+def getmembers(klass, members=None):
+    # get a list of all class members, ordered by class
+    if members is None:
+        members = []
+    for k in klass._ _bases_ _:
+        getmembers(k, members)
+    for m in dir(klass):
+        if m not in members:
+            members.append(m)
+    return members
+
+print getmembers(A)
+print getmembers(B)
+print getmembers(IOError)
+
+*B*['_ _doc_ _', '_ _module_ _', 'a', 'b']
+['_ _doc_ _', '_ _module_ _', 'a', 'b', 'c', 'd']
+['_ _doc_ _', '_ _getitem_ _', '_ _init_ _', '_ _module_ _', '_ _str_ _']*b*
+</PRE>
+<P></P>
+<P>
+<CODE>getmembers</CODE> 函数返回了一个有序列表. 成员在列表中名称出现的越早, 
+它所处的类层次就越高. 如果无所谓顺序的话, 你可以使用字典代替列表. 
+</P>
+<PRE>
+[!Feather 注: 字典是无序的, 而列表和元组是有序的, 网上有关于有序字典的讨论]
+</PRE>
+<P></P>
+<P>
+<CODE>vars</CODE> 函数与此相似, 它返回的是包含每个成员当前值的字典. 如果你使用不带参数的 <CODE>vars</CODE> , 它将返回当前局部名称空间的可见元素(同 <CODE>locals()</CODE> 函数 ). 如 <A HREF="#eg-1-11">Example 1-11</A>所表示. 
+</P>
+<A NAME="eg-1-11"></A>
+<H4><A href='#toptop'> 1.2.3.3. Example 1-11. 使用 vars 函数 </A></H4>
+<PRE>
+File: builtin-vars-example-1.py
+
+book = "library2"
+pages = 250
+scripts = 350
+
+
+print "the %(book)s book contains more than %(scripts)s scripts" % vars()
+
+*B*the library book contains more than 350 scripts*b*
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.2.4. 检查对象类型 </A></H3>
+<P>
+Python 是一种动态类型语言, 这意味着给一个定变量名可以在不同的场合绑定到不同的类型上. 在接下面例子中, 同样的函数分别被整数, 浮点数, 以及一个字符串调用: 
+</P>
+<PRE>
+def function(value):
+    print value
+function(1)
+function(1.0)
+function("one")
+</PRE>
+<P>
+<CODE>type</CODE> 函数 (如 <A HREF="#eg-1-12">Example 1-12</A> 所示) 允许你检查一个变量的类型. 这个函数会返回一个 
+<I>type descriptor (类型描述符)</I>, 它对于 Python 解释器提供的每个类型都是不同的. 
+</P>
+<A NAME="eg-1-12"></A>
+<H4><A href='#toptop'> 1.2.4.1. Example 1-12. 使用 type 函数 </A></H4>
+<PRE>
+File: builtin-type-example-1.py
+
+def dump(value):
+    print type(value), value
+
+dump(1)
+dump(1.0)
+dump("one")
+
+*B*&lt;type 'int'&gt; 1
+&lt;type 'float'&gt; 1.0
+&lt;type 'string'&gt; one*b*
+</PRE>
+<P></P>
+<P>
+每个类型都有一个对应的类型对象, 所以你可以使用 <CODE>is</CODE> 操作符 (对象身份?) 来
+检查类型. (如 <A HREF="#eg-1-13">Example 1-13</A>所示).
+</P>
+<A NAME="eg-1-13"></A>
+<H4><A href='#toptop'> 1.2.4.2. Example 1-13. 对文件名和文件对象使用 type 函数 </A></H4>
+<PRE>
+File: builtin-type-example-2.py
+
+def load(file):
+    if isinstance(file, type("")):
+        file = open(file, "rb")
+    return file.read()
+
+print len(load("samples/sample.jpg")), "bytes"
+print len(load(open("samples/sample.jpg", "rb"))), "bytes"
+
+
+*B*4672 bytes
+4672 bytes*b*
+</PRE>
+<P></P>
+<P>
+<CODE>callable</CODE> 函数, 如 <A HREF="#eg-1-14">Example 1-14</A> 所示, 可以检查一个对象是否是可调用的 
+(无论是直接调用或是通过 <CODE>apply</CODE>). 对于函数, 方法, <CODE>lambda</CODE> 函式, 类, 
+以及实现了 <CODE>_ _call_ _</CODE> 方法的类实例, 它都返回 True. 
+</P>
+<A NAME="eg-1-14"></A>
+<H4><A href='#toptop'> 1.2.4.3. Example 1-14. 使用 callable 函数 </A></H4>
+<PRE>
+File: builtin-callable-example-1.py
+
+def dump(function):
+    if callable(function):
+        print function, "is callable"
+    else:
+        print function, "is *not* callable"
+
+class A:
+    def method(self, value):
+        return value
+
+class B(A):
+    def _ _call_ _(self, value):
+        return value
+
+a = A()
+b = B()
+
+dump(0) # simple objects
+dump("string")
+dump(callable)
+dump(dump) # function
+
+dump(A) # classes
+dump(B)
+dump(B.method)
+
+dump(a) # instances
+dump(b)
+dump(b.method)
+
+*B*0 is *not* callable
+string is *not* callable
+&lt;built-in function callable&gt; is callable
+&lt;function dump at 8ca320&gt; is callable
+A is callable
+B is callable
+&lt;unbound method A.method&gt; is callable
+&lt;A instance at 8caa10&gt; is *not* callable
+&lt;B instance at 8cab00&gt; is callable
+&lt;method A.method of B instance at 8cab00&gt; is callable*b*
+</PRE>
+<P></P>
+<P>
+注意类对象 (A 和 B) 都是可调用的; 如果调用它们, 就产生新的对象(类实例). 但是 A 类的实例不可调用, 因为它的类没有实现 <CODE>_ _call_ _</CODE> 方法.
+</P>
+<P>
+你可以在 <CODE>operator</CODE> 模块中找到检查对象是否为某一内建类型(数字, 序列, 或者字典等)
+的函数. 但是, 因为创建一个类很简单(比如实现基本序列方法的类), 所以对这些
+类型使用显式的类型判断并不是好主意. 
+</P>
+<P>
+在处理类和实例的时候会复杂些. Python 不会把类作为本质上的类型对待; 相反地, 所有的类都属于一个特殊的类类型(special class type), 所有的类实例属于一个特殊的实例类型(special instance type). 
+</P>
+<P>
+这意味着你不能使用 <CODE>type</CODE> 函数来测试一个实例是否属于一个给定的类; 所有的实例都是同样
+的类型! 为了解决这个问题, 你可以使用 <CODE>isinstance</CODE> 函数,它会检查一个对象是
+不是给定类(或其子类)的实例. <A HREF="#eg-1-15">Example 1-15</A> 展示了 <CODE>isinstance</CODE> 函数的使用.
+</P>
+<A NAME="eg-1-15"></A>
+<H4><A href='#toptop'> 1.2.4.4. Example 1-15. 使用 isinstance 函数 </A></H4>
+<PRE>
+File: builtin-isinstance-example-1.py
+
+class A:
+    pass
+
+class B:
+    pass
+
+class C(A):
+    pass
+
+class D(A, B):
+    pass
+
+def dump(object):
+    print object, "=&gt;",
+    if isinstance(object, A):
+        print "A",
+    if isinstance(object, B):
+        print "B",
+    if isinstance(object, C):
+        print "C",
+    if isinstance(object, D):
+        print "D",
+    print
+
+a = A()
+b = B()
+c = C()
+d = D()
+
+dump(a)
+dump(b)
+dump(c)
+dump(d)
+dump(0)
+dump("string")
+
+*B*&lt;A instance at 8ca6d0&gt; =&gt; A
+&lt;B instance at 8ca750&gt; =&gt; B
+&lt;C instance at 8ca780&gt; =&gt; A C
+&lt;D instance at 8ca7b0&gt; =&gt; A B D
+0 =&gt;
+string =&gt;*b*
+</PRE>
+<P></P>
+<P>
+<CODE>issubclass</CODE> 函数与此相似, 它用于检查一个类对象是否与给定类相同, 
+或者是给定类的子类. 如 <A HREF="#eg-1-16">Example 1-16</A> 所示. 
+</P>
+<P>
+注意, <CODE>isinstance</CODE> 可以接受任何对象作为参数, 而 <CODE>issubclass</CODE> 函数在接受非类对象参
+数时会引发 <I>TypeError</I> 异常. 
+</P>
+<A NAME="eg-1-16"></A>
+<H4><A href='#toptop'> 1.2.4.5. Example 1-16. 使用 issubclass 函数 </A></H4>
+<PRE>
+File: builtin-issubclass-example-1.py
+
+class A:
+    pass
+
+class B:
+    pass
+
+class C(A):
+    pass
+
+class D(A, B):
+    pass
+
+def dump(object):
+    print object, "=&gt;",
+    if issubclass(object, A):
+        print "A",
+    if issubclass(object, B):
+        print "B",
+    if issubclass(object, C):
+        print "C",
+    if issubclass(object, D):
+        print "D",
+    print
+
+dump(A)
+dump(B)
+dump(C)
+dump(D)
+dump(0)
+dump("string")
+
+*B*A =&gt; A
+B =&gt; B
+C =&gt; A C
+D =&gt; A B D
+0 =&gt;
+Traceback (innermost last):
+  File "builtin-issubclass-example-1.py", line 29, in ?
+  File "builtin-issubclass-example-1.py", line 15, in dump
+TypeError: arguments must be classes*b*
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.2.5. 计算 Python 表达式 </A></H3>
+<P>
+Python 提供了在程序中与解释器交互的多种方法. 例如 <CODE>eval</CODE> 函数将一个字符串
+作为 Python 表达式求值. 你可以传递一串文本, 简单的表达式, 或者使用
+内建 Python 函数. 如 <A HREF="#eg-1-17">Example 1-17</A> 所示. 
+</P>
+<A NAME="eg-1-17"></A>
+<H4><A href='#toptop'> 1.2.5.1. Example 1-17. 使用 eval 函数 </A></H4>
+<PRE>
+File: builtin-eval-example-1.py
+
+def dump(expression):
+    result = eval(expression)
+    print expression, "=&gt;", result, type(result)
+
+dump("1")
+dump("1.0")
+dump("'string'")
+dump("1.0 + 2.0")
+dump("'*' * 10")
+dump("len('world')")
+
+*B*1 =&gt; 1 &lt;type 'int'&gt;
+1.0 =&gt; 1.0 &lt;type 'float'&gt;
+'string' =&gt; string &lt;type 'string'&gt;
+1.0 + 2.0 =&gt; 3.0 &lt;type 'float'&gt;
+'*' * 10 =&gt; ********** &lt;type 'string'&gt;
+len('world') =&gt; 5 &lt;type 'int'&gt;*b*
+</PRE>
+<P></P>
+<P>
+如果你不确定字符串来源的安全性, 那么你在使用 <CODE>eval</CODE> 的时候会遇到些麻烦. 例如, 
+某个用户可能会使用 <CODE>_ _import_ _</CODE> 函数加载 <CODE>os</CODE> 模块, 然后从硬盘删除文件 
+(如 <A HREF="#eg-1-18">Example 1-18</A> 所示). 
+</P>
+<A NAME="eg-1-18"></A>
+<H4><A href='#toptop'> 1.2.5.2. Example 1-18. 使用 eval 函数执行任意命令 </A></H4>
+<PRE>
+File: builtin-eval-example-2.py
+
+print eval("_ _import_ _('os').getcwd()")
+print eval("_ _import_ _('os').remove('file')")
+
+*B*/home/fredrik/librarybook
+Traceback (innermost last):
+ File "builtin-eval-example-2", line 2, in ?
+ File "&lt;string&gt;", line 0, in ?
+os.error: (2, 'No such file or directory')*b*
+</PRE>
+<P></P>
+<P>
+这里我们得到了一个 <I>os.error</I> 异常, 这说明 <I>Python 事实上在尝试删除文件!</I>
+</P>
+<P>
+幸运地是, 这个问题很容易解决. 你可以给 <CODE>eval</CODE> 函数传递第 2 
+个参数, 一个定义了该表达式求值时名称空间的字典. 
+我们测试下, 给函数传递个空字典:
+</P>
+<PRE>
+&gt;&gt;&gt; print eval("_ _import_ _('os').remove('file')", {})
+Traceback (innermost last):
+  File "&lt;stdin&gt;", line 1, in ?
+  File "&lt;string&gt;", line 0, in ?
+os.error: (2, 'No such file or directory')
+</PRE>
+<P></P>
+<P>
+呃.... 我们还是得到了个 <I>os.error</I> 异常.
+</P>
+<P>
+这是因为 Python 在求值前会检查这个字典, 如果没有发现名称为 <CODE>_ _builtins_ _</CODE> 
+的变量(复数形式), 它就会添加一个:
+</P>
+<PRE>
+&gt;&gt;&gt; namespace = {}
+&gt;&gt;&gt; print eval("_ _import_ _('os').remove('file')", namespace)
+Traceback (innermost last):
+  File "&lt;stdin&gt;", line 1, in ?
+  File "&lt;string&gt;", line 0, in ?
+os.error: (2, 'No such file or directory')
+&gt;&gt;&gt; namespace.keys()
+['_ _builtins_ _']
+</PRE>
+<P></P>
+<P>
+如果你打印这个 namespace 的内容, 你会发现里边有所有的内建函数.
+</P>
+<PRE>
+[!Feather 注: 如果我RP不错的话, 添加的这个_ _builtins_ _就是当前的_ _builtins_ _]
+</PRE>
+<P></P>
+<P>
+我们注意到了如果这个变量存在, Python 就不会去添加默认的, 那么我们的解决方法也来了, 
+为传递的字典参数加入一个 <CODE>_ _builtins_ _</CODE> 项即可. 如 <A HREF="#eg-1-19">Example 1-19</A> 所示.
+</P>
+<A NAME="eg-1-19"></A>
+<H4><A href='#toptop'> 1.2.5.3. Example 1-19. 安全地使用 eval 函数求值 </A></H4>
+<PRE>
+File: builtin-eval-example-3.py
+
+print eval("_ _import_ _('os').getcwd()", {})
+print eval("_ _import_ _('os').remove('file')", {"_ _builtins_ _": {}})
+
+*B*/home/fredrik/librarybook
+Traceback (innermost last):
+  File "builtin-eval-example-3.py", line 2, in ?
+  File "&lt;string&gt;", line 0, in ?
+NameError: _ _import_ _*b*
+</PRE>
+<P></P>
+<P>
+即使这样, 你仍然无法避免针对 CPU 和内存资源的攻击. (比如, 形如 
+<CODE>eval("'*'*1000000*2*2*2*2*2*2*2*2*2")</CODE> 的语句在执行后会使你的程序耗尽系统资源). 
+</P>
+<H3><A href='#toptop'> 1.2.6. 编译和执行代码 </A></H3>
+<P>
+<CODE>eval</CODE> 函数只针对简单的表达式. 如果要处理大块的代码, 你应该使用 <CODE>compile</CODE> 和 <CODE>exec</CODE> 函数 
+(如 <A HREF="#eg-1-20">Example 1-20</A> 所示). 
+</P>
+<A NAME="eg-1-20"></A>
+<H4><A href='#toptop'> 1.2.6.1. Example 1-20. 使用 compile 函数检查语法 </A></H4>
+<PRE>
+File: builtin-compile-example-1.py
+
+NAME = "script.py"
+
+BODY = """
+prnt 'owl-stretching time'
+"""
+
+try:
+    compile(BODY, NAME, "exec")
+except SyntaxError, v:
+    print "syntax error:", v, "in", NAME
+
+# syntax error: invalid syntax in script.py
+</PRE>
+<P></P>
+<P>
+成功执行后, <CODE>compile</CODE> 函数会返回一个代码对象, 你可以使用 <CODE>exec</CODE> 语句执行它, 
+参见 <A HREF="#eg-1-21">Example 1-21</A> .
+</P>
+<A NAME="eg-1-21"></A>
+<H4><A href='#toptop'> 1.2.6.2. Example 1-21. 执行已编译的代码 </A></H4>
+<PRE>
+File: builtin-compile-example-2.py
+
+BODY = """
+print 'the ant, an introduction'
+"""
+
+code = compile(BODY, "&lt;script&gt;", "exec")
+
+print code
+
+exec code
+
+*B*&lt;code object ? at 8c6be0, file "&lt;script&gt;", line 0&gt;
+the ant, an introduction*b*
+</PRE>
+<P></P>
+<P>
+使用 <A HREF="#eg-1-22">Example 1-22</A> 中的类可以在程序执行时实时地生成代码. <CODE>write</CODE> 方法用于添加代码, 
+<CODE>indent</CODE> 和 <CODE>dedent</CODE> 方法用于控制缩进结构. 其他部分交给类来处理. 
+</P>
+<A NAME="eg-1-22"></A>
+<H4><A href='#toptop'> 1.2.6.3. Example 1-22. 简单的代码生成工具 </A></H4>
+<PRE>
+File: builtin-compile-example-3.py
+
+import sys, string
+
+class CodeGeneratorBackend:
+    "Simple code generator for Python"
+
+    def begin(self, tab="\t"):
+        self.code = []
+        self.tab = tab
+        self.level = 0
+
+    def end(self):
+        self.code.append("") # make sure there's a newline at the end 
+        return compile(string.join(self.code, "\n"), "&lt;code&gt;", "exec")
+
+    def write(self, string):
+        self.code.append(self.tab * self.level + string)
+
+    def indent(self):
+        self.level = self.level + 1
+        # in 2.0 and later, this can be written as: self.level += 1
+
+    def dedent(self):
+        if self.level == 0:
+            raise SyntaxError, "internal error in code generator"
+        self.level = self.level - 1
+        # or: self.level -= 1
+
+#
+# try it out!
+
+c = CodeGeneratorBackend()
+c.begin()
+c.write("for i in range(5):")
+c.indent()
+c.write("print 'code generation made easy!'")
+c.dedent()
+exec c.end()
+
+*B*code generation made easy!
+code generation made easy!
+code generation made easy!
+code generation made easy!
+code generation made easy!*b*
+</PRE>
+<P></P>
+<P>
+Python 还提供了 <CODE>execfile</CODE> 函数, 一个从文件加载代码, 编译代码, 执行代码的快捷方式. 
+<A HREF="#eg-1-23">Example 1-23</A> 简单地展示了如何使用这个函数. 
+</P>
+<A NAME="eg-1-23"></A>
+<H4><A href='#toptop'> 1.2.6.4. Example 1-23. 使用 execfile 函数 </A></H4>
+<PRE>
+File: builtin-execfile-example-1.py
+
+execfile("hello.py")
+
+def EXECFILE(filename, locals=None, globals=None):
+    exec compile(open(filename).read(), filename, "exec") in locals, globals
+
+EXECFILE("hello.py")
+
+*B*hello again, and welcome to the show
+hello again, and welcome to the show*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-1-24">Example 1-24</A> 中的代码是 <A HREF="#eg-1-23">Example 1-23</A> 中使用的 hello.py 文件. 
+</P>
+<A NAME="eg-1-24"></A>
+<H4><A href='#toptop'> 1.2.6.5. Example 1-24. hello.py 脚本 </A></H4>
+<PRE>
+File: hello.py
+
+print "hello again, and welcome to the show"
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.2.7. 从 _ _builtin_ _ 模块重载函数 </A></H3>
+<P>
+因为 Python 在检查局部名称空间和模块名称空间前不会检查内建函数, 所以有时候你可能要显式地引用 
+<CODE>_ _builtin_ _</CODE> 模块. 例如 <A HREF="#eg-1-25">Example 1-25</A> 重载了内建的 <CODE>open</CODE> 函数. 
+这时候要想使用原来的 <CODE>open</CODE> 函数, 就需要脚本显式地指明模块名称. 
+</P>
+<A NAME="eg-1-25"></A>
+<H4><A href='#toptop'> 1.2.7.1. Example 1-25. 显式地访问 _ _builtin_ _ 模块中的函数 </A></H4>
+<PRE>
+File: builtin-open-example-1.py
+
+def open(filename, mode="rb"):
+    import _ _builtin_ _
+    file = _ _builtin_ _.open(filename, mode)
+    if file.read(5) not in("GIF87", "GIF89"):
+        raise IOError, "not a GIF file"
+    file.seek(0)
+    return file
+
+fp = open("samples/sample.gif")
+print len(fp.read()), "bytes"
+
+fp = open("samples/sample.jpg")
+print len(fp.read()), "bytes"
+
+*B*3565 bytes
+Traceback (innermost last):
+  File "builtin-open-example-1.py", line 12, in ?
+  File "builtin-open-example-1.py", line 5, in open
+IOError: not a GIF file*b*
+</PRE>
+<P></P>
+<PRE>
+[!Feather 注: 明白这个open()函数是干什么的么? 检查一个文件是否是 GIF 文件, 
+一般如这类的图片格式都在文件开头有默认的格式. 
+另外打开文件推荐使用file()而不是open() , 虽然暂时没有区别]
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc4"></A>
+<H2><A href='#toptop'> 1.3. exceptions 模块 </A></H2>
+<P>
+<CODE>exceptions</CODE> 模块提供了标准异常的层次结构. Python 启动的时候会自动导入这个模块, 
+并且将它加入到 <CODE>_ _builtin_ _</CODE> 模块中. 也就是说, 一般不需要手动导入这个模块. 
+</P>
+<P>
+在 1.5.2 版本时它是一个普通模块, 2.0 以及以后版本成为内建模块. 
+</P>
+<P>
+该模块定义了以下标准异常:
+</P>
+<UL>
+<LI><I>Exception</I> 是所有异常的基类. 强烈建议(但不是必须)自定义的异常异常也继承这个类. 
+<P></P>
+<LI><I>SystemExit(Exception)</I> 由 <CODE>sys.exit</CODE> 函数引发. 如果它在最顶层没有被 <CODE>try-except</CODE> 语句捕获, 
+那么解释器将直接关闭而不会显示任何跟踪返回信息. 
+<P></P>
+<LI><I>StandardError(Exception)</I> 是所有内建异常的基类(除 <I>SystemExit</I> 外). 
+<P></P>
+<LI><I>KeyboardInterrupt(StandardError)</I> 在用户按下 Control-C(或其他打断按键)后 被引发. 如果它可能会在你使用 "捕获所有" 的 <CODE>try-except</CODE> 语句时导致奇怪的问题. 
+<P></P>
+<LI><I>ImportError(StandardError)</I> 在 Python 导入模块失败时被引发. 
+<P></P>
+<LI><I>EnvironmentError</I> 作为所有解释器环境引发异常的基类. (也就是说, 这些异常一般不是由于程序 bug 引起). 
+<P></P>
+<LI><I>IOError(EnvironmentError)</I> 用于标记 I/O 相关错误. 
+<P></P>
+<LI><I>OSError(EnvironmentError)</I> 用于标记 <CODE>os</CODE> 模块引起的错误. 
+<P></P>
+<LI><I>WindowsError(OSError)</I> 用于标记 <CODE>os</CODE> 模块中 Windows 相关错误. 
+<P></P>
+<LI><I>NameError(StandardError)</I> 在 Python 查找全局或局部名称失败时被引发. 
+<P></P>
+<LI><I>UnboundLocalError(NameError)</I> , 当一个局部变量还没有赋值就被使用时, 会引发这个异常. 这个异常只有在2.0及之后的版本有; 早期版本只会引发一个普通的 <I>NameError</I> . 
+<P></P>
+<LI><I>AttributeError(StandardError)</I> , 当 Python 寻找(或赋值)给一个实例属性, 方法, 模块功能或其它有效的命名失败时, 会引发这个异常. 
+<P></P>
+<LI><I>SyntaxError(StandardError)</I> , 当解释器在编译时遇到语法错误, 这个异常就被引发. 
+<P></P>
+<LI>(2.0 及以后版本) <I>IndentationError(SyntaxError)</I> 在遇到非法的缩进时被引发. 该异常只用于 2.0 及以后版本, 之前版本会引发一个 <I>SyntaxError</I> 异常. 
+<P></P>
+<LI>(2.0 及以后版本) <I>TabError(IndentationError)</I> , 当使用 <CODE>-tt</CODE> 选项检查不一致缩进时有可能被引发. 该异常只用于 2.0 及以后版本, 之前版本会引发一个 <I>SyntaxError</I> 异常. 
+<P></P>
+<LI><I>TypeError(StandardError)</I> , 当给定类型的对象不支持一个操作时被引发. 
+<P></P>
+<LI><I>AssertionError(StandardError)</I> 在 <CODE>assert</CODE> 语句失败时被引发(即表达式为 false 时). 
+<P></P>
+<LI><I>LookupError(StandardError)</I> 作为序列或字典没有包含给定索引或键时所引发异常的基类. 
+<P></P>
+<LI><I>IndexError(LookupError)</I> , 当序列对象使用给定索引数索引失败时(不存在索引对应对象)引发该异常.
+<P></P>
+<LI><I>KeyError(LookupError)</I> 当字典对象使用给定索引索引失败时(不存在索引对应对象)引发该异常. 
+<P></P>
+<LI><I>ArithmeticError(StandardError)</I> 作为数学计算相关异常的基类. 
+<P></P>
+<LI><I>OverflowError(ArithmeticError)</I> 在操作溢出时被引发(例如当一个整数太大, 导致不能符合给定类型). 
+<P></P>
+<LI><I>ZeroDivisionError(ArithmeticError)</I> , 当你尝试用 0 除某个数时被引发. 
+<P></P>
+<LI><I>FloatingPointError(ArithmeticError)</I> , 当浮点数操作失败时被引发. 
+<P></P>
+<LI><I>ValueError(StandardError)</I> , 当一个参数类型正确但值不合法时被引发. 
+<P></P>
+<LI>(2.0 及以后版本) <I>UnicodeError(ValueError)</I> , Unicode 字符串类型相关异常. 只使用在 2.0 及以后版本. 
+<P></P>
+<LI><I>RuntimeError(StandardError)</I> , 当出现运行时问题时引发, 包括在限制模式下尝试访问外部内容, 未知的硬件问题等等. 
+<P></P>
+<LI><I>NotImplementedError(RuntimeError)</I> , 用于标记未实现的函数, 或无效的方法. 
+<P></P>
+<LI><I>SystemError(StandardError)</I> , 解释器内部错误. 该异常值会包含更多的细节 
+(经常会是一些深层次的东西, 比如 "<CODE>eval_code2: NULL globals" )</CODE>. 
+这本书的作者编了 5 年程序都没见过这个错误. (想必是没有用 <CODE>raise SystemError</CODE>). 
+<P></P>
+<LI><I>MemoryError(StandardError)</I> , 当解释器耗尽内存时会引发该异常. 注意只有在底层内存分配抱怨时这个异常才会发生; 如果是在你的旧机器上, 这个异常发生之前系统会陷入混乱的内存交换中. 
+</UL>
+
+<P>
+你可以创建自己的异常类. 只需要继承内建的 <I>Exception</I> 类(或者它的任意一个合适的子类)即可, 有需要时可以再重载它的 <CODE>_ _str_ _</CODE> 方法. <A HREF="#eg-1-26">Example 1-26</A> 展示了如何使用 <CODE>exceptions</CODE> 模块. 
+</P>
+<A NAME="eg-1-26"></A>
+<H4><A href='#toptop'> 1.3.0.1. Example 1-26. 使用 exceptions 模块 </A></H4>
+<PRE>
+File: exceptions-example-1.py
+
+# python imports this module by itself, so the following
+# line isn't really needed
+# python 会自动导入该模块, 所以以下这行是不必要的
+# import exceptions
+
+class HTTPError(Exception):
+    # indicates an HTTP protocol error
+    def _ _init_ _(self, url, errcode, errmsg):
+        self.url = url
+        self.errcode = errcode
+        self.errmsg = errmsg
+    def _ _str_ _(self):
+        return (
+            "&lt;HTTPError for %s: %s %s&gt;" %
+            (self.url, self.errcode, self.errmsg)
+            )
+
+try:
+    raise HTTPError("http://www.python.org/foo", 200, "Not Found")
+except HTTPError, error:
+    print "url", "=&gt;", error.url
+    print "errcode", "=&gt;", error.errcode
+    print "errmsg", "=&gt;", error.errmsg
+    raise # reraise exception
+
+*B*url =&gt; http://www.python.org/foo
+errcode =&gt; 200
+errmsg =&gt; Not Found
+Traceback (innermost last):
+  File "exceptions-example-1", line 16, in ?
+HTTPError: &lt;HTTPError for http://www.python.org/foo: 200 Not Found&gt;*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc5"></A>
+<H2><A href='#toptop'> 1.4. os 模块 </A></H2>
+<P>
+这个模块中的大部分函数通过对应平台相关模块实现, 比如 <CODE>posix</CODE> 和 
+<CODE>nt. os</CODE> 模块会在第一次导入的时候自动加载合适的执行模块. 
+</P>
+<H3><A href='#toptop'> 1.4.1. 处理文件 </A></H3>
+<P>
+内建的 <CODE>open / file</CODE> 函数用于创建, 打开和编辑文件, 如 <A HREF="#eg-1-27">Example 1-27</A> 所示. 而 
+<CODE>os</CODE> 模块提供了重命名和删除文件所需的函数. 
+</P>
+<A NAME="eg-1-27"></A>
+<H4><A href='#toptop'> 1.4.1.1. Example 1-27. 使用 os 模块重命名和删除文件 </A></H4>
+<PRE>
+File: os-example-3.py
+
+import os
+import string
+
+def replace(file, search_for, replace_with):
+    # replace strings in a text file
+
+    back = os.path.splitext(file)[0] + ".bak"
+    temp = os.path.splitext(file)[0] + ".tmp"
+
+    try:
+        # remove old temp file, if any
+        os.remove(temp)
+    except os.error:
+        pass
+
+    fi = open(file)
+    fo = open(temp, "w")
+
+    for s in fi.readlines():
+        fo.write(string.replace(s, search_for, replace_with))
+
+    fi.close()
+    fo.close()
+
+    try:
+        # remove old backup file, if any
+        os.remove(back)
+    except os.error:
+        pass
+
+    # rename original to backup...
+    os.rename(file, back)
+
+    # ...and temporary to original
+    os.rename(temp, file)
+
+#
+# try it out!
+
+file = "samples/sample.txt"
+
+replace(file, "hello", "tjena")
+replace(file, "tjena", "hello")
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.4.2. 处理目录 </A></H3>
+<P>
+<CODE>os</CODE> 模块也包含了一些用于目录处理的函数. 
+</P>
+<P>
+<CODE>listdir</CODE> 函数返回给定目录中所有文件名(包括目录名)组成的列表, 如 
+<A HREF="#eg-1-28">Example 1-28</A> 所示. 而 Unix 和 Windows 中使用的当前目录和父目录标记(. 和 .. )不包含在此列表中. 
+</P>
+<A NAME="eg-1-28"></A>
+<H4><A href='#toptop'> 1.4.2.1. Example 1-28. 使用 os 列出目录下的文件 </A></H4>
+<PRE>
+File: os-example-5.py
+
+import os
+
+for file in os.listdir("samples"):
+    print file
+
+*B*sample.au
+sample.jpg
+sample.wav
+...*b*
+</PRE>
+<P></P>
+<P>
+<CODE>getcwd</CODE> 和 <CODE>chdir</CODE> 函数分别用于获得和改变当前工作目录. 如 <A HREF="#eg-1-29">Example 1-29</A> 所示. 
+</P>
+<A NAME="eg-1-29"></A>
+<H4><A href='#toptop'> 1.4.2.2. Example 1-29. 使用 os 模块改变当前工作目录 </A></H4>
+<PRE>
+File: os-example-4.py
+
+import os
+
+# where are we?
+cwd = os.getcwd()
+print "1", cwd
+
+# go down
+os.chdir("samples")
+print "2", os.getcwd()
+
+# go back up
+os.chdir(os.pardir)
+print "3", os.getcwd()
+
+*B*1 /ematter/librarybook
+2 /ematter/librarybook/samples
+3 /ematter/librarybook*b*
+</PRE>
+<P></P>
+<P>
+<CODE>makedirs</CODE> 和 <CODE>removedirs</CODE> 函数用于创建或删除目录层，如 <A HREF="#eg-1-30">Example 1-30</A> 所示. 
+</P>
+<A NAME="eg-1-30"></A>
+<H4><A href='#toptop'> 1.4.2.3. Example 1-30. 使用 os 模块创建/删除多个目录级 </A></H4>
+<PRE>
+File: os-example-6.py
+
+import os
+
+os.makedirs("test/multiple/levels")
+
+fp = open("test/multiple/levels/file", "w")
+fp.write("inspector praline")
+fp.close()
+
+# remove the file
+os.remove("test/multiple/levels/file")
+
+# and all empty directories above it
+os.removedirs("test/multiple/levels")
+</PRE>
+<P></P>
+<P>
+<CODE>removedirs</CODE> 函数会删除所给路径中最后一个目录下所有的空目录. 
+而 <CODE>mkdir</CODE> 和 <CODE>rmdir</CODE> 函数只能处理单个目录级. 如 <A HREF="#eg-1-31">Example 1-31</A> 所示.
+</P>
+<A NAME="eg-1-31"></A>
+<H4><A href='#toptop'> 1.4.2.4. Example 1-31. 使用 os 模块创建/删除目录 </A></H4>
+<PRE>
+File: os-example-7.py
+
+import os
+
+os.mkdir("test")
+os.rmdir("test")
+
+os.rmdir("samples") # this will fail
+
+*B*Traceback (innermost last):
+  File "os-example-7", line 6, in ?
+OSError: [Errno 41] Directory not empty: 'samples'*b*
+</PRE>
+<P></P>
+<P>
+如果需要删除非空目录, 你可以使用 <CODE>shutil</CODE> 模块中的 <CODE>rmtree</CODE> 函数. 
+</P>
+<H3><A href='#toptop'> 1.4.3. 处理文件属性 </A></H3>
+<P>
+<CODE>stat</CODE> 函数可以用来获取一个存在文件的信息, 如 <A HREF="#eg-1-32">Example 1-32</A> 
+所示. 它返回一个类元组对象(stat_result对象, 包含 10 个元素), 
+依次是st_mode (权限模式), st_ino (inode number), st_dev (device), 
+st_nlink (number of hard links), st_uid (所有者用户 ID), st_gid 
+(所有者所在组 ID ), st_size (文件大小, 字节), st_atime (最近一次访问时间), 
+st_mtime (最近修改时间), st_ctime (平台相关; Unix下的最近一次元数据/metadata修改时间, 
+或者 Windows 下的创建时间) - 以上项目也可作为属性访问. 
+</P>
+<PRE>
+[!Feather 注: 原文为 9 元元组. 另,返回对象并非元组类型,为 struct.]
+</PRE>
+<P></P>
+<A NAME="eg-1-32"></A>
+<H4><A href='#toptop'> 1.4.3.1. Example 1-32. 使用 os 模块获取文件属性 </A></H4>
+<PRE>
+File: os-example-1.py
+
+import os
+import time
+
+file = "samples/sample.jpg"
+
+def dump(st):
+    mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime = st
+    print "- size:", size, "bytes"
+    print "- owner:", uid, gid
+    print "- created:", time.ctime(ctime)
+    print "- last accessed:", time.ctime(atime)
+    print "- last modified:", time.ctime(mtime)
+    print "- mode:", oct(mode)
+    print "- inode/dev:", ino, dev
+
+#
+# get stats for a filename
+
+st = os.stat(file)
+
+print "stat", file
+dump(st)
+print
+
+#
+# get stats for an open file
+
+fp = open(file)
+
+st = os.fstat(fp.fileno())
+
+print "fstat", file
+dump(st)
+
+*B*stat samples/sample.jpg
+- size: 4762 bytes
+- owner: 0 0
+- created: Tue Sep 07 22:45:58 1999
+- last accessed: Sun Sep 19 00:00:00 1999
+- last modified: Sun May 19 01:42:16 1996
+- mode: 0100666
+- inode/dev: 0 2
+
+fstat samples/sample.jpg
+- size: 4762 bytes
+- owner: 0 0
+- created: Tue Sep 07 22:45:58 1999
+- last accessed: Sun Sep 19 00:00:00 1999
+- last modified: Sun May 19 01:42:16 1996
+- mode: 0100666
+- inode/dev: 0 0*b*
+</PRE>
+<P></P>
+<P>
+返回对象中有些属性在非 Unix 平台下是无意义的, 比如 (<CODE>st_inode</CODE> , <CODE>st_dev</CODE>)为 
+Unix 下的为每个文件提供了唯一标识, 但在其他平台可能为任意无意义数据 .
+</P>
+<P>
+<CODE>stat</CODE> 模块包含了很多可以处理该返回对象的常量及函数. 下面的代码展示了其中的一些. 
+</P>
+<P>
+可以使用 <CODE>chmod</CODE> 和 <CODE>utime</CODE> 函数修改文件的权限模式和时间属性，如 <A HREF="#eg-1-33">Example 1-33</A> 所示. 
+</P>
+<A NAME="eg-1-33"></A>
+<H4><A href='#toptop'> 1.4.3.2. Example 1-33. 使用 os 模块修改文件的权限和时间戳 </A></H4>
+<PRE>
+File: os-example-2.py
+
+import os
+import stat, time
+
+infile = "samples/sample.jpg"
+outfile = "out.jpg"
+
+# copy contents
+fi = open(infile, "rb")
+fo = open(outfile, "wb")
+
+while 1:
+    s = fi.read(10000)
+    if not s:
+        break
+    fo.write(s)
+
+fi.close()
+fo.close()
+
+# copy mode and timestamp
+st = os.stat(infile)
+os.chmod(outfile, stat.S_IMODE(st[stat.ST_MODE]))
+os.utime(outfile, (st[stat.ST_ATIME], st[stat.ST_MTIME]))
+
+print "original", "=&gt;"
+print "mode", oct(stat.S_IMODE(st[stat.ST_MODE]))
+print "atime", time.ctime(st[stat.ST_ATIME])
+print "mtime", time.ctime(st[stat.ST_MTIME])
+
+print "copy", "=&gt;"
+st = os.stat(outfile)
+print "mode", oct(stat.S_IMODE(st[stat.ST_MODE]))
+print "atime", time.ctime(st[stat.ST_ATIME])
+print "mtime", time.ctime(st[stat.ST_MTIME])
+
+*B*original =&gt;
+mode 0666
+atime Thu Oct 14 15:15:50 1999
+mtime Mon Nov 13 15:42:36 1995
+copy =&gt;
+mode 0666
+atime Thu Oct 14 15:15:50 1999
+mtime Mon Nov 13 15:42:36 1995*b*
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.4.4. 处理进程 </A></H3>
+<P>
+<CODE>system</CODE> 函数在当前进程下执行一个新命令, 并等待它完成, 如 <A HREF="#eg-1-34">Example 1-34</A> 所示. 
+</P>
+<A NAME="eg-1-34"></A>
+<H4><A href='#toptop'> 1.4.4.1. Example 1-34. 使用 os 执行操作系统命令 </A></H4>
+<PRE>
+File: os-example-8.py
+
+import os
+
+if os.name == "nt":
+    command = "dir"
+else:
+    command = "ls -l"
+
+os.system(command)
+
+*B*-rwxrw-r--   1 effbot  effbot        76 Oct  9 14:17 README
+-rwxrw-r--   1 effbot  effbot      1727 Oct  7 19:00 SimpleAsyncHTTP.py
+-rwxrw-r--   1 effbot  effbot       314 Oct  7 20:29 aifc-example-1.py
+-rwxrw-r--   1 effbot  effbot       259 Oct  7 20:38 anydbm-example-1.py
+...*b*
+</PRE>
+<P></P>
+<P>
+命令通过操作系统的标准 shell 执行, 并返回 shell 的退出状态. 需要注意的是在 Windows 95/98 
+下, shell 通常是 <CODE>command.com</CODE> , 它的推出状态总是 0. 
+</P>
+	<BLOCKQUOTE>
+	由于 11os.system11 直接将命令传递给 shell , 所以如果你不检查传入参数的时候会很危险 
+	(比如命令 <CODE>os.system("viewer %s" % file)</CODE>, 将 file 变量设置为 
+	"<CODE>sample.jpg; rm -rf $HOME" ....</CODE>). 如果不确定参数的安全性, 那么最好使用
+	<CODE>exec</CODE> 或 <CODE>spawn</CODE> 代替(稍后介绍).
+	</BLOCKQUOTE>
+<P></P>
+<P>
+<CODE>exec</CODE> 函数会使用新进程替换当前进程(或者说是"转到进程"). 在 <A HREF="#eg-1-35">Example 1-35</A> 中, 
+字符串 "goodbye" 永远不会被打印. 
+</P>
+<A NAME="eg-1-35"></A>
+<H4><A href='#toptop'> 1.4.4.2. Example 1-35. 使用 os 模块启动新进程 </A></H4>
+<PRE>
+File: os-exec-example-1.py
+
+import os
+import sys
+
+program = "python"
+arguments = ["hello.py"]
+
+print os.execvp(program, (program,) +  tuple(arguments))
+print "goodbye"
+
+*B*hello again, and welcome to the show*b*
+</PRE>
+<P></P>
+<P>
+Python 提供了很多表现不同的 <CODE>exec</CODE> 函数. <A HREF="#eg-1-35">Example 1-35</A> 使用的是 
+<CODE>execvp</CODE> 函数, 它会从标准路径搜索执行程序, 把第二个参数(元组)作为单独的参数传递给程序, 并使用当前的环境变量来运行程序. 其他七个同类型函数请参阅 <I>Python Library Reference</I> .
+</P>
+<P>
+在 Unix 环境下, 你可以通过组合使用 <CODE>exec</CODE> , <CODE>fork</CODE> 以及 <CODE>wait</CODE> 函数来从当前程序调用另一个程序, 
+如 <A HREF="#eg-1-36">Example 1-36</A> 所示. <CODE>fork</CODE> 函数复制当前进程, <CODE>wait</CODE> 函数会等待一个子进程执行结束. 
+</P>
+<A NAME="eg-1-36"></A>
+<H4><A href='#toptop'> 1.4.4.3. Example 1-36. 使用 os 模块调用其他程序 (Unix) </A></H4>
+<PRE>
+File: os-exec-example-2.py
+
+import os
+import sys
+
+def run(program, *args):
+    pid = os.fork()
+    if not pid:
+        os.execvp(program, (program,) +  args)
+    return os.wait()[0]
+
+run("python", "hello.py")
+
+print "goodbye"
+
+*B*hello again, and welcome to the show
+goodbye*b*
+</PRE>
+<P></P>
+<P>
+<CODE>fork</CODE> 函数在子进程返回中返回 0 (这个进程首先从 <CODE>fork</CODE> 返回值), 
+在父进程中返回一个非 0 的进程标识符(子进程的 PID ). 也就是说, 
+只有当我们处于子进程的时候 "<CODE>not pid</CODE>" 才为真. 
+</P>
+<P>
+<CODE>fork</CODE> 和 <CODE>wait</CODE> 函数在 Windows 上是不可用的, 但是你可以使用 <CODE>spawn</CODE> 函数, 
+如 <A HREF="#eg-1-37">Example 1-37</A> 所示. 不过, <CODE>spawn</CODE> 不会沿着路径搜索可执行文件, 
+你必须自己处理好这些. 
+</P>
+<A NAME="eg-1-37"></A>
+<H4><A href='#toptop'> 1.4.4.4. Example 1-37. 使用 os 模块调用其他程序 (Windows) </A></H4>
+<PRE>
+File: os-spawn-example-1.py
+
+import os
+import string
+
+def run(program, *args):
+    # find executable
+    for path in string.split(os.environ["PATH"], os.pathsep):
+        file = os.path.join(path, program) + ".exe"
+        try:
+            return os.spawnv(os.P_WAIT, file, (file,) + args)
+        except os.error:
+            pass
+    raise os.error, "cannot find executable"
+
+run("python", "hello.py")
+
+print "goodbye"
+
+*B*hello again, and welcome to the show
+goodbye*b*
+</PRE>
+<P></P>
+<P>
+<CODE>spawn</CODE> 函数还可用于在后台运行一个程序. <A HREF="#eg-1-38">Example 1-38</A> 给 <CODE>run</CODE> 函数添加了一个可选的 
+<CODE>mode</CODE> 参数; 当设置为 <CODE>os.P_NOWAIT</CODE> 时, 这个脚本不会等待子程序结束, 
+默认值 <CODE>os.P_WAIT</CODE> 时 <CODE>spawn</CODE> 会等待子进程结束. 
+</P>
+<P>
+其它的标志常量还有 <CODE>os.P_OVERLAY</CODE> ,它使得 <CODE>spawn</CODE> 的行为和 <CODE>exec</CODE> 类似, 
+以及 <CODE>os.P_DETACH</CODE> , 它在后台运行子进程, 与当前控制台和键盘焦点隔离. 
+</P>
+<A NAME="eg-1-38"></A>
+<H4><A href='#toptop'> 1.4.4.5. Example 1-38. 使用 os 模块在后台执行程序 (Windows) </A></H4>
+<PRE>
+File: os-spawn-example-2.py
+
+import os
+import string
+
+def run(program, *args, **kw):
+    # find executable
+    mode = kw.get("mode", os.P_WAIT)
+    for path in string.split(os.environ["PATH"], os.pathsep):
+        file = os.path.join(path, program) + ".exe"
+        try:
+            return os.spawnv(mode, file, (file,) + args)
+        except os.error:
+            pass
+    raise os.error, "cannot find executable"
+
+run("python", "hello.py", mode=os.P_NOWAIT)
+print "goodbye"
+
+*B*goodbye
+hello again, and welcome to the show*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-1-39">Example 1-39</A> 提供了一个在 Unix 和 Windows 平台上通用的 <CODE>spawn</CODE> 方法. 
+</P>
+<A NAME="eg-1-39"></A>
+<H4><A href='#toptop'> 1.4.4.6. Example 1-39. 使用 spawn 或 fork/exec 调用其他程序 </A></H4>
+<PRE>
+File: os-spawn-example-3.py
+
+import os
+import string
+
+if os.name in ("nt", "dos"):
+    exefile = ".exe"
+else:
+    exefile = ""
+
+def spawn(program, *args):
+    try:
+        # possible 2.0 shortcut!
+        return os.spawnvp(program, (program,) + args)
+    except AttributeError:
+        pass
+    try:
+        spawnv = os.spawnv
+    except AttributeError:
+
+        # assume it's unix
+        pid = os.fork()
+        if not pid:
+            os.execvp(program, (program,) + args)
+        return os.wait()[0]
+    else:
+        # got spawnv but no spawnp: go look for an executable
+        for path in string.split(os.environ["PATH"], os.pathsep):
+            file = os.path.join(path, program) + exefile
+            try:
+                return spawnv(os.P_WAIT, file, (file,) + args)
+            except os.error:
+                pass
+        raise IOError, "cannot find executable"
+
+#
+# try it out!
+
+spawn("python", "hello.py")
+
+print "goodbye"
+
+*B*hello again, and welcome to the show
+goodbye*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-1-39">Example 1-39</A> 首先尝试调用 <CODE>spawnvp</CODE> 函数. 如果该函数不存在
+(一些版本/平台没有这个函数), 它将继续查找一个名为 <CODE>spawnv</CODE> 的函数并且
+开始查找程序路径. 作为最后的选择, 它会调用 <CODE>exec</CODE> 和 <CODE>fork</CODE> 函数完成工作. 
+</P>
+<H3><A href='#toptop'> 1.4.5. 处理守护进程(Daemon Processes) </A></H3>
+<P>
+Unix 系统中, 你可以使用 <CODE>fork</CODE> 函数把当前进程转入后台(一个"守护者/daemon"). 一般来说, 你需要派生(fork off)一个当前进程的副本, 然后终止原进程, 如 <A HREF="#eg-1-40">Example 1-40</A> 所示. 
+</P>
+<A NAME="eg-1-40"></A>
+<H4><A href='#toptop'> 1.4.5.1. Example 1-40. 使用 os 模块使脚本作为守护执行 (Unix) </A></H4>
+<PRE>
+File: os-example-14.py
+
+import os
+import time
+
+pid = os.fork()
+if pid:
+    os._exit(0) # kill original
+
+print "daemon started"
+time.sleep(10)
+print "daemon terminated"
+</PRE>
+<P></P>
+<P>
+需要创建一个真正的后台程序稍微有点复杂, 首先调用 <CODE>setpgrp</CODE> 函数创建一个 "进程组首领/process group leader". 否则, 向无关进程组发送的信号(同时)会引起守护进程的问题: 
+</P>
+<PRE>
+os.setpgrp()
+</PRE>
+<P></P>
+<P>
+为了确保守护进程创建的文件能够获得程序指定的 mode flags(权限模式标记?), 最好删除 user mode mask:
+</P>
+<PRE>
+os.umask(0)
+</PRE>
+<P></P>
+<P>
+然后, 你应该重定向 <I>stdout/stderr</I> 文件, 而不能只是简单地关闭它们(如果你的程序需要 <CODE>stdout</CODE> 
+或 <CODE>stderr</CODE> 写入内容的时候, 可能会出现意想不到的问题). 
+</P>
+<PRE>
+class NullDevice:
+    def write(self, s):
+        pass
+sys.stdin.close()
+sys.stdout = NullDevice()
+sys.stderr = NullDevice()
+</PRE>
+<P></P>
+<P>
+换言之, 由于 Python 的 <CODE>print</CODE> 和 C 中的 <CODE>printf/fprintf</CODE> 在设备(device)
+没有连接后不会关闭你的程序, 此时守护进程中的 <CODE>sys.stdout.write()</CODE> 会抛出一个 <I>IOError</I> 异常, 而你的程序依然在后台运行的很好.... 
+</P>
+<P>
+另外, 先前例子中的 <CODE>_exit</CODE> 函数会终止当前进程. 而 <CODE>sys.exit</CODE> 不同, 如果调用者(caller)
+捕获了 <I>SystemExit</I> 异常, 程序仍然会继续执行. 如 <A HREF="#eg-1-41">Example 1-41</A> 所示.
+</P>
+<A NAME="eg-1-41"></A>
+<H4><A href='#toptop'> 1.4.5.2. Example 1-41. 使用 os 模块终止当前进程 </A></H4>
+<PRE>
+File: os-example-9.py
+
+import os
+import sys
+
+try:
+    sys.exit(1)
+except SystemExit, value:
+    print "caught exit(%s)" % value
+
+try:
+    os._exit(2)
+except SystemExit, value:
+    print "caught exit(%s)" % value
+
+print "bye!"
+
+*B*caught exit(1)*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc6"></A>
+<H2><A href='#toptop'> 1.5. os.path 模块 </A></H2>
+<P>
+<CODE>os.path</CODE> 模块包含了各种处理长文件名(路径名)的函数. 先导入 (import) <CODE>os</CODE> 
+模块, 然后就可以以 <CODE>os.path</CODE> 访问该模块. 
+</P>
+<H3><A href='#toptop'> 1.5.1. 处理文件名 </A></H3>
+<P>
+<CODE>os.path</CODE> 模块包含了许多与平台无关的处理长文件名的函数. 
+也就是说, 你不需要处理前后斜杠, 冒号等. 我们可以看看 <A HREF="#eg-1-42">Example 1-42</A> 中的样例代码. 
+</P>
+<A NAME="eg-1-42"></A>
+<H4><A href='#toptop'> 1.5.1.1. Example 1-42. 使用 os.path 模块处理文件名 </A></H4>
+<PRE>
+File: os-path-example-1.py
+
+import os
+
+filename = "my/little/pony"
+
+print "using", os.name, "..."
+print "split", "=&gt;", os.path.split(filename)
+print "splitext", "=&gt;", os.path.splitext(filename)
+print "dirname", "=&gt;", os.path.dirname(filename)
+print "basename", "=&gt;", os.path.basename(filename)
+print "join", "=&gt;", os.path.join(os.path.dirname(filename),
+                                 os.path.basename(filename))
+
+*B*using nt ...
+split =&gt; ('my/little', 'pony')
+splitext =&gt; ('my/little/pony', '')
+dirname =&gt; my/little
+basename =&gt; pony
+join =&gt; my/little\pony*b*
+</PRE>
+<P></P>
+<P>
+注意这里的 <CODE>split</CODE> 只分割出最后一项(不带斜杠).
+</P>
+<P>
+<CODE>os.path</CODE> 模块中还有许多函数允许你简单快速地获知文件名的一些特征，如 <A HREF="#eg-1-43">Example 1-43</A> 所示。 
+</P>
+<A NAME="eg-1-43"></A>
+<H4><A href='#toptop'> 1.5.1.2. Example 1-43. 使用 os.path 模块检查文件名的特征 </A></H4>
+<PRE>
+File: os-path-example-2.py
+
+import os
+
+FILES = (
+    os.curdir,
+    "/",
+    "file",
+    "/file",
+    "samples",
+    "samples/sample.jpg",
+    "directory/file",
+    "../directory/file",
+    "/directory/file"
+    )
+
+for file in FILES:
+    print file, "=&gt;",
+    if os.path.exists(file):
+        print "EXISTS",
+    if os.path.isabs(file):
+        print "ISABS",
+    if os.path.isdir(file):
+        print "ISDIR",
+    if os.path.isfile(file):
+        print "ISFILE",
+    if os.path.islink(file):
+        print "ISLINK",
+    if os.path.ismount(file):
+        print "ISMOUNT",
+    print
+
+*B*. =&gt; EXISTS ISDIR
+/ =&gt; EXISTS ISABS ISDIR ISMOUNT
+file =&gt;
+/file =&gt; ISABS
+samples =&gt; EXISTS ISDIR
+samples/sample.jpg =&gt; EXISTS ISFILE
+directory/file =&gt;
+../directory/file =&gt;
+/directory/file =&gt; ISABS*b*
+</PRE>
+<P></P>
+<P>
+<CODE>expanduser</CODE> 函数以与大部分Unix shell相同的方式处理用户名快捷符号(~, 
+不过在 Windows 下工作不正常), 如 <A HREF="#eg-1-44">Example 1-44</A> 所示. 
+</P>
+<A NAME="eg-1-44"></A>
+<H4><A href='#toptop'> 1.5.1.3. Example 1-44. 使用 os.path 模块将用户名插入到文件名 </A></H4>
+<PRE>
+File: os-path-expanduser-example-1.py
+
+import os
+
+print os.path.expanduser("~/.pythonrc")
+
+# /home/effbot/.pythonrc
+</PRE>
+<P></P>
+<P>
+<CODE>expandvars</CODE> 函数将文件名中的环境变量替换为对应值, 如 <A HREF="#eg-1-45">Example 1-45</A> 所示. 
+</P>
+<A NAME="eg-1-45"></A>
+<H4><A href='#toptop'> 1.5.1.4. Example 1-45. 使用 os.path 替换文件名中的环境变量 </A></H4>
+<PRE>
+File: os-path-expandvars-example-1.py
+
+import os
+
+os.environ["USER"] = "user"
+
+print os.path.expandvars("/home/$USER/config")
+print os.path.expandvars("$USER/folders")
+
+*B*/home/user/config
+user/folders*b*
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.5.2. 搜索文件系统 </A></H3>
+<P>
+<CODE>walk</CODE> 函数会帮你找出一个目录树下的所有文件 (如 <A HREF="#eg-1-46">Example 1-46</A>
+ 所示). 它的参数依次是目录名, 回调函数, 以及传递给回调函数的数据对象. 
+</P>
+<A NAME="eg-1-46"></A>
+<H4><A href='#toptop'> 1.5.2.1. Example 1-46. 使用 os.path 搜索文件系统 </A></H4>
+<PRE>
+File: os-path-walk-example-1.py
+
+import os
+
+def callback(arg, directory, files):
+    for file in files:
+        print os.path.join(directory, file), repr(arg)
+
+os.path.walk(".", callback, "secret message")
+
+*B*./aifc-example-1.py 'secret message'
+./anydbm-example-1.py 'secret message'
+./array-example-1.py 'secret message'
+...
+./samples 'secret message'
+./samples/sample.jpg 'secret message'
+./samples/sample.txt 'secret message'
+./samples/sample.zip 'secret message'
+./samples/articles 'secret message'
+./samples/articles/article-1.txt 'secret message'
+./samples/articles/article-2.txt 'secret message'
+...*b*
+</PRE>
+<P></P>
+<P>
+<CODE>walk</CODE> 函数的接口多少有点晦涩 (也许只是对我个人而言, 我总是记不住参数的顺序). 
+<A HREF="#eg-1-47">Example 1-47</A> 中展示的 <CODE>index</CODE> 函数会返回一个文件名列表, 
+你可以直接使用 <CODE>for-in</CODE> 循环处理文件. 
+</P>
+<A NAME="eg-1-47"></A>
+<H4><A href='#toptop'> 1.5.2.2. Example 1-47. 使用 os.listdir 搜索文件系统 </A></H4>
+<PRE>
+File: os-path-walk-example-2.py
+
+import os
+
+def index(directory):
+    # like os.listdir, but traverses directory trees
+    stack = [directory]
+    files = []
+    while stack:
+        directory = stack.pop()
+        for file in os.listdir(directory):
+            fullname = os.path.join(directory, file)
+            files.append(fullname)
+            if os.path.isdir(fullname) and not os.path.islink(fullname):
+                stack.append(fullname)
+    return files
+
+for file in index("."):
+    print file
+
+*B*.\aifc-example-1.py
+.\anydbm-example-1.py
+.\array-example-1.py
+...*b*
+</PRE>
+<P></P>
+<P>
+如果你不想列出所有的文件 (基于性能或者是内存的考虑) , <A HREF="#eg-1-48">Example 1-48</A> 展示了另一种方法. 
+这里 <I>DirectoryWalker</I> 类的行为与序列对象相似, 一次返回一个文件. (generator?) 
+</P>
+<A NAME="eg-1-48"></A>
+<H4><A href='#toptop'> 1.5.2.3. Example 1-48. 使用 DirectoryWalker 搜索文件系统 </A></H4>
+<PRE>
+File: os-path-walk-example-3.py
+
+import os
+
+class DirectoryWalker:
+    # a forward iterator that traverses a directory tree
+
+    def _ _init_ _(self, directory):
+        self.stack = [directory]
+        self.files = []
+        self.index = 0
+
+    def _ _getitem_ _(self, index):
+        while 1:
+            try:
+                file = self.files[self.index]
+                self.index = self.index + 1
+            except IndexError:
+                # pop next directory from stack
+                self.directory = self.stack.pop()
+                self.files = os.listdir(self.directory)
+                self.index = 0
+            else:
+                # got a filename
+                fullname = os.path.join(self.directory, file)
+                if os.path.isdir(fullname) and not os.path.islink(fullname):
+                    self.stack.append(fullname)
+                return fullname
+
+for file in DirectoryWalker("."):
+    print file
+
+*B*.\aifc-example-1.py
+.\anydbm-example-1.py
+.\array-example-1.py
+...*b*
+</PRE>
+<P></P>
+<P>
+注意 <I>DirectoryWalker</I> 类并不检查传递给 <CODE>_ _getitem_ _</CODE> 方法的索引值. 
+这意味着如果你越界访问序列成员(索引数字过大)的话, 这个类将不能正常工作. 
+</P>
+<P>
+最后, 如果你需要处理文件大小和时间戳, <A HREF="#eg-1-49">Example 1-49</A> 给出了一个类, 
+它返回文件名和它的 <CODE>os.stat</CODE> 属性(一个元组). 这个版本在每个文件上都能节省一次或两次 
+<CODE>stat</CODE> 调用( <CODE>os.path.isdir</CODE> 和 <CODE>os.path.islink</CODE> 内部都使用了 <CODE>stat</CODE> ), 
+并且在一些平台上运行很快. 
+</P>
+<A NAME="eg-1-49"></A>
+<H4><A href='#toptop'> 1.5.2.4. Example 1-49. 使用 DirectoryStatWalker 搜索文件系统 </A></H4>
+<PRE>
+File: os-path-walk-example-4.py
+
+import os, stat
+
+class DirectoryStatWalker:
+    # a forward iterator that traverses a directory tree, and
+    # returns the filename and additional file information
+
+    def _ _init_ _(self, directory):
+        self.stack = [directory]
+        self.files = []
+        self.index = 0
+
+    def _ _getitem_ _(self, index):
+        while 1:
+            try:
+                file = self.files[self.index]
+                self.index = self.index + 1
+            except IndexError:
+                # pop next directory from stack
+                self.directory = self.stack.pop()
+                self.files = os.listdir(self.directory)
+                self.index = 0
+            else:
+                # got a filename
+                fullname = os.path.join(self.directory, file)
+                st = os.stat(fullname)
+                mode = st[stat.ST_MODE]
+                if stat.S_ISDIR(mode) and not stat.S_ISLNK(mode):
+                    self.stack.append(fullname)
+                return fullname, st
+
+for file, st in DirectoryStatWalker("."):
+    print file, st[stat.ST_SIZE]
+
+*B*.\aifc-example-1.py 336
+.\anydbm-example-1.py 244
+.\array-example-1.py 526*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc7"></A>
+<H2><A href='#toptop'> 1.6. stat 模块 </A></H2>
+<P>
+<A HREF="#eg-1-50">Example 1-50</A> 展示了 <CODE>stat</CODE> 模块的基本用法, 
+这个模块包含了一些 <CODE>os.stat</CODE> 函数中可用的常量和测试函数.
+</P>
+<A NAME="eg-1-50"></A>
+<H4><A href='#toptop'> 1.6.0.1. Example 1-50. Using the stat Module </A></H4>
+<PRE>
+File: stat-example-1.py
+
+import stat
+import os, time
+
+st = os.stat("samples/sample.txt")
+
+print "mode", "=&gt;", oct(stat.S_IMODE(st[stat.ST_MODE]))
+
+print "type", "=&gt;",
+if stat.S_ISDIR(st[stat.ST_MODE]):
+    print "DIRECTORY",
+if stat.S_ISREG(st[stat.ST_MODE]):
+    print "REGULAR",
+if stat.S_ISLNK(st[stat.ST_MODE]):
+    print "LINK",
+print
+
+print "size", "=&gt;", st[stat.ST_SIZE]
+
+print "last accessed", "=&gt;", time.ctime(st[stat.ST_ATIME])
+print "last modified", "=&gt;", time.ctime(st[stat.ST_MTIME])
+print "inode changed", "=&gt;", time.ctime(st[stat.ST_CTIME])
+
+*B*mode =&gt; 0664
+type =&gt; REGULAR
+size =&gt; 305
+last accessed =&gt; Sun Oct 10 22:12:30 1999
+last modified =&gt; Sun Oct 10 18:39:37 1999
+inode changed =&gt; Sun Oct 10 15:26:38 1999*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc8"></A>
+<H2><A href='#toptop'> 1.7. string 模块 </A></H2>
+<P>
+<CODE>string</CODE> 模块提供了一些用于处理字符串类型的函数, 
+如 <A HREF="#eg-1-51">Example 1-51</A> 所示.
+</P>
+<A NAME="eg-1-51"></A>
+<H4><A href='#toptop'> 1.7.0.1. Example 1-51. 使用 string 模块 </A></H4>
+<PRE>
+File: string-example-1.py
+
+import string
+
+text = "Monty Python's Flying Circus"
+
+print "upper", "=&gt;", string.upper(text)
+print "lower", "=&gt;", string.lower(text)
+print "split", "=&gt;", string.split(text)
+print "join", "=&gt;", string.join(string.split(text), "+")
+print "replace", "=&gt;", string.replace(text, "Python", "Java")
+print "find", "=&gt;", string.find(text, "Python"), string.find(text, "Java")
+print "count", "=&gt;", string.count(text, "n")
+
+*B*upper =&gt; MONTY PYTHON'S FLYING CIRCUS
+lower =&gt; monty python's flying circus
+split =&gt; ['Monty', "Python's", 'Flying', 'Circus']
+join =&gt; Monty+Python's+Flying+Circus
+replace =&gt; Monty Java's Flying Circus
+find =&gt; 6 -1
+count =&gt; 3*b*
+</PRE>
+<P></P>
+<P>
+在 Python 1.5.2 以及更早版本中, <CODE>string</CODE> 使用 <CODE>strop</CODE> 中的函数来实现模块功能. 
+</P>
+<P>
+在 Python1.6 和后继版本，更多的字符串操作都可以作为字符串方法来访问, 
+如 <A HREF="#eg-1-52">Example 1-52</A> 所示, <CODE>string</CODE> 模块中的许多函数只是对相对应字符串方法的封装.
+</P>
+<A NAME="eg-1-52"></A>
+<H4><A href='#toptop'> 1.7.0.2. Example 1-52. 使用字符串方法替代 string 模块函数 </A></H4>
+<PRE>
+File: string-example-2.py
+
+text = "Monty Python's Flying Circus"
+
+print "upper", "=&gt;", text.upper()
+print "lower", "=&gt;", text.lower()
+print "split", "=&gt;", text.split()
+print "join", "=&gt;", "+".join(text.split())
+print "replace", "=&gt;", text.replace("Python", "Perl")
+print "find", "=&gt;", text.find("Python"), text.find("Perl")
+print "count", "=&gt;", text.count("n")
+
+*B*upper =&gt; MONTY PYTHON'S FLYING CIRCUS
+lower =&gt; monty python's flying circus
+split =&gt; ['Monty', "Python's", 'Flying', 'Circus']
+join =&gt; Monty+Python's+Flying+Circus
+replace =&gt; Monty Perl's Flying Circus
+find =&gt; 6 -1
+count =&gt; 3*b*
+</PRE>
+<P></P>
+<P>
+为了增强模块对字符的处理能力, 除了字符串方法, <CODE>string</CODE> 
+模块还包含了类型转换函数用于把字符串转换为其他类型, (如 <A HREF="#eg-1-53">Example 1-53</A> 所示).
+</P>
+<A NAME="eg-1-53"></A>
+<H4><A href='#toptop'> 1.7.0.3. Example 1-53. 使用 string 模块将字符串转为数字 </A></H4>
+<PRE>
+File: string-example-3.py
+
+import string
+
+print int("4711"),
+print string.atoi("4711"),
+print string.atoi("11147", 8), # octal 八进制
+print string.atoi("1267", 16), # hexadecimal 十六进制
+print string.atoi("3mv", 36) # whatever...
+
+print string.atoi("4711", 0),
+print string.atoi("04711", 0),
+print string.atoi("0x4711", 0)
+
+print float("4711"),
+print string.atof("1"),
+print string.atof("1.23e5")
+
+*B*4711 4711 4711 4711 4711
+4711 2505 18193
+4711.0 1.0 123000.0*b*
+</PRE>
+<P></P>
+<P>
+大多数情况下 (特别是当你使用的是1.6及更高版本时) ，你可以使用 <CODE>int</CODE> 和 <CODE>float</CODE> 
+函数代替 <CODE>string</CODE> 模块中对应的函数。 
+</P>
+<P>
+<CODE>atoi</CODE> 函数可以接受可选的第二个参数, 指定数基(number base). 
+如果数基为 0, 那么函数将检查字符串的前几个字符来决定使用的数基: 
+如果为 "0x," 数基将为 16 (十六进制), 如果为 "0," 则数基为 8 (八进制). 
+默认数基值为 10 (十进制), 当你未传递参数时就使用这个值.
+</P>
+<P>
+在 1.6 及以后版本中, <CODE>int</CODE> 函数和 <CODE>atoi</CODE> 一样可以接受第二个参数. 
+与字符串版本函数不一样的是 , <CODE>int</CODE> 和 <CODE>float</CODE> 可以接受 Unicode 字符串对象.
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc9"></A>
+<H2><A href='#toptop'> 1.8. re 模块 </A></H2>
+	<BLOCKQUOTE>
+	"Some people, when confronted with a problem, think 'I know, I'll use regular expressions.' Now they have two problems."
+	</BLOCKQUOTE>
+<P></P>
+	<BLOCKQUOTE>
+	- Jamie Zawinski, on comp.lang.emacs
+	</BLOCKQUOTE>
+<P></P>
+<P>
+<CODE>re</CODE> 模块提供了一系列功能强大的正则表达式 (regular expression) 工具, 
+它们允许你快速检查给定字符串是否与给定的模式匹配 (使用 <CODE>match</CODE> 函数), 
+或者包含这个模式 (使用 <CODE>search</CODE> 函数). 正则表达式是以紧凑(也很神秘)的语法写出的字符串模式. 
+</P>
+<P>
+<CODE>match</CODE> 尝试从字符串的起始匹配一个模式, 如 <A HREF="#eg-1-54">Example 1-54</A> 所示. 
+如果模式匹配了某些内容 (包括空字符串, 如果模式允许的话) , 
+它将返回一个匹配对象. 使用它的 <CODE>group</CODE> 方法可以找出匹配的内容. 
+</P>
+<A NAME="eg-1-54"></A>
+<H4><A href='#toptop'> 1.8.0.1. Example 1-54. 使用 re 模块来匹配字符串 </A></H4>
+<PRE>
+File: re-example-1.py
+
+import re
+
+text = "The Attila the Hun Show"
+
+# a single character 单个字符
+m = re.match(".", text)
+if m: print repr("."), "=&gt;", repr(m.group(0))
+
+# any string of characters 任何字符串
+m = re.match(".*", text)
+if m: print repr(".*"), "=&gt;", repr(m.group(0))
+
+# a string of letters (at least one) 只包含字母的字符串(至少一个)
+m = re.match("\w+", text)
+if m: print repr("\w+"), "=&gt;", repr(m.group(0))
+
+# a string of digits 只包含数字的字符串
+m = re.match("\d+", text)
+if m: print repr("\d+"), "=&gt;", repr(m.group(0))
+
+*B* '.' =&gt; 'T'
+'.*' =&gt; 'The Attila the Hun Show'
+'\\w+' =&gt; 'The'*b*
+</PRE>
+<P></P>
+<P>
+可以使用圆括号在模式中标记区域. 找到匹配后, <CODE>group</CODE> 方法可以抽取这些区域的内容，
+如 <A HREF="#eg-1-55">Example 1-55</A> 所示. <CODE>group(1)</CODE> 会返回第一组的内容, <CODE>group(2)</CODE> 
+返回第二组的内容, 这样... 如果你传递多个组数给 <CODE>group</CODE> 函数, 它会返回一个元组. 
+</P>
+<A NAME="eg-1-55"></A>
+<H4><A href='#toptop'> 1.8.0.2. Example 1-55. 使用 re 模块抽出匹配的子字符串 </A></H4>
+<PRE>
+File: re-example-2.py
+
+import re
+
+text ="10/15/99"
+
+m = re.match("(\d{2})/(\d{2})/(\d{2,4})", text)
+if m:
+    print m.group(1, 2, 3)
+
+*B*('10', '15', '99')*b*
+</PRE>
+<P></P>
+<P>
+<CODE>search</CODE> 函数会在字符串内查找模式匹配, 如 <A HREF="#eg-1-56">Example 1-56</A> 所示. 
+它在所有可能的字符位置尝试匹配模式, 从最左边开始, 一旦找到匹配就返回一个匹配对象. 
+如果没有找到相应的匹配, 就返回 <I>None</I> . 
+</P>
+<A NAME="eg-1-56"></A>
+<H4><A href='#toptop'> 1.8.0.3. Example 1-56. 使用 re 模块搜索子字符串 </A></H4>
+<PRE>
+File: re-example-3.py
+
+import re
+
+text = "Example 3: There is 1 date 10/25/95 in here!"
+
+m = re.search("(\d{1,2})/(\d{1,2})/(\d{2,4})", text)
+
+print m.group(1), m.group(2), m.group(3)
+
+month, day, year = m.group(1, 2, 3)
+print month, day, year
+
+date = m.group(0)
+print date
+
+*B*10 25 95
+10 25 95
+10/25/95*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-1-57">Example 1-57</A> 中展示了 <CODE>sub</CODE> 函数, 它可以使用另个字符串替代匹配模式.
+</P>
+<A NAME="eg-1-57"></A>
+<H4><A href='#toptop'> 1.8.0.4. Example 1-57. 使用 re 模块替换子字符串 </A></H4>
+<PRE>
+File: re-example-4.py
+
+import re
+
+text = "you're no fun anymore..."
+
+# literal replace (string.replace is faster)
+# 文字替换 (string.replace 速度更快)
+print re.sub("fun", "entertaining", text)
+
+# collapse all non-letter sequences to a single dash 
+# 将所有非字母序列转换为一个"-"(dansh,破折号)
+print re.sub("[^\w]+", "-", text)
+
+# convert all words to beeps 
+# 将所有单词替换为 BEEP
+print re.sub("\S+", "-BEEP-", text)
+
+*B*you're no entertaining anymore...
+you-re-no-fun-anymore-
+-BEEP- -BEEP- -BEEP- -BEEP-*b*
+</PRE>
+<P></P>
+<P>
+你也可以通过回调 (callback) 函数使用 <CODE>sub</CODE> 来替换指定模式. 
+<A HREF="#eg-1-58">Example 1-58</A> 展示了如何预编译模式. 
+</P>
+<A NAME="eg-1-58"></A>
+<H4><A href='#toptop'> 1.8.0.5. Example 1-58. 使用 re 模块替换字符串(通过回调函数) </A></H4>
+<PRE>
+File: re-example-5.py
+
+import re
+import string
+
+text = "a line of text\\012another line of text\\012etc..."
+
+def octal(match):
+    # replace octal code with corresponding ASCII character
+    # 使用对应 ASCII 字符替换八进制代码
+    return chr(string.atoi(match.group(1), 8))
+
+octal_pattern = re.compile(r"\\(\d\d\d)")
+
+print text
+print octal_pattern.sub(octal, text)
+
+*B*a line of text\012another line of text\012etc...
+a line of text
+another line of text
+etc...*b*
+</PRE>
+<P></P>
+<P>
+如果你不编译, <CODE>re</CODE> 模块会为你缓存一个编译后版本, 所有的小脚本中, 
+通常不需要编译正则表达式. Python1.5.2 中, 缓存中可以容纳 20 个匹配模式, 而在 2.0 中, 
+缓存则可以容纳 100 个匹配模式. 
+</P>
+<P>
+最后, <A HREF="#eg-1-59">Example 1-59</A> 用一个模式列表匹配一个字符串. 这些模式将会组合为一个模式, 并预编译以节省时间. 
+</P>
+<A NAME="eg-1-59"></A>
+<H4><A href='#toptop'> 1.8.0.6. Example 1-59. 使用 re 模块匹配多个模式中的一个 </A></H4>
+<PRE>
+File: re-example-6.py
+
+import re, string
+
+def combined_pattern(patterns):
+    p = re.compile(
+        string.join(map(lambda x: "("+x+")", patterns), "|")
+        )
+    def fixup(v, m=p.match, r=range(0,len(patterns))):
+        try:
+            regs = m(v).regs
+        except AttributeError:
+            return None # no match, so m.regs will fail
+        else:
+            for i in r:
+                if regs[i+1] != (-1, -1):
+                    return i
+    return fixup
+
+#
+# try it out!
+
+patterns = [
+    r"\d+",
+    r"abc\d{2,4}",
+    r"p\w+"
+]
+
+p = combined_pattern(patterns)
+
+print p("129391")
+print p("abc800")
+print p("abc1600")
+print p("python")
+print p("perl")
+print p("tcl")
+
+*B*0
+1
+1
+2
+2
+None*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc10"></A>
+<H2><A href='#toptop'> 1.9. math 模块 </A></H2>
+<P>
+<CODE>math</CODE> 模块实现了许多对浮点数的数学运算函数. 这些函数一般是对平台 C 
+库中同名函数的简单封装, 所以一般情况下, 不同平台下计算的结果可能稍微地有所不同, 
+有时候甚至有很大出入. <A HREF="#eg-1-60">Example 1-60</A> 展示了如何使用 <CODE>math</CODE> 模块.
+</P>
+<A NAME="eg-1-60"></A>
+<H4><A href='#toptop'> 1.9.0.1. Example 1-60. 使用 math 模块 </A></H4>
+<PRE>
+File: math-example-1.py
+
+import math
+
+print "e", "=&gt;", math.e
+print "pi", "=&gt;", math.pi
+print "hypot", "=&gt;", math.hypot(3.0, 4.0)
+
+# and many others...
+
+*B*e =&gt; 2.71828182846
+pi =&gt; 3.14159265359
+hypot =&gt; 5.0*b*
+</PRE>
+<P></P>
+<P>
+完整函数列表请参阅 <I>Python Library Reference</I> .
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc11"></A>
+<H2><A href='#toptop'> 1.10. cmath 模块 </A></H2>
+<P>
+<A HREF="#eg-1-61">Example 1-61</A> 所展示的 <CODE>cmath</CODE> 模块包含了一些用于复数运算的函数.
+</P>
+<A NAME="eg-1-61"></A>
+<H4><A href='#toptop'> 1.10.0.1. Example 1-61. 使用 cmath 模块 </A></H4>
+<PRE>
+File: cmath-example-1.py
+
+import cmath
+
+print "pi", "=&gt;", cmath.pi
+print "sqrt(-1)", "=&gt;", cmath.sqrt(-1)
+
+pi =&gt; 3.14159265359
+sqrt(-1) =&gt; 1j
+</PRE>
+<P></P>
+<P>
+完整函数列表请参阅 <I>Python Library Reference</I> .
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc12"></A>
+<H2><A href='#toptop'> 1.11. operator 模块 </A></H2>
+<P>
+<CODE>operator</CODE> 模块为 Python 提供了一个 "功能性" 的标准操作符接口. 当使用 <CODE>map</CODE> 以及 
+<CODE>filter</CODE> 一类的函数的时候, <CODE>operator</CODE> 模块中的函数可以替换一些 <CODE>lambda</CODE> 函式. 
+而且这些函数在一些喜欢写晦涩代码的程序员中很流行. <A HREF="#eg-1-62">Example 1-62</A> 展示了 
+<CODE>operator</CODE> 模块的一般用法.
+</P>
+<A NAME="eg-1-62"></A>
+<H4><A href='#toptop'> 1.11.0.1. Example 1-62. 使用 operator 模块 </A></H4>
+<PRE>
+File: operator-example-1.py
+
+import operator
+
+sequence = 1, 2, 4
+
+print "add", "=&gt;", reduce(operator.add, sequence)
+print "sub", "=&gt;", reduce(operator.sub, sequence)
+print "mul", "=&gt;", reduce(operator.mul, sequence)
+print "concat", "=&gt;", operator.concat("spam", "egg")
+print "repeat", "=&gt;", operator.repeat("spam", 5)
+print "getitem", "=&gt;", operator.getitem(sequence, 2)
+print "indexOf", "=&gt;", operator.indexOf(sequence, 2)
+print "sequenceIncludes", "=&gt;", operator.sequenceIncludes(sequence, 3)
+
+*B*add =&gt; 7
+sub =&gt; -5
+mul =&gt; 8
+concat =&gt; spamegg
+repeat =&gt; spamspamspamspamspam
+
+getitem =&gt; 4
+indexOf =&gt; 1
+sequenceIncludes =&gt; 0*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-1-63">Example 1-63</A> 展示了一些可以用于检查对象类型的 <CODE>operator</CODE> 函数.
+</P>
+<A NAME="eg-1-63"></A>
+<H4><A href='#toptop'> 1.11.0.2. Example 1-63. 使用 operator 模块检查类型 </A></H4>
+<PRE>
+File: operator-example-2.py
+
+import operator
+import UserList
+
+def dump(data):
+    print type(data), "=&gt;",
+    if operator.isCallable(data):
+        print "CALLABLE",
+    if operator.isMappingType(data):
+        print "MAPPING",
+    if operator.isNumberType(data):
+        print "NUMBER",
+    if operator.isSequenceType(data):
+        print "SEQUENCE",
+    print
+        
+dump(0)
+dump("string")
+dump("string"[0])
+dump([1, 2, 3])
+dump((1, 2, 3))
+dump({"a": 1})
+dump(len) # function 函数
+dump(UserList) # module 模块
+dump(UserList.UserList) # class 类
+dump(UserList.UserList()) # instance 实例
+
+*B*&lt;type 'int'&gt; =&gt; NUMBER
+&lt;type 'string'&gt; =&gt; SEQUENCE
+&lt;type 'string'&gt; =&gt; SEQUENCE
+&lt;type 'list'&gt; =&gt; SEQUENCE
+&lt;type 'tuple'&gt; =&gt; SEQUENCE
+&lt;type 'dictionary'&gt; =&gt; MAPPING
+&lt;type 'builtin_function_or_method'&gt; =&gt; CALLABLE
+&lt;type 'module'&gt; =&gt;
+&lt;type 'class'&gt; =&gt; CALLABLE
+&lt;type 'instance'&gt; =&gt; MAPPING NUMBER SEQUENCE*b*
+</PRE>
+<P></P>
+<P>
+这里需要注意 <CODE>operator</CODE> 模块使用非常规的方法处理对象实例. 所以使用 
+<CODE>isNumberType</CODE> , <CODE>isMappingType</CODE> , 以及 <CODE>isSequenceType</CODE> 函数的时候要小心, 
+这很容易降低代码的扩展性.
+</P>
+<P>
+同样需要注意的是一个字符串序列成员 (单个字符) 也是序列. 所以当在递归函数使用 isSequenceType 来截断对象树的时候, 别把普通字符串作为参数(或者是任何包含字符串的序列对象).
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc13"></A>
+<H2><A href='#toptop'> 1.12. copy 模块 </A></H2>
+<P>
+<CODE>copy</CODE> 模块包含两个函数, 用来拷贝对象, 如 <A HREF="#eg-1-64">Example 1-64</A> 所示. 
+</P>
+<P>
+<CODE>copy(object) =&gt; object</CODE> 创建给定对象的 "浅/浅层(shallow)" 拷贝(copy). 这里 
+"浅/浅层(shallow)" 的意思是复制对象本身, 但当对象是一个容器 (container) 时, 
+它的成员仍然指向原来的成员对象. 
+</P>
+<A NAME="eg-1-64"></A>
+<H4><A href='#toptop'> 1.12.0.1. Example 1-64. 使用 copy 模块复制对象 </A></H4>
+<PRE>
+File: copy-example-1.py
+
+import copy
+
+a = [[1],[2],[3]]
+b = copy.copy(a)
+
+print "before", "=&gt;"
+print a
+print b
+
+# modify original
+a[0][0] = 0
+a[1] = None
+
+print "after", "=&gt;"
+print a
+print b
+
+*B*before =&gt;
+[[1], [2], [3]]
+[[1], [2], [3]]
+after =&gt;
+[[0], None, [3]]
+[[0], [2], [3]]*b*
+</PRE>
+<P></P>
+<P>
+你也可以使用[:]语句 (完整切片) 来对列表进行浅层复制, 也可以使用 <CODE>copy</CODE> 方法复制字典. 
+</P>
+<P>
+相反地, <CODE>deepcopy(object) =&gt; object</CODE> 创建一个对象的深层拷贝(deepcopy), 
+如 <A HREF="#eg-1-65">Example 1-65</A> 所示, 当对象为一个容器时, 所有的成员都被递归地复制了。 
+</P>
+<A NAME="eg-1-65"></A>
+<H4><A href='#toptop'> 1.12.0.2. Example 1-65. 使用 copy 模块复制集合(Collections) </A></H4>
+<PRE>
+File: copy-example-2.py
+
+import copy
+
+a = [[1],[2],[3]]
+b = copy.deepcopy(a)
+
+print "before", "=&gt;"
+print a
+print b
+
+# modify original
+a[0][0] = 0
+a[1] = None
+
+print "after", "=&gt;"
+print a
+print b
+
+*B*before =&gt;
+[[1], [2], [3]]
+[[1], [2], [3]]
+after =&gt;
+[[0], None, [3]]
+[[1], [2], [3]]*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc14"></A>
+<H2><A href='#toptop'> 1.13. sys 模块 </A></H2>
+<P>
+<CODE>sys</CODE> 模块提供了许多函数和变量来处理 Python 运行时环境的不同部分.
+</P>
+<H3><A href='#toptop'> 1.13.1. 处理命令行参数 </A></H3>
+<P>
+在解释器启动后, <CODE>argv</CODE> 列表包含了传递给脚本的所有参数, 如 <A HREF="#eg-1-66">Example 1-66</A> 所示. 
+列表的第一个元素为脚本自身的名称.
+</P>
+<A NAME="eg-1-66"></A>
+<H4><A href='#toptop'> 1.13.1.1. Example 1-66. 使用sys模块获得脚本的参数 </A></H4>
+<PRE>
+File: sys-argv-example-1.py
+
+import sys
+
+print "script name is", sys.argv[0]
+
+if len(sys.argv) &gt; 1:
+    print "there are", len(sys.argv)-1, "arguments:"
+    for arg in sys.argv[1:]:
+        print arg
+else:
+    print "there are no arguments!"
+
+*B*script name is sys-argv-example-1.py
+there are no arguments!*b*
+</PRE>
+<P></P>
+<P>
+如果是从标准输入读入脚本 (比如 "<CODE>python &lt; sys-argv-example-1.py</CODE>"), 
+脚本的名称将被设置为空串. 如果把脚本作为字符串传递给python (使用 <CODE>-c</CODE> 选项), 
+脚本名会被设置为 "-c".
+</P>
+<H3><A href='#toptop'> 1.13.2. 处理模块 </A></H3>
+<P>
+<CODE>path</CODE> 列表是一个由目录名构成的列表, Python 从中查找扩展模块( Python 源模块, 编译模块,或者二进制扩展). 
+启动 Python 时,这个列表从根据内建规则, PYTHONPATH 环境变量的内容, 以及注册表( Windows 系统)等进行初始化. 
+由于它只是一个普通的列表, 你可以在程序中对它进行操作, 如 <A HREF="#eg-1-67">Example 1-67</A> 所示.
+</P>
+<A NAME="eg-1-67"></A>
+<H4><A href='#toptop'> 1.13.2.1. Example 1-67. 使用sys模块操作模块搜索路径 </A></H4>
+<PRE>
+File: sys-path-example-1.py
+
+import sys
+
+print "path has", len(sys.path), "members"
+
+# add the sample directory to the path
+sys.path.insert(0, "samples")
+import sample
+
+# nuke the path
+sys.path = []
+import random # oops!
+
+*B*path has 7 members
+this is the sample module!
+Traceback (innermost last):
+  File "sys-path-example-1.py", line 11, in ?
+    import random # oops!
+ImportError: No module named random*b*
+</PRE>
+<P></P>
+<P>
+<CODE>builtin_module_names</CODE> 列表包含 Python 解释器中所有内建模块的名称, <A HREF="#eg-1-68">Example 1-68</A> 
+ 给出了它的样例代码.
+</P>
+<A NAME="eg-1-68"></A>
+<H4><A href='#toptop'> 1.13.2.2. Example 1-68. 使用sys模块查找内建模块 </A></H4>
+<PRE>
+File: sys-builtin-module-names-example-1.py
+
+import sys
+
+def dump(module):
+    print module, "=&gt;",
+    if module in sys.builtin_module_names:
+        print "&lt;BUILTIN&gt;"
+    else:
+        module = _ _import_ _(module)
+        print module._ _file_ _
+
+dump("os")
+dump("sys")
+dump("string")
+dump("strop")
+dump("zlib")
+
+*B*os =&gt; C:\python\lib\os.pyc
+sys =&gt; &lt;BUILTIN&gt;
+string =&gt; C:\python\lib\string.pyc
+strop =&gt; &lt;BUILTIN&gt;
+zlib =&gt; C:\python\zlib.pyd*b*
+</PRE>
+<P></P>
+<P>
+<CODE>modules</CODE> 字典包含所有加载的模块. <CODE>import</CODE> 语句在从磁盘导入内容之前会先检查这个字典.
+</P>
+<P>
+正如你在 <A HREF="#eg-1-69">Example 1-69</A> 中所见到的, Python 在处理你的脚本之前就已经导入了很多模块.
+</P>
+<A NAME="eg-1-69"></A>
+<H4><A href='#toptop'> 1.13.2.3. Example 1-69. 使用sys模块查找已导入的模块 </A></H4>
+<PRE>
+File: sys-modules-example-1.py
+
+import sys
+
+print sys.modules.keys()
+
+*B*['os.path', 'os', 'exceptions', '_ _main_ _', 'ntpath', 'strop', 'nt',
+'sys', '_ _builtin_ _', 'site', 'signal', 'UserDict', 'string', 'stat']*b*
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.13.3. 处理引用记数 </A></H3>
+<P>
+<CODE>getrefcount</CODE> 函数 (如 <A HREF="#eg-1-70">Example 1-70</A> 所示) 返回给定对象的引用记数 - 
+也就是这个对象使用次数. Python 会跟踪这个值, 当它减少为0的时候, 就销毁这个对象.
+</P>
+<A NAME="eg-1-70"></A>
+<H4><A href='#toptop'> 1.13.3.1. Example 1-70. 使用sys模块获得引用记数 </A></H4>
+<PRE>
+File: sys-getrefcount-example-1.py
+
+import sys
+
+variable = 1234
+
+print sys.getrefcount(0)
+print sys.getrefcount(variable)
+print sys.getrefcount(None)
+
+*B*50
+3
+192*b*
+</PRE>
+<P></P>
+<P>
+注意这个值总是比实际的数量大, 因为该函数本身在确定这个值的时候依赖这个对象.
+</P>
+<P>
+== 检查主机平台===
+</P>
+<P>
+<A HREF="#eg-1-71">Example 1-71</A> 展示了 <CODE>platform</CODE> 变量, 它包含主机平台的名称.
+</P>
+<A NAME="eg-1-71"></A>
+<H4><A href='#toptop'> 1.13.3.2. Example 1-71. 使用sys模块获得当前平台 </A></H4>
+<PRE>
+File: sys-platform-example-1.py
+
+import sys
+
+#
+# emulate "import os.path" (sort of)...
+
+if sys.platform == "win32":
+    import ntpath
+    pathmodule = ntpath
+elif sys.platform == "mac":
+    import macpath
+    pathmodule = macpath
+else:
+    # assume it's a posix platform
+    import posixpath
+    pathmodule = posixpath
+
+print pathmodule
+</PRE>
+<P></P>
+<P>
+典型的平台有Windows 9X/NT(显示为 <CODE>win32</CODE> ), 以及 Macintosh(显示为 <CODE>mac</CODE> ) . 
+对于 Unix 系统而言, platform 通常来自 "<CODE>uname -r</CODE>" 命令的输出, 例如 <CODE>irix6</CODE> , <CODE>linux2</CODE> , 
+或者 <CODE>sunos5</CODE> (Solaris).
+</P>
+<H3><A href='#toptop'> 1.13.4. 跟踪程序 </A></H3>
+<P>
+<CODE>setprofiler</CODE> 函数允许你配置一个分析函数(profiling function). 
+这个函数会在每次调用某个函数或方法时被调用(明确或隐含的), 
+或是遇到异常的时候被调用. 让我们看看 <A HREF="#eg-1-72">Example 1-72</A> 的代码.
+</P>
+<A NAME="eg-1-72"></A>
+<H4><A href='#toptop'> 1.13.4.1. Example 1-72. 使用sys模块配置分析函数 </A></H4>
+<PRE>
+File: sys-setprofiler-example-1.py
+
+import sys
+
+def test(n):
+    j = 0
+    for i in range(n):
+        j = j + i
+    return n
+
+def profiler(frame, event, arg):
+    print event, frame.f_code.co_name, frame.f_lineno, "-&gt;", arg
+
+# profiler is activated on the next call, return, or exception
+# 分析函数将在下次函数调用, 返回, 或异常时激活
+sys.setprofile(profiler)
+
+# profile this function call
+# 分析这次函数调用
+test(1)
+
+# disable profiler
+# 禁用分析函数
+sys.setprofile(None)
+
+# don't profile this call
+# 不会分析这次函数调用
+test(2)
+
+*B*call test 3 -&gt; None
+return test 7 -&gt; 1*b*
+</PRE>
+<P></P>
+<P>
+基于该函数, <CODE>profile</CODE> 模块提供了一个完整的分析器框架. 
+</P>
+<P>
+<A HREF="#eg-1-73">Example 1-73</A> 中的 <CODE>settrace</CODE> 函数与此类似, 
+但是 <CODE>trace</CODE> 函数会在解释器每执行到新的一行时被调用.
+</P>
+<A NAME="eg-1-73"></A>
+<H4><A href='#toptop'> 1.13.4.2. Example 1-73. 使用sys模块配置单步跟踪函数 </A></H4>
+<PRE>
+File: sys-settrace-example-1.py
+
+import sys
+
+def test(n):
+    j = 0
+    for i in range(n):
+        j = j + i
+    return n
+
+def tracer(frame, event, arg):
+    print event, frame.f_code.co_name, frame.f_lineno, "-&gt;", arg
+    return tracer
+
+# tracer is activated on the next call, return, or exception
+# 跟踪器将在下次函数调用, 返回, 或异常时激活
+sys.settrace(tracer)
+
+# trace this function call
+# 跟踪这次函数调用
+test(1)
+
+# disable tracing
+# 禁用跟踪器
+sys.settrace(None)
+
+# don't trace this call
+# 不会跟踪这次函数调用
+test(2)
+
+*B*call test 3 -&gt; None
+line test 3 -&gt; None
+line test 4 -&gt; None
+line test 5 -&gt; None
+line test 5 -&gt; None
+line test 6 -&gt; None
+line test 5 -&gt; None
+line test 7 -&gt; None
+return test 7 -&gt; 1*b*
+</PRE>
+<P></P>
+<P>
+基于该函数提供的跟踪功能, <CODE>pdb</CODE> 模块提供了完整的调试( debug )框架. 
+</P>
+<H3><A href='#toptop'> 1.13.5. 处理标准输出/输入 </A></H3>
+<P>
+<CODE>stdin</CODE> , <CODE>stdout</CODE> , 以及 <CODE>stderr</CODE> 变量包含与标准 I/O 流对应的流对象. 
+如果需要更好地控制输出,而 <CODE>print</CODE> 不能满足你的要求, 它们就是你所需要的. 
+你也可以 <I>替换</I> 它们, 这时候你就可以重定向输出和输入到其它设备( device ), 
+或者以非标准的方式处理它们. 如 <A HREF="#eg-1-74">Example 1-74</A> 所示.
+</P>
+<A NAME="eg-1-74"></A>
+<H4><A href='#toptop'> 1.13.5.1. Example 1-74. 使用sys重定向输出 </A></H4>
+<PRE>
+File: sys-stdout-example-1.py
+
+import sys
+import string
+
+class Redirect:
+
+    def _ _init_ _(self, stdout):
+        self.stdout = stdout
+
+    def write(self, s):
+        self.stdout.write(string.lower(s))
+
+# redirect standard output (including the print statement)
+# 重定向标准输出(包括print语句)
+old_stdout = sys.stdout
+sys.stdout = Redirect(sys.stdout)
+
+print "HEJA SVERIGE",
+print "FRISKT HUM\303\226R"
+
+# restore standard output
+# 恢复标准输出
+sys.stdout = old_stdout
+
+print "M\303\205\303\205\303\205\303\205L!"
+
+*B*heja sverige friskt hum\303\266r
+M\303\205\303\205\303\205\303\205L!*b*
+</PRE>
+<P></P>
+<P>
+要重定向输出只要创建一个对象, 并实现它的 <CODE>write</CODE> 方法.
+</P>
+<P>
+(除非 C 类型的实例外：Python 使用一个叫做 <CODE>softspace</CODE> 的整数属性来控制输出中的空白. 
+如果没有这个属性, Python 将把这个属性附加到这个对象上. 你不需要在使用 Python 对象时担心, 
+但是在重定向到一个 C 类型时, 你应该确保该类型支持 <CODE>softspace</CODE> 属性.)
+</P>
+<H3><A href='#toptop'> 1.13.6. 退出程序 </A></H3>
+<P>
+执行至主程序的末尾时,解释器会自动退出. 但是如果需要中途退出程序, 你可以调用 <CODE>sys.exit</CODE> 函数, 
+它带有一个可选的整数参数返回给调用它的程序. <A HREF="#eg-1-75">Example 1-75</A> 给出了范例.
+</P>
+<A NAME="eg-1-75"></A>
+<H4><A href='#toptop'> 1.13.6.1. Example 1-75. 使用sys模块退出程序 </A></H4>
+<PRE>
+File: sys-exit-example-1.py
+
+import sys
+
+print "hello"
+
+sys.exit(1)
+
+print "there"
+
+*B*hello*b*
+</PRE>
+<P></P>
+<P>
+注意 <CODE>sys.exit</CODE> 并不是立即退出. 而是引发一个 <I>SystemExit</I> 异常. 
+这意味着你可以在主程序中捕获对 <CODE>sys.exit</CODE> 的调用, 如 <A HREF="#eg-1-76">Example 1-76</A> 所示.
+</P>
+<A NAME="eg-1-76"></A>
+<H4><A href='#toptop'> 1.13.6.2. Example 1-76. 捕获sys.exit调用 </A></H4>
+<PRE>
+File: sys-exit-example-2.py
+
+import sys
+
+print "hello"
+
+try:
+    sys.exit(1)
+except SystemExit:
+    pass
+
+print "there"
+
+*B*hello
+there*b*
+</PRE>
+<P></P>
+<P>
+如果准备在退出前自己清理一些东西(比如删除临时文件), 你可以配置一个 
+"退出处理函数"(exit handler), 它将在程序退出的时候自动被调用. 如 <A HREF="#eg-1-77">Example 1-77</A> 所示.
+</P>
+<A NAME="eg-1-77"></A>
+<H4><A href='#toptop'> 1.13.6.3. Example 1-77. 另一种捕获sys.exit调用的方法 </A></H4>
+<PRE>
+File: sys-exitfunc-example-1.py
+
+import sys
+
+def exitfunc():
+    print "world"
+
+sys.exitfunc = exitfunc
+
+print "hello"
+sys.exit(1)
+print "there" # never printed # 不会被 print
+
+*B*hello
+world*b*
+</PRE>
+<P></P>
+<P>
+在 Python 2.0 以后, 你可以使用 <CODE>atexit</CODE> 模块来注册多个退出处理函数.
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc15"></A>
+<H2><A href='#toptop'> 1.14. atexit 模块 </A></H2>
+<P>
+(用于2.0版本及以上) <CODE>atexit</CODE> 模块允许你注册一个或多个终止函数(暂且这么叫), 
+这些函数将在解释器终止前被自动调用.
+</P>
+<P>
+调用 <CODE>register</CODE> 函数, 便可以将函数注册为终止函数, 如 <A HREF="#eg-1-78">Example 1-78</A> 所示. 
+你也可以添加更多的参数, 这些将作为 <CODE>exit</CODE> 函数的参数传递. 
+</P>
+<A NAME="eg-1-78"></A>
+<H4><A href='#toptop'> 1.14.0.1. Example 1-78. 使用 atexit 模块 </A></H4>
+<PRE>
+File: atexit-example-1.py
+
+import atexit
+
+def exit(*args):
+    print "exit", args
+
+# register two exit handler
+atexit.register(exit)
+atexit.register(exit, 1)
+atexit.register(exit, "hello", "world")
+
+*B*exit ('hello', 'world')
+exit (1,)
+exit ()*b*
+</PRE>
+<P></P>
+<P>
+该模块其实是一个对 <CODE>sys.exitfunc</CODE> 钩子( hook )的简单封装. 
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc16"></A>
+<H2><A href='#toptop'> 1.15. time 模块 </A></H2>
+<P>
+<CODE>time</CODE> 模块提供了一些处理日期和一天内时间的函数. 它是建立在 C 运行时库的简单封装. 
+</P>
+<P>
+给定的日期和时间可以被表示为浮点型(从参考时间, 通常是 1970.1.1 到现在经过的秒数. 
+即 Unix 格式), 或者一个表示时间的 struct (类元组). 
+</P>
+<H3><A href='#toptop'> 1.15.1. 获得当前时间 </A></H3>
+<P>
+<A HREF="#eg-1-79">Example 1-79</A> 展示了如何使用 <CODE>time</CODE> 模块获取当前时间.
+</P>
+<A NAME="eg-1-79"></A>
+<H4><A href='#toptop'> 1.15.1.1. Example 1-79. 使用 time 模块获取当前时间 </A></H4>
+<PRE>
+File: time-example-1.py
+
+import time
+
+now = time.time()
+
+print now, "seconds since", time.gmtime(0)[:6]
+print
+print "or in other words:"
+print "- local time:", time.localtime(now)
+print "- utc:", time.gmtime(now)
+
+*B*937758359.77 seconds since (1970, 1, 1, 0, 0, 0)
+
+or in other words:
+- local time: (1999, 9, 19, 18, 25, 59, 6, 262, 1)
+- utc: (1999, 9, 19, 16, 25, 59, 6, 262, 0)*b*
+</PRE>
+<P></P>
+<P>
+<CODE>localtime</CODE> 和 <CODE>gmtime</CODE> 返回的类元组包括年, 月, 日, 时, 分, 秒, 星期, 一年的第几天, 日光标志. 
+其中年是一个四位数(在有千年虫问题的平台上另有规定, 但还是四位数), 星期从星期一(数字 0 代表)开始, 
+1月1日是一年的第一天. 
+</P>
+<H3><A href='#toptop'> 1.15.2. 将时间值转换为字符串 </A></H3>
+<P>
+你可以使用标准的格式化字符串把时间对象转换为字符串, 不过 <CODE>time</CODE> 模块已经提供了许多标准转换函数, 
+如 <A HREF="#eg-1-80">Example 1-80</A> 所示. 
+</P>
+<A NAME="eg-1-80"></A>
+<H4><A href='#toptop'> 1.15.2.1. Example 1-80. 使用 time 模块格式化时间输出 </A></H4>
+<PRE>
+File: time-example-2.py
+
+import time
+
+now = time.localtime(time.time())
+
+print time.asctime(now)
+print time.strftime("%y/%m/%d %H:%M", now)
+print time.strftime("%a %b %d", now)
+print time.strftime("%c", now)
+print time.strftime("%I %p", now)
+print time.strftime("%Y-%m-%d %H:%M:%S %Z", now)
+
+# do it by hand...
+year, month, day, hour, minute, second, weekday, yearday, daylight = now
+print "%04d-%02d-%02d" % (year, month, day)
+print "%02d:%02d:%02d" % (hour, minute, second)
+print ("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN")[weekday], yearday
+
+*B*Sun Oct 10 21:39:24 1999
+99/10/10 21:39
+Sun Oct 10
+Sun Oct 10 21:39:24 1999
+09 PM
+1999-10-10 21:39:24 CEST
+1999-10-10
+21:39:24
+SUN 283*b*
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.15.3. 将字符串转换为时间对象 </A></H3>
+<P>
+在一些平台上, <CODE>time</CODE> 模块包含了 <CODE>strptime</CODE> 函数, 它的作用与 <CODE>strftime</CODE> 相反. 
+给定一个字符串和模式, 它返回相应的时间对象, 如 <A HREF="#eg-1-81">Example 1-81</A> 所示. 
+</P>
+<A NAME="eg-1-81"></A>
+<H4><A href='#toptop'> 1.15.3.1. Example 1-81. 使用 time.strptime 函数解析时间 </A></H4>
+<PRE>
+File: time-example-6.py
+
+import time
+
+# make sure we have a strptime function!
+# 确认有函数 strptime
+try:
+    strptime = time.strptime
+except AttributeError:
+    from strptime import strptime
+
+print strptime("31 Nov 00", "%d %b %y")
+print strptime("1 Jan 70 1:30pm", "%d %b %y %I:%M%p")
+</PRE>
+<P></P>
+<P>
+只有在系统的 C 库提供了相应的函数的时候, <CODE>time.strptime</CODE> 函数才可以使用. 
+对于没有提供标准实现的平台, <A HREF="#eg-1-82">Example 1-82</A> 提供了一个不完全的实现. 
+</P>
+<A NAME="eg-1-82"></A>
+<H4><A href='#toptop'> 1.15.3.2. Example 1-82. strptime 实现 </A></H4>
+<PRE>
+File: strptime.py
+
+import re
+import string
+
+MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
+          "Sep", "Oct", "Nov", "Dec"]
+
+SPEC = {
+    # map formatting code to a regular expression fragment
+    "%a": "(?P&lt;weekday&gt;[a-z]+)",
+    "%A": "(?P&lt;weekday&gt;[a-z]+)",
+    "%b": "(?P&lt;month&gt;[a-z]+)",
+    "%B": "(?P&lt;month&gt;[a-z]+)",
+    "%C": "(?P&lt;century&gt;\d\d?)",
+    "%d": "(?P&lt;day&gt;\d\d?)",
+    "%D": "(?P&lt;month&gt;\d\d?)/(?P&lt;day&gt;\d\d?)/(?P&lt;year&gt;\d\d)",
+    "%e": "(?P&lt;day&gt;\d\d?)",
+    "%h": "(?P&lt;month&gt;[a-z]+)",
+    "%H": "(?P&lt;hour&gt;\d\d?)",
+    "%I": "(?P&lt;hour12&gt;\d\d?)",
+    "%j": "(?P&lt;yearday&gt;\d\d?\d?)",
+    "%m": "(?P&lt;month&gt;\d\d?)",
+    "%M": "(?P&lt;minute&gt;\d\d?)",
+    "%p": "(?P&lt;ampm12&gt;am|pm)",
+    "%R": "(?P&lt;hour&gt;\d\d?):(?P&lt;minute&gt;\d\d?)",
+    "%S": "(?P&lt;second&gt;\d\d?)",
+    "%T": "(?P&lt;hour&gt;\d\d?):(?P&lt;minute&gt;\d\d?):(?P&lt;second&gt;\d\d?)",
+    "%U": "(?P&lt;week&gt;\d\d)",
+    "%w": "(?P&lt;weekday&gt;\d)",
+    "%W": "(?P&lt;weekday&gt;\d\d)",
+    "%y": "(?P&lt;year&gt;\d\d)",
+    "%Y": "(?P&lt;year&gt;\d\d\d\d)",
+    "%%": "%"
+}
+
+class TimeParser:
+    def _ _init_ _(self, format):
+        # convert strptime format string to regular expression
+        format = string.join(re.split("(?:\s|%t|%n)+", format))
+        pattern = []
+        try:
+            for spec in re.findall("%\w|%%|.", format):
+                if spec[0] == "%":
+                    spec = SPEC[spec]
+                pattern.append(spec)
+        except KeyError:
+            raise ValueError, "unknown specificer: %s" % spec
+        self.pattern = re.compile("(?i)" + string.join(pattern, ""))
+    def match(self, daytime):
+        # match time string
+        match = self.pattern.match(daytime)
+        if not match:
+            raise ValueError, "format mismatch"
+        get = match.groupdict().get
+        tm = [0] * 9
+        # extract date elements
+        y = get("year")
+        if y:
+            y = int(y)
+            if y &lt; 68:
+                y = 2000 + y
+            elif y &lt; 100:
+                y = 1900 + y
+            tm[0] = y
+        m = get("month")
+        if m:
+            if m in MONTHS:
+                m = MONTHS.index(m) + 1
+            tm[1] = int(m)
+        d = get("day")
+        if d: tm[2] = int(d)
+        # extract time elements
+        h = get("hour")
+        if h:
+            tm[3] = int(h)
+        else:
+            h = get("hour12")
+            if h:
+                h = int(h)
+                if string.lower(get("ampm12", "")) == "pm":
+                    h = h + 12
+                tm[3] = h
+        m = get("minute")
+        if m: tm[4] = int(m)
+        s = get("second")
+        if s: tm[5] = int(s)
+        # ignore weekday/yearday for now
+        return tuple(tm)
+
+def strptime(string, format="%a %b %d %H:%M:%S %Y"):
+    return TimeParser(format).match(string)
+
+if _ _name_ _ == "_ _main_ _":
+    # try it out
+    import time
+    print strptime("2000-12-20 01:02:03", "%Y-%m-%d %H:%M:%S")
+    print strptime(time.ctime(time.time()))
+
+*B*(2000, 12, 20, 1, 2, 3, 0, 0, 0)
+(2000, 11, 15, 12, 30, 45, 0, 0, 0)*b*
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.15.4. 转换时间值 </A></H3>
+<P>
+将时间元组转换回时间值非常简单, 至少我们谈论的当地时间 (local time) 如此. 
+只要把时间元组传递给 <CODE>mktime</CODE> 函数, 如 <A HREF="#eg-1-83">Example 1-83</A> 所示. 
+</P>
+<A NAME="eg-1-83"></A>
+<H4><A href='#toptop'> 1.15.4.1. Example 1-83. 使用 time 模块将本地时间元组转换为时间值(整数) </A></H4>
+<PRE>
+File: time-example-3.py
+
+import time
+
+t0 = time.time()
+tm = time.localtime(t0)
+
+print tm
+
+print t0
+print time.mktime(tm)
+
+*B*(1999, 9, 9, 0, 11, 8, 3, 252, 1)
+936828668.16
+936828668.0*b*
+</PRE>
+<P></P>
+<P>
+但是, 1.5.2 版本的标准库没有提供能将 UTC 时间
+(Universal Time, Coordinated: 特林威治标准时间)转换为时间值的函数 
+( Python 和对应底层 C 库都没有提供). <A HREF="#eg-1-84">Example 1-84</A> 提供了该函数的一个 
+Python 实现, 称为 <CODE>timegm</CODE> . 
+</P>
+<A NAME="eg-1-84"></A>
+<H4><A href='#toptop'> 1.15.4.2. Example 1-84. 将 UTC 时间元组转换为时间值(整数) </A></H4>
+<PRE>
+File: time-example-4.py
+
+import time
+
+def _d(y, m, d, days=(0,31,59,90,120,151,181,212,243,273,304,334,365)):
+    # map a date to the number of days from a reference point
+    return (((y - 1901)*1461)/4 + days[m-1] + d +
+        ((m &gt; 2 and not y % 4 and (y % 100 or not y % 400)) and 1))
+
+def timegm(tm, epoch=_d(1970,1,1)):
+    year, month, day, h, m, s = tm[:6]
+    assert year &gt;= 1970
+    assert 1 &lt;= month &lt;= 12
+    return (_d(year, month, day) - epoch)*86400 + h*3600 + m*60 + s
+
+t0 = time.time()
+tm = time.gmtime(t0)
+
+print tm
+
+print t0
+print timegm(tm)
+
+*B*(1999, 9, 8, 22, 12, 12, 2, 251, 0)
+936828732.48
+936828732*b*
+</PRE>
+<P></P>
+<P>
+从 1.6 版本开始, <CODE>calendar</CODE> 模块提供了一个类似的函数 <CODE>calendar.timegm</CODE> . 
+</P>
+<H3><A href='#toptop'> 1.15.5. Timing 相关 </A></H3>
+<P>
+<CODE>time</CODE> 模块可以计算 Python 程序的执行时间, 如 <A HREF="#eg-1-85">Example 1-85</A> 所示. 
+你可以测量 "wall time" (real world time), 或是"进程时间" (消耗的 CPU 时间). 
+</P>
+<A NAME="eg-1-85"></A>
+<H4><A href='#toptop'> 1.15.5.1. Example 1-85. 使用 time 模块评价算法 </A></H4>
+<PRE>
+File: time-example-5.py
+
+import time
+
+def procedure():
+    time.sleep(2.5)
+
+# measure process time
+t0 = time.clock()
+procedure()
+print time.clock() - t0, "seconds process time"
+
+# measure wall time
+t0 = time.time()
+procedure()
+print time.time() - t0, "seconds wall time"
+
+*B*0.0 seconds process time
+2.50903499126 seconds wall time*b*
+</PRE>
+<P></P>
+<P>
+并不是所有的系统都能测量真实的进程时间. 一些系统中(包括 Windows ), 
+<CODE>clock</CODE> 函数通常测量从程序启动到测量时的 wall time. 
+</P>
+<P>
+进程时间的精度受限制. 在一些系统中, 它超过 30 分钟后进程会被清理.
+(原文: On many systems, it wraps around after just over 30 minutes.) 
+</P>
+<P>
+另参见 <CODE>timing</CODE> 模块( Windows 下的朋友不用忙活了,没有地~), 它可以测量两个事件之间的 wall time. 
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc17"></A>
+<H2><A href='#toptop'> 1.16. types 模块 </A></H2>
+<P>
+<CODE>types</CODE> 模块包含了标准解释器定义的所有类型的类型对象, 如 <A HREF="#eg-1-86">Example 1-86</A> 所示. 
+同一类型的所有对象共享一个类型对象. 你可以使用 <CODE>is</CODE> 来检查一个对象是不是属于某个给定类型.
+</P>
+<A NAME="eg-1-86"></A>
+<H4><A href='#toptop'> 1.16.0.1. Example 1-86. 使用 types 模块 </A></H4>
+<PRE>
+File: types-example-1.py
+
+import types
+
+def check(object):
+    print object,
+
+    if type(object) is types.IntType:
+        print "INTEGER",
+    if type(object) is types.FloatType:
+        print "FLOAT",
+    if type(object) is types.StringType:
+        print "STRING",
+    if type(object) is types.ClassType:
+        print "CLASS",
+    if type(object) is types.InstanceType:
+        print "INSTANCE",
+    print
+
+check(0)
+check(0.0)
+check("0")
+
+class A:
+    pass
+
+class B:
+    pass
+
+check(A)
+check(B)
+
+a = A()
+b = B()
+
+check(a)
+check(b)
+
+*B*0 INTEGER
+0.0 FLOAT
+0 STRING
+A CLASS
+B CLASS
+&lt;A instance at 796960&gt; INSTANCE
+&lt;B instance at 796990&gt; INSTANCE*b*
+</PRE>
+<P></P>
+<P>
+注意所有的类都具有相同的类型, 所有的实例也是一样. 要测试一个类或者实例所属的类, 
+可以使用内建的 <CODE>issubclass</CODE> 和 <CODE>isinstance</CODE> 函数.
+</P>
+<P>
+<CODE>types</CODE> 模块在第一次引入的时候会破坏当前的异常状态. 也就是说, 
+不要在异常处理语句块中导入该模块 (<I>或其他会导入它的模块</I>) . 
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc18"></A>
+<H2><A href='#toptop'> 1.17. gc 模块 </A></H2>
+<P>
+(可选, 2.0 及以后版本) <CODE>gc</CODE> 模块提供了到内建循环垃圾收集器的接口. 
+</P>
+<P>
+Python 使用引用记数来跟踪什么时候销毁一个对象; 一个对象的最后一个引用一旦消失, 这个对象就会被销毁. 
+</P>
+<P>
+从 2.0 版开始, Python 还提供了一个循环垃圾收集器, 它每隔一段时间执行. 
+这个收集器查找指向自身的数据结构, 并尝试破坏循环. 如 <A HREF="#eg-1-87">Example 1-87</A> 所示.
+</P>
+<P>
+你可以使用 <CODE>gc.collect</CODE> 函数来强制完整收集. 这个函数将返回收集器销毁的对象的数量. 
+</P>
+<A NAME="eg-1-87"></A>
+<H4><A href='#toptop'> 1.17.0.1. Example 1-87. 使用 gc 模块收集循环引用垃圾 </A></H4>
+<PRE>
+File: gc-example-1.py
+
+import gc
+
+# create a simple object that links to itself
+class Node:
+
+    def _ _init_ _(self, name):
+        self.name = name
+        self.parent = None
+        self.children = []
+
+    def addchild(self, node):
+        node.parent = self
+        self.children.append(node)
+
+    def _ _repr_ _(self):
+        return "&lt;Node %s at %x&gt;" % (repr(self.name), id(self))
+
+# set up a self-referencing structure
+root = Node("monty")
+
+root.addchild(Node("eric"))
+root.addchild(Node("john"))
+root.addchild(Node("michael"))
+
+# remove our only reference
+del root
+
+print gc.collect(), "unreachable objects"
+print gc.collect(), "unreachable objects"
+
+*B*12 unreachable objects
+0 unreachable objects*b*
+</PRE>
+<P></P>
+<P>
+如果你确定你的程序不会创建自引用的数据结构, 你可以使用 <CODE>gc.disable</CODE> 函数禁用垃圾收集, 
+调用这个函数以后, Python 的工作方式将与 1.5.2 或更早的版本相同. 
+</P>
+<HR NOSHADE SIZE=5>
+<P></P>
+</DIV>
+
+<!-- html code generated by txt2tags 2.4 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags chapter1.t2t -->
+</BODY></HTML>

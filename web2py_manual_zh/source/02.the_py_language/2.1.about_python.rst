@@ -1,0 +1,13 @@
+关于Python
+===============
+Python是一种通用高级编程语言。该语言的设计哲学就是强调编程效率以及代码可靠性。核心语法、指令、句法，已被精简到最少，但是标准库确异常强大，还包含丰富的软件编程接口（Application Programming Interface）和操作系统功能调用。尽管Python代码异常精简，还是定义了列表（list）、对（tuple）、哈西表（dict）以及自定义长度的长整型（long）这些对象。
+
+Python支持多种编程习惯，包括面向对象（class）、快速（def）以及面向过程（lambda）的编程方式。Python还有一套动态类型系统以及通过引用计数实现的（类似Perl、Ruby和Scheme）自动内存管理。
+
+Python由Guido van Rossum于1991年首次发布。该语言是基于开放、开源社区开发，由非盈利Python软件基金会管理。市面上有很多的Python语言的解释器和编译器，包括基于Java语言的Jython，不过在这里的简要回顾中，我们特制的是Guido创建给用C语言实现的版本。
+
+你能够找到很多的Python教程，官方的文档以及库函数指南能够在Python的官方网站上找到。
+
+想找到更多关于Python的资料，我们在本书中推荐ref.[36]和ref.[37]。
+
+如果您已经很熟悉Python语言可以跳过本章。

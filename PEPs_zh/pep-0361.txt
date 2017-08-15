@@ -1,0 +1,272 @@
+PEP: 361
+Title: Python 2.6 and 3.0 Release Schedule
+Version: $Revision: 62628 $
+Last-Modified: $Date: 2008-05-02 16:07:03 +0800 (Fri, 02 May 2008) $
+Author: Neal Norwitz, Barry Warsaw
+Status: Draft
+Type: Informational
+Created: 29-June-2006
+Python-Version: 2.6
+Python-Version: 3.0
+Post-History: 17-Mar-2008
+
+Abstract
+
+    This document describes the development and release schedule for
+    Python 2.6 and 3.0.  The schedule primarily concerns itself with
+    PEP-sized items.  Small features may be added up to and including
+    the first beta release.  Bugs may be fixed until the final
+    release.
+
+    There will be at least two alpha releases, two beta releases, and
+    one release candidate.  The release date is planned for the
+    beginning of September, 2008.
+
+    Python 2.6 is not only the next advancement in the Python 2
+    series, it is also a transitional release, helping developers
+    begin to prepare their code for Python 3.0.  As such, many
+    features are being backported from Python 3.0 to 2.6.  Thus, it
+    makes sense to release both versions in at the same time.  The
+    precedence for this was set with the Python 1.6 and 2.0 release.
+
+    We will be releasing Python 2.6 and 3.0 in lockstep, on a monthly
+    release cycle.  The releases will happen on the first Wednesday of
+    every month through the beta testing cycle.  There will be two
+    weeks between release candidates.  The final releases of Python
+    2.6 and 3.0 will happen in lockstep.
+
+
+Release Manager and Crew
+
+    2.6/3.0 Release Manager: Barry Warsaw
+    Windows installers: Martin v. Loewis
+    Mac installers: Ronald Oussoren
+    Documentation: Georg Brandl
+    RPMs: Sean Reifschneider
+
+
+Release Schedule
+
+    Note that this schedule is completely tentative. The number of alphas,
+    betas and release candidates will be determined as the release process
+    unfolds.  The minimal schedule is:
+
+        Feb 29 2008: Python 2.6a1 and 3.0a3 are released
+        Apr 02 2008: Python 2.6a2 and 3.0a4 are released
+        May 07 2008: Python 2.6a3 and 3.0a5 planned
+        Jun 04 2008: Python 2.6b1 and 3.0b1 planned
+        Jul 02 2008: Python 2.6b2 and 3.0b2 planned
+        Aug 06 2008: Python 2.6rc1 and 3.0rc1 planned
+        Aug 20 2008: Python 2.6rc2 and 3.0rc2 planned
+        Sep 03 2008: Python 2.6 and 3.0 final
+
+
+Completed features for 3.0
+
+    See PEP 3000 [#pep3000] and PEP 3100 [#pep3100] for details on the
+    Python 3.0 project.
+
+
+Completed features for 2.6
+
+    PEPs:
+
+        352: Raising a string exception now triggers a TypeError.
+             Attempting to catch a string exception raises DeprecationWarning.
+             BaseException.message has been deprecated.
+
+    New modules in the standard library:
+
+        None
+
+    Deprecated modules and functions in the standard library:
+
+        - buildtools
+        - cfmfile
+        - commands.getstatus()
+        - macostools.touched()
+        - md5
+        - MimeWriter
+        - mimify
+        - popen2, os.popen[234]()
+        - posixfile
+        - sets
+        - sha
+
+    Modules removed from the standard library:
+
+        - gopherlib
+        - rgbimg
+        - macfs
+
+    Python 3.0 compatability:
+
+        - warnings were added for the following builtins
+          which no longer exist in 3.0:
+
+             apply, callable, coerce, dict.has_key, execfile, reduce, reload
+
+    Other major features:
+
+      - with/as will be keywords
+      - a __dir__() special method to control dir() was added [1]
+      - AtheOS support stopped.
+
+
+Possible features for 2.6
+
+    New features *should* be implemented prior to alpha2, particularly
+    any C modifications or behavioral changes.  New features *must* be
+    implemented prior to beta1 or will require Release Manager approval.
+
+    The following PEPs are being worked on for possible inclusion in 2.6:
+
+        - PEP 297:  Support for System Upgrades [#pep297]
+        - PEP 358:  The "bytes" Object [#pep358]
+        - PEP 367:  New Super [#pep367]
+        - PEP 3112:  Bytes literals in Python 3000 [#pep3112]
+        - PEP 3127:  Integer Literal Support and Syntax [#pep3127]
+
+    Each non-trivial feature listed here that is not a PEP must be 
+    discussed on python-dev.  Other enhancements include:
+
+        - distutils replacement (requires a PEP)
+        - turtle.py replacement or enhancements
+
+    New modules in the standard library:
+
+        - winerror
+          http://python.org/sf/1505257
+          (Owner: MAL)
+
+        - JSON implementation
+
+        - setuptools
+          BDFL pronouncement for inclusion in 2.5:
+          http://mail.python.org/pipermail/python-dev/2006-April/063964.html
+
+          PJE's withdrawal from 2.5 for inclusion in 2.6:
+          http://mail.python.org/pipermail/python-dev/2006-April/064145.html
+
+	- ast
+          http://mail.python.org/pipermail/python-dev/2008-April/078950.html
+
+    Modules to gain a DeprecationWarning (as specified for Python 2.6
+    or through negligence):
+
+        - rfc822
+        - mimetools
+        - multifile
+        - compiler package (or a Py3K warning instead?)
+
+    - warnings module implemented in C
+      * Convert Parser/*.c to use warnings module rather than printf
+
+    - Add warnings for Py3k features removed:
+      * backticks and <>
+      * __getslice__/__setslice__/__delslice__
+      * float args to PyArgs_ParseTuple
+      * float args to xrange
+      * coerce and all its friends
+      * comparing by default comparison
+      * __cmp__?
+      * other comparison changes?
+      * int division?
+      * {}.has_key()
+      * All PendingDeprecationWarnings (e.g. exceptions)
+      * using zip() result as a list
+      * the exec statement (use function syntax)
+      * file.xreadlines
+      * function attributes that start with func_* (should use __*__)
+      * softspace removal for print() function
+      * the L suffix for long literals
+      * removal of modules because of PEP 4/3100/3108
+      * renaming of __nonzero__ to __bool__
+      * multiple inheritance with classic classes? (MRO might change)
+      * properties and classic classes? (instance attrs shadow property)
+
+    - use __bool__ method if available and there's no __nonzero__
+
+    - Check the various bits of code in Demo/ and Tools/ all still work,
+      update or remove the ones that don't.
+
+    - All modules in Modules/ should be updated to be ssize_t clean.
+
+    - All of Python (including Modules/) should compile cleanly with g++
+
+    - Start removing deprecated features and generally moving towards Py3k
+
+    - Replace all old style tests (operate on import) with unittest or docttest
+
+    - Add tests for all untested modules
+
+    - Document undocumented modules/features
+
+    - bdist_deb in distutils package
+      http://mail.python.org/pipermail/python-dev/2006-February/060926.html
+
+    - bdist_egg in distutils package
+
+    - pure python pgen module
+      (Owner: Guido)
+      Deferral to 2.6:
+      http://mail.python.org/pipermail/python-dev/2006-April/064528.html
+
+    - Remove the fpectl module?
+
+
+Deferred until 2.7
+
+    None
+
+
+Open issues
+
+    How should import warnings be handled?
+    http://mail.python.org/pipermail/python-dev/2006-June/066345.html
+    http://python.org/sf/1515609
+    http://python.org/sf/1515361
+
+    How should -m (__main__ in general) work with relative imports? [#pep366]_
+
+
+References
+
+.. [1] Adding a __dir__() magic method
+   http://mail.python.org/pipermail/python-dev/2006-July/067139.html
+
+.. [#pep358] PEP 358 (The "bytes" Object)
+   http://www.python.org/dev/peps/pep-0358
+
+.. [#pep366] PEP 366 (Main module explicit relative imports)
+   http://www.python.org/dev/peps/pep-0366
+
+.. [#pep367] PEP 367 (New Super)
+   http://www.python.org/dev/peps/pep-0367
+
+.. [#pep3000] PEP 3000 (Python 3000)
+   http://www.python.org/dev/peps/pep-3000
+
+.. [#pep3100] PEP 3100 (Miscellaneous Python 3.0 Plans)
+   http://www.python.org/dev/peps/pep-3100
+
+.. [#pep3112] PEP 3112 (Bytes literals in Python 3000)
+   http://www.python.org/dev/peps/pep-3112
+
+.. [#pep3127] PEP 3127 (Integer Literal Support and Syntax)
+   http://www.python.org/dev/peps/pep-3127
+
+
+Copyright
+
+    This document has been placed in the public domain.
+
+
+
+Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+sentence-end-double-space: t
+fill-column: 70
+coding: utf-8
+End:

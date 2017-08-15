@@ -1,0 +1,55 @@
+.. rst3: filename: html\glossary.txt
+
+.. _glossary:
+
+#########
+Glossary
+#########
+
+We often refer to outline nodes by the directives they contain.
+For example, an @file node is a node whose headline starts with @file, etc.
+
+.. glossary::
+
+    @<file> node
+        A node whose headline starts with
+        @asis, @edit @file, @nosent, @shadow, @thin, or their longer forms.
+   
+    @all directive
+        Cause Leo to copy the body text of all nodes in an @thin tree to the corresponding external file.
+        For more information, see `directives for programming`_ in `Leo's tutorial`_.
+
+.. Links used in this document.
+
+.. ----- External links.
+
+.. _`CWEB language`:                    http://www-cs-faculty.stanford.edu/~knuth/cweb.html
+.. _`literate programming web page`:    http://www.literateprogramming.com/
+.. _`noweb language`:                   http://www.eecs.harvard.edu/~nr/noweb/
+.. _`rST primer`:                       http://docutils.sourceforge.net/docs/user/rst/quickstart.html
+
+.. ----- Relative links.
+
+.. _`Chapter 8: Customizing Leo`:   customizing.html
+.. _`Writing plugins and hooks`:    writingPlugins.html
+
+.. _`programming reference`:    directives.html
+.. _`@asis`:                    directives.html#asis
+.. _`@auto`:                    directives.html#auto
+.. _`@file`:                    directives.html#file-and-thin
+.. _`@nosent`:                  directives.html#nosent
+.. _`@root`:                    directives.html#root
+.. _`@thin`:                    directives.html#file-and-thin
+.. _`@unit documentation`:      directives.html#root
+.. _`tangling @root trees`:     directives.html#tangling-root-trees-with-the-tangle-commands
+.. _`untangling @root trees`:   directives.html#untangling-root-trees-with-the-untangle-commands
+
+.. ----- References to the tutorial.
+.. _`clones & views`:               intro.html#clones-views
+.. _`leo's tutorial`:               intro.html
+.. _`external files section`:        intro.html#derived-files
+.. _`directives for programming`:   intro.html#directives-for-programming
+.. _`leo directives`:               intro.html#leo-directives
+.. _`quick start for programmers`:  intro.html#quick-start-for-programmers
+.. _`sentinels lines`:              intro.html#sentinel-lines
+

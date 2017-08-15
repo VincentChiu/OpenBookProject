@@ -1,0 +1,1346 @@
+﻿　　　GUI Programming
+　　　图形用户界面编程
+
+
+Chapter Topics
+本章主题
+	Introduction
+    引言
+	Tkinter and Python Programming
+    Tkinter与Python编程
+	Tkinter Module
+    Tkinter模块
+	Tk Widgets
+    Tk组件库
+	Tkinter Examples
+    Tkinter使用举例
+	Label, Button and Scale Widgets
+    标签、按钮与进度条组件
+	An Intermediate Tk Example
+    一个使用Tk的中级范例
+	Brief Tour of Other GUIs (Tix, Pmw, wxPython, PyGTK)
+    其他GUI简介（Tix, Pmw, wxPython, PyGTK）
+	Related Modules and Other GUIs
+    相关模块和其他GUI
+
+19
+in  this  chapter,  we  will  give  you  a  brief  introduction  to  the  subject  of graphical user interface (GUI) programming. If you are somewhat new to this area or want to learn more about it, or if you want to see how it is done in Python, then this chapter is for you. We cannot show you everything about GUI application development here in this one chapter, but we will give you a very solid introduction to it. The primary GUI toolkit we will be using is Tk, Python’s default GUI, and we will access Tk from its Python interface called Tkinter (short for “Tk interface”).
+本章我们将对图形用户界面（GUI）进行简介。不论您是初次涉及该领域还是想学到更多，抑或只是想看看Python是如何做的，这一章都会适合您。在这短短的一章里我们无法对GUI程序开发介绍得面面俱到，但我们将给您讲解最核心的内容。Python的默认GUI工具集是Tk，它也是我们将使用的最基本的GUI工具集，我们可以通过Python接口Tkinter来使用Tk（Tkinter正是“Tk接口”之意）。
+
+　Tk is not the “latest and greatest” nor does it have the most robust set of GUI building blocks, but it is fairly simple to use and will allow you to build GUIs that run on most platforms. We will present several simple and inter- mediate examples using Tkinter, followed by a few examples using other tool- kits. Once you have completed this chapter, you will have the skills to build more complex applications and/or move to a more modern graphical toolkit. Python  has  bindings  or  adapters  to  most  of  the  major  toolkits  out  there, including commercial systems.
+Tk并非“最强、最新”也不是包含GUI构建模块最多的工具集，但它非常简单，并且可以开发出能运行于大多数平台的GUI程序。我们将用Tkinter举几个例子其中包括一个中级范例，随后我们还将给出几个其他工具集的例子。一旦完成了本章的学习，您将掌握构建复杂应用程序的技巧，也有能力转向那些更流行的图形工具集。Python有许多对主流工具集的绑定（Binding）或转接(Adaptor)，其中不乏对商业系统的，这里就不多介绍了。
+
+
+19.1  Introduction
+简介
+
+19.1.1 What Are Tcl,Tk, and Tkinter?
+什么是Tcl、Tk和Tkinter？
+
+Tkinter is Python’s default GUI library. It is based on the Tk toolkit, originally designed for the Tool Command Language (Tcl). Due to Tk’s popularity, it  has been ported to a variety of other scripting languages, including Perl
+(Perl/Tk),  Ruby  (Ruby/Tk),  and  Python  (Tkinter).  With  the  GUI  develop- ment portability and flexibility of Tk, along with the simplicity of scripting language integrated with the power of systems language, you are given the tools to rapidly design and implement a wide variety of commercial-quality GUI applications.
+Tkinter是Python的默认GUI库，它基于Tk工具集，后者最初是为工具命令语言（Tcl）设计的。Tk流行后被移植到许多其他脚本语言中，包括Perl(Perl/Tk)、Ruby(Ruby/Tk)和 Python (Tkinter)。借助于Tk开发GUI的可移植性和灵活性，加上脚本语言的简洁和系统语言的强劲，我们得到了一件可与商业软件相匹敌的利器，它可以用于快速开发各种GUI程序。
+
+　If you are new to GUI programming, you will be pleasantly surprised at how easy it is. You will also find that Python, along with Tkinter, provides a fast and exciting way to build applications that are fun (and perhaps useful) and that would have taken much longer if you had had to program directly in C/C++ with the native windowing system’s libraries. Once you have designed the application and the look and feel that goes along with your program, you will use basic building blocks known as widgets to piece together the desired components, and finally, to attach functionality to “make it real.”
+如果是初涉GUI编程，您会惊喜地发现一切竟如此简单。您也会发现Python搭配Tkinter提供了一种高效的、激动人心的应用程序构建方式，可以用来开发出有趣（并且往往还有用）的程序。而同样的程序如果直接使用C/C++，基于本地窗口系统库开发将多花很长的时间。一旦设计好了程序及相应外观，您接下来要做的只是用那些被称作组件的基本构造块去搭建想要的模块，最终再赋予其功能就能让一切“活起来”。
+
+　If you are an old hand at using Tk, either with Tcl or Perl, you will find Python a refreshing way to program GUIs. On top of that, it provides an even faster rapid prototyping system for building them. Remember that you also have Python’s system accessibility, networking functionality, XML, numerical and visual processing, database access, and all the other standard library and third-party extension modules.
+如果您是个Tk老手，不论是使用过Tcl还是Perl，都会发现Python提供了一种进行GUI编程的全新方式。Python基于Tk提供了一种更高效的快速原型系统用以创建应用。别忘了您同时还享有Python的系统访问、网络操作、XML、数字可视化、数据库访问、以及所有其他标准库和第三方模块。
+
+　Once you get Tkinter up on your system, it will take less than 15 minutes to get your first GUI application running.
+一旦您在自己的系统中装好了Tkinter，用不了15分钟就可以让您的第一个GUI程序运行起来！
+
+
+19.1.2 Getting Tkinter Installed and Working
+安装和使用Tkinter
+
+Like threading, Tkinter is not necessarily turned on by default on your sys- tem. You can tell whether Tkinter is available for your Python interpreter by attempting to import the Tkinter module. If Tkinter is available, then no errors occur:
+类似于线程模块，您系统中的Tkinter未必是默认开启的。您可以通过尝试导入Tkinter模块来判断它是否能被Python解释器使用。如果Tkinter是可用的，不会出现任何错误：
+
+>>> import Tkinter
+>>>
+
+　If  your  Python  interpreter  was  not  compiled  with  Tkinter  enabled,  the module import fails:
+　而如果您的Python解释器在编译时没有启用Tkinter，导入过程将失败。
+
+>>> import Tkinter
+Traceback (innermost last):
+File "<stdin>", line 1, in ?
+File "/usr/lib/python1.5/lib-tk/Tkinter.py", line 8, in ?
+　　　import _tkinter # If this fails your Python may not be configured for Tk
+ImportError: No module named _tkinter
+
+
+　　You  may  have  to  recompile  your  Python  interpreter  to  get  access  to Tkinter. This usually involves editing the Modules/Setup file and enabling all  the  correct  settings  to  compile  your  Python  interpreter  with  hooks  to Tkinter or choosing to have Tk installed on your system. Check the README file for your Python distribution for specific instructions on getting Tkinter to compile on your system. Be sure, after your compilation, that you start the new Python interpreter you just created; otherwise, it will act just like your old one without Tkinter (and in fact, it is your old one).
+    这时您不得不重编译Python解释器来访问Tkinter。这通常会涉及编辑Modules/Setup文件和启用所有正确选项来编译您的Python解释器，以确保Tkinter能被选择安装在系统中。请检查您Python发行包中的README文件，里面有把Tkinter编译进系统的操作说明。请确定您编译完后启动的是刚刚创建的新Python解释器，否则它会像那个旧的不含Tkinter的解释器一样工作（实际上，它就是您那个旧解释器）。
+
+19.1.3 Client/Server Architecture—Take Two
+客户端/服务器架构 
+
+In the earlier chapter on network programming, we introduced the notion of client/server computing. A windowing system is another example of a software server. These run on a machine with an attached display, such as a monitor of some sort. There are clients, too—programs that require a windowing environ- ment to execute, also known as GUI applications. Such applications cannot run without a windows system.
+在之前介绍的网络编程中，我们介绍了客户端/服务器计算模式的概念。窗口系统就是软件服务器的另一个例子，它们运行在一个有显示设备的机器上，比如带有一个某种类型的显示器。当然还有客户端（那些需要窗口环境来运行的程序，也就是我们所说的GUI程序），这些程序无法脱离窗口系统单独运行。
+
+　The architecture becomes even more interesting when networking comes into play. Usually when a GUI application is executed, it displays to the machine that
+it started on (via the windowing server), but it is possible in some networked windowing  environments,  such  as  the  X  Window  system  on  Unix,  to  choose another machine’s window server to display to. In such situations, you can be running a GUI program on one machine, but have it displayed on another!
+这种架构混合网络应用将显得更加有趣。通常一个GUI程序被执行时会在启动它的机器上显示（通过窗口服务器），但也可以在一些网络化的窗口环境中（例如Unix的X Window系统）选择其它机器的窗口服务器去显示。这样，您就可以在一台机器上运行GUI程序而在另一台机器上显示它！
+
+19.2  Tkinter and Python Programming
+Tkinter 与 Python 编程
+
+19.2.1 Tkinter Module: Adding Tk to your Applications
+Tkinter模块：把Tk引入您的程序
+
+So what do you need to do to have Tkinter as part of your application? Well, first of all, it is not necessary to have an application already. You can create a pure GUI if you want, but it probably isn’t too useful without some underly- ing software that does something interesting.
+为了让Tkinter成为您程序的一部分，应该怎么做呢？这并不是说您一定要先有一个应用程序。只有您愿意，当然可以创建一个纯粹的GUI程序，但如果没有让人感兴趣的功能的话，这个程序也许不会很有用。
+
+　There are basically five main steps that are required to get your GUI up and running:
+要创建并运行您的GUI程序，下面五步是基本的：
+
+1.   Import the Tkinter module (or from Tkinter import *).
+1.  导入Tkinter模块（import Tkinter，或者，from Tkinter import *)。
+
+2.   Create a top-level windowing object that contains your entire GUI application.
+2.  创建一个顶层窗口对象，来容纳您的整个GUI程序。
+
+3.   Build all your GUI components (and functionality) on top (or “inside”) of your top-level windowing object.
+3.  在您的顶层窗口对象上（或者说在“其中”）创建所有的GUI模块（以及功能）。
+
+4.   Connect these GUI components to the underlying application code.
+4.   把这些GUI模块与底层程序代码相连接。
+
+5.   Enter the main event loop.
+5.  进入主事件循环。
+
+The first step is trivial: All GUIs that use Tkinter must import the Tkinter module. Getting access to Tkinter is the first step (see Section 19.1.2).
+第一步很明显：所有使用Tkinter的GUI程序必须先导入Tkinter模块。第一步就是为了获得Tkinter的访问权（参加19.1.1小节）。
+
+
+19.2.2 Introduction to GUI Programming
+GUI程序开发简介
+
+Before going to the examples, we will give you a brief introduction to GUI application development in general. This will provide you with some of the background you need to move forward.
+在举例之前，我们将先从宏观上来给您简单介绍一下GUI程序开发。这将给您以后的学习提供一些必要的背景知识。
+
+　Setting up a GUI application is similar to an artist’s producing a painting. Conventionally, there is a single canvas onto which the artist must put all the work. The way it works is like this: You start with a clean slate, a “top-level” windowing object on which you build the rest of your components. Think of it as a foundation to a house or the easel for an artist. In other words, you have to pour the concrete or set up your easel before putting together the actual structure or canvas on top of it. In Tkinter, this foundation is known as the top-level window object.
+创建GUI程序与画家作画有些相似。通常画家只会在一块画布上开展自己的创作。工作步骤或许是这样的：首先要找来一块干净的石板，您将在这个“顶层”窗口对象上创建所有其他模块。可以把这一步想象成一座房屋的地基或者某个画家的画架。换言之，在搭建各实物或展开画布之前，您必须先给地基浇灌好混凝土或者架好画架。对Tkinter而言，这个基础被称为顶层窗口对象。
+
+　In GUI programming, a top-level root windowing object contains all of the little windowing objects that will be part of your complete GUI appli- cation. These can be text labels, buttons, list boxes, etc. These individual little  GUI  components  are  known  as  widgets.  So  when  we  say  create  a top-level  window,  we  just  mean  that  you  need  such  a  thing  as  a  place where you put all your widgets. In Python, this would typically look like this line:
+在GUI程序中，会有一个顶层根窗口对象，它包含着所有小窗口对象，它们共同组成一个完整的GUI程序。这些小窗口对象可以是文字标签、按钮、列表框等等。这些独立的GUI构件就是所谓的组件。所以当我们说创建一个顶层窗口的时候，我们实际上是指您需要一个放置所有组件的地方。典型的Python语句如下行：
+
+top = Tkinter.Tk() # or just Tk() with "from Tkinter import *"
+top = Tkinter.Tk() # 如果上文是“from Tkinter import *"，Tk()就够了
+
+　The object returned by Tkinter.Tk() is usually referred to as the root window, hence the reason why some applications use root rather than top to indicate as such. Top-level windows are those that show up standalone as part of your application. You may have more than one top-level window for your GUI, but only one of them should be your root window. You may choose to completely design all your widgets first, then add the real functionality, or do a little of this and a little of that along the way. (This means mixing and matching steps 3 and 4 from our list.)
+Tkinter.Tk()返回的对象通常被称作根窗口，正因为如此，有些程序用root来指示它，而非top。顶层窗口是指那些在您的程序中独立显示的部分。您可以在GUI程序中创建多个顶层窗口，但它们中只能有一个是根窗口。您可以采用先完全设计好组件再添加实际功能的开发方式，也可以二者同时进行。（这意味着交替执行上述五步中的第三步和第四步。）
+
+　Widgets may be standalone or be containers. If a widget “contains” other widgets, it is considered the parent of those widgets. Accordingly, if a widget is “contained” in another widget, it’s considered a child of the parent, the par-
+ent being the next immediate enclosing container widget.
+组件既可以是独立的也可以作为容器存在。如果一个组件“包含”其他组件，它就被认为是这些组件的父组件。相应地，如果一个组件被“包含”在其他组件中，它就被认为是父组件的孩子，父组件则是直接包围其外的那个容器组件。
+
+　Usually, widgets have some associated behaviors, such as when a button is pressed, or text is filled into a text field. These types of user behaviors are called events, and the actions that the GUI takes to respond to such events are known as callbacks.
+通常，组件会有一些相应的行为，例如按钮被按下，或者文本框被写入。这种形式的用户行为被称为事件，而GUI程序对事件所采取的响应动作被称为回调。
+
+　Actions may include the actual button press (and release), mouse move- ment, hitting the RETURN or Enter key, etc. All of these are known to the system literally as events. The entire system of events that occurs from the beginning to the end of a GUI application is what drives it. This is known as event-driven processing.
+用户操作包括按下（以及释放）按钮、移动鼠标、按下RETURN或Enter键等等，所有的这些从系统角度都被看作事件。GUI程序正是由这伴随其始末的整套事件体系所驱动的。这个过程被称作事件驱动处理。
+
+　One example of an event with a callback is a simple mouse move. Let’s say the mouse pointer is sitting somewhere on top of your GUI application. If the  mouse  is  moved  to  another  part  of  your  application,  something  has  to cause the movement of the mouse on your screen so that it looks as if it is moving to another location. These are mouse move events that the system must process to give you the illusion (and reality) that your mouse is moving across the window. When you release the mouse, there are no more events to process, so everything just sits there quietly on the screen again.
+一个事件及其回调的例子是鼠标移动。我们假设鼠标指针停在您GUI程序的某处。如果鼠标被移到了程序的别处，一定是有什么东西引起了屏幕上指针的移动，从而表现这种位置的转移。系统必须处理这些鼠标移动事件才能展现（并实现）鼠标在窗口上的移动。一旦您释放了鼠标，就不再会有事件需要处理，相应地，屏幕上的一切又复归平静。
+
+　The event-driven processing nature of GUIs fits right in with client/server architecture. When you start a GUI application, it must perform some setup procedures to prepare for the core execution, just as when a network server has to allocate a socket and bind it to a local address. The GUI application must  establish  all  the  GUI  components,  then  draw  (aka  render  or  paint) them to the screen. Tk has a couple of geometry managers that help posi- tion the widget in the right place; the main one that you will use is called Pack, aka the packer. Another geometry manager is Grid—this is where you specify GUI widgets to be placed in grid coordinates, and Grid will render each object in the GUI in their grid position. For us, we will stick with the packer.
+GUI程序的事件驱动特性恰好体现出它的客户端/服务器架构。当您启动一个GUI程序时，它必须执行一些初始化例程来为核心功能的运行做准备，正如启动一个网络服务器时必须先申请一个套接字并把它绑定在一个本地地址上一样。Tk有两个坐标管理器用来协助把组件放在正确的位置上；您将经常用到的一个称为“包”，亦即packer。另一个坐标管理器是网格（Grid）--您可以用它来把GUI组件放在网格坐标系中，Grid将依据GUI中的网格坐标来生成每个对象。我们将紧扣packer讲解。
+
+　Once the packer has determined the sizes and alignments of all your wid- gets, it will then place them on the screen for you. When all of the widgets, including  the  top-level  window,  finally  appear  on  your  screen,  your  GUI application then enters a “server-like” infinite loop. This infinite loop involves waiting for a GUI event, processing it, then going back to wait for the next event.
+一旦packer决定好您所有组件的尺寸和对齐方式，它将为您在屏幕上放置它们。当所有这些组件，包括顶层窗口，最终显示在您屏幕上时，GUI程序就会进入一个“服务器式”的无限循环。这个无限循环包括等待GUI事件、处理事件、然后返回等待模式，等待下一个事件。
+
+　The final step we described above says to enter the main loop once all the widgets are ready. This is the “server” infinite loop we have been referring to. In Tkinter, the code that does this is:
+上述最后一步说明所有组件就绪后立即进入主循环。这正是我们提及的“服务器式”无限循环。对Tkinter而言，相应代码如下：
+
+Tkinter.mainloop()
+
+　This  is  normally  the  last  piece  of  sequential  code  your  program  runs. When the main loop is entered, the GUI takes over execution from there. All other  action  is  via  callbacks,  even  exiting  your  application.  When  you  pull down the File menu to click on the Exit menu option or close the window directly, a callback must be invoked to end your GUI application.
+这通常是您程序执行的最后一段代码。一旦进入主循环，GUI便从此掌握控制权。所有其他动作都来自回调函数，包括程序退出。当您拉下文件菜单点击“退出”菜单项或直接关闭窗口时，必须要唤起一个回调来结束您的程序。
+
+
+19.2.3 Top-Level Window: Tkinter.Tk()
+顶层窗口：Tkinter.Tk()
+
+We mentioned above that all main widgets are built into the top-level window object. This object is created by the Tk class in Tkinter and is created via the normal instantiation:
+我们前面提到所有的主要组件都建立在顶层窗口对象内。这个对象是由Tkinter中的Tk类创建的，并且是由普通构造函数创建的：
+
+>>> import Tkinter
+>>> top = Tkinter.Tk()
+
+　Within this window, you place individual widgets or multiple-component pieces together to form your GUI. So what kinds of widgets are there? We will now introduce the Tk widgets.
+在这个窗口中，您可以放置独立组件或集成的模块来构建您的GUI。那么，都有哪些组件可用呢？我们下面就来介绍Tk组件。
+
+
+19.2.4  Tk Widgets
+Tk组件
+
+There are currently 15 types of widgets in Tk. We describe these widgets in
+Table 19.1.
+Tk目前有15种组件。我们在表19.1中列出了它们。
+
+　We won’t go over the Tk widgets in detail as there is plenty of good docu- mentation available on them, either from the Tkinter topics page at the main Python  Web  site  or  the  abundant  number  of  Tcl/Tk  printed  and  online resources  (some  of  which  are  available  in  Appendix  B).  However,  we  will present several simple examples to help you get started.
+我们不准备对所有Tk组件都一一详细讲解，因为已经有许多关于它们的很好的文章可供参考--不论是从Python网站的Tkinter主题页面还是数量可观的Tcl/Tk印刷品，抑或是在线资源（其中一些可以在附录B中找到）。然而，我们将讲解一些例子来帮您启航。
+
+CORE NOTE: Default arguments are your friend
+核心注释：缺省参数是您的朋友
+
+GUI development really takes advantage of default arguments in Python because there are numerous default actions in Tkinter widgets. Unless you know every single option available to you for every single widget you are using, it’s best to start out by setting only the parameters you are aware of and letting the system handle the rest. These defaults were chosen carefully.
+GUI开发从Python的缺省参数机制获益匪浅，因为Tkinter组件有大量的默认动作。除非您熟知自己使用的每一个组件的每一个可用选项，否则最好只设置您关心的参数而把其他的交由系统处理。这些缺省值是精心选出的。
+
+If you do not provide these values, do not worry about your applications appearing odd on the screen.They were created with an optimized set of default arguments as a general rule, and only when you know how to exactly
+customize your widgets should you use values other than the default.
+如果您没有提供这些值也不必担心程序会在屏幕上表现怪异。作为一条基本规则，程序都由一系列经优化的缺省值创建，并且只有当您明确知道如何配置您的组件时，才有必要用自己的值替换这些缺省值。
+
+Widget	Description
+组件    描述
+Button	Similar to a Label but provides additional functionality for mouse overs, presses, and releases as well as keyboard activity/ events
+Button  按钮。类似标签，但提供额外的功能，例如鼠标掠过、按下、释放以及键盘操作/事件
+
+Canvas	Provides ability to draw shapes (lines, ovals, polygons, rectangles); can contain images or bitmaps
+Canvas  画布。提供绘图功能（直线、椭圆、多边形、矩形）；可以包含图形或位图
+
+Checkbutton	Set of boxes of which any number can be “checked” (similar to HTML checkbox input)
+Checkbutton 选择按钮。一组方框，可以选择其中的任意个（类似HTML中的checkbox）
+
+
+Entry	Single-line text field with which to collect keyboard input (similar to HTML text input)
+Entry   文本框。单行文字域，用来收集键盘输入（类似HTML中的text）
+
+Frame	Pure container for other widgets
+Frame   框架。包含其他组件的纯容器
+
+Label	Used to contain text or images
+Label   标签。用来显示文字或图片
+
+Listbox	Presents user list of choices to pick from
+Listbox 列表框。一个选项列表，用户可以从中选择
+
+Menu	Actual list of choices “hanging” from a Menubutton that the user can choose from
+Menu    菜单。点下菜单按钮后弹出的一个选项列表，用户可以从中选择
+
+Menubutton	Provides infrastructure to contain menus (pulldown, cascading, etc.)
+Menubutton  菜单按钮。用来包含菜单的组件（有下拉式、层叠式等等）
+
+Message	Similar to a Label, but displays multi-line text
+Message 消息框。类似于标签，但可以显示多行文本
+
+Radiobutton	Set of buttons of which only one can be “pressed” (similar to HTML radio input)
+Radiobutton 单选按钮。一组按钮，其中只有一个可被“按下”（类似HTML中的radio）
+
+Scale	Linear “slider” widget providing an exact value at current setting; with defined starting and ending values
+Scale   进度条。线性“滑块”组件，可设定起始值和结束值，会显示当前位置的精确值
+
+Scrollbar	Provides scrolling functionality to supporting widgets, i.e., Text, Canvas, Listbox, and Entry
+Scrollbar   滚动条。对其支持的组件（文本域、画布、列表框、文本框）提供滚动功能
+
+Text	Multi-line text field with which to collect (or display) text from user (similar to HTML textarea)
+Text    文本域。多行文字区域，可用来收集（或显示）用户输入的文字（类似HTML中的textarea）
+
+Toplevel	Similar to a Frame, but provides a separate window container
+Toplevel    顶级。类似框架，但提供一个独立的窗口容器。
+
+<------------------------------------------------------------------------------
+Example 19.1  Label Widget Demo (tkhello1.py)
+例19.1  标签组件演示（tkhello1.py）
+
+Our first Tkinter example is . . . what else? “Hello World!” In particular, we introduce our first widget, the Label.
+我们的第一个Tkinter例子是......还能是什么呢？“Hello World!”具体地说，是介绍我们的第一个组件：标签。
+
+1	#!/usr/bin/env python
+2
+3	import Tkinter
+4
+5	top = Tkinter.Tk()
+6	label = Tkinter.Label(top, text='Hello World!')
+7	label.pack()
+8	Tkinter.mainloop()
+------------------------------------------------------------------------------>
+
+19.3  Tkinter Examples
+Tkinter举例
+
+19.3.1 Label Widget
+标签组件
+
+In Example 19.1, we present  tkhello1.py, the Tkinter version of “Hello World!” In particular, it shows you how a Tkinter application is set up and highlights the Label widget.
+在例19.1中，我们展示了Tkinter版的“Hello World!" -- tkhello1.py。实际上，它利用组件向您展示了如何创建一个Tkinter应用程序。
+
+In the first line, we create our top-level window. That is followed by our Label widget containing the all-too-famous string. We instruct the packer to manage and display our widget, and finally call mainloop() to run our GUI application.  Figure  19–1  shows  what  you  will  see  when  you  run  this  GUI application.
+第一行，我们先创建了一个顶层窗口。随后是写着那串举世闻名的字符的标签组件。我们指明用packer来管理和显示组件，并最终调用mainloop()来运行GUI程序。图19-1展示了运行该GUI程序后，您将会看到的效果。
+
+19.3.2 Button Widget
+按钮组件
+
+The next example is pretty much the same as the first. However, instead of a simple  text  label,  we  will  create  a  button  instead.  In  Example  19.2  is  the source code for tkhello2.py.
+第二个例子和第一个很相似。但我们这次将创建一个按钮而不只是显示一个简单的文字标签。例19.2是tkhello2.py的源码。
+
+
+<------------------------------------------------------------------------------
+Unix (twm)	Windows
+Figure 19–1    Tkinter Label widget
+(tkhello1.py)
+Example 19.2   Button Widget Demo (tkhello2.py)
+例19.2  按钮组件演示（tkhello2.py）
+
+This example is exactly the same as tkhello1.py except that rather than using a Label widget, we create a Button widget.
+本例和tkhello1.py完全相同，除了我们创建的是按钮组件而非标签组件。
+
+1	#!/usr/bin/env python
+2
+3	import Tkinter
+4
+5	top = Tkinter.Tk()
+6	quit = Tkinter.Button(top, text='Hello World!',
+7	command=top.quit)
+8	quit.pack()
+9	Tkinter.mainloop()
+------------------------------------------------------------------------------>
+
+
+The first few lines are identical. Things differ only when we create the But- ton widget. Our button has one additional parameter, the Tkinter.quit() method.  This  installs  a  callback  to  our  button  so  that  if  it  is  pressed  (and released),  the  entire  application  will  exit.  The  final  two  lines  are  the  usual pack() and entering of the mainloop(). This simple button application is shown in Figure 19–2.  
+前面几行是相同的。不同的只是我们创建的是按钮组件。我们的按钮有一个额外的参数，Tkinter.quit()方法。这将给我们的按钮安装一个回调函数，在按钮按下（并释放）后让整个程序退出。最后的两行是通常的pack()和进入mainloop()。这个简单的按钮应用程序展示在图19-2中。
+
+
+19.3.3 Label and Button Widgets
+标签和按钮组件
+
+We combine tkhello1.py and tkhello2.py into tkhello3.py, a script that has both a label and a button. In addition, we are providing more param- eters now than before when we were comfortable using all the default argu- ments that are automatically set for us. The source for tkhello3.py is given in Example 19.3.
+我们把tkhello1.py和tkhello2.py组合到tkhello3.py中，得到一个同时包含标签和按钮的脚本。另外，我们现在还使用了更多的参数，而不再满足于完全使用那些自动添入的缺省参数。例19.3给出了tkhello3.py的源码。
+
+　Besides  additional  parameters  for  the  widgets,  we  also  see  some  argu- ments for the packer. The fill parameter tells the packer to let the QUIT button  take  up  the  rest  of  the  horizontal  real  estate,  and  the  expand parameter  directs  the  packer  to  visually  fill  out  the  entire  horizontal  land- scape, stretching the button to the left and right sides of the window.
+除了对组件新加的参数，我们还看到对packer的一些参数。fill参数告诉packer让QUIT按钮填充水平方向的剩余空间，而expand参数则引导packer填充了水平方向的所有可视空间，并拉伸按钮到达窗口的左右边界。
+
+<------------------------------------------------------------------------------
+Unix
+
+Windows
+Figure 19–2	Tkinter Label widget (tkhello1.py)
+
+Example 19.3  Label and Button Widget Demo (tkhello3.py)
+例19.3  标签和按钮组件演示（tkhello3.py）
+
+This example features both a Label and a Button widget. Rather than primarily using default arguments when creating the widget, we are able to specify more now that we know more about Button widgets and how to configure them.
+本例同时展示了标签和按钮组件。既然我们已经了解了按钮组件和如何配置它，我们就可以设置的更多一些，而不必像以前那样大都使用缺省参数。
+
+1	#!/usr/bin/env python
+2
+3	import Tkinter
+4	top = Tkinter.Tk()
+5
+6	hello = Tkinter.Label(top, text='Hello World!')
+7	hello.pack()
+8
+9	quit = Tkinter.Button(top, text='QUIT',
+10	command=top.quit, bg='red', fg='white')
+11   quit.pack(fill=Tkinter.X, expand=1)
+12
+13   Tkinter.mainloop()
+------------------------------------------------------------------------------>
+
+　As  you  can  see  in  Figure  19–3,  without  any  other  instructions  to  the packer, the widgets are placed vertically (on top of each other). Horizontal placement  requires  creating  a  new  Frame object  with  which  to  add  the buttons.  That  frame  will  take  the  place  of  the  parent  object  as  a  single child object (see the buttons in the listdir.py module, Example 19.6 in Section 19.3.6).
+正如您在图19-3中看到的，对packer没有其他指令时，组件是按垂直顺序放置的（依次放在其他组件的上面）。要水平放置则需要创建一个框架对象，再用它来添加按钮。作为父对象的唯一子对象，框架将占据父对象的空间(参见19.3.6小节例19.6中listdir.py模块对按钮的处理)。
+
+<------------------------------------------------------------------------------
+Unix
+
+Windows
+Figure 19–3    Tkinter Label and Button
+widgets (tkhello3.py)
+------------------------------------------------------------------------------>
+
+
+19.3.4 Label, Button, and Scale Widgets
+标签、按钮和进度条组件
+
+Our  final  trivial  example,  tkhello4.py,  involves  the  addition  of  a  Scale widget. In particular, the Scale is used to interact with the Label widget. The  Scale slider  is  a  tool  which  controls  the  size  of  the  text  font  in  the Label widget. The greater the slider position, the larger the font, and the same  goes  for  a  lesser  position,  meaning  a  smaller  font.  The  code  for tkhello4.py is given in Example 19.4.
+我们的最后一个小例子tkhello4.py，增加了一个进度条组件。具体来说，这个进度条是用来和标签组件交互的。进度条的滑块被用作控制标签组件文本大小的工具。滑块的位置值越大字体就越大，反之亦然，越小的位置值意味着越小的字体。例19.4展示了tkhello4.py的源码。
+
+
+<------------------------------------------------------------------------------
+Example 19.4  Label, Button, and Scale Demo
+(tkhello4.py)
+例19.4  标签，按钮和进度条组件演示（tkhello4.py）
+
+Our final introductory widget example introduces the Scale widget and highlights how widgets can “communicate” with each other using callbacks [such as resize()].The text in the Label widget is affected by actions taken on the Scale widget.
+我们最后一个组件例子介绍了进度条组件，重点放在组件间通过回调函数的交互[诸如resize()]。您对进度条组件的动作将影响标签组件上的文字。
+
+1   #!/usr/bin/env python
+2
+3   from Tkinter import *
+4
+5   def resize(ev=None):
+6       label.config(font='Helvetica -%d bold' % \
+7   scale.get())
+8
+9   top = Tk()
+10  top.geometry('250x150')
+11
+12  label = Label(top, text='Hello World!',
+13	    font='Helvetica -12 bold')
+14  label.pack(fill=Y, expand=1)
+15
+16  scale = Scale(top, from_=10, to=40,
+17	    orient=HORIZONTAL, command=resize)
+18  scale.set(12)
+19  scale.pack(fill=X, expand=1)
+20
+21  quit = Button(top, text="QUIT",
+22	    command=top.quit, activeforeground='white',
+23	    activebackground='red')
+24  quit.pack()
+25
+26  mainloop()
+------------------------------------------------------------------------------>
+
+　New features of this script include a resize() callback function (lines 5–7), which is attached to the Scale. This is the code that is activated when the slider on the Scale is moved, resizing the size of the text in the Label.
+这段脚本新增加的resizing()回调函数（5-7行）附加在进度条组件上。这段代码在进度条的滑块被移动时激活，调整标签里文字的大小。
+
+　We also define the size (250 ? 150) of the top-level window (line 10). The final difference between this script and the first three is that we import the attributes  from  the  Tkinter module  into  our  namespace  with  “from Tkinter import *.” Although not recommended because it “pollutes” your  namespace,  we  do  it  here  mainly  because  this  application  involves  a great number of references to Tkinter attributes. This would require use of their fully qualified names for each and every attribute access. By using the undesired shortcut, we are able to access attributes with less typing and have code that is easier to read, at some cost.
+我们还限定了顶层窗口的尺寸（250×150）（第10行）。这段脚本和前3段的最后一个不同点是用“from Tkinter import *”把Tkinter模块的属性引入我们的名字空间。虽然不建议这样做，因为这会“污染”您的名字空间，但这个程序涉及大量对Tkinter属性的引用，这正是我们这样做的主要原因。这种方式（译者注：原文这里表达的不够清晰，本意是指import Tkinter的方式）要求访问每个属性时都使用它们的全部限定性名称。而通过这种不被推荐的快捷方式，我们可以在访问属性时减少输入并且让代码易于理解，但同时也付出了一些代价。
+
+　As you can see from Figure 19–4, both the slider mechanism as well as the current set value show up in the main part of the window. Figure 19-4 shows the state of the GUI after the user moves the scale/slider to a value of 36
+正如您在图19-4所看到的，滑块装置及当前位置值都显示在窗口的显著位置。图19-4展示了用户把进度条/滑块移动到36时的GUI程序状态。
+
+
+<------------------------------------------------------------------------------
+
+
+
+
+Unix
+
+
+
+
+
+
+
+
+
+
+
+
+
+Windows
+
+
+
+
+
+
+
+Figure 19–4    Tkinter Label, Button, and Scale
+widgets (tkhello4.py)
+------------------------------------------------------------------------------>
+
+As you can see from the code, the initial setting for the scale when the appli-cation starts is 12 (line 18).
+从代码中可以看出，进度条的初始值在程序启动时被设置为12（第18行）。
+
+
+19.3.5 Partial Function Application Example
+偏函数应用举例
+
+Before looking a longer GUI application, we wanted to review the Partial Func- tion Application (PFA) as introduced back in Section 11.7.3 of Chapter 11.
+在看更大的GUI程序之前，我们先回顾一下第11章11.7.3节介绍的偏函数应用（PFA）。
+
+　PFAs were added to Python in version 2.5 and are one piece in a series of significant improvements in functional programming.
+Python2.5新增了PFA等一系列新特性，它们显著提高了Python对函数编程的支持。
+
+　PFAs allow you to “cache” function parameters by effectively “freezing” those  predetermined  arguments,  and  then  at  runtime,  when  you  have  the remaining  arguments  you  need,  you  can  thaw  them  out,  send  in  the  final arguments, and have that function called with all parameters.
+偏函数允许您“预存”一些函数变量并有效的“冻结”了这些预定参数，在运行时您获得了所需的其他变量后再把它们“解冻”出来，用这些最终确定的参数去调用函数。
+
+Best of all, PFAs are not limited to just functions. They will work with any “callable,” any object that has a functional interface just by using parenthe- ses, i.e., classes, methods, or callable instances. The use of PFAs fits perfectly into a situation where there are many callables and many of the calls feature the same arguments over and over again.
+最妙的是，PFA不仅仅局限于函数。它们对任何“可调用”的东西都有效，任何有函数接口的对象，比如类、方法、或可调用对象，只要是有括号的。对于有许多待调对象并且许多调用都反复使用相同参数的情况，用PFA是最合适不过的。
+
+　GUI programming makes a great use case because there is good probabil- ity  that  you  want  some  consistency  in  GUI  widget  look-and-feel,  and  this consistency comes about when the same parameters are used to create like objects. We are now going to present an application where multiple buttons will have the same foreground and background colors. It would be a waste of typing to give the same arguments to the same instantiators every time we wanted a slightly different button: the foreground and background colors are the same, but only the text is slightly different.
+GUI编程有很好的操作环境，因为很有可能您需要GUI组件有某些一致的外观和体验，而这些一致性表现在可以使用相同的参数创建相似的对象。我们现在要展示的应用程序中，将有多个按钮有着相同的前景色和背景色。对这些仅有细小差别的按钮，每次调相同的构造函数作初始化时都输入些相同的参数实在是一种浪费：前景和背景色都一样，只是文字有细小差别。
+
+　We are going to use traffic road signs as our example with our application attempts creating textual versions of road signs by dividing them up into vari- ous categories of sign types like critical, warning, or informational (just like logging levels). The type of the sign determines their color layout when the signs are created. For example, critical signs have the text in bright red with a white backdrop, warning signs are in black text on a goldenrod background, and  informational  or  regulatory  signs  feature  black  text  on  a  white  back- ground. We have the “Do Not Enter” and “Wrong Way” signs, which are both “critical,” plus “Merging Traffic” and “Railroad Crossing,” both of which are warnings. Finally, we have the regulatory “Speed Limit” and “One Way” signs. The  application  creates  the  “signs,”  which  are  just  buttons.  When  users press  the  buttons,  they  just  pop  up  the  corresponding  Tk  dialog,  critical/ error, warning, or informational. It is not too exciting, but how the buttons are built is. You will find our application featured here in Example 19.5.
+我们将用交通指示牌作为例子，程序中尝试创造一种文字型的交通指示牌，并且把它们分成如下几类：危急、警告、通知（正好和日志信息级别相）。指示牌的类型决定了它们在创建时的颜色格局。例如，危急指示牌使用亮红文字和白色背景，警告指示牌使用黑色文字和金色背景，通知也就是普通指示牌使用黑色文字和白色背景。我们约定“Do Not Enter”和“Wrong Way”标识为危急，“Merging Traffic”和“Railroad Crossinig”标识为警告，“Speed Limit”和“One Way”标识为通知。该程序创造“指示牌”，它们都只是些按钮。当用户点下按钮时，将简单的弹出一个Tk响应对话框，显示危急/错误、警告、通知。这的确不够好玩，但如何创建这些按钮却很有趣。您将在例19.5看到这里所描述的程序。
+
+
+<------------------------------------------------------------------------------
+Example 19.5  Road Signs PFA GUI Application (pfaGUI2.py)
+例19.5 运用PFA的路灯指示牌GUI程序(pfaGUI2.py)
+
+Create road signs with the appropriate foreground and background colors based on sign type. Use PFAs to help “templatize” common GUI parameters.
+按照指示类型创建适当前景、背景色的路灯指示牌。使用PFA帮助“模板化”常用GUI参数。
+
+1    #!/usr/bin/env python
+2
+3    from functools import partial as pto
+4    from Tkinter import Tk, Button, X
+5    from tkMessageBox import showinfo, showwarning, showerror
+6
+7    WARN = 'warn'
+8    CRIT = 'crit'
+9    REGU = 'regu'
+10
+11   SIGNS = {
+12	'do not enter': CRIT,
+13	'railroad crossing': WARN,
+14	'55\nspeed limit': REGU,
+15	'wrong way': CRIT,
+16	'merging traffic': WARN,
+17	'one way': REGU,
+18   }
+19
+20   critCB = lambda: showerror('Error', 'Error Button Pressed!')
+21   warnCB = lambda: showwarning('Warning',
+22	'Warning Button Pressed!')
+23   infoCB = lambda: showinfo('Info', 'Info Button Pressed!')
+24
+25   top = Tk()
+26   top.title('Road Signs')
+27   Button(top, text='QUIT', command=top.quit,
+28	bg='red', fg='white').pack()
+29
+30   MyButton = pto(Button, top)
+31   CritButton = pto(MyButton, command=critCB, bg='white', fg='red')
+32   WarnButton = pto(MyButton, command=warnCB, bg='goldenrod1')
+33   ReguButton = pto(MyButton, command=infoCB, bg='white')
+34
+35   for eachSign in SIGNS:
+36	signType = SIGNS[eachSign]
+37	cmd = '%sButton(text=%r%s).pack(fill=X, expand=True)' % (
+38	signType.title(), eachSign,
+39	'.upper()' if signType == CRIT else '.title()')
+40	eval(cmd)
+41
+42   top.mainloop()
+Figure 19–5	Road signs PFA GUI application on XDarwin in
+MacOS X (pfaGUI2.py)
+------------------------------------------------------------------------------>
+
+
+When you execute this application, you will get a GUI that will look some- thing like Figure 19.5.
+当您执行这个程序时，会看到一个类似图19.5的GUI。
+
+
+Line-by-Line Explanation
+逐行注解
+
+Lines 1–18
+1-18行
+
+We  begin  our  application  by  importing  functional.partial(),  a  few Tkinter attributes,  and  the  Tk  dialogs  (lines  1–5).  Next,  we  define  some signs along with their categories (lines 7–18).
+作为开始，我们导入了functional.partial()、一些Tkinter属性以及Tk对话框（1-5行）。然后，我们定义了一些标识及其相应类型。
+
+Lines 20–28
+20-28行
+
+The Tk dialogs are assigned as button callbacks, which we will use for each button created (lines 20–23). We then launch Tk, set the title, and create a QUIT button (lines 25–28).
+Tk对话框被关联到按钮回调函数，我们将在创建按钮时使用它们（20-23行）。然后加载Tk，设置标题，并创建了一个QUIT按钮（25-28行）。
+
+Lines 30–33
+30-33行
+
+These lines represent our PFA magic. We use two levels of PFA. The first templatizes the Button class and the root window top. What this does is that every  time  we  call  MyButton,  it  will  call  Button (Tkinter.Button() creates a button.) with top as its first argument. We have “frozen” this into MyButton.
+这些行展示了PFA的魔力。我们通过两个步骤实现PFA。第一步是模板化的按钮类及根窗口top。这样当每次我们调用MyButton时，它会转而调用Button（Tkinter.Button()创建了一个按钮）并使用top作为其第一个参数。我们把这一切“冻结”在了MyButton里。
+
+　The second level of PFA is where we use our first one,  MyButton, and templatize that. We create separate button types for each of our sign catego- ries.  When  users  create  a  critical  button  CritButton (by  calling  it,  e.g., CritButton()),  it  will  then  call  MyButton along  with  the  appropriate button callback and background and foreground colors, which means calling Button with top, callback, and colors. Do you see how it unwinds and goes down the layers until at the very bottom, it has the call that you would have originally had to make if this feature did not exist yet? We repeat with Warn- Button and ReguButton.
+PFA的第二步使用了第一步的结果--MyButton--并再次对它模板化。我们对每个不同的指示类型都创建了单独类型的按钮。当用户创建一个危急按钮CritButton时（通过调用CritButton()），它会转而调用MyButton并使用恰当的按钮回调和前景、背景色参数，这意味着用top、按钮回调、前景、后景去调用Button。您看出它是如何展开并逐步调用低层直到按钮组件了吗？如果没有PFA这个特性，它执行的那些调用本该由您自己执行。我们把同样的步骤应用到WarnButton和ReguButton上。
+
+Lines 35–42
+35-42行
+
+With the setup completed, we look at our list of signs and create them. We put together  a  Python  evaluatable  string  consisting  of  the  correct  button  name, pass in the button label as the text argument, and pack() it. If it is a critical sign, then we CAPITALIZE the button text, otherwise we titlecase it. This last bit is done in line 39, demonstrating another feature introduced in Python 2.5, the temporary operator. Then we take each button creation string and execute it with eval(), creating the buttons one at a time and resulting in the graphic seen previously. Finally, we start the GUI by entering the main event loop.
+按钮类创建过程结束后，我们遍历了指示列表并创建出指示牌。我们使用了一个Python求值字串，它由正确的按钮名字、作为按钮标签传入的text参数组成，然后再pack()一下。如果这是个危急指示牌，我们就把按钮文字全转成大写，否则的话就以标题形式显示。最后一步在第39行完成，同时也展示了Python2.5引入的另一个特性，临时操作符。随后我们对每一个按钮创建字串施以eval()，每次创建一个按钮，最终形成了前面看到的图形。最后我们进入主事件循环，启动GUI。
+
+　This application uses several Python 2.5 features, so you will not be able to run this with an older version.
+这个应用程序使用了一些Python2.5的新特性，所以您不能在旧版上运行它。
+
+19.3.6  Intermediate Tkinter Example
+中级Tkinter范例
+
+We conclude this section with a larger example, listdir.py. This application is a directory tree traversal tool. It starts in the current directory and provides a file listing. Double-clicking on any other directory in the list causes the tool to change to the new directory as well as replace the original file listing with the files from the new directory. The source code is given as Example 19.6.  
+我们以一个比较大型的例子来总结本节，listdir.py。这个应用程序是一个目录树遍历工具。它从当前目录开始并提供文件列表功能。双击列表中的任意其他目录都会让该工具转向这个新的目录，同时用新目录中的文件列表替换原有的文件列表。源码作为例19.6给出。
+
+<------------------------------------------------------------------------------
+Example 19.6  File System Traversal GUI (listdir.py)
+例19.6 GUI文件遍历系统 （listdir.py）
+
+This slightly more advanced GUI expands on the use of widgets, adding listboxes, text entry fields, and scrollbars to our repertoire.There are also a good number of callbacks such as mouse clicks, key presses, and scrollbar action.
+这个稍高级一些的GUI程序扩大了组建的使用范围，演员名单里新增了列表框、文本框、和滚动条。而且还有大量的回调函数，例如鼠标点击、键盘输入、和滚动条操作。
+
+1	#!/usr/bin/env python
+2
+3	import os
+4	from time import sleep
+5	from Tkinter import *
+6
+7	class DirList(object):
+8
+9	    def __init__(self, initdir=None):
+10	        self.top = Tk()
+11	        self.label = Label(self.top,
+12	                            text='Directory Lister v1.1')
+13	        self.label.pack()
+14
+15          self.cwd = StringVar(self.top)
+16
+17          self.dirl = Label(self.top, fg='blue',
+18	                            font=('Helvetica', 12, 'bold'))
+19	        self.dirl.pack()
+20
+21          self.dirfm = Frame(self.top)
+22          self.dirsb = Scrollbar(self.dirfm)
+23	        self.dirsb.pack(side=RIGHT, fill=Y)
+24	        self.dirs = Listbox(self.dirfm, height=15,
+25	                            width=50, yscrollcommand=self.dirsb.set)
+26	        self.dirs.bind('<Double-1>', self.setDirAndGo)
+27	        self.dirsb.config(command=self.dirs.yview)
+28	        self.dirs.pack(side=LEFT, fill=BOTH)
+29	        self.dirfm.pack()
+30
+31	        self.dirn = Entry(self.top, width=50,
+32	        textvariable=self.cwd)
+33	        self.dirn.bind('<Return>', self.doLS)
+34	        self.dirn.pack()
+35
+36	        self.bfm = Frame(self.top)
+37	        self.clr = Button(self.bfm, text='Clear',
+38	                            command=self.clrDir,
+39	                            activeforeground='white',
+40	                            activebackground='blue')
+41	        self.ls = Button(self.bfm,
+42	                            text='List Directory',
+43	                            command=self.doLS,
+44	                            activeforeground='white',
+45	                            activebackground='green')
+46	        self.quit = Button(self.bfm, text='Quit',
+47	                            command=self.top.quit,
+48	                            activeforeground='white',
+49	                            activebackground='red')
+50	        self.clr.pack(side=LEFT)
+51	        self.ls.pack(side=LEFT)
+52	        self.quit.pack(side=LEFT)
+53	        self.bfm.pack()
+54
+55	        if initdir:
+56	            self.cwd.set(os.curdir)
+57	            self.doLS()
+58
+59	    def clrDir(self, ev=None):
+60	        self.cwd.set('')
+61
+62	    def setDirAndGo(self, ev=None):
+63	        self.last = self.cwd.get()
+64	        self.dirs.config(selectbackground='red')
+65	        check = self.dirs.get(self.dirs.curselection())
+66	        if not check:
+67	            check = os.curdir
+68	        self.cwd.set(check)
+69	        self.doLS()
+70
+71      def doLS(self, ev=None):
+72          error = ''
+73  	    tdir = self.cwd.get()
+74  	    if not tdir: tdir = os.curdir
+75  
+76  	    if not os.path.exists(tdir):
+77  	        error = tdir + ': no such file'
+78  	    elif not os.path.isdir(tdir):
+79  	        error = tdir + ': not a directory'
+80  
+81  	    if error:
+82              self.cwd.set(error)
+83              self.top.update()
+84              sleep(2)
+85              if not (hasattr(self, 'last') \ 
+86  	            and self.last):
+87  	            self.last = os.curdir
+88  	        self.cwd.set(self.last)
+89  	        self.dirs.config(\
+90  	        selectbackground='LightSkyBlue')
+91  	        self.top.update()
+92  	        return
+93  
+94  	    self.cwd.set(\
+95  	        'FETCHING DIRECTORY CONTENTS...')
+96  	    self.top.update()
+97  	    dirlist = os.listdir(tdir)
+98  	    dirlist.sort()
+99  	    os.chdir(tdir)
+100 	    self.dirl.config(text=os.getcwd())
+101 	    self.dirs.delete(0, END)
+102 	    self.dirs.insert(END, os.curdir)
+103 	    self.dirs.insert(END, os.pardir)
+104 	    for eachFile in dirlist:
+105 	        self.dirs.insert(END, eachFile)
+106 	    self.cwd.set(os.curdir)
+107 	    self.dirs.config(\
+108 	        selectbackground='LightSkyBlue')
+109
+110 def main():
+111 	d = DirList(os.curdir)
+112 	mainloop()
+113 
+114 if __name__ == '__main__':
+115 	main()
+
+
+Win dows
+
+
+
+Figure 19–6	List directory GUI application in Windows (listdir.py)
+------------------------------------------------------------------------------>
+
+In  Figure  19–6,  we  present  what  this  GUI  looks  like  in  a  Windows environment.
+在图19-6中，我们展示了Windows环境中的GUI外观。
+
+The Unix version of this application is given in Figure 19–7.
+这个程序的Unix版本在图19-7中展示。
+
+Line-by-Line Explanation
+逐行注解
+
+Lines 1–5
+1-5行
+
+These first few lines contain the usual Unix startup line and importation of the  os module,  the  time.sleep() function,  and  all  attributes  of  the Tkinter module.
+开始的几行包括通常的Unix启动行和导入os模块、time.sleep函数、及Tkinter模块的所有属性。
+
+Lines 9–13
+9-13行
+
+These  lines  define  the  constructor  for  the  DirList class,  an  object  that represents our application. The first Label we create contains the main title of the application and the version number.
+这些行定义了DirList类的构造函数，以及一个代表我们程序的对象。我们创建的第一个标签包含了应用程序的主标题和它的版本号。
+
+
+<------------------------------------------------------------------------------
+Figure 19–7    List directory GUI application in Unix
+(listdir.py)
+
+
+Unix
+------------------------------------------------------------------------------>
+
+
+
+Lines 15–19
+15-19行
+
+We declare a Tk variable named cwd to hold the name of the directory we are on—we will see where this comes in handy later. Another Label is cre- ated to display the name of the current directory.
+我们声明了一个名为cwd的Tk变量来保存当前所在目录的名字--我们马上就会看到这个值从哪来。还创建了另一个标签来显示当前目录的名字。
+
+Lines 21–29
+21-29行
+
+This section defines the core part of our GUI, (the Listbox) dirs, which contain the list of files of the directory that is being listed. A Scrollbar is employed to allow the user to move through a listing if the number of files exceeds the size of the Listbox. Both of these widgets are contained in a Frame widget.  Listbox entries  have  a  callback  (setDirAndGo)  tied  to them using the Listbox bind() method.
+这段代码定义了我们这个GUI程序的核心，dirs（列表框）包含了被列目录的文件列表。使用一个滚动条以便用户在文件数目超过列表框窗口尺寸时移动列表。这两个组件都被包含在一个框架组件中。列表框用bind()方法把回调函数（setDirAndGo）和列表项绑定起来。
+
+　Binding means to tie a keystroke, mouse action, or some other event to a callback to be executed when such an event is generated by the user. setDir- AndGo() will  be  called  if  any  item  in  the  Listbox is  doubleclicked.  The Scrollbar is  tied  to  the  Listbox by  calling  the  Scrollbar.config() method.
+绑定意味着把一个回调函数连接在键盘输入、鼠标动作、或其他什么事件上，当这个事件被用户触发时就会执行这个回调函数。当列表框中的任一项被双击时setDirAndGo()函数就会被调用。滚动条被Scrollbar.config()方法贴附在列表框上。
+
+Lines 31–34
+31-34行
+
+We  then  create  a  text  Entry field  for  the  user  to  enter  the  name  of  the directory he or she wants to traverse and see its files listed in the Listbox. We add a RETURN or Enter key binding to this text entry field so that the user  can  hit  RETURN  as  an  alternative  to  pressing  a  button.  The  same applies for the mouse binding we saw above in the Listbox. When the user doubleclicks on a Listbox item, it has the same effect as the user’s entering the  directory  name  manually  into  the  text  Entry field  and  pressing  the “go” button.
+随后我们创建了一个文本框让用户输入目录名，以便转到他/她想去的目录，并在列表框中显示该目录中的文件。我们为该文字输入区加入了一个RETURN或Enter键的绑定，这样用户就能用敲RETURN的方法代替按钮点击，同样的事也会发生在上面提到的列表框中。当用户双击列表项时，效果等同于用户在文本框中输入目录名然后点击“go”按钮。
+
+Lines 36–53
+36-53行
+
+We then define a Button frame (bfm) to hold our three buttons, a “clear” button (clr), a “go” button (ls), and a “quit” button (quit). Each button has its own different configuration and callbacks, if pressed.
+接下来我们定义了一个按钮框架（bfm）来保管这三个按钮：一个“clear”按钮（clr），一个“go”按钮（ls），和一个“quit”按钮（quite）。每一个按钮都有各自不同的配置和点击时的回调函数。
+
+Lines 55–57
+55-57行
+
+The final part of the constructor initializes the GUI program, starting with the current working directory.
+构造函数的最后一部分初始化了这个GUI程序，程序将从当前工作目录开始。
+
+Lines 59–60
+59-60行
+
+The  clrDir() method  clears  the  cwd Tk  string  variable,  which  contains the current directory that is “active.” This variable is used to keep track of what directory we are in and, more important, helps keep track of the pre- vious directory in case errors arise. You will notice the ev variables in the callback functions with a default value of None. Any such values would be passed in by the windowing system. They may or may not be used in your callback.
+clrDir()方法清空Tk字符串变量cwd，其中保存着当前的“活动”目录。这个变量用来跟踪我们当前所处的目录，更重要的是，在错误发生时协助返回上一个目录。您一定注意到了回调函数中的ev参数的缺省值是None。这样的任意值都可能由窗口系统传回，它们在您的回调函数里可以用也可以不用。
+
+Lines 62–69
+62-69行
+
+The  setDirAndGo() method  sets  the  directory  to  traverse  to  and  issues the call to the method that makes it all happen, doLS().
+setDirAndGo()方法设置了要到达的目录并产生一个对doLS()方法的调用，后者负责实现其余的一切。
+
+Lines 71–108
+71-108行
+
+doLS() is, by far, the key to this entire GUI application. It performs all the safety checks (e.g., is the destination a directory and does it exist?). If there is an error, the last directory is reset to be the current directory. If all goes well, it calls os.listdir() to get the actual set of files and replaces the listing in the Listbox. While the background work is going on to pull in the new directory’s information, the highlighted blue bar becomes bright red. When the new directory has been installed, it reverts to blue.
+现在看来，doLS()是整个GUI程序的关键。它负责所有的安全性检查（目标是否是一个目录以及它是否存在？）如果有错误发生，最终目录会被设置为当前目录。如果一切正确，它调用os.listdir()来取得新的文件集合并替换列表框中的列表。当后台忙于获取新目录信息时，高亮的蓝色条会变成亮红色。当新目录设置完毕，它会恢复蓝色。
+
+Lines 110–115
+110-115行
+
+The last pieces of code in listdir.py represent the main part of the code. main() is executed only if this script is invoked directly, and when main() runs,  it  creates  the  GUI  application,  then  calls  mainloop() to  start  the GUI, which is passed control of the application.
+listdir.py中的最后一段代码明显是代码的主体。main()函数只有在该脚本被直接调用时才会执行，并且当它执行时会创建GUI程序，后者随之掌控该程序。
+
+　We leave all other aspects of the application as an exercise to the reader, recommending that it is easier to view the entire application as a combination of a set of widgets and functionality. If you see the individual pieces clearly, then the entire script will not appear as daunting.
+我们把该程序的所有其他方面都留给读者作为练习，再次提醒您，把整个程序看成是一系列组件和功能的组合，一切就都会简单起来。如果您清楚的知道每个单独程序段的意思，那么整个脚本就不会再显得可怕了。
+
+　We hope that we have given you a good introduction to GUI programming with Python and Tkinter. Remember that the best way to get familiar with Tkinter  programming  is  by  practicing  and  stealing  a  few  examples!  The Python  distribution  comes  with  a  large  number  of  demonstration  applica- tions that you can study.
+但愿我们给了您一个够好的关于Python和Tkinter的GUI编程介绍。请记住熟悉Tkinter编程最好的方法就是实践和模仿一些例子！Python发行包附带了很多可供您学习的应用程序范例。
+
+　If you download the source code, you will find Tkinter demo code in Lib/ lib-tk,  Lib/idlelib,  and  Demo/tkinter.  If  you  have  installed  the Win32 version of Python and C:\Python2x, then you can get access to the demo  code  in  Lib\lib-tk and  Lib\idlelib.  The  latter  directory  con- tains the most significant sample Tkinter application: the IDLE IDE itself. For further reference, there are several books on Tk programming, one spe- cifically on Tkinter.
+如果您下载了源码包，就会在Lib/lib-tk、Lib/idlelib、和Demo/tkinter下发现Tkinter的演示代码。如果您把Win32版本的Python安装在C:\Python2.x，那么可以在Lib\lib-tk和Lib\idlelib下找到这些演示代码。最后那个目录包含了最出名的Tkinter例子程序：IDLE
+IDE本身。还有一些关于Tk编程的书籍供进一步参考，其中一本是专为Tkinter编写的。
+
+
+19.4 Brief Tour of Other GUIs
+其他GUI简介
+
+We  hope  to  eventually  develop  an  independent  chapter  on  general  GUI development using many of the abundant number of graphical toolkits that exist under Python, but alas, that is for the future. As a proxy, we would like
+to  present  a  single  simple  GUI  application  written  using  four  of  the  more popular and available toolkits out there: Tix (Tk Interface eXtensions), Pmw (Python  MegaWidgets  Tkinter  extension),  wxPython  (Python  binding  to wxWidgets), and PyGTK (Python binding to GTK?). Links to where you can get more information and/or download these toolkits can be found in the ref- erence section at the end of this chapter.
+我们期望最终能编写出独立的一章来对GUI编程作总体介绍，Python拥有的大量图形工具集中有很多内容值得一讲，然而，这只能是以后的事了。作为替代，我们将使用其中4种比较流行且可用的工具集来编写同一个GUI程序示例：Tix（Tk Interface eXtensions)、Pmw（Python MegaWidgets的Tkinter扩展）、wxPython（wxWidgets的Python绑定）、和PyGTK（GTK+的Python绑定）。您可以在本章末尾参考部分获取更多信息和下载这些工具集的地方。
+
+　The Tix module is already available in the Python standard library. You must download the others, which are third party. Since Pmw is just an extension to Tkinter, it is the easiest to install (just extract into your site packages). wxPython and PyGTK involve the download of more than one file and building (unless you opt for the Win32 versions where binaries are usually available). Once the toolkits are installed and verified, we can begin. Rather than just sticking with the widgets we’ve already seen in this chapter, we’d like to introduce a few more complex widgets for these examples.
+Tix模块包含在Python标准库中，已经可用了。其他工具集是第三方的，你必须自己下载。因为Pmw只是对Tkinter的一个扩展，它的安装是最简便的（只需解压到您的网络包目录下）。wxPython和PyGTK涉及下载多个文件并编译（除非您使用的是Win32版本，这样的话通常有安装包可用）。一旦这些工具集安装好并通过证，我们就能开始了。我们不打算局限在本章已经讲过的那些组件上，我们准备在后面的例子中介绍一些更复杂的组件。
+
+　In  addition  to  the  Label and  Button widgets  we  have  seen  before,  we would  like  to  introduce  the  Control or  SpinButton and  ComboBox.  The Control  widget  is  a  combination  of  a  text  widget  with  a  value  inside  being “controlled” or “spun up or down” by a set of arrow buttons close by, and the ComboBox is usually a text widget and a pulldown menu of options where the currently active or selected item in the list is displayed in the text widget.  　
+除过我们已经看到过的标签和按钮组件，我们准备介绍控制按钮（Control, 又叫微调按钮，SpinButton）和组合框组件（ComboBox）。控制组件是一个文本组件和一对箭头按钮的组合，文本值受旁边按钮的“控制”或者说“旋上、旋下”，而组合框则通常包括一个文本组件和一个下拉菜单，菜单项列表中当前激活或选中的项目将显示在文本组件中。
+
+Our application is fairly basic: pairs of animals are being moved around, and the number of total animals can range from a pair to a dozen max. The Control is used to keep track of the total number while the ComboBox is a menu containing the various types of animals that can be selected. In Figure 19–8, each image shows the state of the GUI application immediately after launch- ing. Note that the default number of animals is two, and no animal type has been selected yet.
+我们的应用程序相当简单：成对的动物要被搬走，动物的总数在从一对到一打（译者注：12只）的范围内。用控制组件来显示总数，用组合框显示动物种类列表菜单供用户选择。注意默认的动物数量是2，且没有选择动物类型。
+
+　Things are different once we start to play around with the application, as evidenced in Figure 19–9 after we have modified some of the elements in the Tix application.
+一旦我们开始执行这个程序，事物就变得不同了，图19-9就是例证，它显示的是在Tix程序中改变一些元素后的结果。
+
+　Below, you will find the code for all four versions of our GUI. You will note that although relatively similar, each one differs in its own special way. Also, we use the .pyw extension to suppress the popping up of the Dos command
+or terminal window.
+下面，您将看到所有4个版本的GUI程序代码。您会发现尽管它们有些相似，但每一个都有自己的特别之处。而且我们使用.pyw作为文件后缀，这样可以防止弹出Dos命令窗口或终端窗口。
+
+
+<------------------------------------------------------------------------------
+Tix
+
+
+
+
+Pmw
+PyGTK
+
+
+wxPython
+Figure 19–8    Application using various GUIs under Win32 (animal*.pyw)
+
+
+
+
+
+Tix
+Figure 19–9    After modifying the Tix GUI
+version of our application (animalTix.pyw)
+------------------------------------------------------------------------------>
+
+19.4.1  Tk Interface eXtensions (Tix)
+Tk Interface eXtensions (Tix)
+
+We start with an example (Example 19.7) of using the Tix module. Tix is an extension  library  for  Td/T  that  adds  many  new  widgets,  image  types,  and other commands that keep Tk a viable GUI development todkit. Let’s take look at how to use Tix with Python.
+我们从一个使用Tix模块的例子（19.7）开始。Tix是对Td/T（译者注：应该是Tcl/Tk）的一个扩展库，其中增加了许多新的组件、图像类型和其它一些命令，提高Tk作为GUI开发工具集的可用性。我们现在来看看如何在Python中使用Tix。
+
+
+<------------------------------------------------------------------------------
+Example 19.7  Tix GUI Demo (animalTix.pyw)
+Tix GUI 编程演示（animalTix.pyw）
+
+Our first example uses the Tix module. Tix comes with Python!
+我们的第一个例子使用Tix模块。Tix已经是Python的一部分了！
+
+1    #!/usr/bin/env python
+2
+3    from Tkinter import Label, Button, END
+4    from Tix import Tk, Control, ComboBox
+5
+6    top = Tk()
+7    top.tk.eval('package require Tix')
+8
+9    lb = Label(top,
+10   text='Animals (in pairs; min: pair, max: dozen)')
+11   lb.pack()
+12
+13   ct = Control(top, label='Number:',
+14	integer=True, max=12, min=2, value=2, step=2)
+15   ct.label.config(font='Helvetica -14 bold')
+16   ct.pack()
+17
+18   cb = ComboBox(top, label='Type:', editable=True)
+19   for animal in ('dog', 'cat', 'hamster', 'python'):
+20	cb.insert(END, animal)
+21   cb.pack()
+22
+23   qb = Button(top, text='QUIT',
+24	command=top.quit, bg='red', fg='white')
+25   qb.pack()
+26
+27   top.mainloop()
+------------------------------------------------------------------------------>
+
+Line-by-Line Explanation
+逐行注解
+
+Lines 1–7
+1-7行
+
+This  is  all  the  setup  code,  module  imports,  and  basic  GUI  infrastructure. Line 7 asserts that the Tix module is available to the application.
+这里都是些初始化代码，模块导入操作，以及基本的GUI操作。第7行的断言要求程序可以使用Tix模块。
+
+Lines 8–27
+8-27行
+
+These  lines  create  all  the  widgets:  Label (lines  9–11),  Control (lines 13–16), ComboBox (lines 18–21), and quit Button (lines 23–25). The con- structors and arguments for the widgets are fairly self-explanatory and do not require elaboration. Finally, we enter the main GUI event loop in line 27.
+这些行创建了所有的组件：标签（9-11行）、控制（13-16行）、组合框（18-21行）、以及退出按钮（23-25行）。组件构造函数里的参数都很浅显明了无需更多解释。最后，我们在第27行进入GUI主事件循环。
+
+
+19.4.2  Python MegaWidgets (PMW)
+Python MegaWidgets (PMW)
+
+
+Next we take a look at Python MegaWidgets as shown in Example 19.8. This module was created to address the aging Tkinter. It basically helps the extend its longevity by adding more modern widgets to the GUI palette.
+下面通过例19.8让我们来看看Python MegaWidgets。这个模块体现了Tkinter悠久的历史。它基本上是通过在GUI工具集中添加一些新式的组件来延长Tkinter的寿命。
+
+　The Pmw example is so similar to our Tix example that we leave line-by- line analysis to the reader. The line of code that differs the most is the con- structor for the control widget, the Pmw Counter. It provides for entry val- idation.  Instead  of  specifying  the  smallest  and  largest  possible  values  as keyword  arguments  to  the  widget  constructor,  Pmw  uses  a  “validator”  to ensure that the values do not fall outside our accepted range.
+这个Pmw的例子和上面Tix的例子是如此的相似，以致我们不准备对读者逐行注解它。代码中区别最大的一行是控制组件的构造函数，那个Pmw的控制组件。它提供了验证函数的入口。不同于直接在组件构造函数中以关键字参数的形式传入最大、最小值，Pmw使用“验证器”来确保值不会超出我们可接受的范围。
+
+　Now, we are finally going to leave the Tk world behind. Tix and Pmw are extensions to Tk and Tkinter, respectively, but now we are going to change gears to look at completely different toolkits, wxWidgets and GTK?. You will notice that the number of lines of code starts to increase as we start program- ming  in  a  more  object-oriented  way  when  using  these  more  modern  and robust GUI toolkits.
+<<<<<<< .mine
+现在我们终于要离开Tk的世界了。Tix和Pmw分别扩展了Tk和Tkinter，然而我们现在将改变方向去看看完全不同的工具集，wxWidgets和GTK+。在使用这些现代的、健壮的GUI工具集时，您将发现代码的行数在增加.这是因为我们开始用面向对象的方法编码了. 
+=======
+现在我们终于要离开Tk的世界了。Tix和Pmw分别扩展了Tk和Tkinter，然而我们现在将改变方向去看看完全不同的工具集，wxWidgets和GTK+。在使用这些现代的、健壮的GUI工具集时，您将发现代码的行数增加了，这是因为我们使用了更多的面向对象特性。
+>>>>>>> .r515
+
+
+19.4.3  wxWidgets and wxPython
+wxWidgets 和 wxPython
+
+wxWidgets (formerly known as wxWindows) is a cross-platform toolkit used to build graphical user applications. It is implemented using C++ and is avail- able on a wide number of platforms to which wxWidgets defines a consistent and common API. The best part of all is that wxWidgets uses the native GUI on each platform, so your program will have the same look-and-feel as all the other  applications  on  your  desktop.  Another  feature  is  that  you  are  not restricted to developing wxWidgets applications in C++. There are interfaces to both Python and Perl. Example 19.9 shows our animal application using wxPython.
+wxWidgets（以前称作wxWindows）是一个跨平台的工具集，用来构建图像用户程序。它用C++实现并在各种平台上广泛使用，wxWidgets为这些平台定义了一致、通用的API。wxWidgets最大的优点它在每个平台上都使用原生GUI，所以您的程序将和所有其它桌面程序有相同的外观和用户体验。另一个特点是您不会被局限于使用C++开发wxWidgets应用程序。它有对Python和Perl的接口。例19.9使用wxPython展示了我们那个动物应用程序。
+
+<------------------------------------------------------------------------------
+Example 19.8  Pmw GUI Demo (animalPmw.pyw)
+Pmw GUI 程序演示（animalPmw.pyw）
+
+Our second example uses the Python MegaWidgets package.
+我们的第二个例子使用Python MegaWidgets包。
+
+1    #!/usr/bin/env python
+2
+3    from Tkinter import Button, END, Label, W
+4    from Pmw import initialise, ComboBox, Counter
+5
+6    top = initialise()
+7
+8    lb = Label(top,
+9    text='Animals (in pairs; min: pair, max: dozen)')
+10   lb.pack()
+11
+12   ct = Counter(top, labelpos=W, label_text='Number:',
+13	          datatype='integer', entryfield_value=2,
+14	          increment=2, entryfield_validate={'validator':
+15	          'integer', 'min': 2, 'max': 12})
+16   ct.pack()
+17
+18   cb = ComboBox(top, labelpos=W, label_text='Type:')
+19   for animal in ('dog', 'cat', 'hamster', 'python'):
+20	cb.insert(end, animal)
+21   cb.pack()
+22
+23   qb = Button(top, text='QUIT',
+24	command=top.quit, bg='red', fg='white')
+25   qb.pack()
+26
+27   top.mainloop()
+------------------------------------------------------------------------------>
+
+
+
+Line-by-Line Explanation
+逐行注解
+
+Lines 5–37
+5-37行
+
+Here we instantiate a Frame class (lines 5–8), of which the sole member is the constructor. This method’s only purpose in life is to create our widgets. Inside the frame, we have a Panel. Inside the panel we use a BoxSizer to contain and layout all of our widgets (lines 10, 36), which consist of a Label (lines  12–14),  SpinCtrl (lines  16–20),  ComboBox (lines  22–27),  and  quit Button (lines 29–34).
+这里我们先编写了一个框架类（5-8行），它的唯一成员即其构造函数。这个方法的唯一实用目的就是创建我们的组件。在框架组件中，我们创建了一个画板组件（panel）。在画板中我们用BoxSizer来包含所有其他组件并对其布局（第10、36行），这些组件是标签（12-14行）、微调按钮（16-20行）、列表框（22-27行）和退出按钮（29-34行）。
+
+
+<------------------------------------------------------------------------------
+Example 19.9  wxPython GUI Demo (animalWx.pyw)
+wxPython GUI 程序演示（animalWx.pyw）
+
+Our third example uses wxPython (and wxWidgets). Note that we have placed all our widgets inside a “sizer” for organization and the more object-oriented nature of this application.
+我们的第三个例子使用wxPython（以及wxWidgets）。注意我们把所有的组件都放在一个布局管理器里，以及该程序中更多的面向对象本质。
+
+1	#!/usr/bin/env python
+2
+3	import wx
+4
+5	class MyFrame(wx.Frame):
+6	    def __init__(self, parent=None, id=-1, title=''):
+7	        wx.Frame.__init__(self, parent, id, title,
+8	        size=(200, 140))
+9	        top = wx.Panel(self)
+10	        sizer = wx.BoxSizer(wx.VERTICAL)
+11	        font = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD)
+12	        lb = wx.StaticText(top, -1,
+13	            'Animals (in pairs; min: pair, max: dozen)')
+14	        sizer.Add(lb)
+15
+16	        c1 = wx.StaticText(top, -1, 'Number:')
+17	        c1.SetFont(font)
+18	        ct = wx.SpinCtrl(top, -1, '2', min=2, max=12)
+19	        sizer.Add(c1)
+20	        sizer.Add(ct)
+21
+22	        c2 = wx.StaticText(top, -1, 'Type:')
+23 ???
+24 ???
+25	        choices=('dog', 'cat', 'hamster','python'))
+26	        sizer.Add(c2)
+27	        sizer.Add(cb)
+28
+29	        qb = wx.Button(top, -1, "QUIT")
+30	        qb.SetBackgroundColour('red')
+31	        qb.SetForegroundColour('white')
+32	        self.Bind(wx.EVT_BUTTON,
+33	            lambda e: self.Close(True), qb)
+34	        sizer.Add(qb)
+35
+36	        top.SetSizer(sizer)
+37	        self.Layout()
+38
+39      class MyApp(wx.App):
+40	    def OnInit(self):
+41	        frame = MyFrame(title="wxWidgets")
+42	        frame.Show(True)
+43	        self.SetTopWindow(frame)
+44	        return True
+45
+46      def main():
+47	    app = MyApp()
+48	    app.MainLoop()
+49
+50      if __name__ == '__main__':
+51	    main()
+------------------------------------------------------------------------------>
+
+
+We have to manually add Labels to the SpinCtrl and ComboBox wid- gets because they apparently do not come with them. Once we have them all, we add them to the sizer, set the sizer to our panel, and lay everything out.  On line 10, you will note that the sizer is vertically oriented, meaning that our widgets will be placed top to bottom. 
+我们不得不手工为微调按钮和组合框组件添加标签，因为它们看起来并不包含标签。一旦我们创建好这些，就把他们加到布局管理器中，再把布局管理器交给画板组件，并确定其中每个组件的布局。您会注意到第10行说布局管理器是垂直走向的，这表明我们所有的组件都会按从上到下的顺序排列。
+
+　One weakness of the SpinCtrl widget is that it does not support “step” functionality. With the other three examples, we are able to click an arrow selector and have it increment or decrement by units of two, but that is not possible with this widget.
+微调按钮组件有一个弱点，它不支持“步进”功能。在其他3个例子中，我们可以点箭头按钮让控制组件每次增加或减少2，但对这个组件却不行。
+
+Lines 39–51
+39-51行
+
+Our application class instantiates the Frame object we just designed, renders it to the screen, and sets it as the top-most window of our application. Finally, the setup lines just instantiate our GUI application and start it running.
+我们的应用程序类实例化了一个刚才设计的框架对象，把它绘制在屏幕上，并设置成程序的顶层窗口。最后，几行安装代码实例化了GUI应用程序对象并启动之。
+
+19.4.4 GTK+ and PyGTK
+GTK+ 和 PyGTK
+
+Finally, we have the PyGTK version, which is quite similar to the wxPython GUI  (See  Example  19.10).  The  biggest  difference  is  that  we  use  only  one class, and it seems more tedious to set the foreground and background colors
+of objects, buttons in particular.
+最后是PyGTK版的例子，它和wxPython GUI程序非常相似（见例19.10）。最大的不同是我们只用一个类，还有那些设置对象--实际上就是按钮--前景、背景色的代码实在是很冗长。
+
+Line-by-Line Explanation
+逐行注解
+
+Lines 1–6
+1-6行
+
+We import three different modules and packages, PyGTK, GTK, and Pango, a library for layout and rendering of text, specifically for I18N purposes. We need  it  here  because  it  represents  the  core  of  text  and  font  handling  for GTK+ (2.x).
+我们导入了3个不同的模块和包，PyGTK、GTK和Pango。Pango是一个用来布局和生成文本的库，专用于实现I18N。这里需要这个库是因为它体现了GTK+（2.x）对文字和字体处理的核心思想。
+
+
+
+<------------------------------------------------------------------------------
+Example 19.10  PyGTK GUI Demo (animalGtk.pyw)
+PyGTK GUI 程序演示（animalGtk.pyw）
+
+Our final example uses PyGTK (and GTK+). Like the wxPython example, this one also uses a class for our application. It is interesting to note how similar yet different all of our GUI applications are.This is not surprising and allows programmers to switch between toolkits with relative ease.
+我们最后一个例子使用PyGTK（和GTK+）。类似wxPython的例子，这里对应用程序也用了一个类。对比一下这两个GUI程序例子的相似和不同点是很有趣的。这种现象并不奇怪，它使得开发者可以比较容易的转用其他工具集。
+
+1	#!/usr/bin/env python
+2
+3	import pygtk
+4	pygtk.require('2.0')
+5   import gtk
+6   import pango
+7
+8	class GTKapp(object):
+9	    def __init__(self):
+10	        top = gtk.Window(gtk.WINDOW_TOPLEVEL)
+11	        top.connect("delete_event", gtk.main_quit)
+12	        top.connect("destroy", gtk.main_quit)
+13	        box = gtk.VBox(False, 0)
+14	        lb = gtk.Label(
+15	            'Animals (in pairs; min: pair, max: dozen)')
+16	        box.pack_start(lb)
+17
+18	        sb = gtk.HBox(False, 0)
+19	        adj = gtk.Adjustment(2, 2, 12, 2, 4, 0)
+20	        sl = gtk.Label('Number:')
+21	        sl.modify_font(
+22	            pango.FontDescription("Arial Bold 10"))
+23	        sb.pack_start(sl)
+24	        ct = gtk.SpinButton(adj, 0, 0)
+25	        sb.pack_start(ct)
+26
+27
+28	        cb = gtk.HBox(False, 0)
+29	        c2 = gtk.Label('Type:')
+30	        cb.pack_start(c2)
+31	        ce = gtk.combo_box_entry_new_text()
+32	        for animal in ('dog', 'cat','hamster', 'python'):
+33	            ce.append_text(animal)
+34	        cb.pack_start(ce)
+35	        box.pack_start(cb)
+36
+37	        qb = gtk.Button("")
+38	        red = gtk.gdk.color_parse('red')
+39          sty = qb.get_style()
+40	        for st in (gtk.STATE_NORMAL,
+41	            gtk.STATE_PRELIGHT, gtk.STATE_ACTIVE):
+42	            sty.bg[st] = red
+43	        qb.set_style(sty)
+44	        ql = qb.child
+45	        ql.set_markup('<span color="white">QUIT</span>')
+46	        qb.connect_object("clicked",
+47	            gtk.Widget.destroy, top)
+48	        box.pack_start(qb)
+49	        top.add(box)
+50	        top.show_all()
+51
+52  if __name__ == '__main__':
+53	    animal = GTKapp()
+54	    gtk.main()
+------------------------------------------------------------------------------>
+
+Lines 8–51
+8-15行
+
+The GTKapp class represents all the widgets of our application. The topmost window is created (with handlers for closing it via the window manager), and a vertically oriented sizer (VBox) is created to hold our primary widgets. This
+is exactly what we did in the wxPython GUI.
+GTKapp类反应了本程序中所有的组件。顶层窗口在这里创建（窗口管理器负责关闭它），而且还创建了一个垂直走向的布局管理器（VBox）来掌管我们的主要组件。这些实际上和我们在wxPython GUI程序中作的一样。
+
+　However, wanting the static labels for the SpinButton and ComboBox- Entry to be next to them (unlike above them for the wxPython example), we create little horizontally oriented boxes to contain the label-widget pairs (lines 18–36), and placed those HBoxes into the all-encompassing VBox.
+然而，为了让微调按钮和组合框的静态文本能出现它们的左侧（wxPython例子中出现在上方），我们创建了小型的水平走向的方框来包括标签组件对（18-36行），而且还把这些HBox完全置于VBox的掌控之下。
+
+After creating the quit Button and adding the VBox to our topmost win- dow, we render everything on-screen. You will notice that we create the but- ton with an empty label at first. We do this so that a Label (child) object will be created as part of the button. Then on lines 45–46, we get access to the label and set the text with white font color.
+接下来我们创建了退出按钮并把VBox添加到顶层窗口中，然后把一切绘制到屏幕上。您一定注意到我们刚开始用空标题创建了按钮。我们这样做是为了让标签（子）对象能作为按钮的一部分被创建。在45-46行，我们取得标签的访问权并用白色字体设置了文字。
+
+　The reason why we do this is because if you set the style foreground, i.e., in the loop and auxiliary code on lines 41–44, the foreground only affects the button’s foreground and not the label—for example, if you set the foreground style to white and highlight the button (by pressing TAB until it is “selected”) you will see that the inside dotted box identifying the selected widget is white, but the label text would still be black if you did not alter it like we did with the markup on line 46.
+我们这样做的原因是如果您直接设置前景风格--通过41-44行的循环和辅助代码--那么前景只会对按钮起作用而对其它--例如标签--却是无效的，假如您把前景设为白色并把焦点置在按钮上（通过按TAB键可以“选中”它），您将看到用来标识选中组件的内点画线是白色的，而标签文字却依然是黑色的，除非您像我们在第45行那样改一下。
+
+Lines 53–55
+53-55行
+
+Here we create our application and enter the main event loop.
+我们在这里创建了应用程序并进入主事件循环。
+
+
+19.5 Related Modules and Other GUIs
+相关模块和其他GUI
+
+There are other GUI development systems that can be used with Python. We present the appropriate modules along with their corresponding window sys- tems in Table 19.2.
+Python还有一些其他的GUI开发系统。我们在表19.2中列出适当的模块及其对应的窗口系统。
+
+
+Table 19.2  GUI Systems Available for Python
+表19.2 Python可用的GUI系统
+
+GUI Module or System	Description
+GUI模块或系统           描述
+
+Tk-Related Modules
+Tk相关模块
+
+Tkinter	TK INTERface: Python’s default GUI toolkit http://wiki.python.org/moin/TkInter
+Tkinter TK INTERface: Python的默认GUI工具集 http://wiki.python.org/moin/TkInter
+
+Pmw	Python MegaWidgets (Tkinter extension)
+Pmw Python MegaWidgets （Tkinter 扩展）
+
+http://pmw.sf.net
+http://pmw.sf.net
+
+Tix	Tk Interface eXtension (Tk extension)
+Tix	Tk Interface eXtension （Tk 扩展）
+
+http://tix.sf.net
+http://tix.sf.net
+
+TkZinc (Zinc)	Extended Tk canvas type (Tk extension)
+TkZinc (Zinc)	Extended Tk canvas type （Tk 扩展）
+
+http://www.tkzinc.org
+http://www.tkzinc.org
+
+EasyGUI (easygui) Very simple non-event-driven GUIs (Tkinter extension)
+EasyGUI (easygui) 非常简单的非事件驱动GUI （Tkinter 扩展）
+
+http://ferg.org/easygui
+http://ferg.org/easygui
+
+
+TIDE + (IDE Studio)
+TIDE + (IDE Studio)
+
+Tix Integrated Development Environment (including IDE Studio, a Tix-enhanced version of the standard IDLE IDE) http://starship.python.net/crew/mike
+Tix 集成开发环境（包括IDE Studio, 一个Tix加强版的标准IDLE IDE) http://starship.python.net/crew/mike
+
+wxWidgets-Related Modules
+wxWidgets相关模块
+
+wxPython	Python binding to wxWidgets, a cross-platform GUI framework (formerly known as wxWindows) http://wxpython.org
+wxPython    Python对wxWidgets的绑定，一个跨平台的GUI框架库（早期称为wxWindows）http://wxpython.org
+
+Boa Constructor	Python IDE and wxPython GUI builder http://boa-constructor.sf.net
+Boa Constructor	Python集成开发环境兼wxPython GUI构造工具 http://boa-constructor.sf.net
+
+PythonCard	wxPython-based desktop application GUI construction kit (inspired by HyperCard)
+PythonCard	基于wxPython的GUI桌面应用程序工具集（从HyperCard获得灵感）
+
+http://pythoncard.sf.net
+http://pythoncard.sf.net
+
+wxGlade	another wxPython GUI designer (inspired by Glade, the GTK+/GNOME GUI builder)
+wxGlade	另一个wxPython GUI设计工具 （从Glade（GTK+/GNOME 的GUI构建工具）受到启发）
+
+http://wxglade.sf.net
+http://wxglade.sf.net
+
+Table 19.2  GUI Systems Available for Python (continued)
+表19.2 Python可用的GUI系统（续）
+
+GUI Module or System	Description
+GUI模块或系统           描述
+
+GTK+/GNOME-Related Modules
+GTK+/GNOME相关模块
+
+PyGTK	Python wrapper for the GIMP Toolkit (GTK+) library http://pygtk.org
+PyGTK	Python对GIMP工具集(GTK+)的封装库 http://pygtk.org
+
+GNOME-Python	Python binding to GNOME desktop and development libraries
+GNOME-Python	Python对GNOME桌面开发库的绑定
+
+http://gnome.org/start/unstable/bindings http://download.gnome.org/sources/gnome-python
+http://gnome.org/start/unstable/bindings http://download.gnome.org/sources/gnome-python
+
+Glade	a GUI builder for GTK+ and GNOME
+Glade	一个针对GTK+和GNOME的GUI构建工具
+
+http://glade.gnome.org
+http://glade.gnome.org
+
+PyGUI (GUI)	cross-platform “Pythonic” GUI API (built on Cocoa [MacOS X] and GTK+ [POSIX/X11 and Win32])
+PyGUI (GUI)	“Pythonic”式的跨平台GUI程序编程接口（MacOS X中基于Cocoa，POSIX/X11和Win32中基于GTK+）
+
+http://www.cosc.canterbury.ac.nz/~greg/python_gui
+http://www.cosc.canterbury.ac.nz/~greg/python_gui
+
+Qt/KDE-Related Modules
+Qt/KDE相关模块
+
+PyQt	Python binding for the Qt GUI/XML/SQL C++ toolkit from Trolltech (partially open source [dual-license]) http://riverbankcomputing.co.uk/pyqt
+PyQt	Trolltech开发的Python对Qt GUI/XML/SQL 工具集的绑定(双协议，部分开源) http://riverbankcomputing.co.uk/pyqt
+
+PyKDE	Python binding for the KDE desktop environment http://riverbankcomputing.co.uk/pykde
+PyKDE	Python对KDE桌面环境的绑定 http://riverbankcomputing.co.uk/pykde
+
+eric	Python IDE written in PyQt using QScintilla editor widget http://die-offenbachs.de/detlev/eric3
+eric	Python使用QScintilla editor组件编写的PyQt集成开发环境 http://die-offenbachs.de/detlev/eric3
+
+http://ericide.python-hosting.com/
+http://ericide.python-hosting.com/
+
+PyQtGPL	Qt (Win32 Cygwin port), Sip, QScintilla, PyQt bundle http://pythonqt.vanrietpaap.nl
+PyQtGPL	包括Qt（Win32 Cygwin移植版）、Sip、QScintilla和PyQt的工具包 http://pythonqt.vanrietpaap.nl
+ 
+Other Open Source GUI Toolkits
+其他开源GUI工具集
+FXPy	Python binding to FOX toolkit (http://fox-toolkit.org)
+FXPy	Python对FOX工具集的绑定 （http://fox-toolkit.org）
+
+http://fxpy.sf.net
+http://fxpy.sf.net
+
+pyFLTK (fltk)	Python binding to FLTK toolkit (http://fltk.org)
+pyFLTK (fltk)	Python对FLTK工具集的绑定 （http://fltk.org）
+
+http://pyfltk.sf.net
+http://pyfltk.sf.net
+
+PyOpenGL (OpenGL)	Python binding to OpenGL (http://opengl.org)
+PyOpenGL (OpenGL)	Python对OpenGL的绑定 （http://opengl.org）
+
+http://pyopengl.sf.net
+http://pyopengl.sf.net
+
+Table 19.2  GUI Systems Available for Python (continued)
+表19.2 Python可用的GUI系统（续）
+
+GUI Module or System	Description
+GUI模块或系统           描述
+
+
+Commercial
+商业软件
+
+win32ui	Microsoft MFC (via Python for Windows Extensions)
+win32ui	Python版的Microsoft MFC (基于Python的Windows扩展)
+
+http://starship.python.net/crew/mhammond/win32
+http://starship.python.net/crew/mhammond/win32
+
+swing	Sun Microsystems Java/Swing (via Jython)
+swing	Python版的Sun Microsystems Java/Swing (基于Jython)
+
+http://jython.org
+http://jython.org
+
+You  can  find  out  more  about  all  GUIs  related  to  Python  from  the  general GUI Programming page on the Python wiki at http://wiki.python. org/moin/ GuiProgramming.
+您还能从Python的GUI编程简介wiki页面 http://wiki.python.org/moin/GuiProgramming 上找到更多有关Python GUI编程的东西。
+
+
+19.6  Exercises
+练习
+
+19–1.   Client/Server Architecture. Describe the roles of a windows (or windowing) server and a windows client.
+客户端/服务器架构。请描述窗口服务器的角色和窗口客户端的角色。
+
+19–2.   Object-Oriented Programming. Describe the relationship between child and parent windows.
+面向对象编程。请描述子窗口和父窗口的关系。
+
+19–3.   Label Widgets. Update the tkhello1.py script to display your own message instead of “Hello World!”
+标签组件。请修改tkhello1.py脚本，让它显示您自定义的消息而非“Hello World!”
+
+19–4.   Label and Button Widgets. Update the tkhello3.py script so that there are three new buttons in addition to the QUIT button. Pressing any of the three buttons will result in changing the text label so that it will then contain the text of the Button (widget) that was pressed.
+标签和按钮组件。请修改tkhello3.py脚本，除了QUIT按钮以外再新增3个按钮。按下这3个按钮中的任意一个都将改变标签文字，显示被按下的按钮（组件）上的文字。
+
+19–5.   Label, Button, and Radiobutton Widgets. Modify your solution to the previous problem so that there are three Radiobuttons presenting the choices of text for the Label. There are two buttons: the QUIT button and an “Update” button. When the Update button is pressed, the text label will then be changed to contain the text of the selected Radiobutton. If no Radiobutton has been checked, the Label will remain unchanged.
+标签、按钮和单选按钮组件。请对您上一问题的答案作修改，用3个单选按钮实现对标签文字的选择。现在有两个按钮：QUIT按钮和“更新”按钮。当更新按钮被按下时，标签里的文字变成选中的单项按钮上的文字。如果没有选中任何单选按钮，则标签内容保持不变。
+
+19–6.   Label, Button, and Entry Widgets. Modify your solution to the previous problem so that the three Radiobuttons are replaced by a single Entry text field widget with a default value of “Hello World!” (to reflect the initial string in the Label). The Entry field can be edited by the user with a new text string for the Label which will be updated if the Update button is pressed.
+标签、按钮和文本框组件。请对您上一问题的答案作修改，用一个单行的文本框组件替换那3个单选按钮，文本框的默认值为“Hello World!”（和标签的初始字符串保持一致）。用户可以编辑文本框，输入新的字符串，标签组件会在更新按钮被按下时显示这个新的字符串。
+
+19–7.   Label and Entry Widgets and Python I/O. Create a GUI application that provides an Entry field where the user can provide the name of a text file. Open the file and read it, dis- playing its contents in a Label.  　Extra Credit (Menus): Replace the Entry widget with a menu that has a File Open option that pops up a window to allow the user to specify the file to read. Also add an Exit or Quit option to the menu rather than having a QUIT button.
+标签、文本框组件及Python I/O。创建包含一个文本框的GUI程序，用户可以在其中输入一个文本文件名。打开该文件并读取，把其中的内容显示在标签组件上。附加题（菜单）：把文本框换成一个包含文件打开选项的菜单，它会弹出一个窗口供用户选择要读取的文件。再给菜单加上一个Exit或Quit选项，这样就用不着QUIT按钮了。
+
+19–8.   Simple Text Editor. Use your solution to the previous problem to create a simple text editor. A file can be cre- ated from scratch or read and displayed into a Text widget that can be edited by the user. When the user quits the application (either with the QUIT button or the Quit/ Exit menu option), the user is prompted whether to save the changes.  Extra Credit: Interface your script to a spellchecker and add a button or menu option to spellcheck the file. The words that are misspelled should be highlighted by using a different foreground or background color in the Text widget.
+简单的文本编辑器。在您上一题答案的基础上创建一个简单的文本编辑器。可以用剪贴板或读文件的方式在一个文本域里显示一些文字供用户编辑。当用户退出程序时（通过QUIT按钮或Quit/Exit菜单项）会询问用户是否保存所作的修改。附加题：给您的脚本添加一个拼写检查接口，增加一个按钮或菜单项来对文件进行拼写检查。拼写错误的词句应在文本域组件中用不同的背景或前景色高亮显示出来。
+
+19–9.   Multithreaded Chat Applications. The chat programs from Chapters 13, 16, and 17 need completion. Create a fully- functional multithreaded chat server. A GUI is not really necessary for the server unless you want to create one as a front-end to its configuration, i.e., port number, name, con- nection to a name server, etc. Create a multithreaded chat client that has separate threads to monitor user input (and sends the message to the server for broadcast) and another thread to accept incoming messages to display to the user. The client front-end GUI should have two portions of the chat window: a larger section with multiple lines to hold all the dialog, and a smaller text entry field to accept input from the user.
+多线程聊天应用程序。第13、16、17章讲到的聊天程序可以完成了。创建一个全功能的多线程聊天服务器。这个服务器其实并不需要有GUI，除非您想给它创建一个前端配置界面，配置诸如端口号、名称、到域名服务器的连接等。创建一个多线程的聊天客户端，使用单独的线程监视用户输入（并以广播方式给服务器发送消息），另一个线程用来接收消息并显示给用户。客户端的GUI聊天窗口应当由两部分组成：较大的部分用来多行显示所有的对话，较小的文本域用来接收用户输入。
+
+19–10.   Using Other GUIs. The example GUI applications using the various toolkits in Chapter 18.4 are very similar; however, they are not the same. Although it is impossible to make them all look exactly alike, tweak them so that they are more consis- tent than they are now.
+使用其他GUI。19.4中的例子使用到了各种各样的工具集，这些GUI程序看起来很相似；然而，它们并不完全一样。尽管不可能让所有的例子看起来完全一样，但请尽量调整它们，让它们比现在看起来更一致些。
+
+19–11.   Using GUI builders. Download either Boa Constructor (for wxWidgets) or Glade (for GTK+) [or both!], and implement the “animal” GUI by just dragging and dropping the widgets from the corresponding palette. Hook up your new GUIs with callbacks so that they behave just like the sample applications we looked at in that chapter.
+使用GUI构建工具。下载Boa Constructor（wxWidgets平台）或Glade（GTK+平台）[或者都下载！]，然后实现那个“动物”GUI程序，只用从相应的工具栏拖拽一些组件就好了。给您的新GUI加上回调函数，让它能有本章例子程序中我们所看到的那些行为。

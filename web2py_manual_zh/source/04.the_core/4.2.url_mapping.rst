@@ -1,0 +1,102 @@
+4.2 URL地址映射
+===========================================================================
+
+
+
+一个标准的WEB2PY URL地址如下：
+http://127.0.0.1:8000/a/c/f.html
+其中f()是一个在 controller "c.py"中的函数，而c.py包含在应用a中。如果函数f不存在，web2py默认将使用controller 中的index函数。如果c也不存在，WEB2PY默认将使用controller "default.py"。此时如果a不存在，WEB2PY默认使用init应用。当init不存在的时候WEB2PY尝试运行WELCOME应用。下面的图也许更能说明问题.
+
+通常所有请求都会创建一个session。另外，一个session cookie将会返回给客户端浏览器并一直保存着。
+.html是一个默认可选扩展名，扩展名决定了view中函数f()的返回结果The extension determines the extension of the view that renders the output of the controller function f()。它允许输出的内容以多种格式展现(html, xml, json, rss, etc.).
+
+下面的URL是非常规的
+http://127.0.0.1:8000/a/static/filename
+When static files are downloaded, web2py does not create a session, nor does it issue a cookie or execute the models
+没有一个控制器被叫做static。WEB2PY认为这是一个对应用a的static文件夹中一个叫做filename文件的请求。当这个静态文件被请求下载时，WEB2PY不会创建一个session也不支持cookie或者执行这个模块。WEB2PY通常将静态文件打碎放到1MB大小的chunk中（译者：个人认为这个存储方式和memcached原理差不多），当用户浏览器多线程请求文件时发送PARTIAL CONTENT（被打碎的静态文件）。WEB2PY也支持IF MODIFIED SINCE协议，如果用户的缓存中有一部分内容已经完成，则当用户再次请求时只发送给用户上次请求内容中的未完成部分。
+
+注意：带参数的函数或以双下划线开头的函数属于内部函数，只能由其他函数调用。
+
+WEB2PY 映射 GET/POST 请求的形式如下：
+http://127.0.0.1:8000/a/c/f.html/x/y/z?p=1&q=2
+
+f是controller "c.py"中的函数，"c.py"包含在应用a中。这个URL中的元素体现在request变量中的样子：
+request.args = ['x', 'y', 'z']
+
+request.vars = {'p':1, 'q':2}
+
+request.application = 'a'
+request.controller = 'c'
+request.function = 'f'
+
+both request.args[i] and request.args(i) can be used to retrieve the i-th element of the request.args
+
+在上例中request.args[i]和request.args(i)都能被用来检索request.args中的每一个元素。但是，如果前者列表没有指定的index会引发一个异常，在这种情况下后者会返回None。
+
+request.url
+
+它保存了用户请求的完整URL（不包括GET中的变量），这个方法和下面的效果一样：
+URL(r=request, args=request.args)
+
+如果是GET方式的HTTP请求，则request.env.request_method变量是"GET";POST请求同理。URL查询变量储藏在 request.vars字典中；同时也被保存在request.get_vars（GET方式）或者request.post vars（POST方式）中
+
+WEB2PY保存WSGI（译者：介绍WSGI http://blog.ez2learn.com/2010/01/27/introduction-to-wsgi/）和WEB2PY自身环境变量于request.env中，举个例子来说:
+
+request.env.path_info = 'a/c/f'
+
+HTTP头部信息：
+
+request.env.http_host = '127.0.0.1:8000'
+
+注意了昂：WEB2PY会验证所有URL以防止目录遍历攻击（译者：不知道这种验证对系统资源消耗怎么样）
+
+URL中只允许包含阿拉伯数字，下划线，slashes；args可以包含不连续的dots。空格会替换成下划线在验证之前。如果URL语法无效，WEB2PY返回HTTP 400。
+
+如果URL正确的请求了一个静态文件，WEB2PY自然放行啦它会返回被请求的文件给请求者。
+
+如果请求的是一个非静态文件，WEB2PY进程将请求按下列顺序进行：
+
+• Parses cookies.
+
+• 创建请求函数的环境
+
+• 初始化 request, response, cache.
+
+• 使用或创建一个新的session
+
+• 执行属于用户请求应用中的model
+
+• 执行controller中的函数
+
+• 如果函数返回了一个字典，执行相应的试图
+
+•在成功的情况下，提交所有任务On success, commits all open transactions.
+
+•保存session
+
+•返回HTTP响应
+
+ Notice that the controller and the view are executed in different copies of
+the same environment; therefore, the view does not see the controller, but
+it sees the models and it sees the variables returned by the controller action
+function.
+请注意controller和视图是在同一环境的不同副本中执行；因此认为视图看不到controller但能看到models同时也
+能看到controller函数的运行结果
+
+如果访问产生异常（不仅仅是HTTP），WEB2PY按以下步骤运行：
+
+• 保存 traceback 在错误文件中，并且为其指定一个ticket number
+
+• 会滚所有打开的事务
+
+• 返回错误页
+
+If the exception is an HTTP exception, this is assumed to be the intended
+behavior (for example, an HTTP redirect), and all open database transactions
+are committed. The behavior after that is specified by the HTTP exception
+itself. The HTTP exception class is not a standard Python exception; it is
+defined by web2py.
+
+如果这是一个HTTP异常，假设已经指定了一个行为（如，HTTP跳转），提交所有的数据事务。当然这个行为由HTTP异常控制自身决定。HTTP异常类并不在PYTHON的标准库中，它是WEB2PY所特有的。
+
+

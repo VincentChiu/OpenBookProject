@@ -1,0 +1,1869 @@
+
+
+Index
+Symbols
+# comments, 279
+% (remainder/format) operator, 96
+& (bitwise and) operator, 96
+* (multiplication) operator, 96
+... prompt, 37
+/ (division) operator, 96
+: colon, 204, 291
+<< (shift left operator), 96
+== (comparison operator), 120, 187
+>> (shift right operator), 96
+>>> input prompt, 35, 37
+^ (bitwise exclusive or) operator, 96
+| (bitwise or) operator, 96
+A
+abs function, 106
+absolute imports, 431
+access-by-key files, 182
+_ _add_ _ method, 475, 492
+addition, right-sided, 502
+aggregation, 523
+AI programming, 12
+all function
+	built-ins
+		all function, 264
+_ _all_ _ variable, 427
+and operator, 96, 243
+anonymous functions, 344-349
+any function, 264
+Apache, 13
+apply function, 350-351
+apply-like call syntax, 351
+arbitrary arguments, 333
+arbitrary scope nesting, 326
+argument passing, 310-343
+argument-matching modes, 339
+arguments
+	applying functions to, 350
+	arbitrary, 333
+	assigning names inside a function doesn't affect the caller, 326
+	changing a mutable object argument in a function may impact the caller, 326
+	combining keywords and defaults, 335
+	defaults, 333
+	general-set functions, 338
+	immutable, are passed by value, 327
+	keyword passing, 351
+	keywords, 332, 340
+	matching modes
+		defaults, 331
+		keywords, 330
+		positionals, 330
+		varargs, 331
+	min wakeup call, 336
+	mutable, are passed by pointer, 327
+	mutable, avoiding changes, 329
+	passed by assignment, 330
+	passed by automatically assigning objects to local names, 326
+	passed to functions, 301
+	shared references and, 327
+	special, matching modes, 330
+	unpacking, 334
+ArithmeticError (built-in exception), 609
+assert statement, 203, 575, 595-596
+	trapping constraints, 595
+AssertionError, 595
+assigned names, 312, 372
+assignment statements, 202, 217-227
+	augmented, 219
+	forms, 218
+	multiple-target, 219
+	properties, 217
+	sequence, 218-222
+		advanced patterns, 220
+	tuple- and list-unpacking, 218
+assignments, 401
+	augmented, 223-225
+		advantages, 224
+		shared references, 225
+	classifying names, 506-508
+	inside class statements, 466
+	multiple-target, 222
+		shared references, 222
+	passing arguments by, 330
+associative arrays, 160
+attribute names, 313
+attribute references, 313
+	catching, 498
+attribute tree construction, 487
+AttributeError exception, 499
+attributes, 387-389, 630
+	class, 487
+		changing, 559-560
+	defs, 483
+	instances, 487
+	names, 506
+	pseudoprivate, 543-545
+		why use, 544
+	references, 483
+augmented assignments, 219, 223-225
+	advantages, 224
+	shared references, 225
+automatic extensions on Windows, 40
+automatic memory management, 14
+B
+backquotes expression, 136
+_ _bases_ _ attribute, 509
+behavior (objects), 466
+bitwise operator, 96
+bitwise shift, numbers, 103
+blank lines, 239
+block boundaries, 239, 240
+block rule special case, 209
+bool data type, 109
+Boolean operators
+	numbers, 103
+Booleans, 87, 109, 246
+bound instance method objects, 534
+bound methods, 536
+break statement, 202, 250
+_ _builtin_ _ module, 106, 312, 314
+built-in types
+	classes derived from, 546
+	extending, 539-543
+		by embedding, 540
+		by subclassing, 540-543
+	why use, 66
+built-ins, 312, 630
+	_ _dict_ _ attribute, 508
+	_ _import_ _ function, 394, 439
+	_ _main_ _ module, 434
+	_ _name_ _ attribute, 428
+	abs function, 106
+	any function, 264
+	apply function, 350-351
+	AttributeError exception, 499
+	chr function, 355
+	converting types manually, 98
+	dict constructor call, 270
+	dictionaries (see dictionaries)
+	dir function, 49, 73, 279
+	docstrings (see docstrings)
+	enumerate function, 271
+	eval, 27
+	eval function, 338
+	exec, 27
+	execfile('module.py') function, 50
+	False name, 109
+	files (see files)
+	filter function, 356
+	int function, 105, 212
+	iter function, 262, 362
+	len function, 70, 300
+	list function, 119, 175, 264
+	lists (see lists)
+	long integers, 104
+	map function, 260, 263, 269, 352-353, 366
+	mathematical functions, 95
+	NotImplementedError exception, 490
+	number literals, 95
+	number tools, 106
+	object types, 14
+	open function, 85, 300
+	operator module, 354
+	ord function, 355
+	pow function, 353
+	random module, 107
+	range function, 221, 249, 265, 268
+	raw_input function, 211, 233, 621
+	repr function, 96, 101
+	round function, 106
+	scopes, 313, 314
+	set function, 87, 108
+	sorted function, 82, 263, 264, 292, 366
+	str function, 96, 101
+	strings (see strings)
+	sum function, 263, 366
+	sys module, 229
+	sys.path list, 392, 430
+	tools, 15, 95
+	True name, 109
+	tuple function, 175, 264, 329
+	tuples (see tuples)
+	type function, 305
+	types and iterators, 364
+	zip function, 265, 268
+byte code, 7
+	compiling, 25
+C
+C++ language, 10, 15
+C, integration with, 15
+_  _call_  _ method, 492, 502
+callbacks, 349, 536
+	handlers, 346
+call-by-reference, 329
+calling methods, 485, 486
+calls, 202, 299
+	embedding, 56
+	intercepting, 502
+case sensitivity, 225
+categories, class-based, 627
+characters, encoding large sets, 130
+chr function, 355
+_ _class_ _ attribute, 509
+class methods, 549, 552-556
+	using, 554-556
+	versus instance methods, 555
+class properties, 550-552
+class statements, 203, 451, 466, 481-484
+	compared to functions, 482
+	compared to names in a module, 482
+	data attributes, 482
+	defs, 483
+	example, 482-484
+	general form, 481
+	inheritance, 483
+	multiple inheritance, 529
+	namespaces, 482
+	statements nested in, 482
+class-based categories, 627
+class-based exceptions, 604-613
+	built-in, 609
+	example, 604-605
+	sending extra data and behavior in instances, 611-613
+	specifying exception text, 610
+	versus string-based exceptions, 604
+	why, 606-609
+classes, 454, 455
+	as records, 519-521
+	assignments inside class statements, 466
+	attributes, 466, 487
+	coding basics (see coding basics)
+	coding class trees, 456-459
+	coding details, 481-517
+		class statements (see class statements)
+		example, 512-515
+		inheritance (see inheritance)
+		methods (see methods)
+		namespaces (see namespaces)
+		operator overloading (see operator overloading)
+	derived from built-in types, 546
+	designing with, 518-538
+		overloading by call signatures, 519
+	extending built-in types, 539-543
+		by embedding, 540
+		by subclassing, 540-543
+	gotchas, 559-564
+		changing attributes, 559-560
+		methods, classes, and nested scopes, 561-563
+		multiple inheritance, 560-561
+		overwrapping, 563
+	intercepting Python operators, 472-476
+		example, 474-475
+	interface techniques, 489
+	method calls, 456
+	mix-in, 529
+	modules, 471
+	new-style, 545-552
+		_ _getattribute_ _ method, 552
+		_ _slots_ _ class attribute, 549
+		diamond inheritance change, 546-549
+		other extension, 549-552
+		properties, 550-552
+		static and class methods, 549
+classes (continued)
+	objects (see objects)
+	persistence, 527
+	pseudoprivate attributes, 543-545
+		why use, 544
+	user-defined (see user-defined classes)
+	versus modules, 537
+	why use, 452-453
+		composition, 452
+		customization via inheritance, 453
+		inheritance, 452
+		multiple instances, 452
+		operator overloading, 453
+classtree function, 511
+closure, 321
+_  _cmp_  _ method, 492
+code
+	common coding gotchas, 291-292
+	compiling, 25
+	documenting (see documenting code)
+	nested, 214
+	reuse, 386, 459-462
+	strings, 143
+coding basics, 465-480
+	calling objects, 466
+	classes intercepting Python operators, 472-476
+		example, 474-475
+	inheritance (see inheritance)
+	multiple instance objects, 465-469
+		concrete items, 466
+		default behavior, 466
+		example, 467-469
+		inheritance, 466
+		self, 466
+	operator overloading, 475
+	simple Python class, 476-478
+cohesion, 369
+COM support on MS Windows, 11
+command-line arguments, 137
+comments, 38, 99, 239
+comparisons, 186-189
+	languages, 18
+	operators, 96
+compiled extensions, 630
+compiling
+	byte code, 25
+	extensions, 7
+	Psyco just-in-time compiler, 29
+	Shedskin, 29
+complex numbers, 95, 104
+components
+	integration, 4, 10
+	merging, 31
+composition, 452, 523-527
+	example, 524-527
+compound statements, 37, 236-247
+compound types, 371
+concatenation, 71, 123
+	strings, 132
+concept hierarchy, 201
+configuration (see installation and configuration)
+constraints, trapping, 595
+context management, 596-600
+	protocol, 598-600
+contextlib standard module, 600
+continue statement, 202, 250, 251
+control flows, unusual, 577
+control language, 6
+conversion, strings, 97
+copies versus references, 184-186
+coupling, 369
+CPython, 28
+cross-file changes, minimizing, 318
+cross-file name changes, 402
+csh shell, 644
+current working directory, 392
+customization via inheritance, 453
+cyclic data structures, 193
+D
+Dabo, 10
+data attributes, 482
+data structures, 66
+database programming, 11
+databases, 11
+_ _debug_ _ flag, 595
+debugger (IDLE), 54
+debuggers, 632
+decimal numbers, 87
+decimal object, 107
+declaration statements
+	missing, 112-116
+def statements, 202, 301, 302-304, 483
+	return, yield, 299
+	versus lambda, 345
+default argument values, 323
+default exception handler, 578
+defaults, 373
+_  _del_  _ method, 492, 505
+del statement, 203
+delegation, 527-528, 556
+descriptor files, 86, 182
+design patterns, 462
+destructor method, 505
+developer productivity, 4, 5
+development tools for larger projects, 631-634
+diamond pattern, inheritance change, 546-549
+	example, 547
+	explicit conflict resolution, 547
+_ _dict_ _ attribute, 477, 508, 528
+dict constructor call, 270
+dictionaries, 67, 79-84, 160-171
+	accessed by key, not offset, 160
+	assigning to new indexes, 166
+	avoiding missing-key errors, 167
+	basic operations, 162
+	changing in-place, 163
+	common literals and operations, 161
+	dictionary interfaces, 169
+	iteration and optimization, 83
+	keys, 80, 162, 166
+	language table, 165
+	len function, 162
+	mapping operations, 79
+	missing keys, 84
+	more methods, 163
+	namespace, 508-511
+	nesting, 80
+	of the category mutable mapping, 160
+	other ways to make, 169
+	pop method, 164
+	sequence operations, 166
+	simulating flexible lists, 166
+	sorting keys, 81-83
+	sparse data structures, 167
+	tables of object references (hash tables), 161
+	unordered collections of arbitrary objects, 160
+	update method, 164
+	usage notes, 166
+	using as records, 168
+	variable-length, heterogeneous, and arbitrarily nestable, 160
+dictionary braces, 209
+dictionary keys, 510
+dictionary-based records, 519
+dir function, 49, 73, 279
+distutils, 395
+	modules, 633
+division
+	classic, 102
+	floor, 102
+Django, 10
+_  _doc_  _ attribute, 279, 280, 535
+docstrings, 239, 279, 280, 282, 535-537, 631
+	main advantage of, 536
+	standards, 282
+	user-defined, 281
+doctest standard library module, 632
+documentation sources, 278-290
+	# comments, 279
+	_ _doc_ _ attribute, 280
+	_  _doc_  _ attribute, 279
+	dir function, 279
+	docstrings, 279, 280, 282
+		standards, 282
+		user-defined, 281
+	published books, 279, 290
+	PyDoc
+		help function, 279, 283, 285
+		HTML reports, 279, 285-289
+	standard manual set, 279, 289
+documenting code, 278-296
+DOS variables, 644
+dynamic typing, 14, 112-122
+	missing declaration statements, 112-116
+		garbage collection, 115
+		types, 114
+		variables, objects, and references, 112
+	shared references, 116-121
+		equality, 119-121
+		in-place changes, 118
+dynamically typed, 68
+E
+Eclipse, 55, 632
+else clause, 252
+embedding
+	extending types by, 540
+	Python in C, 10
+empty excepts, 584
+	avoiding, 625-627
+empty strings, 123, 124
+emulating privacy for instance attributes, 499-500
+encapsulation, 461, 518
+enclosing defs, 312
+enclosing scopes, 320
+encoding large character sets, 130
+end of line, 204
+enumerate function, 271
+enumerated data types, 221
+env lookup, 42
+environment, 642
+environment variable settings, 642
+_  _eq_  _ method, 492
+equality, 186-189
+error checks, 599
+error handling, 576
+	testing inputs, 212
+escape sequences, suppressing, 127
+eval built-in, 27
+eval function, 105, 338
+	using eval to convert from strings to objects, 180
+event handlers, registering functions as, 503-505
+event notification, 577
+except clauses, 582
+except, empty, 584
+exception (built-in exception), 609
+exception objects, 602-616
+	class-based exceptions, 604-613
+		built-in, 609
+		example, 604-605
+		sending extra data and behavior in instances, 611-613
+		specifying exception text, 610
+		versus string-based exceptions, 604
+		why, 606-609
+	string-based exceptions, 603
+		versus class-based exceptions, 604
+exceptions, 575-601, 630
+	assert (see assert statement)
+	built-in
+		ArithmeticError, 609
+		AssertionError, 595
+		catching, 586
+		exception, 609
+		KeyError, 614
+		OverflowError, 609
+		StandardError, 609
+	catching built-in, 586
+	class-based, 602
+	default behavior, 585
+	default exception handler, 578
+	design tips, 624-627
+		avoiding empty excepts, 625-627
+		using class-based categories, 627
+		what should be wrapped, 624
+	designing with, 617-629
+	empty except, 584
+	error handling, 576
+	event notification, 577
+	example, 577-581
+	gotchas, 627-629
+		catching wrong thing, 629
+		string exceptions match by identity, not value, 628-629
+	handler, 578
+	how they have changed, 575
+	idioms, 621-624
+		debugging with outer try statements, 622
+		exceptions are not always errors, 621
+		functions signal conditions with raise, 622
+		running in-process tests, 623
+		sys.exc_info, 624
+	IndexError, 578
+	nesting exception handlers, 617-621
+		control-flow nesting, 619
+		syntactic nesting, 619-621
+	NotImplementedError, 490
+	objects (see exception objects)
+	propagating with raise, 594
+	Python 3.0, 584
+	raise (see raise statement)
+	raising and catching user-defined, 593
+	special-case handling, 577
+	termination actions, 577
+	trapping constraints, 595
+	try/except (see try/except)
+	try/except/else (see try/except/else)
+	try/finally (see try/finally)
+	unusual control flows, 577
+	user-defined, 579
+	why use, 576-577
+	with/as (see with/as)
+excepts, avoiding empty, 625-627
+exec built-in, 27
+exec statement, 203
+execfile('module.py') built-in function, 50
+execution
+	PVM, 26
+execution models, future possibilities, 32
+exercises
+	solutions, 646-680
+		Part I - Breaks, 647
+		Part I - Errors, 647
+		Part I - Interaction, 646
+		Part I - Modules, 646
+		Part I - Programs, 646
+		Part I - Scripts, 647
+		Part II - Dictionary indexing, 651
+		Part II - Dictionary keys, 651
+		Part II - Files, 653
+		Part II - Generic operations, 652
+		Part II - Immutable types, 653
+		Part II - Indexing and slicing, 650
+		Part II - Indexing, slicing, and del, 650
+		Part II - Nesting, 653
+		Part II - String indexing, 652
+		Part II - The basics, 648
+		Part II - The dir function revisited, 653
+		Part II - Tuple assignment, 651
+		Part III - Backslash characters, 654
+		Part III - Coding basic loops, 654
+		Part III - Program logic alternatives, 655
+		Part III - Sorting dictionaries, 654
+		Part IV - Arguments, 656
+		Part IV - file dicts.py, 658
+		Part IV - Keywords, 657
+		Part IV - List comprehensions, 660
+		Part IV - More argument-matching examples, 659
+		Part IV - Primes revisited, 659
+		Part IV - The basics, 656
+		Part IV - varargs, 657
+		Part V - _ _main_ _, 662
+		Part V - Circular imports, 664
+		Part V - from/from *, 662
+		Part V - Import basics, 661
+		Part V - Nested imports, 662
+		Part V - Package imports, 663
+		Part V - Reloads, 664
+		Part VI - Class tree links, 670
+		Part VI - Composition, 670
+		Part VI - Inheritance, 664
+		Part VI - Metaclass methods, 667
+		Part VI - Operator overloading, 666
+		Part VI - Set objects, 668
+		Part VI - Subclassing, 667
+		Part VI - The Dead Parrot Sketch, 672
+		Part VI - Zoo animal hierarchy, 671
+		Part VII - Error handling, 673
+		Part VII - Exception objects and lists, 673
+		Part VII - try/except, 672
+_ _exit_ _ method, 600
+expression operators, 95, 96-98
+	mixed operators, 97
+	overloading, 98
+	parentheses group subexpressions, 97
+expression statements, 228-229
+	common, 228
+	in-place changes, 229
+expression-based equivalents, 347
+expressions operators
+	mixed types, 97
+	numbers, 99
+	parentheses, 97
+extending, Python with C, 15
+Extensible Markup Language, 10
+extension modules, 399
+extensions, 7, 630
+	byte code, 25
+	compiled, 630
+F
+factories, 532-533
+	why use, 533
+factory function, 321
+False built-in name, 109
+FIFO files, 182
+fifos, 86
+file extensions, 40
+file scanners, 259
+files, 67, 85-86, 176-182
+	access-by-key, 182
+	calling the file close method, 178
+	changing file position to offset N for next operation, 177
+	common operations, 176
+	creating input file, 176
+	creating output file, 176
+	descriptor, 182
+	executing, 24
+	flushing output buffer to disk without closing, 177
+	generating namespaces, 405-406
+	in action, 178-182
+		storing and parsing objects, 178
+		storing and parsing packed binary data, 181
+		storing native Python objects with pickle, 180
+		writing single line of text as a string, 178
+files (continued)
+	manual close, 177
+	opening, 176
+	other file-like tools, 86
+	other tools, 182
+	reading entire file into a single string, 177
+	reading entire file into list of line strings, 177 
+	reading next line into a string, 177
+	reading next N bytes into a string, 177
+	using, 177
+	writing a string of bytes into file, 177
+	writing all line strings in a list into file, 177
+filter function, 248, 353, 356
+find method, 145
+flexibility, breaking, 88
+floating-point literals, 94
+floating-point numbers, 93
+floating-point object math, 107
+for loops, 254-258
+	basic usage, 256
+	general format, 254
+	inside a function, 306
+	iterators, 260
+	list comprehensions and, 360
+	nested, 257
+	readlines method, 261
+	strings, 256
+	tuples, 256
+		tuple of targets, 257
+for/else statement, 202
+frameworks, 461
+freeware, 13
+from * statement, 400, 440
+from statement, 202, 400, 439
+	import statement and, 402
+	modules, 385
+	potential pitfalls, 403
+	recursive, 443
+frozen binaries, 31, 56
+function decorators, 505, 528, 556-558
+	example, 558
+function design concepts, 369
+function gotchas
+	defaults and mutable objects, 373
+	enclosing scope loop variables, 375
+	functions without returns, 375
+	local names, 372
+functional programming, 353
+	filter, 353
+	reduce, 354
+functions, 299-309, 310, 630
+	advanced related topics, 344-381
+	anonymous, 344-349
+	apply, 350
+	applying to arguments, 350
+	as objects, 370
+	calling, 292
+	calls, 304
+	coding, 300-303
+		arguments, 301
+		def statement, 301, 302-304
+		global statement, 301
+		return statement, 301, 302
+	defined, 299
+	filter, 353
+	intersecting sequences, 306-308
+		calls, 306
+		for loop inside function, 306
+		local variables, 308
+		polymorphism, 307
+	lambda, 344-349
+	maximizing code reuse and minimizing redundancy, 300
+	number tools, 106
+	procedural decomposition, 300
+	reduce, 354
+	registering as event handlers, 503-505
+	related statements and expressions, 299
+	signal conditions with raise, 622
+	that change objects in-place, 292
+	why use, 300
+G
+garbage collection, 14, 81, 115
+general-set functions, 338
+generator expressions, 365
+generators, 360-366
+	example, 362
+	send method versus next method, 364
+_  _getattr_  _ method, 492, 498, 528
+_ _getattribute_ _ method
+	new-style classes only, 552
+_  _getitem_  _ method, 492, 493
+global, 299
+global scopes, 311, 313
+global statement, 203, 301, 316-320
+global variables, minimizing, 317
+global-scope variables, accessing, 319
+graphical user interface, 9
+GTK, 10
+H
+handler, 578
+"has-a" relationship, 523
+hash tables, 161
+hashes, 160
+"hello world" program, 230
+help function, 74, 283-285
+hexadecimal
+	literals, 94, 105
+	octal literals and, 95
+home directory, 391
+HTML (Hypertext Markup Language), 10
+I
+_  _iadd_  _ method, 492
+icons, clicking, 42-45
+	limitations, 45
+	raw_input, 44-45
+	Windows, 42
+IDEs, 632
+	Eclipse, 55
+	IDLE (see IDLE user interface)
+	Komodo, 55
+	PyDev, 55
+	PythonCard, 55
+	PythonWin, 55
+	WingIDE, 55
+IDLE Run Module menu option, 50
+IDLE text editor, 40
+IDLE user interface, 50-54, 632
+	advanced tools, 54
+	clear-screen option, 53
+	connection errors, 53
+	customizing, 53
+	debugger, 54
+	nested modules, 53
+	repeating prior commands, 52
+	running file of code that you are editing, 51
+	running scripts, 53
+	single-process mode, 53
+	source code files, 51
+	Start button menu for Python, 51
+	starting IDLE on Windows, 51
+	syntax-directed colorization, 51
+	threaded programs, 53
+	Tkinter GUI, 51, 53
+	usability features, 54
+if statements, 236-247
+	basic examples, 237
+	general format, 236
+	multiway branching, 237-239
+if/elif/else statement, 202
+if/else ternary expression, 244
+imaginary numbers, 104
+immutability (strings), 71
+implementation alternatives, 28-29
+	CPython, 28
+	IronPython, 29
+	Jython, 28
+import as extension, 431
+_ _import_ _ function, 394, 439
+import hooks, 393
+import statement, 45-50, 202, 387-389, 389-395, 399
+	.pth file directories, 391
+	advanced module selection concepts, 393
+	compiling, 394
+	from statement and, 402
+	happening only once, 400
+	home directory, 391
+	importing by name string, 438
+	module file selection, 393
+	modules, 385
+	multiple imports, 46
+	namespaces, 49
+	PYTHONPATH directories, 391
+	relative syntax, 431-434
+	running, 394
+	standard library directories, 391
+	sys.path list, 392
+	usage notes, 49
+	using extensions or paths, 292
+	when required, 404
+in membership test, 248, 260, 263, 276
+in operator, 96
+indentation, 291
+	end of, 205
+	rule, 206-208
+IndexError exception, 494, 578
+indexing, 123
+indexing expressions, 70
+indirect calls, 370
+Informix, 11
+inheritance, 452, 469-472, 483, 486-491, 518
+	abstract superclasses, 490
+	attribute inheritance search, 453-455
+	attribute tree construction, 487
+	class interface techniques, 489
+	classes inherit attributes from their superclasses, 469
+	customization via, 453
+	diamond pattern change, 546-549
+inheritance (continued)
+		example, 547
+		explicit conflict resolution, 547
+	each object.attribute reference invokes new, independent search, 469
+	example, 470-471
+	extension coding pattern, 489
+	hierarchy, 451
+	instances inherit attributes from all accessible classes, 469
+	logic changes are made by subclassing, not by changing superclasses, 469
+	modeling real-world relationships, 521-523
+	mulitple, 560-561
+	multiple, 529-531
+	redefining inherited names, 488
+	specializing inherited methods, 488
+	superclasses listed in parentheses in class header, 469
+	tree-searching model, 488
+_ _init_ _ constructor logic, 605
+_  _init_  _ method, 458, 475, 492
+_ _init_ _.py files, 416
+input prompt, 35
+installation and configuration, 23, 639-645
+	checking to see if Python is already installed, 639
+	configuring Python, 641-645
+		DOS variables, 644
+		environment variable settings, 642
+		path files, 645
+		setting options, 644
+		shell variables, 644
+		Windows options, 645
+	installation steps, 640
+	installing Python interpreter, 639-641
+	where to fetch Python, 639
+instance methods, 555
+instances, 454, 455
+	_ _class_ _ attribute, 509
+	attributes, 487
+		emulating privacy, 499-500
+	multiple, 452
+	sending extra data and behavior in, 611-613
+int function, 105, 136, 212
+integers, 94
+	literals, 94
+	log, 103
+	numeric precision and long integers, 94
+integrated development environment (see IDEs)
+integration
+	components, 10
+	with C, 15
+interactive coding, 34-37
+	testing code, 36
+interactive loops, 210-214
+	doing math on user inputs, 211
+	nested code, 214
+	simple, 210
+	testing inputs, 212
+interactive prompt
+	compound statements, 37
+	indentation, 37
+	prompt changes, 37
+	testing code at, 36
+	using, 37
+interactive testing, 441
+intercepting instance-indexing operations, 493
+interfaces, programming, 9
+internationalization, 130
+Internet scripting, 10
+Internet, utility modules, 10
+interpreter, 22-24
+	conventions, 227
+intersect function, 307
+introspection, 435
+IronPython, 11, 29
+is not operator, 96
+is operator, 96
+"is-a" links, 522
+_  _lt_  _ method, 492
+iter function, 262, 362
+_ _iter_ _ method, 493-498
+iterations
+	alternatives, 366-369
+		timing, 366
+	overloading, 493
+	protocol, 83, 261
+	strings, 133
+iterators, 360-366
+	built-in types and, 364
+	generator expressions, 365
+	user-defined, 494-498
+		multiple iterators on one object, 496
+J
+join method, 146, 264
+just-in-time (JIT) compiler, 30
+Jython, 10, 28
+K
+keyed-access files, 86
+KeyError (built-in exception), 614
+keyword arguments, 331, 332, 340
+	passing, 351
+Komodo, 55, 632
+ksh shell, 644
+L
+lambda, 299
+	body, 345
+	nested, 348
+	operators, 96
+	versus def, 345
+	why use, 346
+lambda expressions, 324, 344
+lambda functions, 344-349
+language changes, xxxii
+languages, comparisons to, 18-19
+large character sets, encoding, 130
+launch options, 57
+LEGB rule, 312, 317, 407
+len function, 70, 162, 300
+_  _len_  _ method, 492
+lexical scoping, 311
+library utilities, 15
+limitations, 7
+line indentation, 240
+Linux, 13
+list comprehensions, 78, 260, 263, 272-275, 355-360
+	basics, 272, 355
+	extended syntax, 274
+	files, 273
+	for loops and, 360
+	generator expressions, 365
+	map and, 361
+	matrixes and, 358
+	tests and nested loops, 356-358
+	tuples and, 175
+list function, 119, 146, 175, 264
+lists, 67, 75-79, 152-160
+	accessed by offset, 152
+	arrays of object references, 153
+	basic operations, 154
+	bounds checking, 77
+	category mutable sequence, 153
+	changing in-place, 156
+	common list operations, 159
+	common literals and operations, 153
+	comprehension (see list comprehensions)
+	index assignments, 157
+	indexing, 155
+	inside tuples, 175
+	main properties, 152
+	matrixes, 156
+	method calls, 157
+	nesting, 77
+	ordered collections of arbitrary objects, 152
+	sequence operations, 76
+	slice assignment, 157
+	slicing, 155
+	type-specific operations, 76
+	variable-length, heterogeneous, and arbitrarily nestable, 153
+literals
+	floating-point, 94
+	hexadecimal and octal, 95
+	long integer, 94
+	numbers, 94
+local names, 372
+local scopes, 311, 312
+local variables, 308, 318
+logical operators, 96
+long integer literals, 94
+long integers, 94, 103
+Loop else block, 250
+loop variables, 324
+loops, 248-277
+	break statement, 250
+	coding techniques, 265-271
+		changing lists, 267
+		counter loops, 265
+		generating offests and items, 271
+		nonexhaustive traversals, 266
+		parallel traversals, 268
+	continue statement, 250, 251
+	else clause, 252
+	emulating C while loops, 255
+	for (see for loops)
+	general format, 250
+	interactive, 210-214
+		doing math on user inputs, 211
+		nested code, 214
+		simple, 210
+		testing inputs, 212
+	iterators, 258-264
+		file scanners, 259
+		files, 260-262
+		iteration protocol, 261
+		other built-in type, 262
+		other iteration contexts, 263-264
+		StopIteration exception, 260
+		user-defined, 264
+loops (continued)
+	list comprehensions (see list comprehensions)
+	Loop else block, 250
+	pass statement, 250, 251 
+	readlines method, 261
+	string iteration, 133
+	while, 248-250
+		examples, 249
+		general format, 249
+M
+_ _main_ _ module, 434
+map function, 260, 263, 269, 352, 366
+	functional programming and, 353
+	list comprehensions and, 361
+mappings, 150
+math module, 69
+math on user inputs, 211
+matrixes, list comprehensions and, 358
+merging components, 31
+metaprograms, 435
+methods, 72, 458, 484-486
+	bound, 536
+	bound instance method objects, 534
+	call possibilities, 486
+	calling, 485
+	calling superclass constructors, 486
+	calls made through an instance, 484
+	class (see also class methods)
+	example, 485
+	reassigning names, 555
+	strings, 143
+	unbound, 553
+	unbound class method objects, 534
+MFC, 10
+min wakeup call, 336
+mixed types, expression operators, 97
+mix-in classes, 529
+mod_python package, 10
+modification, mutable types, 150
+module packages, 415-425
+	from versus import, 419
+	import basics, 415-418
+		_ _init_ _.py files, 416
+		dotted paths, 415
+		from * statement behavior, 418
+		module namespace initialization, 417
+		package initialization, 417
+		search path settings, 416
+	import example, 418-420
+	imports search paths, 420
+	package imports, when required, 421
+	why use package imports, 420-423
+modules, 38, 385-397, 630
+	.pth file directories, 391
+	advanced selection concepts, 393
+	advanced topics, 426-447
+	assignments, 401
+	changing search path, 430
+	classes, 471
+	code reuse, 386
+	coding basics, 398-414
+	coding with multiple names, 49
+	creating, 398-399
+	cross-file name changes, 402
+	data hiding in, 426
+		_ _all_ _ variable, 427
+		preventing copying, 426
+	defining, 398
+	design concepts, 434-437
+		changing other module's variables, 435
+		cohesion, 434
+		coupling, 434
+		introspection, 435
+		metaprograms, 435
+	enabling future language features, 427
+	extension, 399
+	file selection, 393
+	filenames, 398
+	from * statement, 400
+	from statement, 385, 400
+		potential pitfalls, 403
+	gotchas, 437-444
+		from * statement, 440
+		from statement, 439
+		importing by name string, 438
+		recursive from imports, 443
+		reload function, 442
+		reload, from, and interactive testing, 441
+		reloading, 440
+		statement order, 437
+	home directory, 391
+	implementing shared services or data, 386
+	import and from equivalence, 402
+	import as extension, 431
+	import statement, 385, 399
+		when required, 404
+	import statement and attributes, 387-389
+	import statment
+		happening only once, 400
+	imports and reloads, 45-50
+		example, 47-49
+		multiple imports, 46
+		namespaces, 49
+		usage notes, 49
+	mixed usage modes, 428-430
+		unit tests with _ _name_ _, 429
+	namespaces, 49, 404-409
+		attribute name qualification, 407
+		files generating, 405-406
+		imports versus scopes, 407
+		nesting, 408
+	nested, 53
+	number tools, 106
+	once loaded, 406
+	PYTHONPATH directories, 391
+	relative import syntax, 431-434
+	reload function, 385
+	reloading, 409-412
+		basics, 410
+		details, 410
+		example, 411
+		in larger systems, 412
+	search path, 390-392
+	shared library, 389
+	standard library directories, 391
+	system namespace partitioning, 386
+	usage, 399-404
+	versus classes, 537
+	when imported, 399
+	why use, 385
+Monty Python's Flying Circus, 18
+multiple inheritance, 529-531, 560-561
+multiple instances, 452
+multiple-target assignments, 219, 222
+	shared references, 222
+multiway branching, 237-239
+mutability, 123
+mutable objects, 373
+mutable types, 150
+mutables in assignments, 292
+MySQL, 11
+N
+_ _name_ _ attribute, 428
+_ _name_ _ check, 429
+_ _name_ _ method, 428
+namespaces, 47, 49, 310, 506-515
+	attribute names, 506
+	classes, 482
+	classifying names, 506-508
+	declaration, 316
+	dictionaries, 508-511
+	links, 511
+	object, 506
+	qualified attribute names, 506
+	simple names, 506
+	system namespace partitioning, 386
+	unqualified names, 506
+namespaces (modules), 404-409
+	attribute name qualification, 407
+	files generating, 405-406
+	imports versus scopes, 407
+	nesting, 408
+naming conventions, 227
+	assigning same name, 227
+negation operator, 96
+negative offsets, strings, 133
+nested function scopes, 320
+	lambda, 348
+	lambdas and, 324
+nested functions, 320-326
+nested loops, 356-358
+nested modules, 53
+.NET, 11
+new-style classes (see classes, new-style)
+next method versus send method, 364
+NLTK package, 12
+noncompound statements, 242
+None object, 189
+not in operator, 96
+not operator, 96
+NotImplementedError exception, 490
+NULL pointer in C, 189
+numbers, 67, 68, 93-111, 150
+	basic operations, 99
+	built-in number literals, 95
+	complex, 95
+	complex numbers, 104
+	display formats, 100
+	expression operators (see expression operators)
+	mixing numeric types, 98
+	numeric literals, 94-95
+	print statements, 100
+numeric precision and long integers, 94
+numeric programming, 11
+NumPy, 11, 95
+O
+obfuscating code, how not to, 347
+object classifications, 183
+object flexibility, 183
+object namespaces, 506
+object persistence, 86
+object types, 65-92, 630
+	core types, 67
+	dictionaries (see dictionaries)
+	files (see files)
+	lists (see lists)
+	numbers (see numbers)
+	strings (see strings)
+	tuples (see tuples)
+	why use built-in types, 66
+object.attribute reference, 469
+object-oriented programming (see OOP)
+object-oriented scripting language, 6
+objects, 114
+	bound instance method objects, 534
+	calling, 466
+	functions and, 370
+	header fields, 114
+	numbers, 93, 99
+	persistence, 11
+	state and behavior, 466
+	string methods, 143
+	unbound class method objects, 534
+oct function, 105
+octals, literals, 94, 105
+ODBC, 11
+offsets, assigning to, 189
+OOP (object-oriented programming), 12, 451-464
+	"has-a" relationship, 523
+	"is-a" links, 522
+	attribute inheritance search, 453-455
+	class method calls, 456
+	classes, 454, 455
+	classes, why use, 452-453
+		composition, 452
+		customization via inheritance, 453
+		inheritance, 452
+		multiple instances, 452
+		operator overloading, 453
+	code reuse, 459-462
+	coding class trees, 456-459
+	composition (see composition)
+	delegation (see delegation)
+	design patterns, 462
+	encapsulation, 461
+	factories, 532-533
+		why use, 533
+	frameworks, 461
+	general ideas behind, 453-462
+	inheritance (see inheritance)
+	instances, 454, 455
+open function, 85, 86, 300
+open source software, 13
+operator module, 354
+operator overloading, 183, 453, 475, 491-505
+	common methods
+		_ _add_ _, 492
+		_ _call_ _, 502
+		_ _del_ _, 505
+		_ _getattr_ _ method, 498
+		_ _getitem_ _, 493
+		_ _iter_ _, 493-498
+		_ _radd_ _, 502
+		_ _repr_ _, 492, 500-502
+		_ _setattr_ _ method, 498
+		_ _str_ _, 500-502
+		_  _call_  _, 492
+		_  _cmp_  _, 492
+		_  _del_  _, 492
+		_  _eq_  _, 492
+		_  _getattr_  _, 492
+		_  _getitem_  _, 492
+		_  _iadd_  _, 492
+		_  _init_  _, 492
+		_  _iter_  _, 492
+		_  _len_  _, 492
+		_  _lt_  _, 492
+		_  _or_  _, 492
+		_  _radd_  _, 492
+		_  _setattr_  _, 492
+		_  _setitem_  _, 492
+		_  _str_  _, 492
+	emulating privacy for instance attributes, 499-500
+	key ideas behind, 491
+	main ideas behind, 473
+	overloading iteration, 493
+	user-defined iterators, 494-498
+		multiple iterators on one object, 496
+operators
+	precedence, 97
+	strings, 132
+optimization options, 633
+optimization tools, 29-31
+	Psyco just-in-time compiler, 29
+	Shedskin C++ translator, 30
+options, which to use, 58
+_  _or_  _ method, 492
+or operator, 96, 243
+Oracle, 11
+ord function, 355
+output parameters, simulating, 329
+OverflowError (built-in exception), 609
+overloading by call signatures, 519
+overloading operators (see operator overloading)
+overwrapping classes, 563
+P
+package-relative imports, 431
+packages (see module packages)
+packed binary data, storing and parsing, 181
+parentheses, 204, 208, 292
+parentheses in expressions, 97
+Parrot project, 32
+parsing, 134
+	text, 146
+pass statement, 202, 250, 251
+passing arguments, 326-330
+PATH, 642, 643
+PATH environment variable, 35
+path files, 645
+performance, 26
+peripheral tools, 630
+Perl, 13, 18
+persistence, 527
+pickle module, 11, 180, 527
+PIL package, 12
+pipes, 86, 182
+PMW, 10, 31
+polymorphism, 71, 88, 98, 305, 518
+	intersect function, 307
+pop method, 164
+portable ANSI C, 13
+portable database APIs, 11
+positive offsets, strings, 133
+PostgreSQL, 11
+pow function, 353
+precedence, rules (operators), 97
+print statements, 35, 40, 202, 229-234
+	"hello world" program, 230
+	forms, 230
+	interactive prompt, 37
+	numbers, 100
+	print >> file extension, 232
+	redirecting output stream, 231
+	sys.stdout and, 233
+profilers, 632
+program execution, 24-27
+	compiling byte code, 25
+	development implications, 27
+	performance implications, 26
+	Python Virtual Machine (PVM), 26
+program portability, 4
+programming, 9
+	databases, 11
+	GUI, 9
+	interpreter, 22
+	numeric, 11
+	string methods, 143
+programming-in-the-large support, 14
+programs, 38
+properties, 550-552
+Psyco, 633
+	just-in-time compiler, 29
+.pth file directories, 391
+PVM (Python Virtual Machine), 26
+.py extension, 39, 53
+py2exe, 31
+PyChecker, 631
+PyDev, 55
+PyDoc, 74, 278, 631
+	help function, 279, 283, ??-285
+	HTML reports, 279, 285-289
+pygame, 12, 31
+PyGTK GUI libraries, 31
+PyInstaller, 31
+Pylons, 10
+PyPI web sites, 12
+PyPy project, 32
+PyRo toolkit, 12
+PySol program, 12
+Python
+	compared to other languages, 18-19
+	program architecture, 386-389
+		how to structure program, 387
+		import statement and attributes, 387-389
+		shared library modules, 389
+	structure, 201
+	technical strengths, 12-18
+		automatic memory management, 14
+		built-in object types, 14
+		built-in tools, 15
+		dynamic typing, 14
+		ease of use, 15
+		easy to learn, 17
+		library utilities, 15
+		mixable, 15
+		powerful, 14
+		programming-in-the-large support, 14
+		third-party utilities, 15
+	toolset, 630
+	what can be done with, 9-12
+		component integration, 10
+		database programming, 11
+Python (continued)
+		gaming, images, AI, XML, robots, and more, 12
+		GUI programming, 9
+		numeric and scientific programming, 11
+		rapid prototyping, 11
+		systems programming, 9
+	who uses, 8
+	why people use, 3-5
+		component integration, 4
+		developer productivity, 4, 5
+		enjoyment, 4
+		program portability, 4
+		software quality, 3, 5
+		support libraries, 4
+Python 2.5 MSI Installer on Windows Vista, 642
+Python 3.0, 350, 353, 354, 381
+	classes, 546
+	exceptions, 584
+	mixed types, 158
+	nonlocal statement, 320
+	preparing for, xxxix-xlii
+	print statement, 234
+python command line, 38
+Python Virtual Machine (PVM), 26
+Python.NET, 29
+Python's official web site, 640
+PythonCard, 10, 55
+PYTHONPATH, 50, 391, 642
+	directories, 391
+	variable, 643
+Python-related environment variable settings, 642
+PYTHONSTARTUP, 642
+	variable, 643
+PythonWin, 55
+PyUnit, 631
+Q
+Qt, 10
+qualified attribute names, 506
+quote characters, 74
+R
+_ _radd_ _ method, 492, 502
+raise statement, 202, 575, 592-595
+	functions signal conditions with, 622
+	general forms, 613-614
+	passing extra data, 593
+	propagating exceptions, 594
+	raising and catching user-defined exceptions, 593
+random module, 69, 107
+range function, 221, 249, 265, 268
+	changing lists, 267
+	counter loops, 265
+	nonexhaustive traversals, 266
+rapid prototyping, 11
+raw strings, 124, 127
+	suppressing escapes, 127
+raw_input function, 211, 233, 621
+readlines method, 261
+records, classes as, 519-521
+recursion, 312, 511
+reduce function, 248, 354
+reference counter, 114
+references, 114
+	shared (see shared references)
+	versus copies, 184-186
+registering functions as event handlers, 503-505
+relative import syntax, 431-434
+reload function, 45-50, 409-412, 442
+	details, 410
+	example, 411
+	from imports, 440
+	modules, 385
+	usage notes, 49
+remainder operator, 96
+repetition (strings), 71
+replace method, 145
+repr display format, 101
+repr function, 96, 101, 136
+_ _repr_ _ method, 492, 500-502, 529
+reserved words, 226
+return statement, 202, 301, 302
+right-sided addition, 502
+round function, 106
+Run module, 50
+running Python
+	interpreter, 23
+S
+scopes, 310-343, 506
+	arbitrary nesting, 326
+	assigned names, 312
+	basics, 311
+	built-in, 314
+	built-in (B), 313
+	built-ins, 312
+	closure, 321
+	cross-file changes, minimizing, 318
+	default argument values, 323
+	enclosing defs, 312
+	example, 314
+	factory function, 321
+	global, 311
+	global (G), 313
+	lambda expressions, 324
+	LEGB rule, 312
+	local, 311
+	local (L), 312
+	nested, 561-563
+	nested functions and, 320-326
+	recursion, 312
+	retaining state with defaults, 323
+	versus defaults with loop variables, 324
+scripting, 6
+	Internet, 10
+	languages, 14
+scripts, 38
+self, 466
+self attributes, 509
+send method versus next method, 364
+sequence assignments, 218-222
+	advanced patterns, 220
+sequence repetition, 192
+sequences, 69, 123, 150
+	mapping functions over, 352
+	suppressing, 127
+set function, 87, 108
+_ _setattr_ _ method, 492, 498
+_  _setitem_  _ method, 492
+sets, 87, 108
+shared references, 116-121
+	and arguments, 327
+	equality, 119
+	in-place changes, 118-119
+shared services or data, 386
+Shedskin C++ translator, 30
+shell tools, 6
+shell variables, 644
+shelve module, 527
+shelves, 182
+shift operators, 96
+shipping options, 633
+short-circuit evaluation, 243
+SIP, 10
+size, object, 132
+slicing, 70, 123
+_ _slots_ _ class attribute, 549
+sockets, 86, 182
+software quality, 3, 5
+sorted function, 82, 263, 264, 292, 366
+source code, compiling, 25
+spaces, 239
+spanning delimited constructs, 242
+sparse data structures, 167
+special-case handling, 577
+speed of development, 5
+SQLite, 11
+square brackets, 208
+stack trace, 578
+Stackless Python system, 32
+standard library, 4
+	directories, 391
+StandardError (built-in exception), 609
+state, 466
+state information, 89
+statements, 201-216
+	as expression-based equivalents, 347
+	boundaries, 239
+	defined, 201
+	delimiters, 241
+	separators, 208
+	special cases, 208
+	without nested statements, 242
+static methods, 549, 552-556
+	using, 554-556
+	versus instance methods, 555
+statically nested scopes, 320
+stdout object, 229
+StopIteration exception, 260, 362
+str function, 96, 101, 137
+_ _str_ _ method, 492, 500-502
+strategic mode, 451
+string-based exceptions, 603
+	versus class-based exceptions, 604
+strings, 67, 69-75, 123-150
+	backslash characters, 126
+	basic operations, 132
+	case conversion, 124
+	common literals and operations, 124
+	concatenation 71, 124
+	content test, 124
+	conversion tools, 136-139
+		character code conversions, 138
+	defined, 123
+	dir function, 73
+	double quotes, 124
+	empty, 124
+	for loops, 256
+	formatting, 124, 140-143
+		advanced, 141
+		codes, 141
+		dictionary-based, 142
+strings (continued)
+	immutability, 71
+	index, slice, length, 124
+	indexing, 133-137
+	iteration, membership, 124
+	literals, 124-131
+		double quotes, 124
+		escape sequences, 124, 125
+		single and double quote, 125
+		single quotes, 124
+		triple quotes, 124, 129
+		Unicode, 124, 130-131
+	method calls, 124
+	methods, 143-149
+		attribute fetches, 143
+		call expressions, 143
+		calls, 144
+		case conversions, 147
+		find, 145
+		join, 146
+		parsing text, 146
+		replace, 145
+		stripping off whitespace, 147
+		testing content, 147
+		testing for substring at end, 147
+	modifying, 139
+	original string module, 148
+	other ways to code, 74
+	pattern matching, 75
+	quote characters, 74
+	raw, 124, 127
+	remove whitespace, 124
+	repetition, 71
+	replacement, 124
+	search, 124
+	sequence operations, 70
+	slicing, 133-137
+		extended, 135
+	split on delimiter, 124
+	triple-quoted blocks, 124
+	type-specific methods, 72
+	unicode, 124
+strongly typed, 68
+structure, how to structure program, 387
+subclasses, 454
+	extending types by, 540-543
+	replacing inherited attributes, 488
+subexpressions, 97
+suffixes, 104
+	complex numbers, 104
+sum function, 263, 366
+superclasses, 454, 489
+	abstract, 490
+	constructors, 486
+	extending methods, 488
+	inheritance, 469
+	links, 487
+	mix-in classes, 529
+support libraries, 4
+suppressing escape sequences, 127
+Swing, 10
+Sybase, 11
+syntax rules, 239-240
+SyntaxError, 586
+sys module, 229
+sys.exc_info, 598, 624
+sys.modules dictionary, 436
+sys.path, 430
+sys.path list, 392
+sys.stdout, 231, 233
+system command lines and files, 37-42
+	Unix executable scripts, 41-42
+	using, 40
+system namespace partitioning, 386
+systems programming, 9
+T
+tactical mode, 451
+Tcl, 13
+TCL_LIBRARY, 642
+termination actions, 577
+	with try/finally, 588
+testing
+	code at interactive prompt, 36
+	inputs, 212
+	nested loops, 356-358
+	running in-process, 623
+text
+	modifying strings, 139
+	parsing, 146
+	string methods, 143
+text editor launch options, 57
+third-party utilities, 15
+threaded programs, 53
+TK_LIBRARY, 642
+Tkinter, 9, 31
+	environment setting, 643
+	GUI, 51, 53, 644
+		API, 451
+		toolkit, 503
+tools
+	built-in functions, 106
+	numbers, 95
+	shell, 6
+top-level (unnested) code, 241
+training changes, xxxiii
+translation, Psyco just-in-time compiler, 29
+True built-in name, 109
+truth tests, 186-189, 243-246
+	and and or operators, 243
+	and operations, 244
+	if/else ternary expression, 244
+	notions of true and false, 188
+	or tests, 243
+	short-circuit evaluation, 243
+try statement clauses, 582-584
+	forms, 583
+try statements
+	debugging with, 622
+	error handling, 213
+	stacking, 617
+try/else, 585
+try/except, 575, 581, 589-592
+	nesting, 590
+	unified try example, 591
+try/except statements
+	nested, 617
+try/except/else, 581-587
+	catching built-in exceptions, 586
+	default behavior, 585
+try/except/finally statement, 202
+try/finally, 575, 580, 587-589
+	coding termination actions, 588
+try/finally statements
+	nested, 618
+tuple- and list-unpacking assignments, 218
+tuple assignment, 219
+tuple function, 175, 264, 329
+tuples, 49, 67, 85, 172-176
+	accessed by offset, 172
+	arrays of object references, 173
+	commas and parentheses, 174
+	common operations, 173
+	conversions and immutability, 174
+	fixed-length, heterogeneous, and arbitrarily nestable, 173
+	for loops, 256
+		tuple of targets, 257
+	in action, 173-175
+	list comprehensions, 175
+	list inside, 175
+	of the category immutable sequence, 173
+	ordered collections of arbitrary objects, 172
+	properties, 172
+	why lists and tuples, 175
+TurboGears, 10
+type categories, 149-150, 182
+	mappings, 150
+	mutable, 150
+	numbers, 150
+	sequences, 150
+type declarations, lack of, 88
+type designator, 114
+type function, 305
+type hierarchies, 189-191
+type-based selections, 519
+types
+	built-in (see built-in types)
+	comparisons, 188
+	converting, 97
+	gotchas, 191-193
+		assignments, 191
+		cyclic data structures, 193
+		immutable types, 193
+		sequence repetition, 192
+	mutable, 150
+	objects versus variables, 114
+	other, 191
+types standard library module, 190
+U
+unary operators, 96
+unbound class method objects, 534
+unbound methods, 553
+underscores, 426, 492
+Unicode strings, 124, 130-131
+unified try example, 591
+Unix executable scripts, 41-42
+unqualified names, 506
+unusual control flows, 577
+update method, 164
+user inputs
+	doing math on, 211
+user-defined classes, 88
+utility modules, 95
+V
+van Rossum, Guido, 18, 546
+varargs, 331
+variable name rules, 225
+variable names, 313
+variables, 114
+	basic expressions and, 99-100
+	creating, 113
+	types, 113
+	usage, 113
+Vaults of Parnassus, 12, 31, 634
+Vista, Python 2.5 MSI Installer, 642
+W
+warnings, 621
+web site resources, xxxviii
+while loops, 248-250
+	emulating C, 255
+	examples, 249
+	general format, 249
+while/else statement, 202
+whitespace, 241
+wide character strings, 130
+win32all Windows extensions package, 423
+win32com, 31
+WingIDE, 55
+with/as, 203, 575, 596-600
+	context management protocol, 598-600
+wrapping, 624
+wxPython, 10, 31
+X
+XML (Extensible Markup Language), 10, 15
+xml library package, 12
+xmlrpclib module, 12
+Y
+yield statement, 202
+Z
+zip function, 265, 268
+	dictionary construction, 270
+Zope, 10

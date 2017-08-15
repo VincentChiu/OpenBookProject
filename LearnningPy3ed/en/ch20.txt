@@ -1,0 +1,182 @@
+Chapter 20
+Chapter 20
+20Module Packages
+So far, when we've imported modules, we've been loading files. This represents typical module usage, and is probably the technique you'll use for most imports you'll code early on in your Python career. However, the module import story is a bit richer than I have thus far implied.
+In addition to a module name, an import can name a directory path. A directory of Python code is said to be a package, so such imports are known as package imports. In effect, a package import turns a directory on your computer into another Python namespace, with attributes corresponding to the subdirectories and module files that the directory contains.
+This is a somewhat advanced feature, but the hierarchy it provides turns out to be handy for organizing the files in a large system, and tends to simplify module search path settings. As we'll see, package imports are also sometimes required to resolve import ambiguities when multiple program files of the same name are installed on a single machine.
+Package Import Basics
+So, how do package imports work? In the place where you have been naming a simple file in your import statements, you can instead list a path of names separated by periods:
+import dir1.dir2.mod
+The same goes for from statements:
+from dir1.dir2.mod import x
+The "dotted" path in these statements is assumed to correspond to a path through the directory hierarchy on your machine, leading to the file mod.py (or similar; the extension may vary). That is, the preceding statements indicate that on your machine there is a directory dir1, which has a subdirectory dir2, which contains a module file mod.py (or similar).
+Furthermore, these imports imply that dir1 resides within some container directory dir0, which is accessible on the Python module search path. In other words, the two import statements imply a directory structure that looks something like this (shown with DOS backslash separators):
+dir0\dir1\dir2\mod.py             # Or mod.pyc, mod.so, etc.
+The container directory dir0 needs to be added to your module search path (unless it's the home directory of the top-level file), exactly as if dir1 were a module file. From there down, the import statements in your script give the directory paths leading to the modules explicitly.
+Packages and Search Path Settings
+If you use this feature, keep in mind that the directory paths in your import statements can only be variables separated by periods. You cannot use any platform-specific path syntax in your import statements, such as C:\dir1, My Documents.dir2, or ../dir1-these do not work syntactically. Instead, use platform-specific syntax in your module search path settings to name the container directories.
+For instance, in the prior example, dir0-the directory name you add to your module search path-can be an arbitrarily long and platform-specific directory path leading up to dir1. Instead of using an invalid statement like this:
+import C:\mycode\dir1\dir2\mod      # Error: illegal syntax
+add C:\mycode to your PYTHONPATH variable or a .pth file (assuming it is not the program's home directory, in which case this step is not necessary), and say this:
+import dir1.dir2.mod
+In effect, entries on the module search path provide platform-specific directory path prefixes, which lead to the leftmost names in import statements. Import statements provide directory path tails in a platform-neutral fashion.
+Package _  _init_  _.py Files
+If you choose to use package imports, there is one more constraint you must follow: each directory named within the path of a package import statement must contain a file named _  _init_  _.py, or your package imports will fail. That is, in the example we've been using, both dir1 and dir2 must contain a file called _  _init_  _.py; the container directory dir0 does not require such a file because it's not listed in the import statement itself. More formally, for a directory structure such as this:
+dir0\dir1\dir2\mod.py
+and an import statement of the form:
+import dir1.dir2.mod
+the following rules apply:
+	*	dir1 and dir2 both must contain an _  _init_  _.py file.
+	*	dir0, the container, does not require an _  _init_  _.py file; this file will simply be ignored if present.
+	*	dir0, not dir0\dir1, must be listed on the module search path (i.e., it must be the home directory, or be listed in your PYTHONPATH, etc.).
+The net effect is that this example's directory structure should be as follows, with indentation designating directory nesting:
+dir0\                       # Container on module search path
+    dir1\
+        _  _init_  _.py
+        dir2\
+            _  _init_  _.py
+            mod.py
+The _  _init_  _.py files can contain Python code, just like normal module files. They are partly present as a declaration to Python, however, and can be completely empty. As declarations, these files serve to prevent directories with common names from unintentionally hiding true modules that appear later on the module search path. Without this safeguard, Python might pick a directory that has nothing to do with your code, just because it appears in an earlier directory on the search path.
+More generally, the _  _init_  _.py file serves as a hook for package initialization-time actions, generates a module namespace for a directory, and implements the behavior of from * (i.e., from ... import *) statements when used with directory imports:
+Package initialization
+The first time Python imports through a directory, it automatically runs all the code in the directory's _  _init_  _.py file. Because of that, these files are a natural place to put code to initialize the state required by files in the package. For instance, a package might use its initialization file to create required data files, open connections to databases, and so on. Typically, _  _init_  _.py files are not meant to be useful if executed directly; they are run automatically when a package is first accessed.
+Module namespace initialization
+In the package import model, the directory paths in your script become real nested object paths after an import. For instance, in the preceding example, after the import, the expression dir1.dir2 works and returns a module object whose namespace contains all the names assigned by dir2's _  _init_  _.py file. Such files provide a namespace for module objects created for directories, which have no real associated module files.
+from * statement behavior
+As an advanced feature, you can use _  _all_  _ lists in _  _init_  _.py files to define what is exported when a directory is imported with the from * statement form. (We'll meet _  _all_  _ in Chapter 21.) In an _  _init_  _.py file, the _  _all_  _ list is taken to be the list of submodule names that should be imported when from * is used on the package (directory) name. If _  _all_  _ is not set, the from * statement does not automatically load submodules nested in the directory; instead, it loads just names defined by assignments in the directory's _  _init_  _.py file, including any submodules explicitly imported by code in this file. For instance, the statement from submodule import X in a directory's _  _init_  _.py makes the name X available in that directory's namespace.
+You can also simply leave these files empty, if their roles are beyond your needs. They must exist, though, for your directory imports to work at all.
+Package Import Example
+Let's actually code the example we've been talking about to show how initialization files and paths come into play. The following three files are coded in a directory dir1, and its subdirectory dir2:
+# File: dir1\_  _init_  _.py
+print 'dir1 init'
+x = 1
+
+# File: dir1\dir2\_  _init_  _.py
+print 'dir2 init'
+y = 2
+
+# File: dir1\dir2\mod.py
+print 'in mod.py'
+z = 3
+Here, dir1 will either be a subdirectory of the one we're working in (i.e., the home directory), or a subdirectory of a directory that is listed on the module search path (technically, on sys.path). Either way, dir1's container does not need an _  _init_  _.py file.
+import statements run each directory's initialization file the first time that directory is traversed, as Python descends the path; print statements are included here to trace their execution. Also, as with module files, an already imported directory may be passed to reload to force re-execution of that single item. As shown here, reload accepts a dotted path name to reload nested directories and files:
+% python 
+>>> import dir1.dir2.mod      # First imports run init files
+dir1 init
+dir2 init
+in mod.py
+>>>
+>>> import dir1.dir2.mod      # Later imports do not
+>>>
+>>> reload(dir1)
+dir1 init
+<module 'dir1' from 'dir1\_  _init_  _.pyc'>
+>>>
+>>> reload(dir1.dir2)
+dir2 init
+<module 'dir1.dir2' from 'dir1\dir2\_  _init_  _.pyc'>
+Once imported, the path in your import statement becomes a nested object path in your script. Here, mod is an object nested in the object dir2, which in turn is nested in the object dir1:
+>>> dir1
+<module 'dir1' from 'dir1\_  _init_  _.pyc'>
+>>> dir1.dir2
+<module 'dir1.dir2' from 'dir1\dir2\_  _init_  _.pyc'>
+>>> dir1.dir2.mod
+<module 'dir1.dir2.mod' from 'dir1\dir2\mod.pyc'>
+In fact, each directory name in the path becomes a variable assigned to a module object whose namespace is initialized by all the assignments in that directory's _  _init_  _.py file. dir1.x refers to the variable x assigned in dir1\_  _init_  _.py, much as mod.z refers to the variable z assigned in mod.py:
+>>> dir1.x
+1
+>>> dir1.dir2.y
+2
+>>> dir1.dir2.mod.z
+3
+from Versus import with Packages
+import statements can be somewhat inconvenient to use with packages because you may have to retype the paths frequently in your program. In the prior section's example, for instance, you must retype and rerun the full path from dir1 each time you want to reach z. If you try to access dir2 or mod directly, you'll get an error:
+>>> dir2.mod
+NameError: name 'dir2' is not defined
+>>> mod.z
+NameError: name 'mod' is not defined
+It's often more convenient, therefore, to use the from statement with packages to avoid retyping the paths at each access. Perhaps more importantly, if you ever restructure your directory tree, the from statement requires just one path update in your code, whereas the import may require many. The import as extension, discussed in the next chapter, can also help here by providing a shorter synonym for the full path:
+% python
+>>> from dir1.dir2 import mod       # Code path here only
+dir1 init
+dir2 init
+in mod.py
+>>> mod.z                           # Don't repeat path
+3
+>>> from dir1.dir2.mod import z
+>>> z
+3
+>>> import dir1.dir2.mod as mod     # Use shorter name
+>>> mod.z
+3
+Why Use Package Imports?
+If you're new to Python, make sure that you've mastered simple modules before stepping up to packages, as they are a somewhat advanced feature. They do serve useful roles, though, especially in larger programs: they make imports more informative, serve as an organizational tool, simplify your module search path, and can resolve ambiguities.
+First of all, because package imports give some directory information in program files, they both make it easier to locate your files and serve as an organizational tool. Without package paths, you must often resort to consulting the module search path to find files. Moreover, if you organize your files into subdirectories for functional areas, package imports make it more obvious what role a module plays, and so make your code more readable. For example, a normal import of a file in a directory somewhere on the module search path, like this:
+import utilities
+offers much less information than an import that includes the path:
+import database.client.utilities
+Package imports can also greatly simplify your PYTHONPATH and .pth file search path settings. In fact, if you use package imports for all your cross-directory imports, and you make those package imports relative to a common root directory, where all your Python code is stored, you really only need a single entry on your search path: the common root. Finally, package imports serve to resolve ambiguities by making explicit exactly which files you want to import. The next section explores this role in more detail.
+A Tale of Three Systems
+The only time package imports are actually required is to resolve ambiguities that may arise when multiple programs with same-named files are installed on a single machine. This is something of an install issue, but it can also become a concern in general practice. Let's turn to a hypothetical scenario to illustrate.
+Suppose that a programmer develops a Python program that contains a file called utilities.py for common utility code, and a top-level file named main.py that users launch to start the program. All over this program, its files say import utilities to load and use the common code. When the program is shipped, it arrives as a single .tar or .zip file containing all the program's files, and when it is installed, it unpacks all its files into a single directory named system1 on the target machine:
+system1\
+    utilities.py        # Common utility functions, classes
+    main.py             # Launch this to start the program
+    other.py            # Import utilities to load my tools
+Now, suppose that a second programmer develops a different program with files also called utilities.py and main.py, and again uses import utilities throughout the program to load the common code file. When this second system is fetched and installed on the same computer as the first system, its files will unpack into a new directory called system2 somewhere on the receiving machine so that they do not overwrite same-named files from the first system:
+system2\
+    utilities.py        # Common utilities
+    main.py             # Launch this to run
+    other.py            # Imports utilities
+So far, there's no problem: both systems can coexist and run on the same machine. In fact, you won't even need to configure the module search path to use these programs on your computer-because Python always searches the home directory first (that is, the directory containing the top-level file), imports in either system's files will automatically see all the files in that system's directory. For instance, if you click on system1\main.py, all imports will search system1 first. Similarly, if you launch system2\main.py, system2 will be searched first instead. Remember, module search path settings are only needed to import across directory boundaries.
+However, suppose that after you've installed these two programs on your machine, you decide that you'd like to use some of the code in each of the utilities.py files in a system of your own. It's common utility code, after all, and Python code by nature wants to be reused. In this case, you want to be able to say the following from code that you're writing in a third directory to load one of the two files:
+import utilities
+utilities.func('spam')
+Now the problem starts to materialize. To make this work at all, you'll have to set the module search path to include the directories containing the utilities.py files. But which directory do you put first in the path-system1 or system2?
+The problem is the linear nature of the search path. It is always scanned from left to right, so no matter how long you ponder this dilemma, you will always get utilities.py from the directory listed first (leftmost) on the search path. As is, you'll never be able to import it from the other directory at all. You could try changing sys.path within your script before each import operation, but that's both extra work, and highly error-prone. By default, you're stuck.
+This is the issue that packages actually fix. Rather than installing programs as flat lists of files in standalone directories, you can package and install them as subdirectories under a common root. For instance, you might organize all the code in this example as an install hierarchy that looks like this:
+root\
+    system1\
+        _  _init_  _.py
+        utilities.py
+        main.py
+        other.py
+    system2\
+        _  _init_  _.py
+        utilities.py
+        main.py
+        other.py
+    system3\                    # Here or elsewhere
+        _  _init_  _.py          	 # Your new code here
+        myfile.py
+Now, add just the common root directory to your search path. If your code's imports are all relative to this common root, you can import either system's utility file with a package import-the enclosing directory name makes the path (and hence, the module reference) unique. In fact, you can import both utility files in the same module, as long as you use an import statement, and repeat the full path each time you reference the utility modules:
+import system1.utilities
+import system2.utilities
+system1.utilities.function('spam')
+system2.utilities.function('eggs')
+The name of the enclosing directory here makes the module references unique. 
+Note that you have to use import instead of from with packages only if you need to access the same attribute in two or more paths. If the name of the called function here was different in each path, from statements could be used to avoid repeating the full package path whenever you call one of the functions, as described earlier.
+Also, notice in the install hierarchy shown earlier that _  _init_  _.py files were added to the system1 and system2 directories to make this work, but not to the root directory. Only directories listed within import statements in your code require these files; as you'll recall, they are run automatically the first time the Python process imports through a package directory. 
+Technically, in this case, the system3 directory doesn't have to be under root-just the packages of code from which you will import. However, because you never know when your own modules might be useful in other programs, you might as well place them under the common root directory to avoid similar name-collision problems in the future.
+Finally, notice that both of the two original systems' imports will keep working unchanged. Because their home directories are searched first, the addition of the common root on the search path is irrelevant to code in system1 and system2; they can keep saying just import utilities, and expect to find their own files. Moreover, if you're careful to unpack all your Python systems under a common root like this, path configuration becomes simple: you'll only need to add the common root directory, once.
+Why You Will Care: Module Packages
+Now that packages are a standard part of Python, it's common to see larger third-party extensions shipped as a set of package directories, rather than a flat list of modules. The win32all Windows extensions package for Python, for instance, was one of the first to jump on the package bandwagon. Many of its utility modules reside in packages imported with paths. For instance, to load client-side COM tools, you use a statement like this:
+from win32com.client import constants, Dispatch
+This line fetches names from the client module of the win32com package (an install subdirectory). 
+Package imports are also pervasive in code run under the Jython Java-based implementation of Python because Java libraries are organized into hierarchies as well. In recent Python releases, the email and XML tools are likewise organized into packaged subdirectories in the standard library. Whether you create package directories, you will probably import from them eventually. 
+
+Chapter Summary
+This chapter introduced Python's package import model-an optional but useful way to explicitly list part of the directory path leading up to your modules. Package imports are still relative to a directory on your module import search path, but rather than relying on Python to traverse the search path manually, your script gives the rest of the path to the module explicitly.
+As we've seen, packages not only make imports more meaningful in larger systems, but also simplify import search path settings (if all cross-directory imports are relative to a common root directory), and resolve ambiguities when there is more than one module of the same name (including the name of the enclosing directory in a package import helps distinguish between them).
+In the next chapter, we will survey a handful of more advanced module-related topics, such as relative import syntax, and the _  _name_  _ usage mode variable. As usual, though, we'll close out this chapter with a short quiz to test what you've learned here.
+Brain Builder
+Chapter Quiz
+	1.	What is the purpose of an _  _init_  _.py file in a module package directory?
+	2.	How can you avoid repeating the full package path every time you reference a package's content?
+	3.	Which directories require _  _init_  _.py files?
+	4.	When must you use import instead of from with packages?
+Quiz Answers
+	1.	The _  _init_  _.py file serves to declare and initialize a module package; Python automatically runs its code the first time you import through a directory in a process. Its assigned variables become the attributes of the module object created in memory to correspond to that directory. It is also not optional-you can't import through a directory with package syntax, unless it contains this file. 
+	2.	Use the from statement with a package to copy names out of the package directly, or use the as extension with the import statement to rename the path to a shorter synonym. In both cases, the path is listed in only one place, in the from or import statement.
+	3.	Each directory listed in an import or from statement must contain an _  _init_  _.py file. Other directories, including the directory containing the leftmost component of a package path, do not need to include this file.
+	4.	You must use import instead of from with packages only if you need to access the same name defined in more than one path. With import, the path makes the references unique, but from allows only one version of any given name.

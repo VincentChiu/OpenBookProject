@@ -1,0 +1,480 @@
+APPENDIX -- UNDERSTANDING UNICODE
+附录 -- 理解UNICODE
+------------------------------------------------------------------------
+
+SECTION -- Some Background on Characters
+节 -- 关于字符的一些背景
+-------------------------------------------------------------------
+
+  Before we see what Unicode is, it makes sense to step back
+  slightly to think about just what it means to store "characters"
+  in digital files. Anyone who uses a tool like a text editor
+  usually just thinks of what they are doing as entering some
+  characters--numbers, letters, punctuation, and so on. But behind
+  the scene a little bit more is going on. "Characters" that are
+  stored on digital media must be stored as sequences of ones and
+  zeros, and some encoding and decoding must happen to make these
+  ones and zeros into characters we see on a screen or type in with
+  a keyboard.
+  在我们了解Unicode之前,让我们先退回一点点,思考一下在数字文件中
+  存储“字符”所代表的意义.使用类似文本编辑器之类工具的人通常
+  认为他们的所作所为只是输入一些字符--数字,字母,标点,等等.
+  但在幕后还有一些事情在进行.存储于数字媒介中的“字符”必须以一或者
+  零的序列形式存储,另外还必须有一些编码和解码以将这些一和零转换为
+  我们在屏幕上看到的或者用键盘输入的字符.
+
+  Sometime around the 1960s, a few decisions were made about just
+  what ones and zeros (bits) would represent characters. One
+  important choice that most modern computer users give no thought
+  to was the decision to use 8-bit bytes on nearly all computer
+  platforms. In other words, bytes have 256 possible values. Within
+  these 8-bit bytes, a consensus was reached to represent one
+  character in each byte. So at that point, computers needed a
+  particular -encoding- of characters into byte values; there were
+  256 "slots" available, but just which character would go in each
+  slot? The most popular encoding developed was Bob Bemers'
+  American Standard Code for Information Interchange (ASCII), which
+  is now specified in exciting standards like ISO-14962-1997 and
+  ANSI-X3.4-1986(R1997). But other options, like IBM's mainframe
+  EBCDIC, linger on, even now.
+  在上个世纪六十年代左右,达成了一些决定,是关于哪些一和零可以代表字符的.
+  一个现代计算机用户不会想到的重要选择就是,在几乎所有电脑平台上
+  使用8比特字节.换句话说,字节有256个可能的值.在这些8比特字节中,
+  一致同意每个字节代表一个字符.所以从这一点上看,电脑需要一种特别的
+  -编码-以将字符转换成字节值；一共存在256个“位置”,但是哪个字符应该
+  到哪个位置呢？最流行的编码是由Bob Bemers开发的
+  American Standard Code for Information Interchange (ASCII),
+  现在一些激动人心的标准,例如ISO-14962-1997和
+  ANSI-X3.4-1986(R1997)中,也指定着一个标准.但是一些其他选项,
+  例如IBM的大型机所用的扩充的二进制编码的十进制交换码 (EBCDIC),
+  也沿用至今.
+
+  ASCII itself is of somewhat limited extent.  Only the values of
+  the lower-order 7-bits of each byte might contain ASCII-encoded
+  characters.  The top 7-bits worth of positions (128 of them)
+  are "reserved" for other uses (back to this).  So, for example,
+  a byte that contains "01000001" -might- be an ASCII encoding of
+  the letter "A", but a byte containing "11000001" cannot be an
+  ASCII encoding of anything.  Of course, a given byte may or may
+  not -actually- represent a character; if it is part of a text
+  file, it probably does, but if it is part of object code, a
+  compressed archive, or other binary data, ASCII decoding is
+  misleading.  It depends on context.
+  ASCII本身具有有限的扩充.只有每个字节的低顺序的7位比特值才可能包含
+  ASCII编码的字符,而位置上高顺序的7比特值(共有128个),被
+  “保留”做其他作用(又回到这里).所以举例而言,包含的“01000001”
+  的字节-可能-是字母“A”的ASCII编码,但是包含“11000001”的字节不可能
+  是任何字符的ASCII编码.当然,给定的字节不一定-实际-代表一个字符；
+  如果它是文本文件的一部分,它很有可能是,但是如果它是目标代码,
+  压缩过的存档,或者其他二进制数据的一部分,ASCII的解码会让人
+  一头雾水.只能说它依赖于语境.
+# 7-bits 需要重新组织一下 
+ 
+  The reserved top 7-bits in common 8-bit bytes have been used for
+  a number of things in a character-encoding context. On
+  traditional textual terminals (and printers, etc.) it has been
+  common to allow switching between -codepages- on terminals to
+  allow display of a variety of national-language characters (and
+  special characters like box-drawing borders), depending on the
+  needs of a user. In the world of Internet communications,
+  something very similar to the codepage system exists with the
+  various ISO-8859-* encodings. What all these systems do is assign
+  a set of characters to the 128 slots that ASCII reserves for
+  other uses. These might be accented Roman characters (used in
+  many Western European languages) or they might be non-Roman
+  character sets like Greek, Cyrillic, Hebrew, or Arabic (or in the
+  future, Thai and Hindi). By using the right codepage, 8-bit bytes
+  can be made quite suitable for encoding reasonable sized
+  (phonetic) alphabets.
+  在常见的8比特字节中保留的高顺序7比特,在字符编码语境中,有很多
+  的用途.在传统的原文终端(以及打印机,等等),通常允许终端
+  在-代码页-中切换,以显示多种国家语言字符(以及特许字符,例如
+  box-drawing borders),这些都依赖于用户的需要.在互联网通讯的世界中,
+  在各种各样的ISO-8859-*编码中存在和代码页系统很类似的内容.这些
+  系统所做的就是,将ASCII原来留作他用的128个位置分配到一套字符.
+  这些可以是重音符号的罗马字符(许多西欧语言使用它们),或者
+  它们也可以是非罗马字符集合,例如希腊语,斯拉夫语,希伯来语,或者阿拉伯语(
+  未来或有泰国语和北印度语).通过使用正确的代码页,8比特字节
+  是相当适合用于对合理尺寸的(音标)字母表进行编码的.
+  
+
+  Codepages and ISO-8859-* encodings, however, have some definite
+  limitations.  For one thing, a terminal can only display one
+  codepage at a given time, and a document with an ISO-8859-*
+  encoding can only contain one character set.  Documents that
+  need to contain text in multiple languages are not possible to
+  represent by these encodings.  A second issue is equally
+  important:  Many ideographic and pictographic character sets
+  have far more than 128 or 256 characters in them (the former is
+  all we would have in the codepage system, the latter if we used
+  the whole byte and discarded the ASCII part).  It is simply not
+  possible to encode languages like Chinese, Japanese, and
+  Korean in 8-bit bytes.  Systems like ISO-2022-JP-1 and codepage
+  943 allow larger character sets to be represented using two or
+  more bytes for each character.  But even when using these
+  language-specific multibyte encodings, the problem of mixing
+  languages is still present.
+  但是,代码页和ISO-8859-*系列编码,是有一些局限性的.是有一些
+  明显的缺陷的.第一个是,某终端在给定时间内只能显示一个代码页,
+  而一个使用ISO-8859-*编码的文档,则只能包含一个字符集.
+  需要包含多种语言的文档,则无法使用这些编码表示.、
+  第二个问题则同样重要:许多表意文字和象形文字集中的字符远远
+  超过128或者256个(前者是我们在代码页系统中所能拥有的数目,后者则是
+  当我们使用整个字节,并抛弃ASCII部分).使用8比特的字节肯定是无法对
+  中文,日文以及朝鲜语进行编码了.有的系统,例如ISO-2022-JP-1和943代码页,
+  通过每个字符使用两个或者更多字节来表示更大的字符集.但就算使用
+  这些特定语言的多字节编码,多种语言的混合使用仍然是个问题.
+
+SECTION -- What is Unicode?
+节 -- 什么是Unicode?
+-------------------------------------------------------------------
+
+  Unicode solves the problems of previous character-encoding
+  schemes by providing a unique code number for -every- character
+  needed, worldwide and across languages. Over time, more
+  characters are being added, but the allocation of available
+  ranges for future uses has already been planned out, so room
+  exists for new characters. In Unicode-encoded documents, no
+  ambiguity exists about how a given character should display (for
+  example, should byte value '0x89' appear as e-umlaut, as in
+  codepage 850, or as the per-mil mark, as in codepage 1004?).
+  Furthermore, by giving each character its own code, there is no
+  problem or ambiguity in creating multilingual documents that
+  utilize multiple character sets at the same time. Or rather,
+  these documents actually utilize the single (very large)
+  character set of Unicode itself.
+  Unicode解决了前述字符编码方案的问题,它为世界上所有语言的
+  -每一个-字符提供了单独的编号.更多字符正随着时间加入,但是
+  未来的可用范围已经分配完毕,字符的显示不会模棱两可(例如,字节值为
+  '0x89', 是作为代码页850中的元音变音显示,抑或作为代码页1004中的per-mil标识?)
+  更进一步看,每个字符拥有其自己的代码, 创建同时使用多个字符集多语言文档
+  也不会有问题,或有歧义. 再或者,这些文档实际上使用了一个(极其大)的
+  字符集,也就是Unicode本身.
+
+  Unicode is managed by the Unicode Consortium (see Resources), a
+  nonprofit group with corporate, institutional, and individual
+  members. Originally, Unicode was planned as a 16-bit
+  specification. However, this original plan failed to leave enough
+  room for national variations on related (but distinct) ideographs
+  across East Asian languages (Chinese, Japanese, and Korean), nor
+  for specialized alphabets used in mathematics and the scholarship
+  of historical languages. As a result, the code space of Unicode
+  is currently 32-bits (and anticipated to remain fairly sparsely
+  populated, given the 4 billion allowed characters).
+  Unicode是由Unicode协会(参见"资源")管理的,它是一个非盈利性组织,
+  里面的成员有公司,公共机构以及个人.起初的时候,Unicode的计划是
+  一个16位的规范.但是,最初的计划无法为东亚国家间那些互相相关但又不同
+  的表意文字(中文,日文以及朝鲜语)留出足够空间,也没有足够空间给
+  数学中的字母表以及历史上曾经的语言.因此,Unicode的代码空间
+  是32位(可以预见其中的分布会相当的稀疏,毕竟可以有四十亿个字符呢).
+  
+
+SECTION -- Encodings
+节 -- 编码
+-------------------------------------------------------------------
+
+  A full 32-bits of encoding space leaves plenty of room for
+  every character we might want to represent, but it has its own
+  problems.  If we need to use 4 bytes for every character we
+  want to encode, that makes for rather verbose files (or
+  strings, or streams).  Furthermore, these verbose files are
+  likely to cause a variety of problems for legacy tools.  As a
+  solution to this, Unicode is itself often encoded using
+  "Unicode Transformation Formats" (abbreviated as 'UTF-*').  The
+  encodings 'UTF-8' and 'UTF-16' use rather clever techniques to
+  encode characters in a variable number of bytes, but with the
+  most common situation being the use of just the number of bits
+  indicated in the encoding name.  In addition, the use of
+  specific byte value ranges in multibyte characters is designed
+  in such a way as to be friendly to existing tools.  'UTF-32' is
+  also an available encoding, one that simply uses all four bytes
+  in a fixed-width encoding.
+  一个32位的编码空间给出的空间足够包括所有我们想要表示的字符,但
+  它也有自己的问题.如果对于每个想要编码的字符,我们都使用4字节
+  来表示,这将造成相当冗长的文件(或者字符串,或者流). 而且,这些
+  冗长的文件很可能对传统的工具形成不同的问题.作为对此的一个解决方案,
+  Unicode自己常使用"Unicode转换格式 (Unicode Transformation Formants)"
+  (简称'UTF-*'). ‘'UTF-8'和'UTF-16'编码使用了相当聪明的技术,用可变
+  长度的字节来对字符进行编码,但最常见的情形就是,比特数的数目和
+  编码中的数字正好一样.另外,在多字节字符中使用特定字节值是以一种
+  对现存工具友好的方法来设计的.'UTF-32'是另一种可用编码,它
+  是固定宽度的编码,利用了所有四个字节.
+
+  The design of 'UTF-8' is such that 'US-ASCII' characters are
+  simply encoded as themselves.  For example, the English letter
+  "e" is encoded as the single byte '0x65' in both ASCII and in
+  'UTF-8'.  However, the non-English "e-umlaut" diacritic, which
+  is Unicode character '0x00EB', is encoded with the two bytes
+  '0xC3 0xAB'.  In contrast, the 'UTF-16' representation of
+  every character is always at least 2 bytes (and sometimes 4
+  bytes).  'UTF-16' has the rather straightforward
+  representations of the letters "e" and "e-umlaut" as '0x65
+  0x00' and '0xEB 0x00', respectively.  So where does the odd
+  value for the e-umlaut in 'UTF-8' come from? Here is the
+  trick:  No multibyte encoded 'UTF-8' character is allowed to
+  be in the 7-bit range used by ASCII, to avoid confusion.  So
+  the 'UTF-8' scheme uses some bit shifting and encodes every
+  Unicode character using up to 6 bytes.  But the byte values
+  allowed in each position are arranged in such a manner as not
+  to allow confusion of byte positions (for example, if you read
+  a file nonsequentially).
+  'UTF-8'的设计是,'US-ASCII'字符的编码就是它们本身.例如,
+  英文字母"e"在ASCII和'UTF-8'中的编码都是单字节'0x65'.
+  但是,非英语"e-umlaut"区别音符,它是Unicode字符'0x00EB',
+  使用两个字节'0xC3 0xAB'来编码.'UTF-16'的表示方法是相当直观,
+  字母"e"和"e-umlaut"分别是'0x65 0x00'和'0xEB 0x00'. 那
+  e-umlaut在'UTF-8'中奇怪的值是从哪儿来的呢?下面是窍门:
+  多字节编码的'UTF-8'字符为了不混淆,是不允许有7位长ASCII的范围内
+  的值的.所以'UTF-8'方案进行了一些位移,每个Unicode字符最多
+  使用6个字节.但是每个位置允许的字符值是仔细安排的,避免
+  字节位置造成的困扰(例如,当你不是按顺序读文件的时候).
+
+  Let's look at another example, just to see it laid out. Here is a
+  simple text string encoded in several ways. The view presented is
+  similar to what you would see in a hex-mode file viewer. This
+  way, it is easy to see both a likely on-screen character
+  representation (on a legacy, non-Unicode terminal) and a
+  representation of the underlying hexadecimal values each byte
+  contains:
+  让我们来看看另外一个例子,就是看看如何布局的.这儿是个简单的字符串,
+  使用了多种方法来编码.展现的视图和你在十六进制模式的文件阅览器中
+  看到的类似.这样一来,很容易同时看到(在传统的非Unicode终端上)屏幕
+  展示的字符形式,以及下面的每个字节包含的十六进制值形式:
+
+      #---- Hex view of several character string encodings ----#
+      #---- 多个字符串编码的十六进制视图 ----#
+      ------------------- Encoding = us-ascii ---------------------------
+      ------------------- 编码 = us-ascii ---------------------------
+      55 6E 69 63 6F 64 65 20 20 20 20 20 20 20 20 20  | Unicode
+      ------------------- 编码 = utf-8 ------------------------------
+      55 6E 69 63 6F 64 65 20 20 20 20 20 20 20 20 20  | Unicode
+      ------------------- 编码 = utf-16 -----------------------------
+      FF FE 55 00 6E 00 69 00 63 00 6F 00 64 00 65 00  |   U n i c o d e
+
+  !!!
+
+SECTION --  Declarations
+节 -- 声明
+-------------------------------------------------------------------
+
+  We have seen how Unicode characters are actually encoded, at
+  least briefly, but how do applications know to use a particular
+  decoding procedure when Unicode is encountered? How applications
+  are alerted to a Unicode encoding depends upon the type of data
+  stream in question.
+  我们已经看过Unicode字符是如何实际编码的了,但是程序在遇到Unicode时候,
+  是如何知道该采用哪种特别解码步骤呢？程序如何意识到Unicode编码,
+  取决于讨论的问题中数据流的类型.
+
+  Normal text files do not have any special header information
+  attached to them to explicitly specify type. However, some
+  operating systems (like MacOS, OS/2, and BeOS--Windows and Linux
+  only in a more limited sense) have mechanisms to attach extended
+  attributes to files; increasingly, MIME header information is
+  stored in such extended attributes. If this happens to be the
+  case, it is possible to store MIME header information such as:
+  普通文本文件并未附上任何特殊数据头信息以显式指定类型.但是,
+  一些操作系统(例如MacOS, OS/2, 和BeOS--Windows和Linux只是在
+  某种有限的意义上)有在文件上附上扩展属性的机制；MIME数据头信息
+  也逐渐储存在这样一个扩展属性中.如果正好是这种情况,可以存储
+  以下的MIME数据头信息:
+
+      #*------------- MIME Header -----------------------------#
+      #*------------- MIME 数据头 -----------------------------#
+      Content-Type: text/plain; charset=UTF-8
+
+  Nonetheless, having MIME headers attached to files is not a safe,
+  generic assumption. Fortunately, the actual byte sequences in
+  Unicode files provides a tip to applications. A Unicode-aware
+  application, absent contrary indication, is supposed to assume
+  that a given file is encoded with 'UTF-8'. A non-Unicode-aware
+  application reading the same file will find a file that contains
+  a mixture of ASCII characters and high-bit characters (for
+  multibyte 'UTF-8' encodings). All the ASCII-range bytes will have
+  the same values as if they were ASCII encoded. If any multibyte
+  'UTF-8' sequences were used, those will appear as non-ASCII
+  bytes and should be treated as noncharacter data by the legacy
+  application. This may result in nonprocessing of those extended
+  characters, but that is pretty much the best we could expect from
+  a legacy application (that, by definition, does not know how to
+  deal with the extended characters).
+  尽管如此,把MIME头文件附着于文件并非一种安全而又通用的假设.幸运的
+  是,Unicode文件中实际的字节序列为程序给出了提示.一个兼容Unicode的
+  程序,若无其他提示,将假设给定的文件是以'UTF-8'编码的.一个非Unicode
+  兼容的程序在读入同一个文件时,会发现这个文件包含了ASCII字符,还有
+  高比特的字符(这是多字节'UTF-8'编码中的).所有ASCII范围内的字节拥有的
+  值就和它们使用ASCII编码的值一样.如果使用了任何多字节'UTF-8'序列,
+  以非ASCII字节出现的将被传统程序视为非字符数据.这样也许会导致
+  这些扩展字符并未被处理,但是这几乎是我们对传统程序所能做的最好期待了
+  (根据定义,传统程序并不知道如何处理扩展的字符).
+
+  For 'UTF-16' encoded files, a special convention is followed for
+  the first two bytes of the file. One of the sequences '0xFF 0xFE'
+  or '0xFE 0xFF' acts as small headers to the file. The choice of
+  which header specifies the endianness of a platform's bytes (most
+  common platforms are little-endian and will use '0xFF 0xFE'). It
+  was decided that the collision risk of a legacy file beginning
+  with these bytes was small and therefore these could be used as a
+  reliable indicator for 'UTF-16' encoding. Within a 'UTF-16'
+  encoded text file, plain ASCII characters will appear every other
+  byte, interspersed with '0x00' (null) bytes. Of course, extended
+  characters will produce non-null bytes and in some cases
+  double-word (4 byte) representations. But a legacy tool that
+  ignores embedded nulls will wind up doing the right thing with
+  'UTF-16' encoded files, even without knowing about Unicode.
+  对于'UTF-16'编码的文件,其前两个字节遵守一个特殊的约定.序列
+  '0xFF 0xFE'或'0xFE 0xFF'中的一个充当了此文件的一个小数据头.
+  对哪种数据头的选择指定了平台的字节存储顺序(最常见的平台都是小端存储,
+  使用'0xFF 0xFE').选择这个的原因是,传统文件以其开始的可能性较小,
+  因此这些可以用作'UTF-16'编码的可靠标识器.在一个'UTF-16'编码的
+  文本文件中,无格式的ASCII字符将每两个字节出现一次,中间以'0x00'
+  (null)字节点缀.当然,扩展字符会生成非null字节,在某些情况下,
+  以双词(4字节)表示.但是传统工具如果忽略内嵌的null,就算不知道Unicode
+  ,处理'UTF-16'文件也能正确的结束.
+
+  Many communications protocols--and more recent document
+  specifications--allow for explicit encoding specification. For
+  example, an HTTP daemon application (a Web server) can return a
+  header such as the following to provide explicit instructions to
+  a client:
+  许多通信协议--以及更多近来的文档规范--允许显式的编码规范.例如,
+  HTTP守护程序(Web服务器)能返回一个如同下列的数据头,以为客户端提供
+  显式的指示:
+
+      #*------------- HTTP Header -----------------------------#
+      #*------------- HTTP 数据头 -----------------------------#
+      HTTP/1.1 200 OK
+      Content-Type: text/html; charset:UTF-8;
+
+  Similarly, an NNTP, SMTP/POP3 message can carry a similar
+  'Content-Type:' header field that makes explicit the encoding to
+  follow (most likely as 'text/plain' rather than 'text/html',
+  however; or at least we can hope).
+  相似地,NNTP,SMTP/POP3消息都能携带一个类似'Content-Type:'的
+  数据头域,后者显式指定需采用的编码(尽管大部分都是类似'text/plain'
+  而非'text/html'；或者至少我们可以希望).
+  ## 不通亚不通
+
+  HTML and XML documents can contain tags and declarations to
+  make Unicode encoding explicit.  An HTML document can provide a
+  hint in a 'META' tag, like:
+  HTML和XML文档可以包含标签和声明来显式表明Unicode编码.HTML文档
+  可以在某个'META'标签中提示,例如:
+
+      #*------------- Content-Type META tag -------------------#
+      #*------------- Content-Type META 标签 -------------------#
+      <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+
+  However, a 'META' tag should properly take lower precedence than
+  an HTTP header, in a situation where both are part of the
+  communication (but for a local HTML file, such an HTTP header
+  does not exist).
+  但是,'META'标签应该适当地采取比HTTP数据头更低层的步骤,如果两者都是
+  通讯的一部分(但是对于本地HTML文件,这样的HTTP头文件并不存在).
+
+  In XML, the actual document declaration should indicate the
+  Unicode encoding, as in:
+  在XML中,实际的文档声明应该标明Unicode编码,如下:
+
+      #*------------- XML Encoding Declaration ----------------#
+      #*------------- XML 编码声明 ----------------#
+      <?xml version="1.0" encoding="UTF-8"?>
+
+  Other formats and protocols may provide explicit encoding
+  specification by similar means.
+  其他格式和协议可能以相似的方法提供显式的编码规范.
+
+SECTION -- Finding Codepoints
+节 -- 寻找CodePoint
+-------------------------------------------------------------------
+
+  Each Unicode character is identified by a unique codepoint.
+  You can find information on character codepoints on official
+  Unicode Web sites, but a quick way to look at visual forms of
+  characters is by generating an HTML page with charts of Unicode
+  characters.  The script below does this:
+  每个Unicode字符都是用单独的codepoint来识别的.你可以在Unicode的
+  官方网站上找到字符codepoint的相关信息,但是有个方法来快速查看
+  字符的可视化形式,就是生成一个网页,其中有Unicode字符的图表.
+  下面的脚本就是干这个的:
+
+      #---------- mk_unicode_chart.py ----------#
+      # Create an HTML chart of Unicode characters by codepoint
+      # 生成按照codepoint排列的Unicode字符网页表格 
+      import sys
+      head = '<html><head><title>Unicode Code Points</title>\n' +\
+             '<META HTTP-EQUIV="Content-Type" ' +\
+                   'CONTENT="text/html; charset=UTF-8">\n' +\
+             '</head><body>\n<h1>Unicode Code Points</h1>'
+      foot = '</body></html>'
+      fp = sys.stdout
+      fp.write(head)
+      num_blocks = 32  # Up to 256 in theory, but IE5.5 is flaky
+      for block in range(0,256*num_blocks,256):
+          fp.write('\n\n<h2>Range %5d-%5d</h2>' % (block,block+256))
+          start = unichr(block).encode('utf-16')
+          fp.write('\n<pre>     ')
+          for col in range(16): fp.write(str(col).ljust(3))
+          fp.write('</pre>')
+          for offset in range(0,256,16):
+              fp.write('\n<pre>')
+              fp.write('+'+str(offset).rjust(3)+' ')
+              line = '  '.join([unichr(n+block+offset) for n in range(16)])
+              fp.write(line.encode('UTF-8'))
+              fp.write('</pre>')
+      fp.write(foot)
+      fp.close()
+
+  Exactly what you see when looking at the generated HTML page
+  depends on just what Web browser and OS platform the page is
+  viewed on--as well as on installed fonts and other factors.
+  Generally, any character that cannot be rendered on the current
+  browser will appear as some sort of square, dot, or question
+  mark. Anything that -is- rendered is generally accurate. Once a
+  character is visually identified, further information can be
+  generated with the [unicodedata] module:
+  你在生成的网页上所能看到的一切,完全依赖于阅读此网页所处于的
+  网页浏览器和操作系统平台--以及所安装的字体,还有其他的一些因素.
+  通常来说,任何字符如果不能在当前浏览器中渲染,它将以某种方块,
+  点,或者问号形式出现.任何-被-渲染的内容通常都是准确的.
+  一旦某字符被视觉识别了,可以使用[unicodedata]模块来生成更多信息.
+
+      >>> import unicodedata
+      >>> unicodedata.name(unichr(1488))
+      'HEBREW LETTER ALEF'
+      >>> unicodedata.category(unichr(1488))
+      'Lo'
+      >>> unicodedata.bidirectional(unichr(1488))
+      'R'
+
+  A variant here would be to include the information provided by
+  [unicodedata] within a generated HTML chart, although such a
+  listing would be far more verbose than the example above.
+  这儿有个变种就是,将[unicodedata]提供的信息加入到生成的HTML表格
+  中,就是这样的列表会比上面的例子冗长得多.
+
+SECTION -- Resources
+节 -- 资源
+-------------------------------------------------------------------
+
+  More-or-less definitive information on all matters Unicode can
+  be found at:
+  所有关于Unicode的信息都可以在此找到或多或少的可靠信息:
+
+    <http://www.unicode.org/>.
+
+  The Unicode Consortium:
+  Unicode协会:
+
+    <http://www.unicode.org/unicode/consortium/consort.html>.
+
+  Unicode Technical Report #17--Character Encoding Model:
+  Unicode技术报告 #17 -- 字符编码模型:
+
+    <http://www.unicode.org/unicode/reports/tr17/>.
+
+  A brief history of ASCII:
+  ASCII的简明历史:
+
+    <http://www.bobbemer.com/ASCII.HTM>.
+

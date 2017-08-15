@@ -1,0 +1,4545 @@
+#@+leo-ver=4-thin
+#@+node:ekr.20031218072017.329:@thin ../doc/leoNotes.txt
+#@@nocolor
+
+#@+all
+#@+node:ekr.20061116060847:@url http://www.jhorman.org/wikidPad/
+#@-node:ekr.20061116060847:@url http://www.jhorman.org/wikidPad/
+#@+node:ekr.20091218120633.6299:Bzr
+#@+node:ekr.20080917153158.10:Bzr notes
+@nocolor
+
+How to create launchpad key pairs:
+
+http://help.launchpad.net/YourAccount/CreatingAnSSHKeyPair
+
+How to create/use branches
+
+===== pushes a branch after it has been created on launchpad
+
+bzr push --use-existing-dir lp:leo-editor/whatever (private)
+
+bzr push --use-existing-dir bzr+ssh://edreamleo@bazaar.launchpad.net/~edreamleo/leo-editor/whatever (private)
+
+====== remembers the push
+
+bzr push --remember bzr+ssh://edreamleo@bazaar.launchpad.net/~edreamleo/leo-editor/whatever
+
+===== creates branch on local machine: do this from leo.repo directory
+
+bzr branch lp:leo-editor new-branch-name 
+
+bzr branch bzr+ssh://edreamleo@bazaar.launchpad.net/~edreamleo/leo-editor/whatever new-branch-name
+
+====== To resolve conflicts
+
+kdiff3 file1 file2 file3 -m
+
+
+Docs:
+- http://doc.bazaar-vcs.org/latest/en/user-guide/index.html
+    - http://bazaar-vcs.org/BzrWhy (referenced in sec 1.1.3 of the guide)
+        - http://ianclatworthy.files.wordpress.com/2007/10/dvcs-why-and-how3.pdf
+        - PQM: https://launchpad.net/pqm (google)
+        - BB Bundle buggy: http://bundlebuggy.aaronbentley.com/help (google)
+        - Spike solution: http://www.extremeprogramming.org/rules/spike.html (google)
+- My log was at: http://bzr.arbash-meinel.com/irc_log/bzr/2008/02/bzr-2008-02-25.html
+
+Windows
+
+- Configuration file is .bazaar in XP
+C:\Documents and Settings\HP_Administrator\Application Data\bazaar\2.0
+
+Linux:
+
+- Configuration file is bazaar.conf in ~/.bazaar directory
+#@-node:ekr.20080917153158.10:Bzr notes
+#@+node:ekr.20090713080429.6042:Bzr workflow notes
+@nocolor-node
+
+http://groups.google.com/group/leo-editor/browse_thread/thread/bd3e06a8a34a1938
+
+This is the first time we have done this ("stable" branch + trunk),
+so it might be good to bring this up:
+
+- When doing a bugfix/improvement, always do it in the oldest branch that will
+  receive it.
+
+- Only after that, merge it to trunk
+
+This prevents "manual" merges, and accidental incorporation of unwanted fixes.
+It also gives us clean merge history.
+
+I think this is the process python-the-project will use with mercurial. If they
+find a bug in python 2.6.whatever, they fix it in that branch first, then merge
+from that branch to trunk (so python 2.7 will receive it).
+
+===================
+
+http://groups.google.com/group/leo-editor/browse_thread/thread/3f24628c7f735c42
+
+> I'll probably open a branch (based on the 4-6-final branch) to
+  attempt a fix for an rst bug.
+
+You don't need to create the branch on launchpad to do little fixes. The local
+branch you create with "bzr branch" is a full-blown branch.
+
+Here's how I do all my commits to trunk:
+
+I have ~/leotrunk. I always keep this up to date with "bzr pull", but never
+develop here.  (But I merge from leo-editor, as shown below.)
+EKR: I call this main-trunk.
+
+I have ~/leo-editor, also created from trunk. I develop here normally.
+Occasionally, I just "bzr push", but often it fails because "branches have
+diverged". I resist the temptation to "bzr merge" here, because it screws up
+history. Rather, I:
+
+- cd ~/leotrunk
+- bzr pull (this always succeeds)
+- bzr merge ~/leo-editor
+- (investigate diffs)
+- bzr qcommit (select the files I really want to commit--usually .py files)
+- bzr push
+
+Then, to get my ~/leo-editor up to date again:
+
+cd ~/leo-editor
+bzr pull 
+#@nonl
+#@-node:ekr.20090713080429.6042:Bzr workflow notes
+#@+node:ekr.20081113095540.1:Bzr/ubuntu notes
+/etc/apt/sources.list.d is a directory
+It contains, on my machine, files called edgy-universe.list.x
+The prefix doesn't matter, but the contents of these files must contain the proper ubuntu distro name,
+for example, gutsy, hardy, intrepid.
+#@nonl
+#@-node:ekr.20081113095540.1:Bzr/ubuntu notes
+#@-node:ekr.20091218120633.6299:Bzr
+#@+node:ekr.20090502071837.103:Cool projects
+@nocolor
+
+These are projects that3 I'd like to follow up on.
+
+Scripts-->@thin leoScripts.txt-->Others-->
+Call hierarchy tracing (using python 'trace' module)
+
+- autosphinx.py plugin
+  http://groups.google.com/group/leo-editor/browse_thread/thread/f292f7c9f2fd66d8
+  bzr branch lp:~villemvainio/leo-editor/autosphinx 
+
+- Caliopy: integrate Leo with many scientific computing tools.
+  http://www.caliopywork.org/
+
+- Clone digger: find similar code
+  http://clonedigger.sourceforge.net/
+
+- Fuse (pyfuse) Leo as a file system.
+  http://leo.zwiki.org/LeoAsAFileSystem
+
+- Google wave: 
+  http://wave.google.com/
+
+- Thread: Leo forum proof of concept:
+  A few buttons turns Leo into a competitor for google groups :-)
+  http://groups.google.com/group/leo-editor/browse_thread/thread/db6e75d82da4b41d
+
+- Manuel: rST testing tool
+  http://pypi.python.org/pypi/manuel/1.0.0a3
+  Manuel parses documents, evaluates their contents,
+  then formats the result of the evaluation.
+
+- objtrees: object trees for unit testing
+  http://groups.google.com/group/leo-editor/browse_thread/thread/32c3a295d2dae35b
+
+- pexpect: a Python module for spawning child applications and
+  controlling them automatically. 
+  http://pexpect.sourceforge.net/pexpect.html
+
+- Pyjamas: AJAX tool kit.
+  http://pyjs.org/
+
+- Pysmell: python IDE completion helper.
+  http://code.google.com/p/pysmell/
+
+- pythoscope: create unit tests automatically.
+  http://pythoscope.org/
+
+- rope: Python refactoring library.
+  http://rope.sourceforge.net/
+
+- rst2a: a web service that converts reStructuredText to pdf or other formats.
+  http://rst2a.com/
+
+- Tomboy: wiki-like notes
+  http://projects.gnome.org/tomboy/index.html
+  http://groups.google.com/group/leo-editor/browse_thread/thread/18d4af19686f2ead
+#@-node:ekr.20090502071837.103:Cool projects
+#@+node:ekr.20091218120633.6300:Other notes
+#@+node:ekr.20090601083544.6066:Cool plugins & Leo code
+These are plugins/projects that I'd like to investigate further.
+
+interact.py:  Add buttons so leo can interact with command line environments.
+
+g.command (class command) decorator:
+http://groups.google.com/group/leo-editor/browse_thread/thread/a83082cec5ad3df8
+#@+node:ekr.20090601083544.6068:@g.command decorator
+#@-node:ekr.20090601083544.6068:@g.command decorator
+#@-node:ekr.20090601083544.6066:Cool plugins & Leo code
+#@+node:ekr.20070614094933:EasyInstall installation notes--XP
+C:\prog>c:\python25\python ez_setup.py
+Downloading http://cheeseshop.python.org/packages/2.5/s/setuptools/setuptools-0.6c6-py2.5.egg
+Processing setuptools-0.6c6-py2.5.egg
+Copying setuptools-0.6c6-py2.5.egg to c:\python25\lib\site-packages
+Adding setuptools 0.6c6 to easy-install.pth file
+Installing easy_install-script.py script to c:\python25\Scripts
+Installing easy_install.exe script to c:\python25\Scripts
+Installing easy_install-2.5-script.py script to c:\python25\Scripts
+Installing easy_install-2.5.exe script to c:\python25\Scripts
+
+Installed c:\python25\lib\site-packages\setuptools-0.6c6-py2.5.egg
+Processing dependencies for setuptools==0.6c6
+Finished processing dependencies for setuptools==0.6c6
+
+C:\prog>c:\python24\python ez_setup.py
+Downloading http://cheeseshop.python.org/packages/2.4/s/setuptools/setuptools-0.6c6-py2.4.egg
+Processing setuptools-0.6c6-py2.4.egg
+creating c:\python24\lib\site-packages\setuptools-0.6c6-py2.4.egg
+Extracting setuptools-0.6c6-py2.4.egg to c:\python24\lib\site-packages
+Adding setuptools 0.6c6 to easy-install.pth file
+Installing easy_install-script.py script to c:\python24\Scripts
+Installing easy_install.exe script to c:\python24\Scripts
+Installing easy_install-2.4-script.py script to c:\python24\Scripts
+Installing easy_install-2.4.exe script to c:\python24\Scripts
+
+Installed c:\python24\lib\site-packages\setuptools-0.6c6-py2.4.egg
+Processing dependencies for setuptools==0.6c6
+#@nonl
+#@-node:ekr.20070614094933:EasyInstall installation notes--XP
+#@+node:ekr.20071104222805:Emacs/Pymacs notes
+#@+node:ekr.20071102191642.1:xemacs/pymacs install notes
+@nocolor
+
+Added the following line to setup.py and setup files.
+
+# -*- coding: utf-8 -*-
+
+The second installation script installs the Emacs Lisp part only.
+[snip]
+I couldn't get this script to work.  Instead, I just created a pymacs folder at::
+
+    C:\XEmacs\xemacs-packages\lisp\pymacs
+
+For Win32 systems, I created create c:\Windows\pymacs-services.bat containing::
+
+    c:\Python25\python C:\prog\Pymacs-0.22\scripts\pymacs-services
+
+To check that pymacs.el is properly installed, start Emacs and do::
+
+    M-x load-library RET pymacs
+
+You should not receive any error.
+(works)
+
+To check that pymacs.py is properly installed, start an interactive Python session and type::
+
+    from Pymacs import lisp
+
+you should not receive any error.
+(works)
+
+To check that pymacs-services is properly installed, type the following in a console::
+
+    pymacs-services </dev/null
+
+You should then get a line ending with (pymacs-version version), and another saying : Protocol error : `>' expected..
+(works, mostly: I omitted the </dev/null
+
+The rest is from Leo's Chapter 18::
+
+    ; Step 1: load leoPymacs if it has not already been loaded.
+    (setq reload nil)
+    (if (or reload (not (boundp 'leoPymacs)))
+        (setq leoPymacs (pymacs-load "leoPymacs" "leo-"))
+        (message "leoPymacs already loaded")
+    )
+
+    ; Step 2: compute the path to leo/test/ut.leo using a Leo script.
+    (setq script
+        "g.app.scriptResult = g.os_path_abspath(
+            g.os_path_join(g.app.loadDir,'..','test','ut.leo'))"
+    )
+    (setq fileName (leo-run-script nil script))
+
+    ; Step 3: execute a script in ut.leo.
+    (setq c (leo-open fileName))
+    (setq script "print 'c',c.shortFileName() ,'current:',c.p.h")
+    (leo-run-script c script)
+#@nonl
+#@-node:ekr.20071102191642.1:xemacs/pymacs install notes
+#@+node:ekr.20071103090504:Pymacs docs
+@killcolor
+#@nonl
+#@+node:ekr.20071103090504.1:Emacs Lisp structures and Python objects
+#@+node:ekr.20071103090504.2:Emacs lisp structures and Python
+Conversions
+
+Whenever Emacs Lisp calls Python functions giving them arguments, these arguments are Emacs Lisp structures that should be converted into Python objects in some way. Conversely, whenever Python calls Emacs Lisp functions, the arguments are Python objects that should be received as Emacs Lisp structures. We need some conventions for doing such conversions.
+
+Conversions generally transmit mutable Emacs Lisp structures as mutable objects on the Python side, in such a way that transforming the object in Python will effectively transform the structure on the Emacs Lisp side (strings are handled a bit specially however, see below). The other way around, Python objects transmitted to Emacs Lisp often loose their mutability, so transforming the Emacs Lisp structure is not reflected on the Python side.
+
+Pymacs sticks to standard Emacs Lisp, it explicitly avoids various Emacs Lisp extensions. One goal for many Pymacs users is taking some distance from Emacs Lisp, so Pymacs is not overly pushing users deeper into it.
+#@-node:ekr.20071103090504.2:Emacs lisp structures and Python
+#@+node:ekr.20071103090504.3:Simple objects
+Simple objects
+
+Emacs Lisp nil and the equivalent Emacs Lisp () yield Python None. Python None and the Python empty list [] are returned as nil in Emacs Lisp.
+
+Emacs Lisp numbers, either integer or floating, are converted in equivalent Python numbers. Emacs Lisp characters are really numbers and yield Python numbers. In the other direction, Python numbers are converted into Emacs Lisp numbers, with the exception of long Python integers and complex numbers.
+
+Emacs Lisp strings are usually converted into equivalent Python narrow strings. As Python strings do not have text properties, these are not reflected. This may be changed by setting the pymacs-mutable-strings option : if this variable is not nil, Emacs Lisp strings are then transmitted opaquely. Python strings, except Unicode, are always converted into Emacs Lisp strings.
+
+Emacs Lisp symbols yield the special lisp.symbol or lisp[string] notations on the Python side. The first notation is used when the Emacs Lisp symbol starts with a letter, and contains only letters, digits and hyphens, in which case Emacs Lisp hyphens get replaced by Python underscores. This convention is welcome, as Emacs Lisp programmers commonly prefer using dashes, where Python programmers use underlines. Otherwise, the second notation is used. Conversely, lisp.symbol on the Python side yields an Emacs Lisp symbol with underscores replaced with hyphens, while lisp[string] corresponds to an Emacs Lisp symbol printed with that string which, of course, should then be a valid Emacs Lisp symbol name.
+#@-node:ekr.20071103090504.3:Simple objects
+#@+node:ekr.20071103090504.4:Sequences
+Sequences
+
+The case of strings has been discussed in the previous section.
+
+Proper Emacs Lisp lists, those for which the cdr of last cell is nil, are normally transmitted opaquely to Python. If pymacs-forget-mutability is set, or if Python later asks for these to be expanded, proper Emacs Lisp lists get converted into Python lists, if we except the empty list, which is always converted as Python None. In the other direction, Python lists are always converted into proper Emacs Lisp lists.
+
+Emacs Lisp vectors are normally transmitted opaquely to Python. However, if pymacs-forget-mutability is set, or if Python later asks for these to be expanded, Emacs Lisp vectors get converted into Python tuples. In the other direction, Python tuples are always converted into Emacs Lisp vectors.
+
+Remember the rule : Round parentheses correspond to square brackets!. It works for lists, vectors, tuples, seen from either Emacs Lisp or Python.
+
+The above choices were debatable. Since Emacs Lisp proper lists and Python lists are the bread-and-butter of algorithms modifying structures, at least in my experience, I guess they are more naturally mapped into one another, this spares many casts in practice. While in Python, the most usual idiom for growing lists is appending to their end, the most usual idiom in Emacs Lisp to grow a list is by cons'ing new items at its beginning :
+
+     (setq accumulator (cons 'new-item accumulator))
+
+
+or more simply :
+
+     (push 'new-item accumulator)
+
+
+So, in case speed is especially important and many modifications happen in a row on the same side, while order of elements ought to be preserved, some (nreverse ...) on the Emacs Lisp side or .reverse() on the Python side side might be needed. Surely, proper lists in Emacs Lisp and lists in Python are the normal structure for which length is easily modified.
+
+We cannot so easily change the size of a vector, the same as it is a bit more of a stunt to modify a tuple. The shape of these objects is fixed. Mapping vectors to tuples, which is admittedly strange, will only be done if the Python side requests an expanded copy, otherwise an opaque Emacs Lisp object is seen in Python. In the other direction, whenever an Emacs Lisp vector is needed, one has to write tuple(python_list) while transmitting the object. Such transmissions are most probably to be unusual, as people are not going to blindly transmit whole big structures back and forth between Emacs and Python, they would rather do it once in a while only, and do only local modifications afterwards. The infrequent casting to tuple for getting an Emacs Lisp vector seems to suggest that we did a reasonable compromise.
+
+In Python, both tuples and lists have O(1) access, so there is no real speed consideration there. Emacs Lisp is different : vectors have O(1) access while lists have O(N) access. The rigidity of Emacs Lisp vectors is such that people do not resort to vectors unless there is a speed issue, so in real Emacs Lisp practice, vectors are used rather parsimoniously. So much, in fact, that Emacs Lisp vectors are overloaded for what they are not meant : for example, very small vectors are used to represent X events in key-maps, programmers only want to test vectors for their type, or users just like bracketed syntax. The speed of access is hardly an issue then.
+#@-node:ekr.20071103090504.4:Sequences
+#@-node:ekr.20071103090504.1:Emacs Lisp structures and Python objects
+#@+node:ekr.20071103090504.5:Opaque objects
+#@+node:ekr.20071103090504.6:Emacs lisp handles
+Emacs Lisp handles
+
+When a Python function is called from Emacs Lisp, the function arguments have already been converted to Python types from Emacs Lisp types and the function result is going to be converted back to Emacs Lisp.
+
+Several Emacs Lisp objects do not have Python equivalents, like for Emacs windows, buffers, markers, overlays, etc. It is nevertheless useful to pass them to Python functions, hoping that these Python functions will operate on these Emacs Lisp objects. Of course, the Python side may not itself modify such objects, it has to call for Emacs services to do so. Emacs Lisp handles are a mean to ease this communication.
+
+Whenever an Emacs Lisp object may not be converted to a Python object, an Emacs Lisp handle is created and used instead. Whenever that Emacs Lisp handle is returned into Emacs Lisp from a Python function, or is used as an argument to an Emacs Lisp function from Python, the original Emacs Lisp object behind the Emacs Lisp handle is automatically retrieved.
+
+Emacs Lisp handles are either instances of the internal Lisp class, or of one of its subclasses. If object is an Emacs Lisp handle, and if the underlying Emacs Lisp object is an Emacs Lisp sequence, then whenever object[index], object[index] = value and len(object) are meaningful, these may be used to fetch or alter an element of the sequence directly in Emacs Lisp space. Also, if object corresponds to an Emacs Lisp function, object(arguments) may be used to apply the Emacs Lisp function over the given arguments. Since arguments have been evaluated the Python way on the Python side, it would be conceptual overkill evaluating them again the Emacs Lisp way on the Emacs Lisp side, so Pymacs manage to quote arguments for defeating Emacs Lisp evaluation. The same logic applies the other way around.
+
+Emacs Lisp handles have a value() method, which merely returns self. They also have a copy() method, which tries to open the box if possible. Emacs Lisp proper lists are turned into Python lists, Emacs Lisp vectors are turned into Python tuples. Then, modifying the structure of the copy on the Python side has no effect on the Emacs Lisp side.
+
+For Emacs Lisp handles, str() returns an Emacs Lisp representation of the handle which should be eq to the original object if read back and evaluated in Emacs Lisp. repr() returns a Python representation of the expanded Emacs Lisp object. If that Emacs Lisp object has an Emacs Lisp representation which Emacs Lisp could read back, then repr() value is such that it could be read back and evaluated in Python as well, this would result in another object which is equal to the original, but not neccessarily eq.
+#@-node:ekr.20071103090504.6:Emacs lisp handles
+#@+node:ekr.20071103090504.7:Python handles
+Python handles
+
+The same as Emacs Lisp handles are useful for handling Emacs Lisp objects on the Python side, Python handles are useful for handling Python objects on the Emacs Lisp side.
+
+Many Python objects do not have direct Emacs Lisp equivalents, including long integers, complex numbers, Unicode strings, modules, classes, instances and surely a lot of others. When such are being transmitted to the Emacs Lisp side, Pymacs use Python handles. These are automatically recovered into the original Python objects whenever transmitted back to Python, either as arguments to a Python function, as the Python function itself, or as the return value of an Emacs Lisp function called from Python.
+
+The objects represented by these Python handles may be inspected or modified using the basic library of Python functions. For example, in :
+
+     (setq matcher (pymacs-eval "re.compile('pattern').match"))
+     (pymacs-call matcher argument)
+
+
+the initial setq above could be decomposed into :
+
+           (setq compiled (pymacs-eval "re.compile('pattern')")
+     	    matcher (pymacs-call "getattr" compiled "match"))
+
+
+This example shows that one may use pymacs-call with getattr as the function, to get a wanted attribute for a Python object.
+#@-node:ekr.20071103090504.7:Python handles
+#@-node:ekr.20071103090504.5:Opaque objects
+#@+node:ekr.20071103090504.8:Usages on the Emacs lisp side
+#@+node:ekr.20071103090504.9:pymacs-eval/apply
+
+pymacs-eval
+
+Function (pymacs-eval text) gets text evaluated as a Python expression, and returns the value of that expression converted back to Emacs Lisp.
+
+pymacs-call
+
+Function (pymacs-call function argument...) will get Python to apply the given function over zero or more argument. function is either a string holding Python source code for a function (like a mere name, or even an expression), or else, a Python handle previously received from Python, and hopefully holding a callable Python object. Each argument gets separately converted to Python before the function is called. pymacs-call returns the resulting value of the function call, converted back to Emacs Lisp.
+
+pymacs-apply
+
+Function (pymacs-apply function arguments) will get Python to apply the given function over the given arguments. arguments is a list containing all arguments, or nil if there is none. Besides arguments being bundled together instead of given separately, the function acts pretty much like pymacs-call.
+
+We do not expect that pymacs-eval, pymacs-call or pymacs-apply will be much used, if ever. In practice, the Emacs Lisp side of a Pymacs application might call pymacs-load a few times for linking into the Python modules, with the indirect effect of defining trampoline functions for these modules on the Emacs Lisp side, which can later be called like usual Emacs Lisp functions.
+#@-node:ekr.20071103090504.9:pymacs-eval/apply
+#@+node:ekr.20071103090504.10:pymacs-load
+pymacs-load
+
+Function (pymacs-load module prefix) imports the Python module into Emacs Lisp space.
+
+module is the name of the file containing the module, without any .py or .pyc extension. If the directory part is omitted in module, the module will be looked into the current Python search path. Dot notation may be used when the module is part of a package. Each top-level function in the module produces a trampoline function in Emacs Lisp having the same name, except that underlines in Python names are turned into dashes in Emacs Lisp, and that prefix is uniformly added before the Emacs Lisp name (as a way to avoid name clashes).
+
+prefix may be omitted, in which case it defaults to base name of module with underlines turned into dashes, and followed by a dash.
+
+Whenever pymacs_load_hook is defined in the loaded Python module, pymacs-load calls it without arguments, but before creating the Emacs view for that module. So, the pymacs_load_hook function may create new definitions or even add interaction attributes to functions.
+
+The return value of a successful pymacs-load is the module object. An optional third argument, noerror, when given and not nil, will have pymacs-load to return nil instead of raising an error, if the Python module could not be found.
+
+When later calling one of these trampoline functions, all provided arguments are converted to Python and transmitted, and the function return value is later converted back to Emacs Lisp. It is left to the Python side to check for argument consistency. However, for an interactive function, the interaction specification drives some checking on the Emacs Lisp side. Currently, there is no provision for collecting keyword arguments in Emacs Lisp.
+#@-node:ekr.20071103090504.10:pymacs-load
+#@-node:ekr.20071103090504.8:Usages on the Emacs lisp side
+#@+node:ekr.20071103091052:Usage on the Python side
+#@+node:ekr.20071103091052.1:Python setup
+Python setup
+
+Pymacs requires little or no setup in the Python modules which are meant to be used from Emacs, for the simple situations where these modules receive nothing but Emacs nil, numbers or strings, or return nothing but Python None, numbers or strings.
+
+Otherwise, use from Pymacs import lisp. If you need more Pymacs features, like the Let class, write from Pymacs import lisp, Let.
+#@-node:ekr.20071103091052.1:Python setup
+#@+node:ekr.20071103091052.2:Response mode
+Response mode
+
+When Python receives a request from Emacs in the context of Pymacs, and until it returns the reply, Emacs keeps listening to serve Python requests. Emacs is not listening otherwise. Other Python threads, if any, may not call Emacs without very careful synchronisation.
+#@-node:ekr.20071103091052.2:Response mode
+#@+node:ekr.20071103091052.3:Emacs lisp symbols
+Emacs Lisp symbols
+
+lisp is a special object which has useful built-in magic. Its attributes do nothing but represent Emacs Lisp symbols, created on the fly as needed (symbols also have their built-in magic).
+
+lisp.nil or lisp["nil"], are the same as None.
+
+Otherwise, lisp.symbol and lisp[string] yield objects of the internal Symbol type. These are genuine Python objects, that could be referred to by simple Python variables. One may write quote = lisp.quote, for example, and use quote afterwards to mean that Emacs Lisp symbol. If a Python function received an Emacs Lisp symbol as an argument, it can check with == if that argument is lisp.never or lisp.ask, say. A Python function may well choose to return lisp.t.
+
+In Python, writing lisp.symbol = value or lisp[string] = value does assign value to the corresponding symbol in Emacs Lisp space. Beware that in such cases, the lisp. prefix may not be [omitted] spared. After result = lisp.result, one cannot hope that a later result = 3 will have any effect in the Emacs Lisp space : this would merely change the Python variable result, which was a reference to a Symbol instance, so it is now a reference to the number 3.
+
+The Symbol class has value() and copy() methods. One can use either lisp.symbol.value() or lisp.symbol.copy() to access the Emacs Lisp value of a symbol, after conversion to some Python object, of course. However, if value() would have given an Emacs Lisp handle, lisp.symbol.copy() has the effect of lisp.symbol.value().copy(), that is, it returns the value of the symbol as opened as possible.
+
+A symbol may also be used as if it was a Python function, in which case it really names an Emacs Lisp function that should be applied over the following function arguments. The result of the Emacs Lisp function becomes the value of the call, with all due conversions of course.
+#@-node:ekr.20071103091052.3:Emacs lisp symbols
+#@+node:ekr.20071103091052.4:Dynamic bindings (The let class)
+Dynamic bindings
+
+As Emacs Lisp uses dynamic bindings, it is common that Emacs Lisp programs use
+let for temporarily setting new values for some Emacs Lisp variables having
+global scope. These variables recover their previous value automatically when
+the let gets completed, even if an error occurs which interrupts the normal flow
+of execution.
+
+Pymacs has a Let class to represent such temporary settings. Suppose for example
+that you want to recover the value of lisp.mark() when the transient mark mode
+is active on the Emacs Lisp side. One could surely use lisp.mark(lisp.t) to
+force reading the mark in such cases, but for the sake of illustration, let's
+ignore that, and temporarily deactivate transient mark mode instead. This could
+be done this way :
+
+         try :
+     	let = Let()
+     	let.push(transient_mark_mode=None)
+     	... user code ...
+         finally :
+     	let.pop()
+
+let.push() accepts any number of keywords arguments. Each keyword name is
+interpreted as an Emacs Lisp symbol written the Pymacs way, with underlines. The
+value of that Emacs Lisp symbol is saved on the Python side, and the value of
+the keyword becomes the new temporary value for this Emacs Lisp symbol. A later
+let.pop() restores the previous value for all symbols which were saved together
+at the time of the corresponding let.push(). There may be more than one
+let.push() call for a single Let instance, they stack within that instance. Each
+let.pop() will undo one and only one let.push() from the stack, in the reverse
+order or the pushes.
+
+When the Let instance disappears, either because the programmer does del let or
+let = None, or just because the Python let variable goes out of scope, all
+remaining let.pop() get automatically executed, so the try/finally statement may
+be omitted in practice. For this omission to work flawlessly, the programmer
+should be careful at not keeping extra references to the Let instance.
+
+The constructor call let = Let() also has an implied initial .push() over all
+given arguments, so the explicit let.push() may be omitted as well. In practice,
+this sums up and the above code could be reduced to a mere :
+
+     let = Let(transient_mark_mode=None)
+     ... user code ...
+
+Be careful at assigning the result of the constructor to some Python variable.
+Otherwise, the instance would disappear immediately after having been created,
+restoring the Emacs Lisp variable much too soon.
+
+Any variable to be bound with Let should have been bound in advance on the Emacs
+Lisp side. This restriction usually does no kind of harm. Yet, it will likely be
+lifted in some later version of Pymacs.
+
+The Let class has other methods meant for some macros which are common in Emacs
+Lisp programming, in the spirit of let bindings. These method names look like
+push_* or pop_*, where Emacs Lisp macros are save-*. One has to use the matching
+pop_* for undoing the effect of a given push_* rather than a mere .pop() : the
+Python code is clearer, this also ensures that things are undone in the proper
+order. The same Let instance may use many push_* methods, their effects nest.
+
+push_excursion() and pop_excursion() save and restore the current buffer, point
+and mark. push_match_data() and pop_match_data() save and restore the state of
+the last regular expression match. push_restriction() and pop_restriction() save
+and restore the current narrowing limits. push_selected_window() and
+pop_selected_window() save and restore the fact that a window holds the cursor.
+push_window_excursion() and pop_window_excursion() save and restore the current
+window configuration in the Emacs display.
+
+As a convenience, let.push() and all other push_* methods return the Let
+instance. This helps chaining various push_* right after the instance
+generation. For example, one may write :
+
+         let = Let().push_excursion()
+         if True :
+     	... user code ...
+         del let
+
+The if True: (use if 1: with older Python releases, some people might prefer
+writing if let: anyway), has the only goal of indenting user code, so the scope
+of the let variable is made very explicit. This is purely stylistic, and not at
+all necessary. The last del let might be omitted in a few circumstances, for
+example if the excursion lasts until the end of the Python function.
+#@-node:ekr.20071103091052.4:Dynamic bindings (The let class)
+#@+node:ekr.20071103091052.5:Raw Emacs lisp expression
+Raw Emacs Lisp expressions
+
+Pymacs offers a device for evaluating a raw Emacs Lisp expression, or a sequence of such, expressed as a string. One merely uses lisp as a function, like this :
+
+     lisp("""
+     ...
+     possibly-long-sequence-of-lisp-expressions
+     ...
+     """)
+
+
+The Emacs Lisp value of the last or only expression in the sequence becomes the value of the lisp call, after conversion back to Python.
+#@-node:ekr.20071103091052.5:Raw Emacs lisp expression
+#@+node:ekr.20071103091052.6:User interaction
+User interaction
+
+Emacs functions have the concept of user interaction for completing the specification of their arguments while being called. This happens only when a function is interactively called by the user, it does not happen when a function is programmatically called by another. As Python does not have a corresponding facility, a bit of trickery was needed to retrofit that facility on the Python side.
+
+After loading a Python module but prior to creating an Emacs view for this
+module, Pymacs decides whether loaded functions will be interactively callable
+from Emacs, or not. Whenever a function has an interaction attribute, this
+attribute holds the Emacs interaction specification for this function. The
+specification is either another Python function or a string. In the former case,
+that other function is called without arguments and should, maybe after having
+consulted the user, return a list of the actual arguments to be used for the
+original function. In the latter case, the specification string is used verbatim
+as the argument to the (interactive ...) function on the Emacs side. To get a
+short reminder about how this string is interpreted on the Emacs side, try C-h f
+interactive within Emacs. Here is an example where an empty string is used to
+specify that an interactive has no arguments::
+
+         from Pymacs import lisp
+
+         def hello_world() :
+     	"`Hello world' from Python."
+     	lisp.insert("Hello from Python!")
+         hello_world.interaction = ''
+
+Versions of Python released before the integration of PEP 232 do not allow users
+to add attributes to functions, so there is a fallback mechanism. Let's presume
+that a given function does not have an interaction attribute as explained above.
+If the Python module contains an interactions global variable which is a
+dictionary, if that dictionary has an entry for the given function with a value
+other than None, that function is going to be interactive on the Emacs side.
+Here is how the preceeding example should be written for an older version of
+Python, or when portability is at premium::
+
+         from Pymacs import lisp
+         interactions = {}
+
+         def hello_world() :
+     	"`Hello world' from Python."
+     	lisp.insert("Hello from Python!")
+         interactions[hello_world] = ''
+
+One might wonder why we do not merely use lisp.interactive(...) from within
+Python. There is some magic in the Emacs Lisp interpreter itself, looking for
+that call before the function is actually entered, this explains why
+(interactive ...) has to appear first in an Emacs Lisp defun. Pymacs could try
+to scan the already compiled form of the Python code, seeking for
+lisp.interactive, but as the evaluation of lisp.interactive arguments could get
+arbitrarily complex, it would a real challenge un-compiling that evaluation into
+Emacs Lisp.
+#@-node:ekr.20071103091052.6:User interaction
+#@+node:ekr.20071103091052.7:Key bindings
+Keybindings
+
+An interactive function may be bound to a key sequence.
+
+To translate bindings like C-x w, say, one might have to know a bit more how
+Emacs Lisp processes string escapes like \C-x or \M-\C-x in Emacs Lisp, and
+emulate it within Python strings, since Python does not have such escapes. \C-L,
+where L is an upper case letter, produces a character which ordinal is the
+result of subtracting 0x40 from ordinal of L. \M- has the ordinal one gets by
+adding 0x80 to the ordinal of following described character. So people can use
+self-inserting non-ASCII characters, \M- is given another representation, which
+is to replace the addition of 0x80 by prefixing with `ESC', that is 0x1b.
+
+So \C-x in Emacs is '\x18' in Python. This is easily found, using an interactive
+Python session, by givin it : chr(ord('X') - ord('A') + 1). An easier way would
+be using the kbd function on the Emacs Lisp side, like with lisp.kbd('C-x w') or
+lisp.kbd('M-<f2>').
+
+To bind the F1 key to the helper function in some module :
+
+     lisp.global_set_key((lisp.f1,), lisp.module_helper)
+
+(item,) is a Python tuple yielding an Emacs Lisp vector. lisp.f1 translates to
+the Emacs Lisp symbol f1. So, Python (lisp.f1,) is Emacs Lisp [f1]. Keys like
+[M-f2] might require some more ingenuity, one may write either (lisp['M-f2'],)
+or (lisp.M_f2,) on the Python side.
+#@-node:ekr.20071103091052.7:Key bindings
+#@-node:ekr.20071103091052:Usage on the Python side
+#@+node:ekr.20071103092153:Debugging
+#@+node:ekr.20071103092153.1:The *pymacs* buffer
+The *Pymacs* buffer
+
+Emacs and Python are two separate processes (well, each may use more than one process). Pymacs implements a simple communication protocol between both, and does whatever needed so the programmers do not have to worry about details. The main debugging tool is the communication buffer between Emacs and Python, which is named *Pymacs*. As it is sometimes helpful to understand the communication protocol, it is briefly explained here, using an artificially complex example to do so. Consider :
+
+     (pymacs-eval "lisp('(pymacs-eval \"`2L**111`\")')")
+     "2596148429267413814265248164610048L"
+
+Here, Emacs asks Python to ask Emacs to ask Python for a simple bignum computation. Note that Emacs does not natively know how to handle big integers, nor has an internal representation for them. This is why I use backticks, so Python returns a string representation of the result, instead of the result itself. Here is a trace for this example. The < character flags a message going from Python to Emacs and is followed by an expression written in Emacs Lisp. The > character flags a message going from Emacs to Python and is followed by a expression written in Python. The number gives the length of the message.
+
+     <22   (pymacs-version "0.3")
+     >49   eval("lisp('(pymacs-eval \"`2L**111`\")')")
+     <25   (pymacs-eval "`2L**111`")
+     >18   eval("`2L**111`")
+     <47   (pymacs-reply "2596148429267413814265248164610048L")
+     >45   reply("2596148429267413814265248164610048L")
+     <47   (pymacs-reply "2596148429267413814265248164610048L")
+
+Python evaluation is done in the context of the Pymacs.pymacs module, so for example a mere reply really means Pymacs.pymacs.reply. On the Emacs Lisp side, there is no concept of module namespaces, so we use the pymacs- prefix as an attempt to stay clean. Users should ideally refrain from naming their Emacs Lisp objects with a pymacs- prefix.
+
+reply and pymacs-reply are special functions meant to indicate that an expected result is finally transmitted. error and pymacs-error are special functions that introduce a string which explains an exception which recently occurred. pymacs-expand is a special function implementing the copy() methods of Emacs Lisp handles or symbols. In all other cases, the expression is a request for the other side, that request stacks until a corresponding reply is received.
+
+Part of the protocol manages memory, and this management generates some extra-noise in the *Pymacs* buffer. Whenever Emacs passes a structure to Python, an extra pointer is generated on the Emacs side to inhibit garbage collection by Emacs. Python garbage collector detects when the received structure is no longer needed on the Python side, at which time the next communication will tell Emacs to remove the extra pointer. It works symmetrically as well, that is, whenever Python passes a structure to Emacs, an extra Python reference is generated to inhibit garbage collection on the Python side. Emacs garbage collector detects when the received structure is no longer needed on the Emacs side, after which Python will be told to remove the extra reference. For efficiency, those allocation-related messages are delayed, merged and batched together within the next communication having another purpose.
+
+Variable pymacs-trace-transit may be modified for controlling how and when the *Pymacs* buffer, or parts thereof, get erased.
+#@-node:ekr.20071103092153.1:The *pymacs* buffer
+#@+node:ekr.20071103092153.2:Usual Emacs debugging
+Emacs usual debugging
+
+If cross-calls between Emacs Lisp and Python nest deeply, an error will raise successive exceptions alternatively on both sides as requests unstack, and the diagnostic gets transmitted back and forth, slightly growing as we go. So, errors will eventually be reported by Emacs. I made no kind of effort to transmit the Emacs Lisp backtrace on the Python side, as I do not see a purpose for it : all debugging is done within Emacs windows anyway.
+
+On recent Emacses, the Python backtrace gets displayed in the mini-buffer, and the Emacs Lisp backtrace is simultaneously shown in the *Backtrace* window. One useful thing is to allow to mini-buffer to grow big, so it has more chance to fully contain the Python backtrace, the last lines of which are often especially useful. Here, I use :
+
+         (setq resize-mini-windows t
+     	  max-mini-window-height .85)
+
+
+in my .emacs file, so the mini-buffer may use 85% of the screen, and quickly shrinks when fewer lines are needed. The mini-buffer contents disappear at the next keystroke, but you can recover the Python backtrace by looking at the end of the *Messages* buffer. In which case the ffap package in Emacs may be yet another friend! From the *Messages* buffer, once ffap activated, merely put the cursor on the file name of a Python module from the backtrace, and C-x C-f RET will quickly open that source for you.
+#@-node:ekr.20071103092153.2:Usual Emacs debugging
+#@+node:ekr.20071103092153.3:Auto-reloading on save
+Auto-reloading on save
+
+I found useful to automatically pymacs-load some Python files whenever they get saved from Emacs. This can be decided on a per-file or per-directory basis. To get a particular Python file to be reloaded automatically on save, add the following lines at the end :
+
+     # Local Variables :
+     # pymacs-auto-reload : t
+     # End :
+
+
+Here is an example of automatic reloading on a per-directory basis. The code below assumes that Python files meant for Pymacs are kept in ~/share/emacs/python.
+
+         (defun fp-maybe-pymacs-reload ()
+           (let ((pymacsdir (expand-file-name "~/share/emacs/python/")))
+     	(when (and (string-equal (file-name-directory buffer-file-name)
+     				 pymacsdir)
+     		   (string-match "\\.py\\'" buffer-file-name))
+     	  (pymacs-load (substring buffer-file-name 0 -3)))))
+         (add-hook 'after-save-hook 'fp-maybe-pymacs-reload)
+#@-node:ekr.20071103092153.3:Auto-reloading on save
+#@-node:ekr.20071103092153:Debugging
+#@+node:ekr.20071103092153.4:Example 1: defining an Emacs command in Python
+@nocolor
+Let's say I have a a module, call it manglers.py, containing this simple python
+function::
+
+    def break_on_whitespace(some_string) :
+         words = some_string.split()
+         return '\n'.join(words)
+
+The goal is telling Emacs about this function so that I can call it on a region
+of text and replace the region with the result of the call. We shall also bind
+this function to the key [f7].
+
+Here is the Python side::
+@color
+
+    from Pymacs import lisp
+    interactions = {}
+
+    def break_on_whitespace():
+        # start and end may be given in any order.
+        start,end = lisp.point(),lisp.mark(lisp.t)
+        words = lisp.buffer_substring(start, end).split()
+        lisp.delete_region(start,end)
+        lisp.insert('\n'.join(words))
+
+    interactions[break_on_whitespace] = ''
+@nocolor
+
+Here is the emacs side::
+
+    (pymacs-load "manglers")
+    (global-set-key [f7] 'manglers-break-on-whitespace)
+#@-node:ekr.20071103092153.4:Example 1: defining an Emacs command in Python
+#@+node:ekr.20071103093725:Example 3: defining a rebox tool
+For comments held within boxes, it is painful to fill paragraphs, while
+stretching or shrinking the surrounding box by hand, as needed. This piece of
+Python code eases my life on this. It may be used interactively from within
+Emacs through the Pymacs interface, or in batch as a script which filters a
+single region to be reformatted.
+
+In batch mode, the reboxing is driven by command options and arguments and expects a
+complete, self-contained boxed comment from a file.
+
+Emacs function rebox-region also presumes that the region encloses a single
+boxed comment.
+
+Emacs rebox-comment is different, as it has to chase itself the extent of the
+surrounding boxed comment.
+
+#@+node:ekr.20071103094355:The python side
+Design notes for rebox.py:
+
+Pymacs specific features are used exclusively from within the pymacs_load_hook
+function and the Emacs_Rebox class. In batch mode, Pymacs is not even imported.
+
+In batch mode, as well as with rebox-region, the text to handle is turned over
+to Python, and fully processed in Python, with practically no Pymacs interaction
+while the work gets done. On the other hand, rebox-comment is rather Pymacs
+intensive: the comment boundaries are chased right from the Emacs buffer, as
+directed by the function Emacs_Rebox.find_comment. Once the boundaries are
+found, the remainder of the work is essentially done on the Python side.
+
+Once the boxed comment has been reformatted in Python, the old comment is
+removed in a single delete operation, the new comment is inserted in a second
+operation. This occurs in Emacs_Rebox.process_emacs_region. But by doing so, if
+point was within the boxed comment before the reformatting, its precise position
+is lost. To well preserve point, Python might have driven all reformatting
+details directly in the Emacs buffer. We really preferred doing it all on the
+Python side : as we gain legibility by expressing the algorithms in pure Python,
+the same Python code may be used in batch or interactively, and we avoid the
+slowdown that would result from heavy use of Emacs services.
+
+To avoid completely loosing point, I kludged a Marker class, which goal is to
+estimate the new value of point from the old. Reformatting may change the amount
+of white space, and either delete or insert an arbitrary number characters meant
+to draw the box. The idea is to initially count the number of characters between
+the beginning of the region and point, while ignoring any problematic character.
+Once the comment has been reboxed, point is advanced from the beginning of the
+region until we get the same count of characters, skipping all problematic
+characters. This Marker class works fully on the Python side, it does not
+involve Pymacs at all, but it does solve a problem that resulted from my choice
+of keeping the data on the Python side instead of handling it directly in the
+Emacs buffer.
+
+We want a comment reformatting to appear as a single operation, in the context
+of Emacs Undo. The method Emacs_Rebox.clean_undo_after handles the general case
+for this. Not that we do so much in practice : a reformatting implies one
+delete-region and one insert, and maybe some other little adjustements at
+Emacs_Rebox.find_comment time. Even if this method scans and mofifies an Emacs
+Lisp list directly in the Emacs memory, the code doing this stays neat and
+legible. However, I found out that the undo list may grow quickly when the Emacs
+buffer use markers, with the consequence of making this routine so Pymacs
+intensive that most of the CPU is spent there. I rewrote that routine in Emacs
+Lisp so it executes in a single Pymacs interaction.
+
+Function Emacs_Rebox.remainder_of_line could have been written in Python, but it
+was probably not worth going away from this one-liner in Emacs Lisp. Also, given
+this routine is often called by find_comment, a few Pymacs protocol interactions
+are spared this way. This function is useful when there is a need to apply a
+regexp already compiled on the Python side, it is probably better fetching the
+line from Emacs and do the pattern match on the Python side, than transmitting
+the source of the regexp to Emacs for it to compile and apply it.
+
+For refilling, I could have either used the refill algorithm built within in
+Emacs, programmed a new one in Python, or relied on Ross Paterson's fmt,
+distributed by GNU and available on most Linuxes. In fact, refill_lines prefers
+the latter. My own Emacs setup is such that the built-in refill algorithm is
+already overridden by GNU fmt, and it really does a much better job. Experience
+taught me that calling an external program is fast enough to be very bearable,
+even interactively. If Python called Emacs to do the refilling, Emacs would
+itself call GNU fmt in my case, I preferred that Python calls GNU fmt directly.
+I could have reprogrammed GNU fmt in Python. Despite interesting, this is an
+uneasy project : fmt implements the Knuth refilling algorithm, which depends on
+dynamic programming techniques; Ross did carefully fine tune them, and took care
+of many details. If GNU fmt fails, for not being available, say, refill_lines
+falls back on a dumb refilling algorithm, which is better than none.
+#@-node:ekr.20071103094355:The python side
+#@+node:ekr.20071103094355.1:The emacs side
+For most Emacs language editing modes, refilling does not make sense
+outside comments, one may redefine the `M-q' command and link it to this
+Pymacs module.  For example, I use this in my `.emacs' file::
+
+    (add-hook 'c-mode-hook 'fp-c-mode-routine)
+    (defun fp-c-mode-routine ()
+        (local-set-key "\M-q" 'rebox-comment))
+    (autoload 'rebox-comment "rebox" nil t)
+    (autoload 'rebox-region "rebox" nil t)
+
+with a "rebox.el" file having this single line:
+
+    (pymacs-load "Pymacs.rebox")
+
+The Emacs function `rebox-comment' automatically discovers the extent of the
+boxed comment near the cursor, possibly refills the text, then adjusts the box
+style. When this command is executed, the cursor should be within a comment, or
+else it should be between two comments, in which case the command applies to the
+next comment.
+
+The Emacs function `rebox-region' does the same, except that it takes the
+current region as a boxed comment. Both commands obey numeric prefixes to add or
+remove a box, force a particular box style, or to prevent refilling of text.
+Without such prefixes, the commands may deduce the current box style from the
+comment itself so the style is preserved.
+
+The default style initial value is nil or 0.  It may be preset to another
+value through calling `rebox-set-default-style' from Emacs LISP, or changed
+to anything else though using a negative value for a prefix, in which case
+the default style is set to the absolute value of the prefix.
+
+A `C-u' prefix avoids refilling the text, but forces using the default box
+style.  `C-u -' lets the user interact to select one attribute at a time.
+
+Adding new styles
+-----------------
+
+Let's suppose you want to add your own boxed comment style, say:
+
+    //--------------------------------------------+
+    // This is the style mandated in our company.
+    //--------------------------------------------+
+
+You might modify `rebox.py' but then, you will have to edit it whenever you
+get a new release of `pybox.py'.  Emacs users might modify their `.emacs'
+file or their `rebox.el' bootstrap, if they use one.  In either cases,
+after the `(pymacs-load "Pymacs.rebox")' line, merely add:
+
+    (rebox-Template NNN MMM ["//-----+"
+                             "// box  "
+                             "//-----+"])
+
+In batch mode [If you use the `rebox' script rather than Emacs], the simplest is to make
+your own.  This is easy, as it is very small.  For example, the above
+style could be implemented by using this script instead of `rebox':
+
+    #!/usr/bin/env python
+    import sys
+    from Pymacs import rebox
+    rebox.Template(226, 325, ('//-----+',
+                              '// box  ',
+                              '//-----+'))
+    apply(rebox.main, tuple(sys.argv[1:]))
+
+In all cases, NNN is the style three-digit number, with no zero digit.
+Pick any free style number, you are safe with 911 and up.  MMM is the
+recognition priority, only used to disambiguate the style of a given boxed
+comments, when it matches many styles at once.  Try something like 400.
+Raise or lower that number as needed if you observe false matches.
+
+Usually, the template uses three lines of equal length.  Do not worry if
+this implies a few trailing spaces, they will be cleaned up automatically
+at box generation time.  The first line or the third line may be omitted
+to create vertically opened boxes.  But the middle line may not be omitted,
+it ought to include the word `box', which will get replaced by your actual
+comment.  If the first line is shorter than the middle one, it gets merged
+at the start of the comment.  If the last line is shorter than the middle
+one, it gets merged at the end of the comment and is refilled with it.
+#@nonl
+#@-node:ekr.20071103094355.1:The emacs side
+#@+node:ekr.20071103093725.1:rebox.py
+@color
+@language python
+@tabwidth -4
+
+@others
+<< templates >>
+
+if __name__ == '__main__':
+    apply(main, sys.argv[1:])
+#@+node:ekr.20071103093725.2:rebox declarations
+#!/usr/bin/env python
+# Copyright © 1991-1998, 2000, 2002 Progiciels Bourbeau-Pinard inc.
+# François Pinard <pinard@iro.umontreal.ca>, April 1991.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+"""\
+Handling of boxed comments in various box styles.
+
+Introduction
+------------
+
+For comments held within boxes, it is painful to fill paragraphs, while
+stretching or shrinking the surrounding box "by hand", as needed.  This piece
+of Python code eases my life on this.  It may be used interactively from
+within Emacs through the Pymacs interface, or in batch as a script which
+filters a single region to be reformatted.  I find only fair, while giving
+all sources for a package using such boxed comments, to also give the
+means I use for nicely modifying comments.  So here they are!
+
+Box styles
+----------
+
+Each supported box style has a number associated with it.  This number is
+arbitrary, yet by _convention_, it holds three non-zero digits such the the
+hundreds digit roughly represents the programming language, the tens digit
+roughly represents a box quality (or weight) and the units digit roughly
+a box type (or figure).  An unboxed comment is merely one of box styles.
+Language, quality and types are collectively referred to as style attributes.
+
+When rebuilding a boxed comment, attributes are selected independently
+of each other.  They may be specified by the digits of the value given
+as Emacs commands argument prefix, or as the `-s' argument to the `rebox'
+script when called from the shell.  If there is no such prefix, or if the
+corresponding digit is zero, the attribute is taken from the value of the
+default style instead.  If the corresponding digit of the default style
+is also zero, than the attribute is recognised and taken from the actual
+boxed comment, as it existed before prior to the command.  The value 1,
+which is the simplest attribute, is ultimately taken if the parsing fails.
+
+A programming language is associated with comment delimiters.  Values are
+100 for none or unknown, 200 for `/*' and `*/' as in plain C, 300 for `//'
+as in C++, 400 for `#' as in most scripting languages, 500 for `;' as in
+LISP or assembler and 600 for `%' as in TeX or PostScript.
+
+Box quality differs according to language. For unknown languages (100) or
+for the C language (200), values are 10 for simple, 20 for rounded, and
+30 or 40 for starred.  Simple quality boxes (10) use comment delimiters
+to left and right of each comment line, and also for the top or bottom
+line when applicable. Rounded quality boxes (20) try to suggest rounded
+corners in boxes.  Starred quality boxes (40) mostly use a left margin of
+asterisks or X'es, and use them also in box surroundings.  For all others
+languages, box quality indicates the thickness in characters of the left
+and right sides of the box: values are 10, 20, 30 or 40 for 1, 2, 3 or 4
+characters wide.  With C++, quality 10 is not useful, it is not allowed.
+
+Box type values are 1 for fully opened boxes for which boxing is done
+only for the left and right but not for top or bottom, 2 for half
+single lined boxes for which boxing is done on all sides except top,
+3 for fully single lined boxes for which boxing is done on all sides,
+4 for half double lined boxes which is like type 2 but more bold,
+or 5 for fully double lined boxes which is like type 3 but more bold.
+
+The special style 221 is for C comments between a single opening `/*'
+and a single closing `*/'.  The special style 111 deletes a box.
+
+Batch usage
+-----------
+
+Usage is `rebox [OPTION]... [FILE]'.  By default, FILE is reformatted to
+standard output by refilling the comment up to column 79, while preserving
+existing boxed comment style.  If FILE is not given, standard input is read.
+Options may be:
+
+  -n         Do not refill the comment inside its box, and ignore -w.
+  -s STYLE   Replace box style according to STYLE, as explained above.
+  -t         Replace initial sequence of spaces by TABs on each line.
+  -v         Echo both the old and the new box styles on standard error.
+  -w WIDTH   Try to avoid going over WIDTH columns per line.
+
+So, a single boxed comment is reformatted by invocation.  `vi' users, for
+example, would need to delimit the boxed comment first, before executing
+the `!}rebox' command (is this correct? my `vi' recollection is far away).
+
+Batch usage is also slow, as internal structures have to be reinitialised
+at every call.  Producing a box in a single style is fast, but recognising
+the previous style requires setting up for all possible styles.
+
+Emacs usage
+-----------
+
+For most Emacs language editing modes, refilling does not make sense
+outside comments, one may redefine the `M-q' command and link it to this
+Pymacs module.  For example, I use this in my `.emacs' file:
+
+     (add-hook 'c-mode-hook 'fp-c-mode-routine)
+     (defun fp-c-mode-routine ()
+       (local-set-key "\M-q" 'rebox-comment))
+     (autoload 'rebox-comment "rebox" nil t)
+     (autoload 'rebox-region "rebox" nil t)
+
+with a "rebox.el" file having this single line:
+
+     (pymacs-load "Pymacs.rebox")
+
+Install Pymacs from `http://www.iro.umontreal.ca/~pinard/pymacs.tar.gz'.
+
+The Emacs function `rebox-comment' automatically discovers the extent of
+the boxed comment near the cursor, possibly refills the text, then adjusts
+the box style.  When this command is executed, the cursor should be within
+a comment, or else it should be between two comments, in which case the
+command applies to the next comment.  The function `rebox-region' does
+the same, except that it takes the current region as a boxed comment.
+Both commands obey numeric prefixes to add or remove a box, force a
+particular box style, or to prevent refilling of text.  Without such
+prefixes, the commands may deduce the current box style from the comment
+itself so the style is preserved.
+
+The default style initial value is nil or 0.  It may be preset to another
+value through calling `rebox-set-default-style' from Emacs LISP, or changed
+to anything else though using a negative value for a prefix, in which case
+the default style is set to the absolute value of the prefix.
+
+A `C-u' prefix avoids refilling the text, but forces using the default box
+style.  `C-u -' lets the user interact to select one attribute at a time.
+
+Adding new styles
+-----------------
+
+Let's suppose you want to add your own boxed comment style, say:
+
+    //--------------------------------------------+
+    // This is the style mandated in our company.
+    //--------------------------------------------+
+
+You might modify `rebox.py' but then, you will have to edit it whenever you
+get a new release of `pybox.py'.  Emacs users might modify their `.emacs'
+file or their `rebox.el' bootstrap, if they use one.  In either cases,
+after the `(pymacs-load "Pymacs.rebox")' line, merely add:
+
+    (rebox-Template NNN MMM ["//-----+"
+                             "// box  "
+                             "//-----+"])
+
+If you use the `rebox' script rather than Emacs, the simplest is to make
+your own.  This is easy, as it is very small.  For example, the above
+style could be implemented by using this script instead of `rebox':
+
+    #!/usr/bin/env python
+    import sys
+    from Pymacs import rebox
+    rebox.Template(226, 325, ('//-----+',
+                              '// box  ',
+                              '//-----+'))
+    apply(rebox.main, tuple(sys.argv[1:]))
+
+In all cases, NNN is the style three-digit number, with no zero digit.
+Pick any free style number, you are safe with 911 and up.  MMM is the
+recognition priority, only used to disambiguate the style of a given boxed
+comments, when it matches many styles at once.  Try something like 400.
+Raise or lower that number as needed if you observe false matches.
+
+On average, the template uses three lines of equal length.  Do not worry if
+this implies a few trailing spaces, they will be cleaned up automatically
+at box generation time.  The first line or the third line may be omitted
+to create vertically opened boxes.  But the middle line may not be omitted,
+it ought to include the word `box', which will get replaced by your actual
+comment.  If the first line is shorter than the middle one, it gets merged
+at the start of the comment.  If the last line is shorter than the middle
+one, it gets merged at the end of the comment and is refilled with it.
+
+History
+-------
+
+I first observed rounded corners, as in style 223 boxes, in code from
+Warren Tucker, a previous maintainer of the `shar' package, circa 1980.
+
+Except for very special files, I carefully avoided boxed comments for
+real work, as I found them much too hard to maintain.  My friend Paul
+Provost was working at Taarna, a computer graphics place, which had boxes
+as part of their coding standards.  He asked that we try something to get
+him out of his misery, and this how `rebox.el' was originally written.
+I did not plan to use it for myself, but Paul was so enthusiastic that I
+timidly started to use boxes in my things, very little at first, but more
+and more as time passed, still in doubt that it was a good move.  Later,
+many friends spontaneously started to use this tool for real, some being very
+serious workers.  This convinced me that boxes are acceptable, after all.
+
+I do not use boxes much with Python code.  It is so legible that boxing
+is not that useful.  Vertical white space is less necessary, too.  I even
+avoid white lines within functions.  Comments appear prominent enough when
+using highlighting editors like Emacs or nice printer tools like `enscript'.
+
+After Emacs could be extended with Python, in 2001, I translated `rebox.el'
+into `rebox.py', and added the facility to use it as a batch script.
+"""
+
+## Note: This code is currently compatible down to Python version 1.5.2.
+## It is probably worth keeping it that way for a good while, still.
+
+## Note: a double hash comment introduces a group of functions or methods.
+
+import re, string, sys
+
+#@-node:ekr.20071103093725.2:rebox declarations
+#@+node:ekr.20071103093725.3:main
+def main(*arguments):
+    refill = 1
+    style = None
+    tabify = 0
+    verbose = 0
+    width = 79
+    import getopt
+    options, arguments = getopt.getopt(arguments, 'ns:tvw:', ['help'])
+    for option, value in options:
+        if option == '--help':
+            sys.stdout.write(__doc__)
+            sys.exit(0)
+        elif option == '-n':
+            refill = 0
+        elif option == '-s':
+            style = int(value)
+        elif option == '-t':
+            tabify = 1
+        elif option == '-v':
+            verbose = 1
+        elif option == '-w':
+            width = int(value)
+    if len(arguments) == 0:
+        text = sys.stdin.read()
+    elif len(arguments) == 1:
+        text = open(arguments[0]).read()
+    else:
+        sys.stderr.write("Invalid usage, try `rebox --help' for help.\n")
+        sys.exit(1)
+    old_style, new_style, text, position = engine(
+        text, style=style, width=width, refill=refill, tabify=tabify)
+    if text is None:
+        sys.stderr.write("* Cannot rebox to style %d.\n" % new_style)
+        sys.exit(1)
+    sys.stdout.write(text)
+    if verbose:
+        if old_style == new_style:
+            sys.stderr.write("Reboxed with style %d.\n" % old_style)
+        else:
+            sys.stderr.write("Reboxed from style %d to %d.\n"
+                             % (old_style, new_style))
+
+#@-node:ekr.20071103093725.3:main
+#@+node:ekr.20071103093725.4:pymacs_load_hook
+def pymacs_load_hook():
+    global interactions, lisp, Let, region, comment, set_default_style
+    from Pymacs import lisp, Let
+    emacs_rebox = Emacs_Rebox()
+    # Declare functions for Emacs to import.
+    interactions = {}
+    region = emacs_rebox.region
+    interactions[region] = 'P'
+    comment = emacs_rebox.comment
+    interactions[comment] = 'P'
+    set_default_style = emacs_rebox.set_default_style
+
+#@-node:ekr.20071103093725.4:pymacs_load_hook
+#@+node:ekr.20071103093725.5:class Emacs_Rebox
+class Emacs_Rebox:
+    @others
+#@+node:ekr.20071103093725.6:__init__
+
+def __init__(self):
+    self.default_style = None
+
+#@-node:ekr.20071103093725.6:__init__
+#@+node:ekr.20071103093725.7:set_default_style
+def set_default_style(self, style):
+    """\
+Set the default style to STYLE.
+"""
+    self.default_style = style
+
+#@-node:ekr.20071103093725.7:set_default_style
+#@+node:ekr.20071103093725.8:region
+def region(self, flag):
+    """\
+Rebox the boxed comment in the current region, obeying FLAG.
+"""
+    self.emacs_engine(flag, self.find_region)
+
+#@-node:ekr.20071103093725.8:region
+#@+node:ekr.20071103093725.9:comment
+def comment(self, flag):
+    """\
+Rebox the surrounding boxed comment, obeying FLAG.
+"""
+    self.emacs_engine(flag, self.find_comment)
+
+#@-node:ekr.20071103093725.9:comment
+#@+node:ekr.20071103093725.10:emacs_engine
+def emacs_engine(self, flag, find_limits):
+    """\
+Rebox text while obeying FLAG.  Call FIND_LIMITS to discover the extent
+of the boxed comment.
+"""
+    # `C-u -' means that box style is to be decided interactively.
+    if flag == lisp['-']:
+        flag = self.ask_for_style()
+    # If FLAG is zero or negative, only change default box style.
+    if type(flag) is type(0) and flag <= 0:
+        self.default_style = -flag
+        lisp.message("Default style set to %d" % -flag)
+        return
+    # Decide box style and refilling.
+    if flag is None:
+        style = self.default_style
+        refill = 1
+    elif type(flag) == type(0):
+        if self.default_style is None:
+            style = flag
+        else:
+            style = merge_styles(self.default_style, flag)
+        refill = 1
+    else:
+        flag = flag.copy()
+        if type(flag) == type([]):
+            style = self.default_style
+            refill = 0
+        else:
+            lisp.error("Unexpected flag value %s" % flag)
+    # Prepare for reboxing.
+    lisp.message("Reboxing...")
+    checkpoint = lisp.buffer_undo_list.value()
+    start, end = find_limits()
+    text = lisp.buffer_substring(start, end)
+    width = lisp.fill_column.value()
+    tabify = lisp.indent_tabs_mode.value() is not None
+    point = lisp.point()
+    if start <= point < end:
+        position = point - start
+    else:
+        position = None
+    # Rebox the text and replace it in Emacs buffer.
+    old_style, new_style, text, position = engine(
+        text, style=style, width=width,
+        refill=refill, tabify=tabify, position=position)
+    if text is None:
+        lisp.error("Cannot rebox to style %d" % new_style)
+    lisp.delete_region(start, end)
+    lisp.insert(text)
+    if position is not None:
+        lisp.goto_char(start + position)
+    # Collapse all operations into a single one, for Undo.
+    self.clean_undo_after(checkpoint)
+    # We are finished, tell the user.
+    if old_style == new_style:
+        lisp.message("Reboxed with style %d" % old_style)
+    else:
+        lisp.message("Reboxed from style %d to %d"
+                     % (old_style, new_style))
+
+#@-node:ekr.20071103093725.10:emacs_engine
+#@+node:ekr.20071103093725.11:ask_for_style
+def ask_for_style(self):
+    """\
+Request the style interactively, using the minibuffer.
+"""
+    language = quality = type = None
+    while language is None:
+        lisp.message("\
+Box language is 100-none, 200-/*, 300-//, 400-#, 500-;, 600-%%")
+        key = lisp.read_char()
+        if key >= ord('0') and key <= ord('6'):
+            language = key - ord('0')
+    while quality is None:
+        lisp.message("\
+Box quality/width is 10-simple/1, 20-rounded/2, 30-starred/3 or 40-starred/4")
+        key = lisp.read_char()
+        if key >= ord('0') and key <= ord('4'):
+            quality = key - ord('0')
+    while type is None:
+        lisp.message("\
+Box type is 1-opened, 2-half-single, 3-single, 4-half-double or 5-double")
+        key = lisp.read_char()
+        if key >= ord('0') and key <= ord('5'):
+            type = key - ord('0')
+    return 100*language + 10*quality + type
+
+#@-node:ekr.20071103093725.11:ask_for_style
+#@+node:ekr.20071103093725.12:find_region
+def find_region(self):
+    """\
+Return the limits of the region.
+"""
+    return lisp.point(), lisp.mark(lisp.t)
+
+#@-node:ekr.20071103093725.12:find_region
+#@+node:ekr.20071103093725.13:find_comment
+def find_comment(self):
+    """\
+Find and return the limits of the block of comments following or enclosing
+the cursor, or return an error if the cursor is not within such a block
+of comments.  Extend it as far as possible in both directions.
+"""
+    let = Let()
+    let.push_excursion()
+    # Find the start of the current or immediately following comment.
+    lisp.beginning_of_line()
+    lisp.skip_chars_forward(' \t\n')
+    lisp.beginning_of_line()
+    if not language_matcher[0](self.remainder_of_line()):
+        temp = lisp.point()
+        if not lisp.re_search_forward('\\*/', None, lisp.t):
+            lisp.error("outside any comment block")
+        lisp.re_search_backward('/\\*')
+        if lisp.point() > temp:
+            lisp.error("outside any comment block")
+        temp = lisp.point()
+        lisp.beginning_of_line()
+        lisp.skip_chars_forward(' \t')
+        if lisp.point() != temp:
+            lisp.error("text before start of comment")
+        lisp.beginning_of_line()
+    start = lisp.point()
+    language = guess_language(self.remainder_of_line())
+    # Find the end of this comment.
+    if language == 2:
+        lisp.search_forward('*/')
+        if not lisp.looking_at('[ \t]*$'):
+            lisp.error("text after end of comment")
+    lisp.end_of_line()
+    if lisp.eobp():
+        lisp.insert('\n')
+    else:
+        lisp.forward_char(1)
+    end = lisp.point()
+    # Try to extend the comment block backwards.
+    lisp.goto_char(start)
+    while not lisp.bobp():
+        if language == 2:
+            lisp.skip_chars_backward(' \t\n')
+            if not lisp.looking_at('[ \t]*\n[ \t]*/\\*'):
+                break
+            if lisp.point() < 2:
+                break
+            lisp.backward_char(2)
+            if not lisp.looking_at('\\*/'):
+                break
+            lisp.re_search_backward('/\\*')
+            temp = lisp.point()
+            lisp.beginning_of_line()
+            lisp.skip_chars_forward(' \t')
+            if lisp.point() != temp:
+                break
+            lisp.beginning_of_line()
+        else:
+            lisp.previous_line(1)
+            if not language_matcher[language](self.remainder_of_line()):
+                break
+        start = lisp.point()
+    # Try to extend the comment block forward.
+    lisp.goto_char(end)
+    while language_matcher[language](self.remainder_of_line()):
+        if language == 2:
+            lisp.re_search_forward('[ \t]*/\\*')
+            lisp.re_search_forward('\\*/')
+            if lisp.looking_at('[ \t]*$'):
+                lisp.beginning_of_line()
+                lisp.forward_line(1)
+                end = lisp.point()
+        else:
+            lisp.forward_line(1)
+            end = lisp.point()
+    return start, end
+
+#@-node:ekr.20071103093725.13:find_comment
+#@+node:ekr.20071103093725.14:remainder_of_line
+def remainder_of_line(self):
+    """\
+Return all characters between point and end of line in Emacs buffer.
+"""
+    return lisp('''\
+(buffer-substring (point) (save-excursion (skip-chars-forward "^\n") (point)))
+''')
+
+#@-node:ekr.20071103093725.14:remainder_of_line
+#@+node:ekr.20071103093725.15:clean_undo_after_old
+def clean_undo_after_old(self, checkpoint):
+    """\
+Remove all intermediate boundaries from the Undo list since CHECKPOINT.
+"""
+    # Declare some LISP functions.
+    car = lisp.car
+    cdr = lisp.cdr
+    eq = lisp.eq
+    setcdr = lisp.setcdr
+    # Remove any `nil' delimiter recently added to the Undo list.
+    cursor = lisp.buffer_undo_list.value()
+    if not eq(cursor, checkpoint):
+        tail = cdr(cursor)
+        while not eq(tail, checkpoint):
+            if car(tail):
+                cursor = tail
+                tail = cdr(cursor)
+            else:
+                tail = cdr(tail)
+                setcdr(cursor, tail)
+
+#@-node:ekr.20071103093725.15:clean_undo_after_old
+#@+node:ekr.20071103093725.16:clean_undo_after
+def clean_undo_after(self, checkpoint):
+    """\
+Remove all intermediate boundaries from the Undo list since CHECKPOINT.
+"""
+    lisp("""
+(let ((undo-list %s))
+(if (not (eq buffer-undo-list undo-list))
+  (let ((cursor buffer-undo-list))
+(while (not (eq (cdr cursor) undo-list))
+  (if (car (cdr cursor))
+      (setq cursor (cdr cursor))
+    (setcdr cursor (cdr (cdr cursor)))))))
+nil)
+"""
+         % (checkpoint or 'nil'))
+
+#@-node:ekr.20071103093725.16:clean_undo_after
+#@-node:ekr.20071103093725.5:class Emacs_Rebox
+#@+node:ekr.20071103093725.17:engine
+def engine(text, style=None, width=79, refill=1, tabify=0, position=None):
+    """\
+Add, delete or adjust a boxed comment held in TEXT, according to STYLE.
+STYLE values are explained at beginning of this file.  Any zero attribute
+in STYLE indicates that the corresponding attribute should be recovered
+from the currently existing box.  Produced lines will not go over WIDTH
+columns if possible, if refilling gets done.  But if REFILL is false, WIDTH
+is ignored.  If TABIFY is true, the beginning of produced lines will have
+spaces replace by TABs.  POSITION is either None, or a character position
+within TEXT.  Returns four values: the old box style, the new box style,
+the reformatted text, and either None or the adjusted value of POSITION in
+the new text.  The reformatted text is returned as None if the requested
+style does not exist.
+"""
+    last_line_complete = text and text[-1] == '\n'
+    if last_line_complete:
+        text = text[:-1]
+    lines = string.split(string.expandtabs(text), '\n')
+    # Decide about refilling and the box style to use.
+    new_style = 111
+    old_template = guess_template(lines)
+    new_style = merge_styles(new_style, old_template.style)
+    if style is not None:
+        new_style = merge_styles(new_style, style)
+    new_template = template_registry.get(new_style)
+    # Interrupt processing if STYLE does not exist.
+    if not new_template:
+        return old_template.style, new_style, None, None
+    # Remove all previous comment marks, and left margin.
+    if position is not None:
+        marker = Marker()
+        marker.save_position(text, position, old_template.characters())
+    lines, margin = old_template.unbuild(lines)
+    # Ensure only one white line between paragraphs.
+    counter = 1
+    while counter < len(lines) - 1:
+        if lines[counter] == '' and lines[counter-1] == '':
+            del lines[counter]
+        else:
+            counter = counter + 1
+    # Rebuild the boxed comment.
+    lines = new_template.build(lines, width, refill, margin)
+    # Retabify to the left only.
+    if tabify:
+        for counter in range(len(lines)):
+            tabs = len(re.match(' *', lines[counter]).group()) / 8
+            lines[counter] = '\t' * tabs + lines[counter][8*tabs:]
+    # Restore the point position.
+    text = string.join(lines, '\n')
+    if last_line_complete:
+        text = text + '\n'
+    if position is not None:
+        position = marker.get_position(text, new_template.characters())
+    return old_template.style, new_style, text, position
+
+#@-node:ekr.20071103093725.17:engine
+#@+node:ekr.20071103093725.18:guess_language
+def guess_language(line):
+    """\
+Guess the language in use for LINE.
+"""
+    for language in range(len(language_matcher) - 1, 1, -1):
+        if language_matcher[language](line):
+            return language
+    return 1
+
+#@-node:ekr.20071103093725.18:guess_language
+#@+node:ekr.20071103093725.19:guess_template
+def guess_template(lines):
+    """\
+Find the heaviest box template matching LINES.
+"""
+    best_template = None
+    for template in template_registry.values():
+        if best_template is None or template > best_template:
+            if template.match(lines):
+                best_template = template
+    return best_template
+
+#@-node:ekr.20071103093725.19:guess_template
+#@+node:ekr.20071103093725.20:left_margin_size
+def left_margin_size(lines):
+    """\
+Return the width of the left margin for all LINES.  Ignore white lines.
+"""
+    margin = None
+    for line in lines:
+        counter = len(re.match(' *', line).group())
+        if counter != len(line):
+            if margin is None or counter < margin:
+                margin = counter
+    if margin is None:
+        margin = 0
+    return margin
+
+#@-node:ekr.20071103093725.20:left_margin_size
+#@+node:ekr.20071103093725.21:merge_styles
+def merge_styles(original, update):
+    """\
+Return style attributes as per ORIGINAL, in which attributes have been
+overridden by non-zero corresponding style attributes from UPDATE.
+"""
+    style = [original / 100, original / 10 % 10, original % 10]
+    merge = update / 100, update / 10 % 10, update % 10
+    for counter in range(3):
+        if merge[counter]:
+            style[counter] = merge[counter]
+    return 100*style[0] + 10*style[1] + style[2]
+
+#@-node:ekr.20071103093725.21:merge_styles
+#@+node:ekr.20071103093725.22:refill_lines
+def refill_lines(lines, width):
+    """\
+Refill LINES, trying to not produce lines having more than WIDTH columns.
+"""
+    # Try using GNU `fmt'.
+    import tempfile, os
+    name = tempfile.mktemp()
+    open(name, 'w').write(string.join(lines, '\n') + '\n')
+    process = os.popen('fmt -cuw %d %s' % (width, name))
+    text = process.read()
+    os.remove(name)
+    if process.close() is None:
+        return map(string.expandtabs, string.split(text, '\n')[:-1])
+    # If `fmt' failed, do refilling more naively, wihtout using the
+    # Knuth algorithm, nor protecting full stops at end of sentences.
+    lines.append(None)
+    new_lines = []
+    new_line = ''
+    start = 0
+    for end in range(len(lines)):
+        if not lines[end]:
+            margin = left_margin_size(lines[start:end])
+            for line in lines[start:end]:
+                counter = len(re.match(' *', line).group())
+                if counter > margin:
+                    if new_line:
+                        new_lines.append(' ' * margin + new_line)
+                        new_line = ''
+                    indent = counter - margin
+                else:
+                    indent = 0
+                for word in string.split(line):
+                    if new_line:
+                        if len(new_line) + 1 + len(word) > width:
+                            new_lines.append(' ' * margin + new_line)
+                            new_line = word
+                        else:
+                            new_line = new_line + ' ' + word
+                    else:
+                        new_line = ' ' * indent + word
+                        indent = 0
+            if new_line:
+                new_lines.append(' ' * margin + new_line)
+                new_line = ''
+            if lines[end] is not None:
+                new_lines.append('')
+                start = end + 1
+    return new_lines
+
+#@-node:ekr.20071103093725.22:refill_lines
+#@+node:ekr.20071103093725.23:class Marker
+class Marker:
+    @others
+#@+node:ekr.20071103093725.24:save_position
+
+## Heuristic to simulate a marker while reformatting boxes.
+
+def save_position(self, text, position, ignorable):
+    """\
+Given a TEXT and a POSITION in that text, save the adjusted position
+by faking that all IGNORABLE characters before POSITION were removed.
+"""
+    ignore = {}
+    for character in ' \t\r\n' + ignorable:
+        ignore[character] = None
+    counter = 0
+    for character in text[:position]:
+        if character in ignore:
+            counter = counter + 1
+    self.position = position - counter
+
+#@-node:ekr.20071103093725.24:save_position
+#@+node:ekr.20071103093725.25:get_position
+def get_position(self, text, ignorable, latest=0):
+    """\
+Given a TEXT, return the value that would yield the currently saved position,
+if it was saved by `save_position' with IGNORABLE.  Unless the position lies
+within a series of ignorable characters, LATEST has no effect in practice.
+If LATEST is true, return the biggest possible value instead of the smallest.
+"""
+    ignore = {}
+    for character in ' \t\r\n' + ignorable:
+        ignore[character] = None
+    counter = 0
+    position = 0
+    if latest:
+        for character in text:
+            if character in ignore:
+                counter = counter + 1
+            else:
+                if position == self.position:
+                    break
+                position = position + 1
+    elif self.position > 0:
+        for character in text:
+            if character in ignore:
+                counter = counter + 1
+            else:
+                position = position + 1
+                if position == self.position:
+                    break
+    return position + counter
+
+#@-node:ekr.20071103093725.25:get_position
+#@-node:ekr.20071103093725.23:class Marker
+#@+node:ekr.20071103093725.26:class Template
+## Template processing.
+
+class Template:
+    @others
+#@+node:ekr.20071103093725.27:__init__
+
+def __init__(self, style, weight, lines):
+    """\
+Digest and register a single template.  The template is numbered STYLE,
+has a parsing WEIGHT, and is described by one to three LINES.
+STYLE should be used only once through all `declare_template' calls.
+
+One of the lines should contain the substring `box' to represent the comment
+to be boxed, and if three lines are given, `box' should appear in the middle
+one.  Lines containing only spaces are implied as necessary before and after
+the the `box' line, so we have three lines.
+
+Normally, all three template lines should be of the same length.  If the first
+line is shorter, it represents a start comment string to be bundled within the
+first line of the comment text.  If the third line is shorter, it represents
+an end comment string to be bundled at the end of the comment text, and
+refilled with it.
+"""
+    assert style not in template_registry, \
+           "Style %d defined more than once" % style
+    self.style = style
+    self.weight = weight
+    # Make it exactly three lines, with `box' in the middle.
+    start = string.find(lines[0], 'box')
+    if start >= 0:
+        line1 = None
+        line2 = lines[0]
+        if len(lines) > 1:
+            line3 = lines[1]
+        else:
+            line3 = None
+    else:
+        start = string.find(lines[1], 'box')
+        if start >= 0:
+            line1 = lines[0]
+            line2 = lines[1]
+            if len(lines) > 2:
+                line3 = lines[2]
+            else:
+                line3 = None
+        else:
+            assert 0, "Erroneous template for %d style" % style
+    end = start + len('box')
+    # Define a few booleans.
+    self.merge_nw = line1 is not None and len(line1) < len(line2)
+    self.merge_se = line3 is not None and len(line3) < len(line2)
+    # Define strings at various cardinal directions.
+    if line1 is None:
+        self.nw = self.nn = self.ne = None
+    elif self.merge_nw:
+        self.nw = line1
+        self.nn = self.ne = None
+    else:
+        if start > 0:
+            self.nw = line1[:start]
+        else:
+            self.nw = None
+        if line1[start] != ' ':
+            self.nn = line1[start]
+        else:
+            self.nn = None
+        if end < len(line1):
+            self.ne = string.rstrip(line1[end:])
+        else:
+            self.ne = None
+    if start > 0:
+        self.ww = line2[:start]
+    else:
+        self.ww = None
+    if end < len(line2):
+        self.ee = line2[end:]
+    else:
+        self.ee = None
+    if line3 is None:
+        self.sw = self.ss = self.se = None
+    elif self.merge_se:
+        self.sw = self.ss = None
+        self.se = string.rstrip(line3)
+    else:
+        if start > 0:
+            self.sw = line3[:start]
+        else:
+            self.sw = None
+        if line3[start] != ' ':
+            self.ss = line3[start]
+        else:
+            self.ss = None
+        if end < len(line3):
+            self.se = string.rstrip(line3[end:])
+        else:
+            self.se = None
+    # Define parsing regexps.
+    if self.merge_nw:
+        self.regexp1 = re.compile(' *' + regexp_quote(self.nw) + '.*$')
+    elif self.nw and not self.nn and not self.ne:
+        self.regexp1 = re.compile(' *' + regexp_quote(self.nw) + '$')
+    elif self.nw or self.nn or self.ne:
+        self.regexp1 = re.compile(
+            ' *' + regexp_quote(self.nw) + regexp_ruler(self.nn)
+            + regexp_quote(self.ne) + '$')
+    else:
+        self.regexp1 = None
+    if self.ww or self.ee:
+        self.regexp2 = re.compile(
+            ' *' + regexp_quote(self.ww) + '.*'
+            + regexp_quote(self.ee) + '$')
+    else:
+        self.regexp2 = None
+    if self.merge_se:
+        self.regexp3 = re.compile('.*' + regexp_quote(self.se) + '$')
+    elif self.sw and not self.ss and not self.se:
+        self.regexp3 = re.compile(' *' + regexp_quote(self.sw) + '$')
+    elif self.sw or self.ss or self.se:
+        self.regexp3 = re.compile(
+            ' *' + regexp_quote(self.sw) + regexp_ruler(self.ss)
+            + regexp_quote(self.se) + '$')
+    else:
+        self.regexp3 = None
+    # Save results.
+    template_registry[style] = self
+
+#@-node:ekr.20071103093725.27:__init__
+#@+node:ekr.20071103093725.28:__cmp__
+def __cmp__(self, other):
+    return cmp(self.weight, other.weight)
+
+#@-node:ekr.20071103093725.28:__cmp__
+#@+node:ekr.20071103093725.29:characters
+def characters(self):
+    """\
+Return a string of characters which may be used to draw the box.
+"""
+    characters = ''
+    for text in (self.nw, self.nn, self.ne,
+                 self.ww, self.ee,
+                 self.sw, self.ss, self.se):
+        if text:
+            for character in text:
+                if character not in characters:
+                    characters = characters + character
+    return characters
+
+#@-node:ekr.20071103093725.29:characters
+#@+node:ekr.20071103093725.30:match
+def match(self, lines):
+    """\
+Returns true if LINES exactly match this template.
+"""
+    start = 0
+    end = len(lines)
+    if self.regexp1 is not None:
+        if start == end or not self.regexp1.match(lines[start]):
+            return 0
+        start = start + 1
+    if self.regexp3 is not None:
+        if end == 0 or not self.regexp3.match(lines[end-1]):
+            return 0
+        end = end - 1
+    if self.regexp2 is not None:
+        for line in lines[start:end]:
+            if not self.regexp2.match(line):
+                return 0
+    return 1
+
+#@-node:ekr.20071103093725.30:match
+#@+node:ekr.20071103093725.31:unbuild
+def unbuild(self, lines):
+    """\
+Remove all comment marks from LINES, as hinted by this template.  Returns the
+cleaned up set of lines, and the size of the left margin.
+"""
+    margin = left_margin_size(lines)
+    # Remove box style marks.
+    start = 0
+    end = len(lines)
+    if self.regexp1 is not None:
+        lines[start] = unbuild_clean(lines[start], self.regexp1)
+        start = start + 1
+    if self.regexp3 is not None:
+        lines[end-1] = unbuild_clean(lines[end-1], self.regexp3)
+        end = end - 1
+    if self.regexp2 is not None:
+        for counter in range(start, end):
+            lines[counter] = unbuild_clean(lines[counter], self.regexp2)
+    # Remove the left side of the box after it turned into spaces.
+    delta = left_margin_size(lines) - margin
+    for counter in range(len(lines)):
+        lines[counter] = lines[counter][delta:]
+    # Remove leading and trailing white lines.
+    start = 0
+    end = len(lines)
+    while start < end and lines[start] == '':
+        start = start + 1
+    while end > start and lines[end-1] == '':
+        end = end - 1
+    return lines[start:end], margin
+
+#@-node:ekr.20071103093725.31:unbuild
+#@+node:ekr.20071103093725.32:build
+def build(self, lines, width, refill, margin):
+    """\
+Put LINES back into a boxed comment according to this template, after
+having refilled them if REFILL.  The box should start at column MARGIN,
+and the total size of each line should ideally not go over WIDTH.
+"""
+    # Merge a short end delimiter now, so it gets refilled with text.
+    if self.merge_se:
+        if lines:
+            lines[-1] = lines[-1] + '  ' + self.se
+        else:
+            lines = [self.se]
+    # Reduce WIDTH according to left and right inserts, then refill.
+    if self.ww:
+        width = width - len(self.ww)
+    if self.ee:
+        width = width - len(self.ee)
+    if refill:
+        lines = refill_lines(lines, width)
+    # Reduce WIDTH further according to the current right margin,
+    # and excluding the left margin.
+    maximum = 0
+    for line in lines:
+        if line:
+            if line[-1] in '.!?':
+                length = len(line) + 1
+            else:
+                length = len(line)
+            if length > maximum:
+                maximum = length
+    width = maximum - margin
+    # Construct the top line.
+    if self.merge_nw:
+        lines[0] = ' ' * margin + self.nw + lines[0][margin:]
+        start = 1
+    elif self.nw or self.nn or self.ne:
+        if self.nn:
+            line = self.nn * width
+        else:
+            line = ' ' * width
+        if self.nw:
+            line = self.nw + line
+        if self.ne:
+            line = line + self.ne
+        lines.insert(0, string.rstrip(' ' * margin + line))
+        start = 1
+    else:
+        start = 0
+    # Construct all middle lines.
+    for counter in range(start, len(lines)):
+        line = lines[counter][margin:]
+        line = line + ' ' * (width - len(line))
+        if self.ww:
+            line = self.ww + line
+        if self.ee:
+            line = line + self.ee
+        lines[counter] = string.rstrip(' ' * margin + line)
+    # Construct the bottom line.
+    if self.sw or self.ss or self.se and not self.merge_se:
+        if self.ss:
+            line = self.ss * width
+        else:
+            line = ' ' * width
+        if self.sw:
+            line = self.sw + line
+        if self.se and not self.merge_se:
+            line = line + self.se
+        lines.append(string.rstrip(' ' * margin + line))
+    return lines
+
+#@-node:ekr.20071103093725.32:build
+#@-node:ekr.20071103093725.26:class Template
+#@+node:ekr.20071103093725.33:regexp_quote
+def regexp_quote(text):
+    """\
+Return a regexp matching TEXT without its surrounding space, maybe
+followed by spaces.  If STRING is nil, return the empty regexp.
+Unless spaces, the text is nested within a regexp parenthetical group.
+"""
+    if text is None:
+        return ''
+    if text == ' ' * len(text):
+        return ' *'
+    return '(' + re.escape(text.strip() + ') *'
+
+#@-node:ekr.20071103093725.33:regexp_quote
+#@+node:ekr.20071103093725.34:regexp_ruler
+def regexp_ruler(character):
+    """\
+Return a regexp matching two or more repetitions of CHARACTER, maybe
+followed by spaces.  Is CHARACTER is nil, return the empty regexp.
+Unless spaces, the ruler is nested within a regexp parenthetical group.
+"""
+    if character is None:
+        return ''
+    if character == ' ':
+        return '  +'
+    return '(' + re.escape(character + character) + '+) *'
+
+#@-node:ekr.20071103093725.34:regexp_ruler
+#@+node:ekr.20071103093725.35:unbuild_clean
+def unbuild_clean(line, regexp):
+    """\
+Return LINE with all parenthetical groups in REGEXP erased and replaced by an
+equivalent number of spaces, except for trailing spaces, which get removed.
+"""
+    match = re.match(regexp, line)
+    groups = match.groups()
+    for counter in range(len(groups)):
+        if groups[counter] is not None:
+            start, end = match.span(1 + counter)
+            line = line[:start] + ' ' * (end - start) + line[end:]
+    return string.rstrip(line)
+
+#@-node:ekr.20071103093725.35:unbuild_clean
+#@+node:ekr.20071103093725.36:make_generic
+## Template data.
+
+# Matcher functions for a comment start, indexed by numeric LANGUAGE.
+language_matcher = []
+for pattern in (r' *(/\*|//+|#+|;+|%+)',
+                r'',            # 1
+                r' */\*',       # 2
+                r' *//+',       # 3
+                r' *#+',        # 4
+                r' *;+',        # 5
+                r' *%+'):       # 6
+    language_matcher.append(re.compile(pattern).match)
+
+# Template objects, indexed by numeric style.
+template_registry = {}
+
+def make_generic(style, weight, lines):
+    """\
+Add various language digit to STYLE and generate one template per language,
+all using the same WEIGHT.  Replace `?' in LINES accordingly.
+"""
+    for language, character in ((300, '/'),  # C++ style comments
+                                (400, '#'),  # scripting languages
+                                (500, ';'),  # LISP and assembler
+                                (600, '%')): # TeX and PostScript
+        new_style = language + style
+        if 310 < new_style <= 319:
+            # Disallow quality 10 with C++.
+            continue
+        new_lines = []
+        for line in lines:
+            new_lines.append(string.replace(line, '?', character))
+        Template(new_style, weight, new_lines)
+
+#@-node:ekr.20071103093725.36:make_generic
+#@+node:ekr.20071103093725.37:<< templates >>
+
+make_generic(11, 115, ('? box',))
+
+make_generic(12, 215, ('? box ?',
+                       '? --- ?'))
+
+make_generic(13, 315, ('? --- ?',
+                       '? box ?',
+                       '? --- ?'))
+
+make_generic(14, 415, ('? box ?',
+                       '???????'))
+
+make_generic(15, 515, ('???????',
+                       '? box ?',
+                       '???????'))
+
+make_generic(21, 125, ('?? box',))
+
+make_generic(22, 225, ('?? box ??',
+                       '?? --- ??'))
+
+make_generic(23, 325, ('?? --- ??',
+                       '?? box ??',
+                       '?? --- ??'))
+
+make_generic(24, 425, ('?? box ??',
+                       '?????????'))
+
+make_generic(25, 525, ('?????????',
+                       '?? box ??',
+                       '?????????'))
+
+make_generic(31, 135, ('??? box',))
+
+make_generic(32, 235, ('??? box ???',
+                       '??? --- ???'))
+
+make_generic(33, 335, ('??? --- ???',
+                       '??? box ???',
+                       '??? --- ???'))
+
+make_generic(34, 435, ('??? box ???',
+                       '???????????'))
+
+make_generic(35, 535, ('???????????',
+                       '??? box ???',
+                       '???????????'))
+
+make_generic(41, 145, ('???? box',))
+
+make_generic(42, 245, ('???? box ????',
+                       '???? --- ????'))
+
+make_generic(43, 345, ('???? --- ????',
+                       '???? box ????',
+                       '???? --- ????'))
+
+make_generic(44, 445, ('???? box ????',
+                       '?????????????'))
+
+make_generic(45, 545, ('?????????????',
+                       '???? box ????',
+                       '?????????????'))
+
+# Textual (non programming) templates.
+
+Template(111, 113, ('box',))
+
+Template(112, 213, ('| box |',
+                    '+-----+'))
+
+Template(113, 313, ('+-----+',
+                    '| box |',
+                    '+-----+'))
+
+Template(114, 413, ('| box |',
+                    '*=====*'))
+
+Template(115, 513, ('*=====*',
+                    '| box |',
+                    '*=====*'))
+
+Template(121, 123, ('| box |',))
+
+Template(122, 223, ('| box |',
+                    '`-----\''))
+
+Template(123, 323, ('.-----.',
+                    '| box |',
+                    '`-----\''))
+
+Template(124, 423, ('| box |',
+                    '\\=====/'))
+
+Template(125, 523, ('/=====\\',
+                    '| box |',
+                    '\\=====/'))
+
+Template(141, 143, ('| box ',))
+
+Template(142, 243, ('* box *',
+                    '*******'))
+
+Template(143, 343, ('*******',
+                    '* box *',
+                    '*******'))
+
+Template(144, 443, ('X box X',
+                    'XXXXXXX'))
+
+Template(145, 543, ('XXXXXXX',
+                    'X box X',
+                    'XXXXXXX'))
+# C language templates.
+
+Template(211, 118, ('/* box */',))
+
+Template(212, 218, ('/* box */',
+                    '/* --- */'))
+
+Template(213, 318, ('/* --- */',
+                    '/* box */',
+                    '/* --- */'))
+
+Template(214, 418, ('/* box */',
+                    '/* === */'))
+
+Template(215, 518, ('/* === */',
+                    '/* box */',
+                    '/* === */'))
+
+Template(221, 128, ('/* ',
+                    '   box',
+                    '*/'))
+
+Template(222, 228, ('/*    .',
+                    '| box |',
+                    '`----*/'))
+
+Template(223, 328, ('/*----.',
+                    '| box |',
+                    '`----*/'))
+
+Template(224, 428, ('/*    \\',
+                    '| box |',
+                    '\\====*/'))
+
+Template(225, 528, ('/*====\\',
+                    '| box |',
+                    '\\====*/'))
+
+Template(231, 138, ('/*    ',
+                    ' | box',
+                    ' */   '))
+
+Template(232, 238, ('/*        ',
+                    ' | box | ',
+                    ' *-----*/'))
+
+Template(233, 338, ('/*-----* ',
+                    ' | box | ',
+                    ' *-----*/'))
+
+Template(234, 438, ('/* box */',
+                    '/*-----*/'))
+
+Template(235, 538, ('/*-----*/',
+                    '/* box */',
+                    '/*-----*/'))
+
+Template(241, 148, ('/*    ',
+                    ' * box',
+                    ' */   '))
+
+Template(242, 248, ('/*     * ',
+                    ' * box * ',
+                    ' *******/'))
+
+Template(243, 348, ('/******* ',
+                    ' * box * ',
+                    ' *******/'))
+
+Template(244, 448, ('/* box */',
+                    '/*******/'))
+
+Template(245, 548, ('/*******/',
+                    '/* box */',
+                    '/*******/'))
+
+Template(251, 158, ('/* ',
+                    ' * box',
+                    ' */   '))
+
+#@-node:ekr.20071103093725.37:<< templates >>
+#@-node:ekr.20071103093725.1:rebox.py
+#@-node:ekr.20071103093725:Example 3: defining a rebox tool
+#@-node:ekr.20071103090504:Pymacs docs
+#@-node:ekr.20071104222805:Emacs/Pymacs notes
+#@+node:ekr.20050123161408:ExamDiff files & scripts
+0 leo.py
+1 leoApp.py
+2 leoAtFile.py
+3 leoColor.py
+4 leoCommands.py
+5 leoCompare.py
+6 leoConfig.py
+7 leoFileCommands.py
+8 leoFind.py
+9 leoFrame.py
+10 leoGlobals.py
+11 leoGui.py
+12 leoImport.py
+13 leoKeys.py
+14 leoMenu.py
+15 leoNodes.py
+16 leoPlugins.py
+17 leoTangle.py
+18 leoTkinterComparePanel.py
+19 leoTkinterDialog.py
+20 leoTkinterFind.py
+21 leoTkinterFontPanel.py
+22 leoTkinterFrame.py
+23 leoTkinterGui.py
+24 leoTkinterKeys.py
+25 leoTkinterMenu.py
+26 leoTkinterTree.py
+27 leoUndo.py
+#@nonl
+#@+node:ekr.20050123160215.1:Put all files in alpha order in ExamDiff
+print '-' * 20
+d = []
+
+for p in c.all_positions():
+    s = p.h
+    if s.startswith('@thin'):
+        d.append(s[5:].strip())
+
+d.sort()
+
+for s in d:
+    print s
+
+
+
+#@-node:ekr.20050123160215.1:Put all files in alpha order in ExamDiff
+#@-node:ekr.20050123161408:ExamDiff files & scripts
+#@+node:ekr.20031218072017.365:How to...
+#@+node:ekr.20060208112908:BZR stuff...
+#@+node:ekr.20060331094112:How to generate keys using putty
+To generate a SSH key using PuTTY:
+
+Execute c:\"Program Files"\tortoiseCVS\PUTTYGEN.EXE
+
+Select "SSH2 DSA", within the "Parameters" section.
+
+Click on the "Generate" button. Follow the instruction to move the mouse over
+the blank area of the program in order to create random data used by PUTTYGEN to
+generate secure keys. Key generation will occur once PUTTYGEN has collected
+sufficient random data.
+
+Enter edream@cvs.sourceforge.net for the key comment (depends on what host the
+key is for)
+
+(Omit) Enter the desired passphrase in the "Key passphrase" and "Confirm passphrase"
+fields. If the key will be used for automation of operations (i.e. as part of a
+script), you may choose to omit this step from the key generation process.
+
+Click on the "Save private key" button. Use the resulting dialog to save your
+private key data for future use. You may use a filename such as
+"SourceForge-Shell.ppk" or "SourceForge-CF.ppk". The .ppk extension is used for
+PuTTY Private Key files.
+
+Go to the SSH key posting page on the SourceForge.net site: http://sourceforge.net/account/
+
+Copy your public key data from the "Public key for pasting into OpenSSH
+authorized_keys2 file" section of the PuTTY Key Generator, and paste the key
+data to the provided form on the SourceForge.net site. Click on the "Update"
+button to complete the posting process.
+
+Exit the PuTTY Key Generator (PUTTYGEN).
+
+Key data sync to hosts from the SourceForge.net site occurs on regular
+intervals. Your key data will be synchronized to the designated servers (either
+shell and CVS, or the Compile Farm) after a short delay.
+#@nonl
+#@-node:ekr.20060331094112:How to generate keys using putty
+#@+node:ekr.20060208112908.1:How to check out leo from SourceForge
+The Tortoise cvs params:
+
+:ext:edream@cvs.sourceforge.net:/cvsroot/leo
+
+That is...
+
+Protocol: pserver
+Server: cvs.sourceforge.net
+Repository folder: /cvsroot/leo
+User name: your cvs name
+
+### :pserver:anonymous@cvs.sourceforge.net:/cvsroot/leo
+#@nonl
+#@-node:ekr.20060208112908.1:How to check out leo from SourceForge
+#@+node:ekr.20031218072017.366:How to add and remove files from CVS repository
+use the command line option in the admin menu to do the following:
+
+add leoConfig.py and leoConfig.txt
+	cvs add leoConfig.txt
+	cvs add leoConfig.py
+	(then do commit)
+
+remove readme*.doc
+	remove files from working area (done)
+	cvs remove readme1.doc
+	cvs remove readme2.doc
+	...
+	(then do commit)
+#@nonl
+#@-node:ekr.20031218072017.366:How to add and remove files from CVS repository
+#@+node:ekr.20031218072017.391:How to use CVS branches
+@nocolor
+
+I have a fair bit of expertise on CVS branches. It's late at night, so I don't have time for a long soapbox spiel at the moment. I will try to post something tomorrow. 
+
+The brief picture is: 
+
+* Check out code from CVS at the point you want to create the branch. 
+
+* Make sure none of the files in your sandbox is modified. 
+
+* Create the branch (cvs tag -b branchname). The branch name must start with a letter (upper or lower case) and thereafter can have alphanumeric characters, hyphens, and underscores (no periods or spaces). 
+
+* The branch is created on the repository, but your sandbox is still checked out on the main branch. To check out on the new branch, do "cvs up -r branchname". 
+
+When you want to merge changes back into the main branch, you can use "cvs up -r MAIN" to retrieve the main branch, then "cvs up -j branchname" to merge changes, then "cvs commit" to commit the merged version to the main branch AFTER YOU HAVE VERIFIED IT. 
+
+I would recommend caution with merging because as you have noted, leo files are not well set up for CVS. They don't merge well because of inconsistent sentinel values. 
+
+You may want to look at manually merging changes back into the main branch until leo implements invariant unique (UUID) sentinel indices. 
+
+This will not hurt your ability to use branches, only your ability to automatically merge changes from one branch onto another.
+#@nonl
+#@-node:ekr.20031218072017.391:How to use CVS branches
+#@-node:ekr.20060208112908:BZR stuff...
+#@+node:ekr.20031218072017.367:How to add support for a new language
+@nocolor
+
+- Add new entries in the following Python dictionariues in leoApp.py:
+  self.language_delims_dict, self.language_extension_dict and self.extension_dict
+
+- Add an entry to the languages list in <<configure language-specific settings>>
+
+- Add a list of the keywords of the language to << define colorizer keywords >>
+
+  N.B.: the name of this list must be x_keywords, where x is the entry in language in step a.
+
+- Add any language-specifig code to leoColor.colorizeAnyLanguage.
+  For most languages nothing need be done.
+
+- If the language is case insensitive, add it to the list of
+case_insensitiveLanguages found in  << define global colorizer data >>
+
+- Create the files theLanguage.xml and theLanguage.py file was added to the leo\modes directory.
+  See Chapter 15 of Leo's users guide for full details.
+
+TESTS
+
+- Test the syntax coloring for the new language by using the @language directive.
+
+@color
+#@nonl
+#@-node:ekr.20031218072017.367:How to add support for a new language
+#@+node:ekr.20080814134319.1:How to create and push to a private bzr branch
+@nocolor
+
+C:\leo.repo\trunk>bzr push --use-existing-dir bzr+ssh://edreamleo@bazaar.launchpad.net/~edreamleo/leo-editor/leo-4-5-1
+
+C:\leo.repo\trunk>bzr push --use-existing-dir bzr+ssh://edreamleo@bazaar.launchpad.net/~edreamleo/leo-editor/leo-4-5-1
+
+#@-node:ekr.20080814134319.1:How to create and push to a private bzr branch
+#@+node:ekr.20051203084725:How to expand java .jar files
+- Put whatever.jar in c:\prog
+- cd: c:\prog
+- jar xvf whatever.jar
+#@nonl
+#@-node:ekr.20051203084725:How to expand java .jar files
+#@+node:ekr.20031218072017.384:How to export syntax colored code preserving colors
+Scite has the option to "Export as html" and "export as rtf", and it will be
+full of colour and fonts - and you can define them in properties, so it will be
+the same as during editing.
+#@nonl
+#@-node:ekr.20031218072017.384:How to export syntax colored code preserving colors
+#@+node:ekr.20031218072017.385:How to Increase environment space
+To increase the size of environment space, add the following to config.sys:
+
+shell=C:\windows\command\command.com /p:4096
+
+Notes:
+
+1. The path C:\windows\command\command.com may vary.
+Check you system for the location of command.com.
+
+2. This works for versions of Windows prior to Me.
+On Me you set the registry somehow.
+No information on XP.
+#@nonl
+#@-node:ekr.20031218072017.385:How to Increase environment space
+#@+node:ekr.20051203084725.1:How to install and run jythonShell
+Install:
+
+Put JythonShellEA.jar in c:\prog\JythonShell
+
+(optional) Expand the jar so you can see the code:
+
+jar xvf JythonShellEA.jar
+
+Run:
+
+Here is the contents of jythonShell.bat:
+
+cd c:\prog\jythonShell
+java -cp c:\jython-2.2a1\jython.jar;c:\prog\jythonShell\JythonShellEA2.1.jar org.leo.shell.JythonShell
+#@nonl
+#@-node:ekr.20051203084725.1:How to install and run jythonShell
+#@+node:ekr.20050316092232:How to install jyLeo
+- Unpack the .zip file, placing the result somewhere, say in c:\prog\jyleo-Jan-11-06
+
+- Edit jleo.bat so it refers to jyleo-Jan-11-06.  For example:
+
+rem open jyLeo
+set ARGS= 
+:loop 
+if [%1] == [] goto end 
+set ARGS=%ARGS% %1 
+shift 
+goto loop 
+:end 
+
+cd c:\prog\jyleo-Jan-11-06
+java -jar c:\jython-2.2a1\jython.jar src\leo.py
+#@nonl
+#@+node:ekr.20050716104357:Old instructions
+@nocolor
+
+- put the jyleo-nnn.jar file in c:\prog
+
+- Execute the following command in a console window
+    cd c:\prog
+    jar xvf j-leo-nnn.jar
+
+This creates a folder called j-leo-nnn
+
+- Do the following, or execute jleo.bat
+
+cd c:\prog\j-leo-nnn\src
+java -jar c:\jython22a0\jython.jar leo.py
+
+Note:  at present this gives KeyError: HOME
+
+In leo.py, in computeHomeDir, I changed:
+@color
+
+home = os.getenv('HOME' )#,default=dotDir)
+
+to:
+
+try:
+    home = os.getenv('HOME' )#,default=dotDir)
+except Exception:
+    home = ''
+#@-node:ekr.20050716104357:Old instructions
+#@+node:ekr.20050317153447:jy-Leo install instructions by Paul Paterson
+@killcolor
+
+http://sourceforge.net/forum/message.php?msg_id=3053534
+By: paulpaterson
+
+Very interesting indeed - great work! 
+
+I didn't have Java/Jython installed so for others in the same boat here's what I had to do to get it work on my platform (Win2k). Some of this is in the README but I had to do some extra but I'm not sure why. 
+
+1. Install 1.5 JDK  
+http://java.sun.com/j2se/1.5.0/download.jsp 
+
+2. Install Jython 
+http://www.jython.org/jython22a1.zip 
+
+3. Edit Jython.bat file - the part that calls Java.exe to ... 
+"C:\Program Files\Java\jdk1.5.0_02\jre\bin\java" -cp "C:\Program Files\Java\jdk1.5.0_02\jre\lib";"c:\Apps\Python23\Jython";"C:\Apps\jLeo\j-leo-MAR15\Icons";"C:\Apps\jLeo\j-leo-MAR15\skins";"C:\Apps\jLeo\j-leo-MAR15\src";"C:\Apps\jLeo\j-leo-MAR15\skinimages" -Dpython.home="c:\Apps\Python23\Jython" -jar jython.jar %ARGS% 
+
+Where  
+- Java installed at C:\Program Files\Java\jdk1.5.0_02 
+- Jython at c:\Apps\Python23\Jython 
+- jLeo at C:\Apps\jLeo\j-leo-MAR15 
+
+Change your paths as appropriate! There must be a better way to do this - Java confuses me! 
+
+4. Edit leo.py in jleo/src directory to fix failure to find HOME env variable. 
+
+line 241 becomes ... 
+
+....try:home = os.getenv('HOME' )#,default=dotDir) 
+....except KeyError:home="" 
+
+
+Then, from the Jython install directory ... 
+
+Jython " 
+C:\Apps\jLeo\j-leo-MAR15\src\leo.py" 
+
+Works a treat!  
+
+Paul
+#@-node:ekr.20050317153447:jy-Leo install instructions by Paul Paterson
+#@-node:ekr.20050316092232:How to install jyLeo
+#@+node:ekr.20051129084430:How to install jython
+@nocolor
+
+- Download jython_Release_2_2alpha1.jar and put it anywhere (say on the desktop)
+
+- Double-click the file.  This brings up an installer.  Follow the direction.
+  (I installed to c:\jython-2.2a1
+
+- Using the Control Panel, System, Advanced tab, environment variables,
+  add c:\jython-2.2a1\jython.jar to CLASSPATH (in user variables)
+#@nonl
+#@+node:ekr.20051129084430.1:@url http://www.jython.org/install.html
+#@-node:ekr.20051129084430.1:@url http://www.jython.org/install.html
+#@-node:ekr.20051129084430:How to install jython
+#@+node:ekr.20070623150151:How to make Leo commands undoable
+The chapter commands provide a good example.  In this file, see the node:
+
+Code-->Core classes...-->@thin leoChapters.py-->class chapterController-->Undo
+
+The general plan is this:
+
+1. The command handler calls a **beforeCommand** method before changing the outline.
+
+The beforeCommand method creates a g.Bunch that contains all the information needed to
+restore the outline to its previous state. Typically, the beforeCommand method
+will call c.undoer.createCommonBunch(p), where p is, as usual, c.p.
+
+2. After changing the outline the command handler calls an **afterCommand** method.
+
+This method should take as one argument the g.Bunch returned by the
+beforeCommand method. In the discussion below, denote this bunch by b. The
+afterCommand method adds any information required to redo the operation after
+the operation has been undone.
+
+The afterCommand method also sets b.undoHelper and b.redoHelper to two method
+that actually perform the undo and redo operations. (Actually, the beforeCommand
+method could also set these two entries).
+
+When the afterCommand method has 'filled in' all the entries of b, the
+afterCommand method must call u.pushBead(b). This pushes all the undo
+operation on a stack managed by the Leo's undoer, i.e., c.commands.undoer.
+
+3. The undoer calls the undoHelper and redoHelper methods to perform the actual undo and redo operations.
+
+The undoer handles most of the housekeeping chores related to undo and redo.  All the undoHelper and redoHelper methods have to do is actually alter Leo's outline.
+
+**Note**: the undoer creates an ivar (instance variable) of the *undoer* class for every entry in the bunch b passed as an argument to u.pushBead(b).  For example, suppose u = c.commands.under and that b has ivars 'a','b' and 'c'.  Then, on entry to the undoHelper and the redoHelper the u.a, u.b and u.c ivars will be defined.  This makes it unnecessary for the undoHelper or the redoHelper to 'unpack' b explicitly.
+
+Writing correct undo and redo helpers is usually a bit tricky.  The code is often subtly different from the original code that implements a command.  That just can't be helped.
+
+
+
+
+#@-node:ekr.20070623150151:How to make Leo commands undoable
+#@+node:ekr.20091217112515.6070:How to make the codewise completer work
+@nocolor-node
+
+http://groups.google.com/group/leo-editor/browse_thread/thread/ac3f8789010c882e
+
+Ville's completer is working and very cool, here are instructions for
+making it go.  They're like the instructions Ville gave, only usable ;-)
+
+1. (done) Make sure you have exuberant ctags (not just regular ctags)
+installed.  It's an Ubuntu package, so easy if you're using Ubuntu.
+
+2. (done) Install Ville's python module "codewise".  This is a small module on
+which the Leo plugin relies.
+
+   bzr branch lp:codewise
+   cd codewise
+   sudo python setup.py install
+
+3. (done) You need a recent trunk version of leo to get the plugin which uses
+the above module.
+
+4. (done) Enable the plugin by putting "codewisecompleter.py" on an
+uncommented line in your @enabled-plugins @settings node.
+
+5. On the command line:
+
+if you have an existing ~/.ctags for some reason, and it's nothing you
+need to keep:
+
+  rm ~/.ctags
+
+then
+
+  codewise setup
+  codewise init
+  codewise parse .../path/to/leo/  # assuming you want completion on
+                                   # leo code
+  codewise parse .../some/other/project/
+
+Then, after restarting leo if necessary, type
+
+c.op<Alt-0> in the body editor to find all the c. methods starting
+with 'op' etc.
+
+
+===== Ville's response
+
+Especially the presentation part (QCompleter) needs some care, so you
+can operate it from your keyboard alone. It should probably be moved
+to core (qtgui, perhaps leoQTextEditWIdget), so codewise completer can
+just invoke w.complete(list_of_completions) that will bring up the
+QCompleter popup.
+
+> Then, after restarting leo if necessary, type
+
+> c.op<Alt-0> in the body editor to find all the c. methods starting
+> with 'op' etc.
+
+Also, try the explicit declarations:
+
+# w : SomeClass
+
+w.<alt+0>
+
+And self.<alt+0>
+#@+node:ekr.20091217112515.6069:Others posts
+@nocolor-node
+
+1. codewisecompleter.py now completes by explicit type hints (as seen in
+screenhots). p, c also work, as does 'self'.
+
+self works by scanning for parent headlines looking for "class Foo"
+
+Work remains for presentation part (it's mouse only now) but Edward
+will probably do it :-).
+
+2. > Would codewise work outside of leo, as stand-alone plugin for a text
+> editor?
+
+Yes, currently Leo uses it as an external program ("codewise m
+MyClass" dumps the methods in MyClass to stdout).
+
+Someone just has to write the vim integration plugin (or whatever they
+call it). OTOH, vim already has "pysmell" and the likes that do the
+same thing.
+
+==============
+
+The version of codewise completer that works with Tk is now on trunk.
+#@nonl
+#@-node:ekr.20091217112515.6069:Others posts
+#@+node:ekr.20091217112515.6071:plugin docs
+@nocolor-node
+
+- You need to create ctags file to ~/.leo/tags. Example::
+
+    cd ~/.leo
+    ctags -R /usr/lib/python2.5 ~/leo-editor ~/my-project
+
+- Enter text you want to complete and press alt+0 to show completions
+  (or bind/execute ctags-complete command yourself).
+
+Attempting to complete 'foo->' is useless, but 'foo->ba' will work (provided you
+don't have 2000 functions/methods starting with 'ba'. 'foo->' portion is ignored
+in completion search.
+#@-node:ekr.20091217112515.6071:plugin docs
+#@-node:ekr.20091217112515.6070:How to make the codewise completer work
+#@+node:ekr.20031218072017.386:How to remove cursed newlines: use binary mode
+teknico ( Nicola Larosa ) 
+ RE: Removing '\r' characters?   
+2002-09-16 14:27  
+> I am plowing through old bug reports, and I found the following, from whom 
+> I don't know: 
+
+That's from me, *again*. You are kindly advised to stop forgetting the attribution to all my bug reports. ;^) 
+
+>> - Source files still have the dreaded \r in them. Why don't you switch 
+>> to \n only, once and for all, and live happily ever after? ;^) 
+
+> I sure whould like to do that, and I'm not sure how to do this. All 
+> versions of the read code attempt to remove '\r' characters, and all 
+> versions of the write code write '\n' only for newlines. 
+
+Sorry for being a bit vague, I was talking about the Leo source files themselves. I don't know what you use to edit them, ;^))) but in version 3.6 they still have \r\n as end-of-line. 
+
+If Leo itself does not solve the problem, may I suggest the 
+Tools/scripts/crlf.py script in the Python source distibution? It's nice and simple, and skips binary files, too. That's what I use every time I install a new version of Leo. :^) 
+
+#@+node:ekr.20031218072017.387:The solution
+Under unix, python writes "\n" as "\n"; under windows, it writes it as "\r\n". The unix python interpreter ignores trailing "\r" in python source files. There are no such guarantees for other languages. Unix users should be able to get rid of the cosmetically detrimental "\r" either by running dos2unix on the offending files, or, if they're part of a .leo project, reading them into leo and writing them out again.  
+
+
+By: edream ( Edward K. Ream ) 
+ RE: Removing '\r' characters?   
+2002-09-17 09:34  
+Oh, I see. Thanks very much for this clarification. 
+
+Just to make sure I understand you: the problem with '\r' characters is that: 
+
+1. I am creating LeoPy.leo and LeoDocs.leo on Windows and 
+2. People are then using these files on Linux. 
+
+and the way to remove the '\r' characters: 
+
+1. I could run dos2unix on all distributed files just before committing to CVS or making a final distribution or 
+2. People could, say, do the following: 
+
+Step 1: Read and Save the .leo files, thereby eliminating the '\r' in those files and 
+Step 2: Use the Write @file nodes command on all derived files to clear the '\r' in those files. 
+
+Do you agree so far? 
+
+> Under unix, python writes "\n" as "\n"; under windows, it writes it as "\r\n". 
+
+I am going to see if there is any way to get Python to write a "raw" '\n' to a file. I think there must be. This would solve the problem once and for all. 
+
+Thanks again for this most helpful comment. 
+
+Edward
+#@nonl
+#@-node:ekr.20031218072017.387:The solution
+#@+node:ekr.20031218072017.388:cursed newline answer
+In 2.3 you can open files with the "U" flag and get "universal newline"
+support: 
+
+% python
+Python 2.3a0 (#86, Sep 4 2002, 21:13:00) 
+[GCC 2.96 20000731 (Mandrake Linux 8.1 2.96-0.62mdk)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> f = open("crlf.txt")
+>>> line = f.readline()
+>>> line
+'This is an example of what I have come to call the "cursed newline"
+problem,\r\n'
+>>> f = open("crlf.txt", "rU")
+>>> line = f.readline()
+>>> line
+'This is an example of what I have come to call the "cursed newline" problem,\n'
+
+#@-node:ekr.20031218072017.388:cursed newline answer
+#@+node:ekr.20031218072017.389:cursed newline answer 2
+> You can open the file in 'binary' mode (adding 'b' to the mode string) and
+> the file will contain '\r\n' on both platforms (and any other platforms.)
+
+Nope. Exactly wrong. In 2.2 and those before, when files are opened in
+*text* mode (no "b") then reading them will provide Unix-style line endings
+(newline only). When you open files in binary mode then you see the bytes
+stored in the file.
+
+On Unix systems there's no difference in the contents of a file whether in
+binary or text mode. On Windows a file is shorter by the number of carriage
+returns. On the Mac I have no idea what they do. Probably just carriage
+returns, to be different :-)
+
+2.3 will be a bit more flexible about such mattrers.
+#@-node:ekr.20031218072017.389:cursed newline answer 2
+#@-node:ekr.20031218072017.386:How to remove cursed newlines: use binary mode
+#@+node:ekr.20061023153133:How to run patch
+patch -p1 < patchfile
+#@-node:ekr.20061023153133:How to run patch
+#@+node:ekr.20050510071834:How to use a temp file with pdb
+@killcolor
+
+http://sourceforge.net/forum/message.php?msg_id=3137690
+By: nobody
+
+I dont know if anyone has solved this for regular Leo, but in the JyLeo JythonShell,
+when the user executes a script with Pdb it:
+1. dumps the script in a tmp file system's tmp directory.
+2. Executes pdb based off of that tmp file.
+
+that way you get all the goodness that pdb can offer.
+#@-node:ekr.20050510071834:How to use a temp file with pdb
+#@+node:ekr.20041214135556:How to use Tile
+@nocolor
+https://sourceforge.net/forum/message.php?msg_id=2882718
+By: nobody
+
+if anyone is interested here is some code that Tilefied my Leo instance, its
+does some patching in the LeoGui program.
+
+@color
+
+def createRootWindow(self):
+
+    """Create a hidden Tk root window."""
+    #import Tix
+    self.root = root = Tk.Tk()
+    root.tk.call( 'package', 'require', 'tile' )
+    #root.tk.call( 'namespace', 'import', '-force', 'ttk::*' )
+    root.tk.call( 'namespace', 'import', '-force', 'ttk::scrollbar' )
+    root.tk.call( 'namespace', 'import', '-force', 'ttk::label' )
+    root.tk.call( 'namespace', 'import', '-force', 'ttk::entry' )
+    root.tk.call( 'namespace', 'import', '-force', 'ttk::menu' )
+    root.tk.call( 'namespace', 'import', '-force', 'ttk::button' )
+    root.tk.call( 'namespace', 'import', '-force', 'ttk::frame' )
+    root.tk.call( 'namespace', 'import', '-force', 'ttk::menubutton' )
+    root.tk.call( 'tile::setTheme', 'clam' )
+    #self.root = root = Tix.Tk()
+    root.title("Leo Main Window")
+    root.withdraw()
+
+    self.setDefaultIcon()
+    self.getDefaultConfigFont(g.app.config)
+    self.createGlobalWindows()
+
+    return root
+#@nonl
+#@-node:ekr.20041214135556:How to use Tile
+#@-node:ekr.20031218072017.365:How to...
+#@+node:ekr.20070215183046:IronPython notes
+@nocolor
+
+- IronPython does not accept 'from __future__ import x'
+  I could work around this, but perhaps it is time to abandon Python 2.2.2.
+
+- Amazingly, it is possible to add Python24\Lib to IronPython's path!
+  Almost all of those modules import correct.
+
+- IronPython has troubles with the xml modules.
+  It complains about a missing 'strict' codec.
+
+- IronPython has trouble with the pdb module, so some other way must be found to debug IronPython programs.
+#@nonl
+#@-node:ekr.20070215183046:IronPython notes
+#@+node:ekr.20080114142724:leoGtkNotes
+@nocolor
+
+@all
+#@nonl
+#@+node:ekr.20080112175736: gtk: to do
+gtkGui:
+
+** Rewrite leoKeyEventClass.
+   This should be done by EKR: it is an essential part of all key handline.
+- There is no root ivar in the gtk gui.  Rewrite all code that uses self.root.
+- Rewrite runOpenFileDialog
+- Rewrite runSaveFileDialog
+
+gtkFrame:
+- What is the correct way to close a window?
+- Should there be a separate minibuffer class?
+- Should there be separate files for the log, body, etc.?
+- Should there be smaller methods to create components and make bindings?
+
+gtkFind:
+- Create the find tab.
+
+gtkComparePanel:
+- At present this does not exist.  The compare window is optional.
+
+General:
+- Write unit tests for all new gui code.
+- Unit tests for showFindPanel and openCompareWindow.
+
+#@-node:ekr.20080112175736: gtk: to do
+#@+node:ekr.20080113061130: gtk: what I did
+- Added code to Leo's code to do nothing it the compare panel and stand-alone find panel do not exist.
+#@nonl
+#@-node:ekr.20080113061130: gtk: what I did
+#@-node:ekr.20080114142724:leoGtkNotes
+#@+node:ekr.20050214055018:Mac Notes
+#@+node:ekr.20050221054932:How to make monolithic Leo app on MacOS X
+ @killcolor
+http://sourceforge.net/forum/message.php?msg_id=3007062
+By: jgleeson
+
+Sorry to take so long to reply.  I've been buried in work and haven't kept up
+with some email.
+
+Here's the link to the site where I posted the folder you have:
+<http://homepage.mac.com/jdgleeson/>  It's the small file named "Leo.zip" (23
+KB), not the large file "Leo-4.3-alpha-2.dmg" (20 MB).
+
+I agree that I did not write very clear instructions, beginnng with the first
+step, where I should have also said:  "It is important to use version 1.1.8
+of py2app, which is only available through svn.  The version on the py2app website
+is 1.1.7, which creates buggy Tkinter apps. If you try to use version 1.1.7,
+the Leo app it creates will give you a message saying that Tkinter is not properly
+installed.  Your installation is fine; otherwise you could not have even built
+Leo.app with py2app, because py2app copies the essential parts of Tcl/Tk into
+the application bundle to make the app completely standalone."
+
+I haven't tried intalling the Fink subversion -- I'm using DarwinPorts
+<http://darwinports.opendarwin.org/>.  But there's a simpler alternative than
+DarwinPorts. Metissian releases OS X packages of Subversion clients
+<http://metissian.com/projects/macosx/subversion/>
+
+AFAIK, the command "python setup.py bdist_mpkg --open" only applies to the py2app
+1.1.8 distribution.  By the way, bdist_mpkg is distributed with py2app. It creates
+a package around the setup.py script (more specialized than Platypus).  I don't
+have any experience with bdist_mpkg yet.
+
+'Copy the leo folder into this directory' is horrible. I'm glad you figured
+it out -- I'm not sure I could have.
+
+"python setup.py py2app -a" should be run in the folder with the readme file,
+which also contains the setup.py file that the command refers to.  Most importantly,
+the folder in which this command is run must contain the leo folder -- which
+it does only if you are brilliant enough to decode my instructions.   ;) 
+
+HTH
+
+-John
+#@nonl
+#@-node:ekr.20050221054932:How to make monolithic Leo app on MacOS X
+#@+node:ekr.20050214055018.4:@url http://idisk.mac.com/genthaler-Public/Leo.zip (download)
+#@-node:ekr.20050214055018.4:@url http://idisk.mac.com/genthaler-Public/Leo.zip (download)
+#@+node:ekr.20050214055018.5:@url http://www.wordtech-software.com/leo.html  (Mac Bundle)
+#@-node:ekr.20050214055018.5:@url http://www.wordtech-software.com/leo.html  (Mac Bundle)
+#@+node:ekr.20050513164506:Problems with run script command on Mac x11
+@killcolor
+
+Jon Schull <jschull@softlock.com>  
+Date:  2003/12/30 Tue PM 05:50:51 EST 
+To:  edreamleo@charter.net 
+Subject:  Leo, Mac OS X 10.3, and VPython 
+
+I've been evaluating leo or vpython programming on  Mac OS X 10.3, and 
+have some observations and a suggestion.
+
+Observations:
+- Leo runs under X11 as well as under OS X.
+- My X11 python configuration was created using the recipe at XXX (which enables vpython).
+- The OS X configuration is vanilla MacPython from MacPython.org, along with AquaTclTk batteries included XXX.
+
+In both environments I can run leo under python leo.py and under idle.
+Under OS X we get font smoothing, but we can't run visual python programs (python crashes;  this is a known incompatibility with  MacPython.)
+
+- Under X11 we can run visual python programs like this one
+    #box.py
+    from visual import *
+    box()
+
+And we can even run them under leo (under X11). HOWEVER, when the visual python program is terminated, leo vanishes (leo and the vp program apparently run in the same space)
+
+Under x11, we can keep leo alive by putting the vp program in its own space:
+
+    os.popen3('/sw/bin/python /Users/jis/box.py')
+
+However,  this doesn't let us see the output of stderr and stdout.  
+Those text streams are available...
+
+    def do(cmd='ls'):
+        from os import popen3
+        pIn,pOut,pErr=0,1,2
+        popenResults=popen3(cmd)
+        print popenResults[pOut].read()
+        print popenResults[pErr].read()
+
+    import os	
+    do('/sw/bin/python /Users/jis/box.py')
+
+...but only when the vpython program terminates.
+
+Here's the good news:  if we execute our vp program with 
+/sw/bin/idle.py rather than with python, we get to see the program 
+output in real time (under idle, under X11).
+
+    import os	
+    os.chdir('/sw/lib/python2.3/idlelib')
+    os.popen3('/sw/bin/python idle.py -r /Users/jis/box.py')
+
+#this runs as an executed script in leo, and produces a live idle 
+with real time ongoing output.
+
+Now, while idle is running, leo sits in suspended animation.  But when 
+the vpython program terminates, we are left in idle, and when idle is 
+terminated, leo becomes active again.
+
+It would be even better if leo were not suspended (using os.spawn, 
+perhaps) but the real point is that I would really really like leo's 
+"Execute script" command to execute code this way and spare me having 
+to  hard-write the path to box.py.  It ought to be possible to 
+eliminate os.chdir as well.
+
+------------------
+Jon Schull, Ph.D.
+Associate Professor
+Information Technology
+Rochester Institute of Technology
+schull@digitalgoods.com 585-738-6696
+#@nonl
+#@-node:ekr.20050513164506:Problems with run script command on Mac x11
+#@+node:ekr.20040104162835.8:Linux/Mac notes: Dan Winkler
+#@+node:ekr.20040104162835.13:Fink & aqua
+Yes, fink does have pre-built Pythons, both 2.1 and 2.2.  (If you don't 
+see them it probably means you don't have the right servers listed in 
+your /sw/etc/apt/sources.list file.)  However, the versions of Python 
+you'd get through fink are set up to run under X Windows, which I don't 
+think is what you want.
+
+I think what you want is MacPython which can run Tk programs like Leo 
+under Aqua.  That's what I use these days.
+
+I can tell from your question that you don't understand the following 
+differences between the versions of Python available:
+
+1) The version that comes with OS X is a text only one which doesn't 
+have Tk.  Leo can't run under that.  Also, I hate Apple for including 
+this instead of one that does have Tk and I hope they'll fix it some 
+day.
+
+2) You can get a version of Python from fink with has Tk but which runs 
+under X Windows.  I don't think you want that.
+
+3). You can also get MacPython which has Tk but it's a version of Tk 
+that uses the Aqua windowing system, not X Windows.
+
+So Tk can either be present or not and if it is present it can use 
+either X Windows or Aqua.  You want it present and using Aqua, I think.
+
+
+#@-node:ekr.20040104162835.13:Fink & aqua
+#@+node:ekr.20040104162835.14:Mac, Fink, etc.
+> 1. The python that FC installs is MacPython.  I think that because the
+> MacPython docs talk about Fink.
+
+Nope.  The python installed by FC knows nothing about the Mac.  It 
+thinks it's running on a Unix machine.  And it uses a version of Tk 
+which thinks it's running on a Unix machine.  The window standard on 
+Unix is called X (or X11 or XFree86, all the same thing).  So the main 
+reason to run Leo this way would be to get an idea of how it works for 
+Unix/Linux users.  But when programs run under X, they don't look like 
+Mac programs.  They don't get all those glossy, translucent widgets 
+that Aqua provides.  They really look like they would on a Unix/Linux 
+machine.
+
+Aqua is the native windowing system on Mac.  MacPython is set up to 
+work with it.  Most Mac users will want Leo to work this way.  That's 
+what I do.
+
+>
+>
+> I have the TkTclAquBI (Batteries included) installer.  Is installing 
+> this
+> enough to get Leo to work with Aqua?  Do I have to de-install the
+> present tk stuff that I installed with FC?
+
+Yes, I think that's all I installed to get Tk to work under Aqua.  You 
+don't have to deinstall the FC stuff.  All the FC stuff lives in its 
+own world under /sw and runs under X.  It won't conflict with the Mac 
+world.
+
+#@-node:ekr.20040104162835.14:Mac, Fink, etc.
+#@+node:ekr.20040104162835.15:Double clicking on Linux
+Double-clickable things (i.e. Macintosh applications) are usually 
+actually folders with a name that ends in .app.  The file you found is 
+probably executable only from the command line, not by double clicking 
+it.  So I think if you run it from the command line it will work but 
+will not know about Tk because Apple's version was built without Tk 
+support.
+
+You can also execute the .app programs from the command line by using 
+the open command, so "open foo.app" will do the same thing as double 
+clicking on foo in the finder (the .app extension is suppressed).  The 
+idea behind this is that an application can look like just one opaque 
+icon in the finder but actually have all its resources nicely organized 
+in subfolders.
+#@-node:ekr.20040104162835.15:Double clicking on Linux
+#@-node:ekr.20040104162835.8:Linux/Mac notes: Dan Winkler
+#@-node:ekr.20050214055018:Mac Notes
+#@+node:ekr.20060111112513.1:New jyLeo notes
+@nocolor
+http://sourceforge.net/forum/message.php?msg_id=3516227
+By: nobody
+
+Some highlights:
+* simpler startup:
+jyleo leo.py
+should be sufficient to start it up.
+* new editor colorization
+* the JythonShell is much more powerful and cooler
+* new plugins
+* Chapters support
+* mod_script is in place.
+* dyna-menu was converted.  I guess 'e' will have to judge the conversion.
+* multi-language script support.
+* drag and drop
+* some powerful new editor commands.  Try keyword completing on the language
+in effect.  Say if it is python:
+se(Tab)
+becomes
+self
+
+Some warnings:
+1. Be careful about reading your regular leo files into jyleo and saving them.
+Its quite conceivable that jyleo will write it out to an XML format that regular
+leo can't handle.  Why?  Well jyleo is using an XML library to spit its XML
+out while leo uses a home grown method.  The library can handle leo's XML, but
+Ive seen regular leo not be able to handle jyleo's XML.  Its based around <tag/>
+I believe.
+
+2. If you move jyleo after executing it you will need to clear out your compiled
+py files as the __file__ attribute is hard compiled into the resulting objects.
+Not what we want.  We want it to be set at runtime.  Ive been waiting a long
+time for jython to release again and hopefully fix this, but Im not holding
+my breath anymore.
+
+----------
+Its hard to give this thing a number, I want to call it jyleo2, but jyleo is
+sufficient.  Dependent upon bug reports the next release could be much sooner
+than before, maybe even weeks.  I hope one thing, that the dreaded "I can't
+get it to start" problems are gone.  I took the snapshot and expanded it in
+Windows XP.  Went to the src directory and typed: jython leo.py
+and it started.  That's what I wanted to see.  I didn't have to mess with the
+CLASSPATH or anything.
+
+things needed:
+java 5
+a jython2.2a1 or beyond.  jython2.2a1 is the most recent snapshot.
+
+Beyond bug fixing, I will be planning to add more SwingMacs command as time
+goes along.  But I think most major features are in place.  Of course the 3D
+experiments in the future could change that... :D
+
+A NOTE ON STARTUP TIMES: In my experience it takes awhile for jyleo to start.
+It will take much longer the first time you execute it because the py files
+are being compiled.  Ive haven't been able to figure out what eats the time,
+it may just have a slow startup in the aggregate.  So don't think its not doing
+anything, it probably is.
+
+leouser
+#@nonl
+#@-node:ekr.20060111112513.1:New jyLeo notes
+#@+node:ekr.20031218072017.392:Python Notes...
+#@+node:ekr.20031218072017.398:How to call any Python method from the C API
+In general, everything you can do in Python is accessible through the C API.
+
+	lines = block.split('\n');
+
+> That will be
+
+	lines = PyObject_CallMethod(block, "split", "s", "\n");
+#@-node:ekr.20031218072017.398:How to call any Python method from the C API
+#@+node:ekr.20031218072017.399:How to run Python programs easily on NT,2K,XP
+#@+node:ekr.20031218072017.400:setting the PATHEXT env var
+It is worth noting that NT, Win2K and XP all have an alternative which is
+to add .PY to the PATHEXT environment variable. Then you can run any .PY
+file directly just by typing the name of the script without the extension. 
+
+e.g.
+C:\>set PATHEXT=.COM;.EXE;.BAT;.CMD
+
+C:\>set PATH=%PATH%;c:\python22\tools\Scripts
+
+C:\>google
+'google' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\>set PATHEXT=.COM;.EXE;.BAT;.CMD;.PY
+
+C:\>google
+Usage: C:\python22\tools\Scripts\google.py querystring
+
+C:\>
+#@-node:ekr.20031218072017.400:setting the PATHEXT env var
+#@+node:ekr.20031218072017.401:Yet another Python .bat wrapper
+>> It has a header of just one line. All the ugly stuff is at the end.
+>>
+>> -------------------------------------------------------------------
+>> goto ="python"
+>>
+>> # Python code goes here
+>>
+>> ''' hybrid python/batch footer:
+>> @:="python"
+>> @python.exe %0 %1 %2 %3 %4 %5 %6 %7 %8 %9
+>> @if errorlevel 9009 echo Python may be downloaded from
+>www.python.org/download
+>> @rem '''
+>> -------------------------------------------------------------------
+>>
+>>         Oren
+>>
+>
+
+It's for running python scripts on windows, without having to type:
+
+[<path to python>\]python[.exe] <scriptname> [<arguments>*]
+
+and almost takes the place of the "shabang" line at the top of *nix
+scripts.
+
+#@-node:ekr.20031218072017.401:Yet another Python .bat wrapper
+#@-node:ekr.20031218072017.399:How to run Python programs easily on NT,2K,XP
+#@-node:ekr.20031218072017.392:Python Notes...
+#@+node:ekr.20090501095634.2:rst2leo.py
+# By Kent Tenney
+
+@language python
+@tabwidth -4
+
+#all the allowable underline characters
+# valid_underline_characters = [
+    # '!','"','#','$','%','&',"'",'(',')','*','+',
+    # ',','-','.','/',':',';','<','=','>','?','@',
+    # '[','\\',']','^','_','`','{','|','}','~']
+
+valid_underline_characters = [
+    z for z in "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"]
+
+# print repr(valid_underline_characters)
+# print repr(valid_underline_characters2)
+
+# assert valid_underline_characters == valid_underline_characters2
+
+@others
+#@+node:ekr.20090501095634.4:class ParseReST
+class ParseReST:
+    """Processes a chunks of ReST, creating a list of nodes/sections
+    """
+    @others
+#@+node:ekr.20090501095634.5:__init__
+def __init__(self, input):
+
+    """Initialize document level variables
+    input is a list of strings or a string. 
+    If it's a string, it's split.
+    """
+
+    if type(input) == type('string') or \
+    type(input) == type(u'string'):
+        self.lines = input.split("\n")
+    else:            
+        self.lines = input
+
+    self.index = 0 
+
+    # for each section gather title, contents and underline character
+    # over-under titles are indicated by 
+    # 2 character strings for underline_character
+    # the initial section is root
+    self.section = {'title':'root', 'contents':[], 'underline_character':'root'}
+    # the list of sections
+    self.sections = []
+#@nonl
+#@-node:ekr.20090501095634.5:__init__
+#@+node:ekr.20090501095634.39:_isCharacterLine (old)
+def _isCharacterLine(self):
+    """Determine if the current line consists of only 
+    valid underline characters
+    """
+    line = self.lines[self.index]
+    is_character_line = False
+    if len(line) > 0:
+        if line[0] in valid_underline_characters:
+            c = line[0]
+            for char in line:
+                if char == c:
+                    is_character_line = True
+                else:
+                    is_character_line = False
+                    #get out of the loop
+                    #otherwise error if 1st and last are characters
+                    break
+    else:
+        return False
+    return is_character_line
+
+
+#@-node:ekr.20090501095634.39:_isCharacterLine (old)
+#@+node:ekr.20090501095634.6:_isUnderLine
+def _isUnderLine(self,s):
+
+    """Return True if s consists of only valid underline characters
+    """
+
+    for ch in s:
+        if ch not in valid_underline_characters:
+            return False
+    return True
+#@nonl
+#@-node:ekr.20090501095634.6:_isUnderLine
+#@+node:ekr.20090501095634.7:_isTransition
+def _isTransition(self):
+    """self.index is pointing to a character line
+    if there are blank lines on either side, this is a transition
+    """
+
+    current = self.lines[self.index]
+    prev = self.lines[self.index - 1]
+    next = self.lines[self.index + 1]
+
+    return len(prev) == 0 and len(next) == 0
+
+
+#@-node:ekr.20090501095634.7:_isTransition
+#@+node:ekr.20090501095634.8:_isUnderline
+def _isUnderline(self):
+    """self.index is pointing to a character line 
+    if two lines back is a blank line, the previous line
+    is not longer than this, we have an underline
+    """
+
+    current = self.lines[self.index].strip()
+    prev = self.lines[self.index - 1].strip()
+    prevprev = self.lines[self.index - 2].strip()
+
+
+    return len(prev) > 0 and \
+    len(prev) <= len(current) and \
+    len(prevprev) == 0
+
+
+
+#@-node:ekr.20090501095634.8:_isUnderline
+#@+node:ekr.20090501095634.9:_isUnderOverline
+def _isUnderOverline(self):
+    """self.index is pointing at a character line
+    if there is a line not longer than this
+    followed by a character line like this,
+    we have an UnderOverline
+    """
+
+    current = self.lines[self.index].strip()
+    next = self.lines[self.index + 1].strip()
+    #the last line may be a character line
+    try:
+        nextnext = self.lines[self.index + 2]
+    except IndexError:
+        return False
+
+    return (nextnext == current) and (len(next) > 0) \
+    and len(next) <= len(current)
+
+
+
+#@-node:ekr.20090501095634.9:_isUnderOverline
+#@+node:ekr.20090501095634.10:_isSectionHead
+def _isSectionHead(self):
+    """The current line is a character line,
+    is this a section heading?
+    http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#sections
+    """
+    # save typing with aliases
+    current = self.lines[self.index]
+    prev = self.lines[self.index - 1]
+    next = self.lines[self.index + 1]
+
+    # a transition has a blank line before and after
+    if  self._isTransition():
+        return False
+
+    # underline section heading    
+    if self._isUnderline():
+        # previous to discovering the underline, we appended
+        # the section title to the current section. 
+        # Remove it before closing the section
+        self.section['contents'].pop()
+        self._closeCurrentSection()
+        self.section['underline_character'] = current[0]
+        self.section['title'] = prev
+        # step index past this line
+        self.index += 1
+        return True
+
+    # over-under section heading
+    if self._isUnderOverline():
+        self._closeCurrentSection()
+        self.section['underline_character'] = current[0:2]
+        # leading whitespace is allowed in over under style, remove it
+        self.section['title'] = next.strip()
+        # step index past overline, section title, and underline
+        self.index += 3
+        return True
+
+        raise Exception ("Error in foundSectionHead()")
+
+
+#@-node:ekr.20090501095634.10:_isSectionHead
+#@+node:ekr.20090501095634.11:_closeCurrentSection
+def _closeCurrentSection(self):
+    """We have a section title, which ended the previous
+    section. Add this section to nodes, and start the next
+    """
+    self.sections.append(self.section)
+    self.section = {'title':'', 'contents':[], 'underline_character':''}
+
+
+#@-node:ekr.20090501095634.11:_closeCurrentSection
+#@+node:ekr.20090501095634.12:_insertTitle
+def _insertTitle(self, uc, isSubTitle = False):
+    """Inserting a title consists of merging section[1],
+    the first section, into section[0], the root.
+    This works the same for title and subtitle, since
+    merging title deletes section[1], making the subtitle
+    section[1]
+
+    The 'isSubTitle' parameter differentiates between title and subtitle
+    """    
+    title = self.sections[1]['title']
+
+    if not isSubTitle:
+        self.sections[0]['title'] = title
+
+    # extend the charline and pad the title
+    charline = (len(title) * uc[0]) + (4 * uc[0])
+    title = '  ' + title
+
+    self.sections[0]['contents'].append('')
+    self.sections[0]['contents'].append(charline)
+    self.sections[0]['contents'].append(title)
+    self.sections[0]['contents'].append(charline)
+    self.sections[0]['contents'].append('')
+
+    # append each line, not the list of lines
+    for line in self.sections[1]['contents']:
+        self.sections[0]['contents'].append(line)
+
+    del self.sections[1]
+
+
+
+#@-node:ekr.20090501095634.12:_insertTitle
+#@+node:ekr.20090501095634.13:_fixupSections
+def _fixupSections(self):
+    """Make corrections to the list of sections
+    to reflect the syntax for 'Title' and 'Subtitle'
+
+    If the first section heading is a unique over/under
+    it is a title, and should stay in the root section.
+
+    If the second section heading is a unique over/under
+    it is a subtitle and should remain in the root section.
+    """
+
+    def isUnique(uc, start):
+        index = start
+        while index < len(self.sections):
+            if self.sections[index]['underline_character'] == uc:
+                return False
+            index += 1
+        return True                
+
+
+    # self.sections[0] is root, a special case
+    underline_first = self.sections[1]['underline_character'] 
+    if len(underline_first) > 1:
+        if isUnique(underline_first, 2):
+            # the section head is the document title and must
+            # be added to the root section
+            self._insertTitle(underline_first)
+    if len(self.sections) > 2:
+        underline_second = self.sections[2]['underline_character'] 
+        if len(underline_second) > 1:
+            if isUnique(underline_second, 3):
+                # the section head is the document subtitle and must
+                # be added to the root section
+                self._insertTitle(underline_second, True)
+
+
+
+
+#@-node:ekr.20090501095634.13:_fixupSections
+#@+node:ekr.20090501095634.14:processLines
+def processLines(self):
+    """Loop through the lines of ReST input, building a list
+    of sections. A section consists of::
+        -title
+        -contents
+        -underline_character
+    """
+    line_count = len(self.lines)
+
+    while self.index < line_count:
+        if self._isUnderLine(s) and self._isSectionHead(s):
+            # isCharacterLine() and isSectionHead() do all the housekeeping
+            # required. This doesn't look like good style, but I'm not
+            # sure how this should be written.
+            pass
+        else:        
+            self.section['contents'].append(self.lines[self.index])
+            self.index += 1
+
+    self._closeCurrentSection()
+    if len(self.sections) > 1:
+        if len(self.sections[0]['underline_character']) > 1:
+            self._fixupSections()
+    return self.sections
+#@nonl
+#@-node:ekr.20090501095634.14:processLines
+#@-node:ekr.20090501095634.4:class ParseReST
+#@+node:ekr.20090501095634.15:class BuildLeo
+class BuildLeo:
+    """Create a tree of nodes in a Leo file using a list of sections"""
+    @others
+#@+node:ekr.20090501095634.16:__init__
+
+def __init__(self, nodes, position, commander):
+    """the nodes paramater is returned by ParseReST.processLines
+    It is a list of dictionaries consisting of 
+    underline_character, title, contents 
+    """
+    self.nodes = nodes
+    self.p = position
+    self.c = commander #position.c
+    #self.g = leoGlobals
+
+    # self.levels is a dictionary, the keys
+    # are underline_character and the value is the
+    # last Leo node created at that level
+    self.levels = {}
+
+    # self.underline_characters is a list of the underline characters
+    # in the order of levels. The first is always 'root'
+    self.underline_characters = ['root',]
+
+#@-node:ekr.20090501095634.16:__init__
+#@+node:ekr.20090501095634.17:_setRootNodeHeadString
+def _setRootNodeHeadString(self, rootstring):
+    """
+    """
+
+    rst3_config = getConfig(rootstring, '.. rst3:')
+    rst3_filename = None
+
+    if rst3_config:
+        rst3_filename = getConfig(rst3_config, 'filename:')
+
+    if rst3_filename:
+        return '@rst %s' % rst3_filename
+
+
+
+#@-node:ekr.20090501095634.17:_setRootNodeHeadString
+#@+node:ekr.20090501095634.18:_dedent
+def _dedent(self, text):
+    """
+    """
+    current = self.p
+    d = self.g.scanDirectives(self.c,current) # Support @tab_width directive properly.
+    tab_width = d.get("tabwidth",self.c.tab_width)
+    result = [] ; changed = False
+
+    for line in text:
+        i, width = self.g.skip_leading_ws_with_indent(line,0,tab_width)
+        s = self.g.computeLeadingWhitespace(width-abs(tab_width),tab_width) + line[i:]
+        if s != line: changed = True
+        result.append(s)
+
+    return result    
+
+
+#@-node:ekr.20090501095634.18:_dedent
+#@+node:ekr.20090501095634.19:_fixCodeNodes
+def _fixCodeNodes(self):
+    """The main block loops through nodes calling isCodeNode on each
+    node. isCodeNode finds and removes markup added to code nodes
+    by Leo.
+    """
+    code_node_tag = '**code**:'
+    code_block_tag = '.. code-block::'
+    class_code_tag = '.. class:: code'
+    comment_tag = '..'
+    literal_block_tag = '::'
+
+    tags = [code_node_tag, code_block_tag, class_code_tag, 
+            comment_tag, literal_block_tag]
+
+
+    def isCodeNode(data, index):
+        """
+        """
+        is_code_node = False
+        index = 0
+        num_lines = len(data)
+
+        while index < num_lines:
+            line = data[index]
+            if line.find(code_node_tag) > -1 or \
+            line.find(code_block_tag) > -1:
+                is_code_node = True
+            index += 1
+
+        return is_code_node
+
+    index = 0
+    num_nodes = len(self.nodes)
+    while index < num_nodes:
+        data = self.nodes[index]['contents']
+        is_code_node = isCodeNode(data, index)
+        if is_code_node:
+            data = self._dedent(data)
+            data = data[8:]
+            self.nodes[index]['contents'] = data
+        index += 1
+
+
+
+#@-node:ekr.20090501095634.19:_fixCodeNodes
+#@+node:ekr.20090501095634.20:_contents2String
+def _contents2String(self):
+    """nodes[index]['contents'] is a list of string,
+    all the processing required is line oriented.
+    Leo requires a string for bodyString.
+    """
+
+    index = 0
+    num_nodes = len(self.nodes)
+    while index < num_nodes:
+        list = self.nodes[index]['contents']
+        string = '\n'.join(list)
+        self.nodes[index]['contents'] = string
+        index += 1
+
+
+
+#@-node:ekr.20090501095634.20:_contents2String
+#@+node:ekr.20090501095634.21:processNodes
+def processNodes(self):
+    """Step through the list of nodes created by
+    parseReST creating the appropriate Leo nodes
+    """
+
+    self._fixCodeNodes()    
+    self._contents2String()
+
+    # Create root node as a sibling of current node
+    # Creating a new node provides crude versioning, 
+    # and avoids issues of replacing the existing tree with
+    # the one being downloaded
+    root = self.p.insertAfter()
+    self.levels['root'] = root
+
+    rootstring = self.nodes[0]['contents']
+    roottitle = self._setRootNodeHeadString(rootstring)
+    if not roottitle:
+        roottitle = self.nodes[0]['title']
+    root.setBodyString(rootstring)
+    root.setHeadString(roottitle)
+
+    # step through the rest of the nodes
+    index = 1
+    while index < len(self.nodes):
+        uc = self.nodes[index]['underline_character']
+        title = self.nodes[index]['title']
+        contents = self.nodes[index]['contents']
+
+        # this level exists, insert the node
+        if self.levels.has_key(uc):
+            # get parent of this node
+            parent_index = self.underline_characters.index(uc) - 1
+            parent_uc = self.underline_characters[parent_index]
+            current = self.levels[parent_uc].insertAsLastChild()
+            self.levels[uc] = current
+            current.setHeadString(title)
+            current.setBodyString(contents)
+
+        # if this is the first time this uc is encountered
+        # it means we are creating a new sublevel 
+        # create the level then insert the node
+        else:
+            # if we are descending to a new level, the parent 
+            # underline character is currently the last one
+            parent = self.levels[self.underline_characters[-1] ]
+            self.underline_characters.append(uc)
+            current = parent.insertAsLastChild()
+            self.levels[uc]  = current
+            current.setHeadString(title)
+            current.setBodyString(contents)
+
+        index += 1
+
+
+
+
+
+
+
+
+
+#@-node:ekr.20090501095634.21:processNodes
+#@-node:ekr.20090501095634.15:class BuildLeo
+#@+node:ekr.20090501095634.22:class ZWiki
+class ZWiki:
+    @others
+#@+node:ekr.20090501095634.23:__init__
+def __init__ (self, url, auth = None, cookie = None, create = False):
+    """ZWiki init
+    """
+
+    # create a Browser instance
+    self.auth = auth 
+    self.cookie = cookie  
+    self.create = create 
+    self.url = url
+    self._parseURL()
+    self.browser = self.Browser()
+    self._addHeaders()
+
+
+
+
+#@-node:ekr.20090501095634.23:__init__
+#@+node:ekr.20090501095634.24:_addHeaders
+def _addHeaders(self):
+    """
+    """
+
+    authorized = False
+    if self.auth:
+        self.browser.addHeader('Authorization', 'Basic %s' % self.auth)
+        authorized = True
+    if self.cookie:
+        self.browser.addHeader('Cookie', self.cookie)
+        authorized = True
+
+    if not authorized:
+        print "You must set either Authorization or User Cookie"
+        raise "Not Authorized!"
+
+
+
+#@-node:ekr.20090501095634.24:_addHeaders
+#@+node:ekr.20090501095634.25:_string2DateTime
+def _string2DateTime(self, s):
+    """Convert the string used by ZWiki ThePage/lastEditTime
+    to a datetime.datetime instance
+    """
+
+    import datetime, pytz
+
+    date, time, tzone = s.split()
+    date = date.split('/')
+    time = time.split(':')
+    tz = pytz.timezone(tzone)
+
+    web_tzone = pytz.timezone(tzone)
+    dt = datetime.datetime(int(date[0]), int(date[1]), int(date[2]),
+                            int(time[0]), int(time[1]), int(time[2]),
+                            tzinfo = tz)
+    return dt
+
+
+
+
+#@-node:ekr.20090501095634.25:_string2DateTime
+#@+node:ekr.20090501095634.26:_parseURL
+def _parseURL(self):
+    """Get self.page and self.base from the url,
+    assemble url's for editform, page create and lastEditTime
+    """
+    url = self.url
+    self.page = url[url.rfind('/')+1:]
+    self.base = url[0:url.rfind('/')]
+    self.url_edit ='%s/%s/editform' % (self.base,self.page)
+    self.url_create = '%s/FrontPage/editform?page=%s' % (self.base, self.page)
+    self.url_lastEditTime = '%s/lastEditTime' % url
+    self.url_manage = '%s/manage' % url
+    self.url_createFile = '%s/manage_addProduct/OFSP/fileAdd' % self.base 
+
+
+
+
+
+
+#@-node:ekr.20090501095634.26:_parseURL
+#@+node:ekr.20090501095634.27:_createFile
+def _createFile(self):
+    """
+    """
+
+    form_index = 0        
+    id_name = 'id'
+    submit_name = 'submit'
+
+    self.browser.open(self.url_createFile)
+    form0 = self.browser.getForm(index = form_index)
+    id_field = form0.getControl(name = id_name)
+    submit_field = form0.getControl(name = submit_name)
+
+    id_field.value = self.page
+    submit_field.click()
+
+
+
+
+
+#@-node:ekr.20090501095634.27:_createFile
+#@+node:ekr.20090501095634.28:getLastEditTime
+def getLastEditTime(self):
+    """Return the contents of page/lastEditTime
+    """
+
+    self.browser.open(self.url_lastEditTime)
+    return self.browser.contents
+
+
+#@-node:ekr.20090501095634.28:getLastEditTime
+#@+node:ekr.20090501095634.29:putReST
+def putReST(self, data):
+    """
+    """
+
+    self._addHeaders()
+    try:
+        self.browser.open(self.url_edit)
+    # TODO figure out why 
+    # except HTPPError:
+    # results in
+    # # NameError: name 'HTTTPError' is not defined
+    except : 
+        if self.create:
+            self.browser.open(self.url_create)
+        else:
+            raise "The page does not exist, and 'create' is not configured"
+
+    form_index = 0        
+    textarea_name = 'text'
+    save_name = "edit:method"
+
+    form = self.browser.getForm(index = form_index)
+    textarea = form.getControl(name=textarea_name)
+    save = form.getControl(name=save_name)
+    if type(data) != type("string"):
+        data = '\n'.join(data)
+    textarea.value = data
+    save.click()
+
+
+
+
+#@-node:ekr.20090501095634.29:putReST
+#@+node:ekr.20090501095634.30:getReST
+def getReST(self):
+    """
+    Get the contents of the text form on ThePage/editform
+
+    return contents 
+    """
+
+    self._addHeaders()
+    response = self.browser.open(self.url_edit)
+
+    form_index = 0        
+    textarea_name = 'text'
+    save_name = "edit:method"
+
+    form = self.browser.getForm(index = form_index)
+    textarea = form.getControl(name=textarea_name)
+    self.contents = textarea.value
+    return self.contents
+
+
+
+
+#@-node:ekr.20090501095634.30:getReST
+#@+node:ekr.20090501095634.31:putFile
+def putFile(self, data):
+    """Upload a file to a ZWiki.
+
+    Especially css.
+    This version is pasting into a textarea, so it's only good for text files
+    """
+    if not self.auth:
+        raise "you must have manage authentication to use putFile()"
+    try:
+        self.browser.open(self.url_manage)
+    except:
+        if not self.create:
+            raise "You must set @create_page = True"
+        else:
+            self._createFile()        
+
+    self.browser.open(self.url_manage)
+    form_index = 0        
+    textarea_name = 'filedata:text'
+    save_name = 'manage_edit:method'
+
+    form = self.browser.getForm(index = form_index)
+    textarea = form.getControl(name = textarea_name)
+    save = form.getControl(name = save_name)
+
+    if type(data) != type("string"):
+        data = '\n'.join(data)
+
+    textarea.value = data
+    save.click()
+
+
+
+#@-node:ekr.20090501095634.31:putFile
+#@+node:ekr.20090501095634.32:getFile
+def getFile(self):
+    """
+    """
+
+    if not self.auth:
+        raise "you must have manage authentication to use putFile()"
+
+    form_index = 0        
+    textarea_name = 'filedata:text'
+    save_name = 'manage_edit:method'
+
+    self.browser.open(self.url_manage)
+
+    form = self.browser.getForm(index = form_index)
+    textarea = form.getControl(name = textarea_name)
+    save = form.getControl(name = save_name)
+
+    data = textarea.value
+    return data
+
+
+
+
+
+#@-node:ekr.20090501095634.32:getFile
+#@-node:ekr.20090501095634.22:class ZWiki
+#@+node:ekr.20090501095634.33:class Button
+class Button:
+    """Wrapper for rst2leo 'upload' and 'download' buttons
+    """
+    @others
+#@+node:ekr.20090501095634.34:__init__
+
+
+def __init__(self, position, commander, leoGlobals):
+    """
+    """
+
+    self.p = position
+    self.c = commander
+    self.g = leoGlobals
+
+    self.body = self.p.bodyString().split('\n')
+    self.head = self.p.headString()
+
+    self.url = getConfig(self.body, '.. url:')
+    auth_key = getConfig(self.body, '.. auth:')
+    self.auth = self.c.config.getString(auth_key)
+    cookie_key = getConfig(self.body, '.. cookie:')
+    self.cookie = self.c.config.getString(cookie_key)
+    self.create = self.c.config.getBool('create_page')
+
+
+
+
+#@-node:ekr.20090501095634.34:__init__
+#@+node:ekr.20090501095634.35:_stripCodeMarkers
+def _stripCodeMarkers(self, data):
+    """@data is a string containing the ReST version of the Leo node
+    convert to list for processing to remove the **code** markers
+    added by the rst3 plugin, return as a string.
+    """
+
+    data = data.split('\n')
+    fixed_data = []
+    for line in data:
+        if line.strip() != '**code**:':
+            fixed_data.append(line)
+
+
+    return '\n'.join(fixed_data)
+
+
+
+#@-node:ekr.20090501095634.35:_stripCodeMarkers
+#@+node:ekr.20090501095634.36:upload
+def upload(self):
+    """
+    """
+    p = self.p
+    c = self.c
+    g = self.g
+
+    # uploading type = ReST
+    if p.headString().startswith('@rst'):
+        g.es("Uploading ReST")
+        # activate rst3 plugin, get ReST version of this node tree
+        import leoPlugins
+        rst3 = leoPlugins.getPluginModule('rst3')
+        # disable SilverCity for now
+        # download only strips non-SilverCity header inserts
+        rst3.SilverCity = None
+        controller = rst3.controllers.get(c)
+        for p in p.self_and_parents_iter():
+            if p.headString().startswith('@rst '):
+                controller.processTree(p)
+        data = controller.source
+
+        data = self._stripCodeMarkers(data)
+
+        z = ZWiki(self.url, self.auth, self.cookie, self.create)
+        z.putReST(data)
+        g.es('Upload of %s successful' % self.url)
+
+    # css files have the URL in the headline    
+    elif self.head.lower().find('.css') > -1:
+        g.es("Uploading file type")
+        url = self.head.strip()
+        z = ZWiki(url, self.auth, self.cookie, self.create)
+        z.putFile(self.body)
+        g.es('Upload of %s successful' % self.url)
+
+    else:
+        g.es('rst2leo currently only supports ReST and .css files')    
+
+
+
+
+
+#@-node:ekr.20090501095634.36:upload
+#@+node:ekr.20090501095634.37:download
+def download(self):
+    """
+    """
+    p = self.p
+    c = self.c
+    g = self.g
+
+    if p.headString().startswith('@rst'):
+        z = ZWiki(self.url, self.auth, self.cookie)
+        data = z.getReST()
+        parsed = ParseReST(data)
+        sections = parsed.processLines()
+        nodes = BuildLeo(sections, p, self.g)
+        nodes.processNodes()
+        c.redraw() 
+        g.es('Download of %s successful' % self.url)
+
+    elif self.head.lower().find('.css') > -1:
+        self.url = self.head.strip()
+        z = ZWiki(self.url, self.auth, self.cookie)
+        data = z.getFile()
+        p.setBodyString(data)
+        g.es('Download of %s successful' % self.url)
+    else:
+        g.es('rst2leo currently only supports ReST and .css files')
+
+
+
+
+
+
+#@-node:ekr.20090501095634.37:download
+#@-node:ekr.20090501095634.33:class Button
+#@+node:ekr.20090501095634.38:getConfig
+def getConfig(text, tag):
+    """Utility method to retrieve config data
+
+    @text is a string or list of strings
+    @tag and it's value must begin, and be alone on, a line.
+    """
+
+    # if string or unicode,  convert to list
+    if type(text) == type("")\
+        or type(text) == type(u""):
+
+        text = text.split("\n")
+
+    for line in text:
+        if line.find(tag) > -1:
+            start = len(tag)
+            return line[start:].strip()
+
+
+
+
+
+
+
+
+
+#@-node:ekr.20090501095634.38:getConfig
+#@-node:ekr.20090501095634.2:rst2leo.py
+#@+node:ekr.20070308062440:Thread notes
+#@+node:ekr.20070308062440.1:Posting 2
+On 2/26/07, Edward Ream <edreamleo@charter.net> wrote:
+
+> threads will swap after sys.getcheckinterval() bytecodes have been
+> processed for that thread.
+
+Many thanks for this detailed summary.  I think this is the guarantee I need
+a) to experiment with threads and b) to fiddle with settings should that 
+appear to be necessary.
+
+Just be careful.  Test your assumptions before you rely on them, especially regarding threads.  Generally threading is seen as a "hard" problem.  If you want to help make them easier, use Queues to handle inter-thread communication. 
+
+
+> you can use a technique known as 'cooperative multithreading with 
+> generators'.
+
+Googling this leads directly to an entry in the Python Cookbook.  The site
+is down at present.  I'll study this entry when it's back up.
+
+The basic idea is to have each task be a generator, with each generator giving up control after some amount of work.  Here's a variant of the recipe in the cookbook... 
+
+ - Josiah
+
+import collections
+
+tasks = collections.deque()
+
+def busy():
+    while 1:
+        yield None
+
+def delay(v):
+    import time
+    while 1:
+        time.sleep(v)
+        yield None 
+
+def xpasses(x):
+    while x > 0:
+        x -= 1
+        yield None
+
+def runtasks():
+    while 1:
+        task = tasks.popleft()
+        try:
+            task.next()
+        except StopIteration: 
+            pass
+        else:
+            tasks.append(task)
+#@nonl
+#@-node:ekr.20070308062440.1:Posting 2
+#@-node:ekr.20070308062440:Thread notes
+#@+node:ekr.20050306070535:Tk Notes
+@killcolor
+#@nonl
+#@+node:ekr.20050306070535.3:How to detect changes in text
+http://sourceforge.net/forum/message.php?msg_id=1864564
+By: btheado
+
+WAS:RE: Leo 3.10 comments
+edream wrote:
+
+>This is due to apparent glitches in the Tk event dispatching. The problem is
+that pressing a control or alt or shift key _all by themselves_ will generate
+keypress events that are passed on to Leo's key handlers
+
+This should be easy to make simpler--just bind an empty script to <Alt-KeyPress>,
+<Shift-KeyPress>, etc.  Tk chooses the most specific event it can find, so the
+more general <KeyPress> handler will not fire.
+
+On a broader note, when programming the text widget in Tcl/Tk, watching key
+events is not the easiest way to detect changes in the text.  The only way the
+text in a text widget can change is if either the delete or the insert subcommands
+(methods) are called.  Any keypresses that end up changing text will have called
+one of these subcommands.
+
+So the simplest way to detect changes is to just intercept the calls to insert
+and delete.  In Tcl/Tk intercepting these calls is pretty straightforward. 
+I don't know if the same is true in Tkinter.
+
+Also note the text widget in Tk8.4 (http://www.tcl.tk/man/tcl8.4/TkCmd/text.htm#M72)
+has a built-in way of seeing if the text has changed
+
+Brian Theado
+#@nonl
+#@-node:ekr.20050306070535.3:How to detect changes in text
+#@-node:ekr.20050306070535:Tk Notes
+#@-node:ekr.20091218120633.6300:Other notes
+#@+node:ekr.20031218072017.434:Unused code
+@ignore
+@language python
+@color
+#@nonl
+#@+node:ekr.20050920084036.207:queryReplaceCommandsClass (limited to single node)
+class queryReplaceCommandsClass (baseEditCommandsClass):
+
+    '''A class to handle query replace commands.'''
+
+    @others
+#@+node:ekr.20050920084036.208: ctor & init
+def __init__ (self,c):
+
+    baseEditCommandsClass.__init__(self,c) # init the base class.
+    self.regexp = False # True: do query-replace-regexp.  Set in stateHandler.
+
+def init (self):
+
+    self.qQ = None
+    self.qR = None
+    self.replaced = 0 # The number of replacements.
+#@-node:ekr.20050920084036.208: ctor & init
+#@+node:ekr.20050920084036.209: getPublicCommands
+def getPublicCommands (self):
+
+    return {
+        'query-replace':        self.queryReplace,
+        'query-replace-regex':  self.queryReplaceRegex,
+    }
+#@-node:ekr.20050920084036.209: getPublicCommands
+#@+node:ekr.20050920084036.210:Entry points
+def queryReplace (self,event):
+
+    '''Interactively find and replace text.
+    This is not recommended: Leo's other find and change commands are more capable.'''
+    self.regexp = False
+    self.stateHandler(event)
+
+def queryReplaceRegex (self,event):
+    '''Interactively find and replace text using regular expressions.
+    This is not recommended: Leo's other find and change commands are more capable.'''
+    self.regexp = True
+    self.stateHandler(event)
+#@-node:ekr.20050920084036.210:Entry points
+#@+node:ekr.20051005151838:Helpers
+#@+node:ekr.20050920084036.212:doOneReplace
+def doOneReplace (self,event):
+
+    w = self.editWidget(event)
+    if not w: return
+
+    i = w.tag_ranges('qR')
+    w.delete(i[0],i[1])
+    ins = w.getInsertPoint()
+    w.insert(ins,self.qR)
+    self.replaced += 1
+#@-node:ekr.20050920084036.212:doOneReplace
+#@+node:ekr.20050920084036.219:findNextMatch (query-replace)
+def findNextMatch (self,event):
+
+    '''Find the next match and select it.
+    Return True if a match was found.
+    Otherwise, call quitSearch and return False.'''
+
+    k = self.k
+    w = self.editWidget(event)
+    if not w: return
+
+    if g.app.gui.guiName() != 'tkinter':
+        return g.es('command not ready yet',color='blue')
+
+    w.tag_delete('qR')
+    if self.regexp:
+        << handle regexp >>
+    else:
+        << handle plain search >>
+#@+node:ekr.20051005155611:<< handle regexp >>
+try:
+    regex = re.compile(self.qQ)
+except Exception:
+    self.quitSearch(event,'Illegal regular expression')
+    return False
+
+i = w.getInsertPoint()
+txt = w.get(i,'end')
+match = regex.search(txt)
+
+if match:
+    start = match.start()
+    end = match.end()
+    length = end - start
+    i = w.getInsertPoint()
+    w.setInsertPoint(i+start)
+    w.tag_add('qR','insert','insert +%sc' % length)
+    w.tag_config('qR',background='lightblue')
+    i = w.getInsertPoint()
+    txt = w.get(i,i+length)
+    return True
+else:
+    self.quitSearch(event)
+    return False
+#@-node:ekr.20051005155611:<< handle regexp >>
+#@+node:ekr.20051005160923:<< handle plain search >> (tag_add & tag_config) LATER
+i = w.search(self.qQ,'insert',stopindex='end')
+
+if i:
+    w.setInsertPoint(i)
+    w.tag_add('qR','insert','insert +%sc' % len(self.qQ))
+    w.tag_config('qR',background='lightblue')
+    return True
+else:
+    self.quitSearch(event)
+    return False
+#@-node:ekr.20051005160923:<< handle plain search >> (tag_add & tag_config) LATER
+#@-node:ekr.20050920084036.219:findNextMatch (query-replace)
+#@+node:ekr.20050920084036.211:getUserResponse
+def getUserResponse (self,event):
+
+    w = self.editWidget(event)
+    if not w or not hasattr(event,'keysym'): return
+
+    # g.trace(event.keysym)
+    if event.keysym == 'y':
+        self.doOneReplace(event)
+        if not self.findNextMatch(event):
+            self.quitSearch(event)
+    elif event.keysym in ('q','Return'):
+        self.quitSearch(event)
+    elif event.keysym == '!':
+        while self.findNextMatch(event):
+            self.doOneReplace(event)
+    elif event.keysym in ('n','Delete'):
+        # Skip over the present match.
+        i = w.getInsertPoint()
+        w.setInsertPoint(i + len(self.qQ))
+        if not self.findNextMatch(event):
+            self.quitSearch(event)
+
+    w.seeInsertPoint()
+#@-node:ekr.20050920084036.211:getUserResponse
+#@+node:ekr.20050920084036.220:quitSearch
+def quitSearch (self,event,message=None):
+
+    k = self.k
+    w = self.editWidget(event)
+    if not w: return
+
+    w.tag_delete('qR')
+    k.clearState()
+    if message is None:
+        message = 'Replaced %d occurences' % self.replaced
+    k.setLabelGrey(message)
+#@-node:ekr.20050920084036.220:quitSearch
+#@+node:ekr.20050920084036.215:stateHandler
+def stateHandler (self,event):
+
+    k = self.k ; state = k.getState('query-replace')
+
+    prompt = g.choose(self.regexp,'Query replace regexp','Query replace')
+
+    if state == 0: # Get the first arg.
+        self.init()
+        k.setLabelBlue(prompt + ': ',protect=True)
+        k.getArg(event,'query-replace',1,self.stateHandler)
+    elif state == 1: # Get the second arg.
+        self.qQ = k.arg
+        if len(k.arg) > 0:
+            prompt = '%s %s with: ' % (prompt,k.arg)
+            k.setLabelBlue(prompt)
+            k.getArg(event,'query-replace',2,self.stateHandler)
+        else:
+            k.resetLabel()
+            k.clearState()
+    elif state == 2: # Set the prompt and find the first match.
+        self.qR = k.arg # Null replacement arg is ok.
+        k.setLabelBlue('Query replacing %s with %s\n' % (self.qQ,self.qR) +
+            'y: replace, (n or Delete): skip, !: replace all, (q or Return): quit',
+            protect=True)
+        k.setState('query-replace',3,self.stateHandler)
+        self.findNextMatch(event)
+    elif state == 3:
+        self.getUserResponse(event)
+#@-node:ekr.20050920084036.215:stateHandler
+#@-node:ekr.20051005151838:Helpers
+#@-node:ekr.20050920084036.207:queryReplaceCommandsClass (limited to single node)
+#@-node:ekr.20031218072017.434:Unused code
+#@+node:ekr.20090202064534.4:Your mission, should you choose to accept it
+#@+node:ekr.20100223100750.5843:Original post by Robin Dunn
+@nocolor-node
+
+Here are the emacs features that I use very often that any editor would
+need to have in order for me to switch.  I've seen some editors with
+some of these, but none with all unless it is an emacs clone.  I'll
+leave out the obvious things like platform independence, good syntax
+highlighting, calltips or auto-completion.  Also, these features are
+just dealing with the code editor portion of the app, if it is more than
+that (like a full IDE) then some of these things may or may not apply to
+the non code editor parts:
+
+* (done) Python should be just one of the languages that this editor supports,
+not the primary target.  I spend as much time in C/C++ as I do Python,
+and my editor of choice needs to help me with C/C++ coding just as much
+as it does with Python.  So some sort of support for calltips and
+auto-completion would be marvelous, and also being able to act as a
+front-end for gdb since I currently use emacs for that most of the time.
+
+* (done) Absolutely every feature or action must be able to be done with just
+the keyboard.  Moving the hand back and forth to the mouse wastes time,
+breaks concentration and contributes to RSI.  Multi-key sequences are
+fine as long as they are grouped in a logical fashion.  For example in
+emacs all of the version control features are accessible via the
+Ctrl-x,v sequence plus one more letter.
+
+* (done) Incremental search, both forward and reverse, and wrapping around
+after you've reached the end or the beginning of the document.  I like
+to have the same key to start the search and also do a search-next after
+you've typed all the characters you are searching for, and also to have
+backspace go back one search position and/or remove one character from
+the search text.
+
+* (done) Multiple top level windows, and able to show any buffer in any TLW,
+including those that are already displayed in another TLW.  Of course
+there should be key-bindings available for opening a new TLW, cycling
+forward and backward through the buffer list, and a way to select a
+buffer from a popup list of buffer/file names.
+
+* (to be improved) The Kill-Ring.  For those of you that have never used an emacs-like
+editor it works like this:  There is a collection of the N previous
+blocks of text that have been cut or copied (in emacs 'cut' == 'kill'
+more or less)  When I do a yank (paste) it uses the last thing put in
+the kill-ring.  If I then immediately use another key-binding then it
+replaces that pasted text with the next item in the kill ring, and so on
+until I eventually wrap around get back to the first one in the ring, or
+I do some other command or move the cursor somewhere else.
+
+* (done) Registers.  A text snippet can be copied into a register, which is
+like the kill ring except you refer to each one by name, where the names
+are 'a' through 'z'.  You can also append to a register that already has
+text in it, and you can paste the contents of a register into the
+document at the current cursor location.
+
+* (done) Able to have selections be either a stream of characters or a
+rectangle.  A stream selection is like what you have in all text
+editors, it starts from position a on line N and continues forward or
+back to position b on line M and includes all the characters in between.
+
+  A rectangle selection is all the characters between position a and b
+on lines N to M.  In other words, it has width and height and it might
+be something like positions 5 through 10 on lines 20 to 25.  Cutting or
+deleting a rectangle removes the text in the rectangle and shifts any
+text to the right of the rectangle over.  It does not remove any lines
+although they may end up being empty.  Pasting a rectangle inserts the
+new text with the upper-left of the rectangle at the current cursor
+position, shifts existing text to the right if needed, and fills with
+spaces on the left if a line affected by the paste is not long enough.
+New lines are not added unless the file needs to be extended to
+accommodate the rectangle paste.  Rectangles can also be put into registers.
+
+* (to be improved) Good keystroke macro recording and the ability to save and load
+keystroke macros, and the ability to assign a key-binding to a saved
+recorded macro. Any time I need to make the same edits to a bunch of
+lines or groups of lines I'll record doing it on the first one including
+the keystrokes needed to reposition for the next line, and then stop
+recording and then it's just one keystroke to replay the keystrokes for
+every other line that needs it done.  I record, use and throw away up to
+a dozen or so macros per day.
+
+* (done, and better than asserted) If you must have a toolbar make it optional
+and keep it simple. Toolbars require the mouse and the goal is to keep the hand
+off the mouse as much as possible.
+
+* (done) Similarly, avoid using popup dialogs whenever possible.  This includes
+things like the file dialog.  I don't mind seeing the file dialog if I
+select a menu item, because most likely my hand is already on the mouse,
+but the rest of the time I just want to hit a key, type a path name
+(with tab-completion to help find stuff, up/down keys to cycle through
+past selections) and press enter.  So I would prefer this editor to have
+something like emacs' minibuffer, or the QuickFind panel in Firefox.  In
+other words, when there is something you would normally use a dialog for
+just create a small panel that rolls up from the bottom of the frame,
+put the keyboard focus there, perhaps do stuff in the main buffer as
+they are typing if appropriate, and then when the user is done the panel
+rolls out of sight again and keyboard focus is restored to their active
+buffer.  This can be done for file open/saves, search & replace,
+specifying build or grep commands (see next item) choosing to execute
+some editor function by name that may not have some key-binding yet (see
+item after next) etc.
+
+* (done, with user @commands)
+
+Flexible build/grep commands.  Emacs handles both of these in almost
+the same way so I'll list them together here.  I hit a key and am
+presented with either the default, or the most recently used compile or
+grep command.  I can edit the command or use the up/down arrows to
+select previous commands that I've used.  I then hit enter and emacs
+runs the command putting the output in an editor buffer.  There is a key
+I can hit to kill the compile if needed.  It then parses the output and
+there is a key I can use to find the file listed in the compile or grep
+output, load it, and position the cursor on the reported line.  (This
+can even be done while the compile/grep is still running.)
+
+* (done) For access to editor commands/functionality that may not be bound to a
+keystroke it's real nice to have the ability to hit a key, type the
+command name, press enter and then it's done.  This can also allow for
+commands that might need to prompt for parameters, be interactive, etc.
+  All editor commands should be named and can be bound to keys by name
+or executed by name in this way.
+
+* (done) Regex search.  Emacs has support for regular expression search modes
+for all of the search types, incremental search, search/replace,
+although I don't use it that much.
+
+* (done, or not needed, depending on your point of view)
+Multi-file search and replace.  Be able to select files interactively,
+or by wildcard, or both.  Enter search string, or regex, and replace
+text.  The editor loads each file and does the search, allowing you to
+choose for each one whether to do the replacement, or replace all.
+
+* If it is a full IDE it would be nice to have a way to start just the
+code editor portion for quick edits.
+
+Things that would be nice to have, but that I could live without:
+
+(All of these things can be done easily with @command)
+
+* Interactive diffs, merges and applying of patches.
+
+* Able to be a front-end for gdb.
+
+* Able to be a front-end for CVS, SVN, etc.
+
+* (done) Be able to run shell commands, or the shell itself in an editor buffer.
+
+* (easy) have a built-in psychotherapist or be able to play towers of hanoi.  ;-) 
+#@nonl
+#@-node:ekr.20100223100750.5843:Original post by Robin Dunn
+#@+node:ekr.20100223100750.5842:Post to pyxides, 2010/02/23
+http://groups.google.com/group/pyxides
+
+Robin Dunn's post, reproduced at:
+http://groups.google.com/group/leo-editor/browse_thread/thread/4f76a0f57759aba
+continues to be one of the benchmarks for Leo.
+
+Leo 4.7 went out the door today.  It contains many important
+improvements, but few directly related to Robin's important post.
+That doesn't mean Robin's post is irrelevant, but it does mean that
+other considerations were more relevant :-)  In particular, Leo passes
+all unit tests with Python 2.6 and Python 3.1.
+
+Leo 4.8 will concentrate on better support for vim-like bindings.  As
+a happy side effect, this will make Leo compliant with almost all
+unfinished aspects of Robin's mission.
+
+There are two major items from Robin's list that are incomplete in
+Leo:
+
+* The Kill-Ring.  Leo does have a kill ring.  The vim work will fix
+discrepancies between how Leo, emacs and vim handle the kill ring.
+
+* Good keystroke macro recording and the ability to save and load
+keystroke macros.  This happen as part of support for vim's "dot"
+command.  To some extent, Leo's execute-script command compensates for
+wimpy macro support, but I'd like to do better.
+
+The following could be done easily using Leo's @command or @button
+features.  There doesn't seem to be much demand for them in Leo, but
+I'll list them here for completeness.
+
+- Flexible build/grep commands.
+- Interactive diffs, merges and applying of patches.
+- Able to be a front-end for gdb. (Leo has a plugin to do this).
+- Able to be a front-end for CVS, SVN, etc.
+- Have a built-in psychotherapist or be able to play towers of
+hanoi.  ;-)
+
+As always, I invite you all to try Leo, and to ask for features that
+would be important to you.
+
+======
+
+P.S. Leo does have auto-completion.  It will be improved in Leo 4.9.
+
+#@-node:ekr.20100223100750.5842:Post to pyxides, 2010/02/23
+#@-node:ekr.20090202064534.4:Your mission, should you choose to accept it
+#@-all
+#@nonl
+#@-node:ekr.20031218072017.329:@thin ../doc/leoNotes.txt
+#@-leo

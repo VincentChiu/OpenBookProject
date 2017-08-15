@@ -1,0 +1,1697 @@
+Execution
+Environment
+执行环境
+Chapter Topics
+本章主题
+
+	Callable Objects
+	Code Objects
+	Statements and Built-in Functions
+	Executing Other Programs
+	Terminating Execution
+	Miscellaneous Operating System Interface
+	Related Modules
+	可调用对象
+	代码对象
+	语句和内置函数
+	执行其他程序
+	终止执行
+	各类操作系统接口
+	相关模块
+
+there are multiple ways in Python to run other pieces of code outside of  the  currently  executing  program,  i.e.,  run  an  operating  system command or another Python script, or execute a file on disk or across the network. It all depends on what you are trying to accomplish. Some spe- cific execution scenarios could include:
+在python中有多种运行外部程序的方法，比如，运行操作系统命令或另外的python脚本，或执行一个磁盘上的文件，或通过网络来运行文件。这完全取决于你想要干什么。有些特定的执行场景包括：
+
+
+?	Remain executing within our current script
+?	Create and manage a subprocess
+?	Execute an external command or program
+?	Execute a command that requires input
+?	Invoke a command across the network
+?	Execute a command creating output that requires processing
+?	Execute another Python script
+?	Execute a set of dynamically generated Python statements
+?	Import a Python module (and executing its top-level code)
+
+　Remain executing within our current script
+	在当前脚本继续运行
+?	创建和管理子进程
+?	执行外部命令或程序
+?	执行需要输入的命令
+	通过网络来调用命令
+	执行命令来创建需要处理的输出
+?	执行其他的Python脚本
+?	执行一系列动态生成的Python语句
+?	导入Python模块 (和执行它顶层的代码)
+
+
+
+　There  are  built-ins  and  external  modules  that  can  provide  any  of  the functionality described above. The programmer must decide which tool to pick from the box based on the application that requires implementation. This chapter sketches a potpourri of many of the aspects of the execution environment within Python; however, we will not discuss how to start the Python interpreter or the different command-line options. Readers seeking information  on  invoking  or  starting  the  Python  interpreter  should  review Chapter 2.
+    python中，内建和外部模块都可以提供上述各种功能。程序员得根据实现的需要，从这些模块中选择合适的处理方法。本章将对python执行环境进行全面的描述，但不会涉及如何启动python解释器和不同的命令行选项。读者可以从第二章中查阅到相关信息。
+
+　Our tour of Python’s execution environment consists of looking at “callable” objects and following up with a lower-level peek at code objects. We will then take a look at what Python statements and built-in functions are available to support  the  functionality  we  desire.  The  ability  to  execute  other  programs gives our Python script even more power, as well as being a resource-saver because certainly it is illogical to reimplement all this code, not to mention the loss of time and manpower. Python provides many mechanisms to exe- cute programs or commands external to the current script environment, and we will run through the most common options. Next, we give a brief over- view of Python’s restricted execution environment, and finally, the different ways of terminating execution (other than letting a program run to comple- tion).  We  begin  our  tour  of  Python’s  execution  environment  by  looking  at “callable” objects.
+   我们的python执行环境之旅从可调用对象开始，接着是代码对象，然后去看看什么样的python语句和内建函数适合支持我们需要的功能。执行其他程序的能力不仅大大增强了python脚本的威力，也节约了资源，因为重复实现这些代码肯定是不合逻辑的，更是浪费时间和人力。python给当前脚本环境提供了许多执行程序或者外部命令的机制，我们将介绍下最普遍的几个命令。接下来，我们对python的受限执行环境作一个简短的概况，最后，介绍下各种终止执行的方法（而不是让程序正常完成）。就从可调用对象开始我们的旅程吧。
+
+
+
+14.1  Callable Objects
+可调用对象
+
+A number of Python objects are what we describe as “callable,” meaning any object  that  can  be  invoked  with  the  function  operator  “()”.  The  function operator is placed immediately following the name of the callable to invoke it. For example, the function “foo” is called with “foo()”. You already know this.  Callables  may  also  be  invoked  via  functional  programming  interfaces such  as  apply(),  filter(),  map(),  and  reduce(),  all  of  which  we  dis- cussed in Chapter 11. Python has four callable objects: functions, methods, classes,  and  some  class  instances.  Keep  in  mind  that  any  additional  refer- ences or aliases of these objects are callable, too.
+许多的python对象都是我们所说的可调用的，即是任何能通过函数操作符“（）”来调用的对象。要调用可调用对象，函数操作符得紧跟在可调用对象之后。比方说，用“foo()”来调用函数"foo"。可调用对象可以通过函数式编程接口来进行调用，如apply(),filter(),map(),以及reduce()，这四个接口我们都在11章讨论过了。Python有4种可调用对象：函数，方法，类，以及一些类的实例。记住这些对象的任何引用或者别名都是可调用的。
+
+14.1.1 Functions
+函数
+
+The first callable object we introduced was the function. There are three dif- ferent types of function objects. The first is the Python built-in functions.
+我们介绍的第一种可调用的对象是函数。python有3种不同类型函数对象。第一种是内建函数。
+
+
+Built-in Functions (BIFs)
+内建函数（BIFs)
+
+BIFs are functions written in C/C++, compiled into the Python interpreter, and loaded into the system as part of the first (built-in) namespace. As men- tioned in previous chapters, these functions are found in the __builtin__ module and are imported into the interpreter as the __builtins__ module.
+BIF是用c/c++写的，编译过后放入python解释器，然后把它们作为第一（内建）名字空间的一部分加载进系统。如前面章节所提到的，这些函数在_bulitin_模块里，并作为__builtins__模块导入到解释器中。
+
+Table 14.1  Built-in Function Attributes
+表14.1 内建函数属性
+
+BIF Attribute	Description
+BIF 属性	描述
+
+bif.__doc__	Documentation string (or None)
+		文档字符串（或None)
+
+bif.__name__	Function name as a string
+		字符串类型的文档名字
+
+bif.__self__	Set to None (reserved for built-in methods)
+		设置为None（保留给built-in方法）
+
+bif.__module__	Name of the module where bif is defined (or None)
+		存放bif定义的模块名字(或None)
+
+
+
+BIFs  have  the  basic  type  attributes,  but  some  of  the  more  interesting unique ones are listed in Table 14.1.
+BIF有基础类型属性，其中一些独特的属性已列在表14.1中
+You can list all attributes of a function by using dir():
+你可以用dir()列出函数的所有属性：
+
+>>> dir(type)
+['__call__', '__class__', '__cmp__', '__delattr__', '__doc__',
+'__getattribute__', '__hash__', '__init__', '__module__',
+'__name__', '__new__', '__reduce__', '__reduce_ex__',
+'__repr__', '__self__', '__setattr__', '__str__']
+
+Internally,  BIFs  are  represented  as  the  same  type  as  built-in  methods (BIMs), so invoking type() on a BIF or BIM results in:
+从内部机制来看，因为BIFs和内建方法(BIMs)属于相同的类型，所以对BIF或者BIM调用type()的结果是：
+
+>>> type(dir)
+<type 'builtin_function_or_method'>
+
+　Note that this does not apply to factory functions, where type() correctly returns the type of object produced:
+    注意这不能应用于工厂函数，因为type()正好会返回产生对象的类型：
+
+>>> type(int)
+<type 'type'>
+>>> type(type)
+<type 'type'>
+
+
+
+User-Defined Functions (UDFs)
+用户定义的函数（UDF）
+
+UDFs are generally written in Python and defined at the top-level part of a module and hence are loaded as part of the global namespace (once the built-in namespace has been established). Functions may also be defined  in other functions, and due to the nested scopes improvement in 2.2, we now have access to attributes in multiply-nested scopes. Hooks to attributes defined elsewhere are provided by the func_closure attribute.
+UDF（User-Defined Function，用户定义的函数）通常是用python写的，定义在模块的最高级，因此会作为全局名字空间的一部分(一旦创建好内建名字空间）装载到系统中。函数也可在其他的函数体内定义，并且由于在2.2中嵌套作用域的改进，我们现在可以对多重嵌套作用域中的属性进行访问。可以用func_closure属性来钩住在其他地方定义的属性。
+
+Table 14.2  User-Defined Function Attributes
+表14.2 用户自定义函数属性
+
+UDF Attribute	Description
+UDF属性	描述
+
+udf.__doc__	Documentation string (also udf.func_doc) 
+		文档字符串(也可以用udf.func_doc)
+
+udf.__name__	Function name as a string (also udf.func_name) 
+		字符串类型的函数名字（也可以用 udf.func_name)
+		
+udf.func_code	Byte-compiled code object
+		字节编译的代码对象
+		
+
+udf.func_defaults	Default argument tuple
+		默认的参数元组
+
+udf.func_globals	Global namespace dictionary; same as calling globals(x) from within function
+		全局名字空间字典； 和从函数内部调用globals(x)一样
+
+udf.func_dict	Namespace for function attributes 
+		函数属性的名字空间
+
+udf.func_doc	(See udf.__doc__ above) 
+		 udf.func_doc (见上面的udf.__doc__)
+
+udf.func_name	(See udf.__name__ above)
+		(见上面的udf.__name__)
+
+udf.func_closure	Tuple of Cell objects (see the Python/C API Refer- ence Manual) that contains references to free vari- ables (those used in udf but defined elsewhere; see the Python [Language] Reference Manual)
+		包含了自由变量的引用的单元对象元组（自用变量在UDF中使用，但在别处定义；参见python[语言]参考手册）
+
+Like the BIFs above, UDFs also have many attributes. The more interesting and specific ones to UDFs are listed below in Table 14.2.
+如同上面的BIFs，UDF也有许多的属性。UDF最让人感兴趣和最特殊的属性都列在下面的表14.2中
+
+　Internally, user-defined functions are of the type “function,” as indicated in the following example by using type():
+    从内部机制来看，用户自定义的函数是“函数“类型的，如在下面的例子中用type()表明的一样：
+
+>>> def foo(): pass
+>>> type(foo)
+<type 'function'>
+
+lambda Expressions (Functions Named “<lambda>”)
+Lambda expressions are the same as user-defined functions with some minor differences. Although they yield function objects, lambda expressions are not created with the  def statement and instead are created using the  lambda keyword.
+lambda表达式和用户自定义对函数相比，略有不同。虽然它们也是返回一个函数对象，但是lambda表达式不是用def语句创建的，而是用lambda关键字：
+
+　Because lambda expressions do not provide the infrastructure for naming the  codes  that  are  tied  to  them,  lambda  expressions  must  be  called  either through  functional  programming  interfaces  or  have  their  reference  be assigned  to  a  variable,  and  then  they  can  be  invoked  directly  or  again  via functional programming. This variable is merely an alias and is not the func- tion object’s name.
+    因为lambda表达式没有给命名绑定的代码提供基础结构，所以要通过函数式编程接口来调用，或把它们的引用赋值给一个变量，然后就可以直接调用或者再通过函数来调用。变量仅是个别名，并不是函数对象的名字。
+
+　Function objects created by lambda also share all the same attributes as user-defined functions, with the only exception resulting from the fact that they  are  not  named;  the  __name__ or  func_name attribute  is  given  the string “<lambda>”。Using the type() factory function, we show that lambda expressions yield the same function objects as user-defined functions:
+通过lambda来创建函数的对象除了没有命名之外，享有和用户自定义函数相同的属性；__name__或者func_name属性给定为字符串"<lambda>"。使用type()工厂函数，我们来演示下lambda表达式返回和用户自定义函数相同的函数对象。
+
+>>> lambdaFunc = lambda x: x * 2
+>>> lambdaFunc(100)
+200
+>>> type(lambdaFunc)
+<type 'function'>
+
+　In the example above, we assign the expression to an alias. We can also invoke type() directly on a lambda expression:
+   在上面的例子中，我们将表达式赋值给一个别名。我们也可以直接在一个lambda表达式上调用type()：
+
+>>> type(lambda:1)
+<type 'function'>
+
+Let us take a quick look at UDF names, using lambdaFunc above and foo from the preceding subsection:
+我们快速的来看看UDF名字，使用上面的lambdaFunc和先前小节中的foo():
+
+>>> foo.__name__
+'foo'
+>>> lambdaFunc.__name__
+'<lambda>'
+
+　As we noted back in Section 11.9, programmers can also define function attributes once the function has been declared (and a function object avail- able). All of the new attributes become part of the  udf.__dict__ object. Later on in this chapter, we will discuss taking strings of Python code and executing it. There will be a combined example toward the end of the chap- ter highlighting function attributes and dynamic evaluation of Python code (from strings) and executing those statements.
+    从11.9小节中我们可以看到，一旦函数声明以后（且函数对象可用），程序员也可以自定义函数属性。所有的新属性变成udf.__dict__对象的一部分。在本章的稍后内容中，我们将讨论获取含有python代码的字符串并执行该代码。到了本章最后，会有一个组合例子，着重描写函数属性和python代码(字符串）的动态求值和执行语句。
+
+
+14.1.2 Methods
+方法
+
+In Chapter 13 we discovered methods, functions that are defined as part of a class—these are user-defined methods. Many Python data types such as lists and dictionaries also have methods, known as built-in methods. To further show  this  type  of  “ownership,”  methods  are  named  with  or  represented alongside the object’s name via the dotted-attribute notation.
+在13章，我们研究了方法。用户自定义方法是被定义为类的一部分的函数。许多python数据类型，比如列表和字典，也有方法，这些被称为内建方法。为了进一步说明“所有权“的类型，方法通过对象的名字和句点属性标识进行命名。
+
+Table 14.3  Built-in Method Attributes
+14.3 内建方法（BIM）属性
+
+BIM Attribute	Description
+BIM属性		描述
+
+bim.__doc__	Documentation string 
+bim.__doc__	文档字串
+
+bim.__name__	Function name as a string 
+		字符串类型的函数名字
+
+bim.__self__	Object the method is bound to
+		绑定的对象
+
+
+
+Built-in Methods (BIMs)
+内建方法(BIMs)
+
+We  discussed  in  the  previous  section  how  built-in  methods  are  similar  to built-in  functions.  Only  built-in  types  (BITs)  have  BIMs.  As  you  can  see below, the type() factory function gives the same output for built-in meth- ods as it does for BIFs—note how we have to provide a built-in type (object or reference) in order to access a BIM:
+在前面的小节中，我们讨论了内建方法与内建函数的类似之处。只有内建类型(BIT)有BIM.正如你在下面看到的，对于内建方法，type()工厂函数给出了和BIF相同的输出--注意，我们是如何提供一个内建对象来访问BIM:
+
+>>> type([].append)
+<type 'builtin_function_or_method'>
+
+　Furthermore,  both  BIMs  and  BIFs  share  the  same  attributes,  too.  The only exception is that now the __self__ attribute points to a Python object(for BIMs) as opposed to None (for BIFs):
+此外，BIM和BIF两者也都享有相同属性。不同之处在于BIM的__self__属性指向一个Python对象，而BIF指向None。
+
+Recall that for classes and instances, their data and method attributes can be  obtained  by  using  the  dir() BIF  with  that  object  as  the  argument  to dir(). It can also be used with BIMs:
+对于类和实例，都能以该对象为参数，通过内建函数dir()来获得他们的数据和方法属性。这也可以用在BIM上：
+
+>>> dir([].append)
+['__call__', '__class__', '__cmp__', '__delattr__', '__doc__',
+'__getattribute__', '__hash__', '__init__', '__module__',
+'__name__', '__new__', '__reduce__', '__reduce_ex__',
+'__repr__', '__self__', '__setattr__', '__str__']
+
+It does not take too long to discover, however, that using an actual object to access its methods does not prove very useful functionally, as in the last example. No reference is saved to the object, so it is immediately garbage- collected. The only thing useful you can do with this type of access is to use it to display what methods (or members) a BIT has.
+然而，不用多久就会发现，从功能上看，用实际的对象去访问其方法并不是非常有用，如最后的例子。由于没有引用来保存这个对象，所以它立即被垃圾回收了。你处理这种访问的类型唯一的用处就是显示BIT有什么方法。
+
+User-Defined Methods (UDMs)
+用户定义的方法（UDM）
+User-defined  methods  are  contained  in  class  definitions  and  are  merely “wrappers” around standard functions, applicable only to the class they are defined for. They may also be called by subclass instances if not overridden in the subclass definition.As  explained  in  Chapter  13,  UDMs  are  associated  with  class  objects (unbound  methods),  but  can  be  invoked  only  with  class  instances  (bound methods). Regardless of whether they are bound or not, all UDMs are of the same type, “instance method,” as seen in the following calls to type():
+UDM（User-defined  method，用户定义的方法）包含在类定义之中，只是拥有标准函数的包装，仅有定义它们的类可以使用。如果没有在子类定义中被覆盖掉，也可以通过子类实例来调用它们。正如在13章解释的那样， UDM与类对象是关联的（非绑定方法），但是只能通过类的实例来调用(绑定方法）。无论UDMs是否绑定，所有的UMD都是相同的类型——“实例方法“，如在下面例子看到的type()调用：
+
+>>> class C(object):	# define class # 定义类
+...	def foo(self): pass	# define UDM  # 定义UDM
+...
+>>> c = C()	# instantiation # 实例化
+>>> type(C)	# type of class # 类的类别
+<type 'type'>
+>>> type(c)	# type of instance # 实例的类别
+<class '__main__.C'>
+>>> type(C.foo)	# type of unbound method  # 非绑定方法的类别
+<type 'instancemethod'>
+>>> type(c.foo)	# type of bound method  # 绑定方法的类别
+<type 'instancemethod'>
+
+UDMs have attributes as shown in Table 14.4. Accessing the object itself will reveal whether you are referring to a bound or an unbound method. As you can also see below, a bound method reveals to which instance object a method is bound:
+表11.4中展示了UDM的属性。访问对象本身将会揭示你正在引用一个绑定方法还是非绑定方法。正如你从下面看到的，绑定的方法揭示了方法绑定到哪一个实例。
+
+>>> C.foo	# unbound method object  # 非绑定方法对象
+<unbound method C.foo>
+>>>
+>>> c.foo	# bound method object  # 绑定方法对象
+<bound method C.foo of <__main__.C object at 0x00B42DD0>
+>>> c	# instance foo()'s bound to  # foo()实例被绑定到……
+<__main__.C object at 0x00B42DD0>
+
+
+Table 14.4  User-Defined Method Attributes
+表14.4 用户自定义属性
+
+UDM Attribute	Description
+UDM属性 	描述
+
+udm.__doc__	Documentation string (same as udm.im_func.__doc__)
+		文档字符串（与udm.im_fuc.__doc__相同）
+
+udm.__name__	Method name as a string (same as udm.im_func.__name__)
+		字符串类型的方法名字（与umd.im_func.__name__相同）
+
+udm.__module__	Name of the module where udm is defined (or None)
+		定义udm的模块的名字(或none)
+
+udm.im_class	Class that method is associated with (for bound meth- ods; if unbound, then the class that requested udm)
+		方法相关联的类（对于绑定的方法；如果是非绑定，那么为要求udm的类）
+
+udm.im_func	Function object for method (see UDFs)
+		方法的函数对象（见UDFs）
+udm.im_self	Associated instance if bound, None if unbound
+		如果绑定的话为相关联的实例，如果非绑定位为none
+
+
+14.1.3 Classes
+类
+
+The callable property of classes allows instances to be created. “Invoking” a class  has  the  effect  of  creating  an  instance,  better  known  as  instantiation. Classes have default constructors that perform no action, basically consisting of a pass statement. The programmer may choose to customize the instanti- ation process by implementing an __init__() method. Any arguments to an instantiation call are passed on to the constructor:
+我们可以利用类的可调用性来创建实例。“调用”类的结果便是创建了实例，即大家所知道的实例化。类有默认构造函数，该函数什么都不做，基本上只有一个pass语句。程序员可以通过实现__int__()方法，来自定义实例化过程。实例化调用的任何参数都会传入到构造函数里。
+
+
+>>> class C(object):
+def __init__(self, *args):
+print 'Instantiated with these arguments:\n', args
+
+>>> c1 = C() # invoking class to instantiate c1
+Instantiated with these arguments:
+()
+>>> c2 = C('The number of the counting shall be', 3) Instantiated with these arguments:
+('The number of the counting shall be', 3)
+
+　We are already familiar with the instantiation process and how it is accom- plished, so we will keep this section brief. What is new, however, is how to make instances callable.
+我们已经很熟悉实例化过程以及它是如何完成的，在这里将不再赘述。不过，一个新的问题是如何让实例能够被调用。
+
+
+14.1.4 Class Instances
+类的实例
+
+Python provides the __call__() special method for classes, which allows a programmer  to  create  objects  (instances)  that  are  callable.  By  default,  the __call__() method is not implemented, meaning that most instances are not  callable.  However,  if  this  method  is  overridden  in  a  class  definition, instances of such a class are made callable. Calling such instance objects is equivalent to invoking the  __call__() method. Naturally, any arguments given in the instance call are passed as arguments to __call__(). You also have to keep in mind that __call__() is still a method, so the instance  object  itself  is  passed  in  as  the  first  argument  to  __call__() as self. In other words, if foo is an instance, then foo() has the same effect as foo.__call__(foo)—the  occurrence  of  foo as  an  argument—simply the  reference  to  self that  is  automatically  part  of  every  method  call.  If __call__() has arguments, i.e., __call__(self, arg), then foo(arg) is the same as invoking foo.__call__(foo, arg). Here we present an exam-ple of a callable instance, using a similar example as in the previous section:
+python给类提供了名为__call__的特别方法，该方法允许程序员创建可调用的对象（实例）。默认情况下，__call__()方法是没有实现的，这意味着大多数实例都是不可调用的。然而，如果在类定义中覆盖了这个方法，那么这个类的实例就成为可调用的了。调用这样的实例对象等同于调用__call__()方法。自然地，任何在实例调用中给出的参数都会被传入到__call()__中。……那么foo()就和foo.__call__(foo)的效果相同， 这里foo也作为参数出现，因为是对自己的引用，实例将自动成为每次方法调用的第一个参数。如果 ___call___()有参数，比如，(self, arg),那么foo(arg)就和调用foo.__call__(foo, arg)一样。这里我们给出一个可调用实例的例子，和前面小节的例子相似：
+
+
+>>> class C(object):
+...	def __call__(self, *args):
+...	print "I'm callable!	Called with args:\n", args
+...
+
+>>> c =
+C()
+# instantiation   # 实例化
+>>> c
+
+# our instance    # 我们的实例
+<__main__.C instance at 0x00B42DD0>
+>>> callable(c)	# instance is callable #实例是可调用的
+True
+>>> c()	# instance invoked  # 调用实例
+I'm callable!	Called with arguments:
+()
+>>> c(3)	# invoked with 1 arg # 呼叫的时候给出一个参数
+I'm callable!	Called with arguments:
+(3,)
+>>> c(3, 'no more, no less')	# invoked with 2 args  # 呼叫的时候给出两个参数
+I'm callable!	Called with arguments:
+(3, 'no more, no less')
+　We close this subsection with a note that class instances cannot be made callable unless the __call__() method is implemented as part of the class definition.
+    记住只有定义类的时候实现了__call__方法，类的实例才能成为可调用的。
+
+
+14.2 Code Objects
+代码对象
+
+Callables are a crucial part of the Python execution environment, yet they are only  one  element  of  a  larger  landscape.  The  grander  picture  consists  of Python statements, assignments, expressions, and even modules. These other “executable  objects”  do  not  have  the  ability  to  be  invoked  like  callables. Rather,  these  objects  are  the  smaller  pieces  of  the  puzzle  that  make  up executable blocks of code called code objects.
+可调用的对象是python执行环境里最重要的部分，然而他们只是冰山一角。python语句，赋值，表达式，甚至还有模块构成了更宏大的场面。这些可执行对象无法像可调用物那样被调用。更确切地说，这些对象只是构成可执行代码块的拼图的很小一部分，而这些代码块被称为代码对象。
+
+　At the heart of every callable is a code object, which consists of statements, assignments,  expressions,  and  other  callables.  Looking  at  a  module  means viewing one large code object that contains all the code found in the module. Then it can be dissected into statements, assignments, expressions, and call- ables, which recurse to another layer as they contain their own code objects.
+每个可调用物的核心都是代码对象，由语句，赋值，表达式，以及其他可调用物组成。察看一个模块意味着观察一个较大的、包含了模块中所有代码的对象。然后代码可以分成语句，赋值，表达式，以及可调用物。可调用物又可以递归分解到下一层，那儿有自己的代码对象。
+	
+　In general, code objects can be executed as part of function or method invocations or using either the exec statement or eval() BIF. A bird’s eye view of a Python module also reveals a single code object representing all lines of code that make up that module.
+一般说来，代码对象可以作为函数或者方法调用的一部分来执行，也可用exec语句或内建函数eval()来执行。从整体上看，一个python模块的代码对象是构成该模块的全部代码。
+
+　If any Python code is to be executed, that code must first be converted to byte-compiled code (aka bytecode). This is precisely what code objects are.They  do  not  contain  any  information  about  their  execution  environment, however, and that is why callables exist, to “wrap” a code object and provide that extra information.
+如果要执行python代码，那么该代码必须先要转换成字节编译的代码（又称字节码）。这才是真正的代码对象。然而，它们不包含任何关于它们执行环境的信息，这便是可调用物存在的原因，它被用来包装一个代码对象并提供额外的信息。
+
+　Recall,  from  the  previous  section,  the  udf.func_code attribute  for  a UDFs?   Well,   guess   what?   That   is   a   code   object.   Or   how   about   the udm.im_func function  object  for  UDMs?  Since  that  is  also  a  function object, it also has its own udm.im_func.func_code code object. So you can see that function objects are merely wrappers for code objects, and methods are wrappers for function objects. You can start anywhere and dig. When you get to the bottom, you will have arrived at a code object.
+还记得前面的小节中UDF的udf.func_code属性吗？呃，想不到吧？那就是代码对象。UDM的udm.im_func函数对象又是怎么一回事呢？因为那也是一个函数对象，所以他同样有它自己的udm.im_func.func_code代码对象。这样的话，你会发现，函数对象仅是代码对象的包装，方法则是给函数对象的包装。你可以到处看看。当研究到最底层，你会发现便是一个代码对象
+
+
+
+14.3 Executable Object Statements and Built-in Functions
+可执行的对象声明和内建函数
+
+Python  provides  a  number  of  BIFs  supporting  callables  and  executable objects, including the exec statement. These functions let the programmer execute  code  objects  as  well  as  generate  them  using  the  compile() BIF. They are listed in Table 14.5.
+Python提供了大量的BIF来支持可调用/可执行对象，其中包括exec语句。这些函数帮助程序员执行代码对象，也可以用内建函数complie()来生成代码对象。
+
+
+Table 14.5  Executable Object Statements and Built-in Functions
+表14.5 可执行对象和内建函数
+
+Built-in Function or Statement	Description
+内建函数和语句		描述
+
+callable(obj)	Returns True if obj is callable and False otherwise
+				如果obj可调用，返回True，否则返回FALSE
+
+compile(string,file, type)  Creates a code object from string of type type; file is where the code originates from (usually set to "")
+		         从type类型中创建代码对象；file是代码存放的地方（通常设为"")
+
+
+eval(obj, glo- bals=globals(), locals=locals())    Evaluates obj, which is either an expression compiled into a code object or a string expression; global and/or local namespace may also be provided
+				           对obj进行求值，obj是已编译为代码对象的表达式，或是一个字符串表达式；可以给出全局或者/和局部的名字空间
+
+exec obj	Executes obj, a single Python statement or set of statements, either in code object or string format; obj may also be a file object (opened to a valid Python script)
+执行obj、单一的python语句或者语句的集合，也就是说格式是代码对象或者字符串；obj也可以是一个文件对象（已经打开的有效python脚本中）
+
+input(prompt='')	Equivalent to eval(raw_input(prompt=''))
+		等同于eval(raw_input(prompt=”))
+
+14.3.1  callable()
+
+callable() is a Boolean function that determines if an object type can be invoked via the function operator ( ( ) ). It returns True if the object is callable and False otherwise (1 and 0, respectively, for Python 2.2 and earlier). Here are some sample objects and what callable returns for each type:
+callable()是一个布尔函数，确定一个对象是否可以通过函数操作符(())来调用。如果函数可调用便返回True，否则便是False（对与2.2和较早的版本而言，分别是1和0）。这里有些对象及其对应的callable返回值
+
+>>> callable(dir)	# built-in function  # 内建函数
+True
+>>> callable(1)	# integer  #整数
+False
+>>> def foo(): pass
+...
+>>> callable(foo)	# user-defined function  # 用户自定义函数
+True
+>>> callable('bar')	# string  #字符串
+False
+>>> class C(object): pass
+...
+>>> callable(C)	# class #类
+True
+
+14.3.2  compile()
+
+compile() is  a  function  that  allows  the  programmer  to  generate  a  code object on the fly, that is, during runtime. These objects can then be exe- cuted or evaluated using the exec statement or eval() BIF. It is impor- tant  to  bring  up  the  point  that  both  exec and  eval() can  take  string representations of Python code to execute. When executing code given as strings,  the  process  of  byte-compiling  such  code  must  occur  every  time. The  compile() function  provides  a  one-time  byte-code  compilation  of code so that the precompile does not have to take place with each invoca- tion. Naturally, this is an advantage only if the same pieces of code are exe- cuted more than once. In these cases, it is definitely better to precompile the code.
+compile()函数允许程序员在运行时刻迅速生成代码对象，然后就可以用exec语句或者内建函数eval()来执行这些对象或者对它们进行求值。一个很重要的观点是：exec和eval()都可以执行字符串格式的Python代码。当执行字符串形式的代码时，每次都必须对这些代码进行字节编译处理。compile()函数提供了一次性字节代码预编译，以后每次调用的时候，都不用编译了。
+
+　All  three  arguments  to  compile() are  required,  with  the  first  being  a string representing the Python code to compile. The second string, although required, is usually set to the empty string. This parameter represents the file name (as a string) where this code object is located or can be found. Normal usage is for compile() to generate a code object from a dynamically gener- ated string of Python code—code that obviously does not originate from an existing file. 
+compile的三个参数都是必需的，第一参数代表了要编译的python代码。第二个字符串，虽然是必需的，但通常被置为空串。该参数代表了存放代码对象的文件的名字(字符串类型）。compile的通常用法是动态生成字符串形式的Python代码， 然后生成一个代码对象——代码显然没有存放在任何文件。
+
+
+　The last argument is a string indicating the code object type. There are three possible values:
+    最后的参数是个字符串，它用来表明代码对象的类型。有三个可能值：
+
+'eval'	Evaluatable expression [to be used with eval()]
+	可求值的表达式[和eval()一起使用]
+
+'single'	Single executable statement [to be used with exec]
+	单一可执行语句[和exec一起使用]
+
+'exec'	Group of executable statements [to be used with exec]
+              可执行语句组[和exec一起使用]
+
+Evaluatable Expression
+可求值表达式
+
+>>> eval_code = compile('100 + 200', '', 'eval')
+>>> eval(eval_code)
+300
+
+Single Executable Statement
+单一可执行语句
+
+>>> single_code = compile('print "Hello world!"', '', 'single')
+>>> single_code
+<code object ? at 120998, file "", line 0>
+>>> exec single_code
+Hello world!
+
+Group of Executable Statements
+可执行语句组
+
+>>> exec_code = compile("""
+... req = input('Count how many numbers? ')
+... for eachNum in range(req):
+...	print eachNum
+... """, '', 'exec')
+>>> exec exec_code
+Count how many numbers? 6
+0
+1
+2
+3
+4
+5
+
+　In the final example, we see input() for the first time. Since the begin- ning, we have been reading input from the user using  raw_input(). The input() BIF is a shortcut function that we will discuss later in this chapter. We just wanted to tease you with a sneak preview.
+    在最后的例子中，我们第一次看到input()。一直以来，我们都是从raw_input()中读取输入的。内建函数input()是我们将在本章稍后讨论的一个快捷函数。
+
+14.3.3  eval()
+
+eval() evaluates  an  expression,  either  as  a  string  representation  or  a pre-compiled  code  object  created  via  the  compile() built-in.  This  is the first and most important argument to eval(). . . it is what you want to execute. The second and third parameters, both optional, represent the objects in the global and local namespaces, respectively. If provided, globals must be a dictionary. If provided,  locals  can be any mapping object, e.g., one that implements the __getitem__() special method. (Before 2.4, locals was required to be a dictionary.) If neither of these are given, they default to objects returned by globals() and locals(),  spectively. If only a globals dictionary is passed in, then it is also passed in as locals. Okay, now let us take a look at eval():
+eval()对表达式求值，后者可以为字符串或内建函数complie()创建的预编译代码对象。这是eval()第一个也是最重要的参数.......这便是你想要执行的对象。第二个和第三个参数，都为可选的，分别代表了全局和局部名字空间中的对象。如果给出这两个参数，globals必须是个字典，locals可以是任意的映射对象，比如，一个实现了__getitem__()方法的对象。(在2.4之前，local必须是一个字典）如果都没给出这两个参数，分别默认为globals()和locals()返回的对象，如果只传入了一个全局字典，那么该字典也作为locals传入。好了，我们一起来看看eval():
+
+>>> eval('932')
+932
+>>> int('932')
+932
+
+　We see that in this case, both eval() and int() yield the same result: an integer with the value 932. The paths they take are somewhat different, how- ever. The eval() BIF takes the string in quotes and evaluates it as a Python expression. The int() BIF takes a string representation of an integer and converts it to an integer. It just so happens that the string consists exactly of the string 932, which as an expression yields the value 932, and that 932 is also the integer represented by the string “932.” Things are not the same, however, when we use a pure string expression:
+在这种情况下，eval()和int()都返回相同的结果：整数932。然而，它们采用的方式却不尽相同。内建函数eval()接收引号内的字符串并把它作为python表达式进行求值。内建函数int()接收代表整数的字符串并把它转换为整数。这只有在该字符串只由字符串932组成的时候才会成功，而该字符串作为表达式返回值932，932也是字符串”932”所代表的整数。当我们用纯字符串表达式的时候，两者便不再相同了：
+
+>>> eval('100 + 200')
+300
+>>> int('100 + 200') Traceback (innermost last):
+File "<stdin>", line 1, in ?
+ValueError: invalid literal for int(): 100 + 200
+
+　In  this  case,  eval() takes  the  string  and  evaluates  "100 + 200" as  an expression,  which,  after  performing  integer  addition,  yields  the  value  300. The call to int() fails because the string argument is not a string representa- tion of an integer—there are invalid literals in the string, namely, the spaces and “+” character. One simple way to envision how the eval() function works is to imagine that the quotation marks around the expression are invisible and think, “If I were  the  Python  interpreter,  how  would  I  view  this  expression?”  In  other words, how would the interpreter react if the same expression were entered interactively? The output after pressing the RETURN or ENTER key should be the same as what eval() will yield.
+    在这种情况下，eval()接收一个字符串并把"100+200"作为表达式求值，当进行整数加法后，给出返回值300。而对int()的调用失败了，因为字符串参数不是能代表整数的字符串， 因为在字符串中有非法的文字，即，空格以及“+”字符。可以这样理解eval()函数的工作方式：对表达式两端的引号视而不见，接着假设“如果我是python解释器，我会怎样去观察表达式呢？”，换句话说，如果以交互方式输入相同的表达式，解释器会做出怎么样的反应呢？按下回车后的结果应该和eval()返回的结果相同。
+
+14.3.4  exec
+
+Like eval(), the exec statement also executes either a code object or a string  representing  Python  code.  Similarly,  precompiling  soft-repeated code  with  compile() helps  improve  performance  by  not  having  to  go through the byte-code compilation process for each invocation. The exec statement takes exactly one argument, as indicated here with its general syntax:
+和eval()相似，exec语句执行代码对象或字符串形式的python代码。类似地，用compile()预编译重复代码有助于改善性能，因为在调用时不必经过字节编译处理。exec语句只接受一个参数，下面便是它的通用语法：
+
+exec obj
+
+　The executed object (obj) can be either a single statement or a group of statements, and either may be compiled into a code object (with “single” or “exec,” respectively) or it can be just the raw string. Below is an example of multiple statements being sent to exec as a single string:
+被执行的对象(obj)可以只是原始的字符串，比如单一语句或是语句组，它们也可以预编译成一个代码对象（分别用'single'和'exec"参数)。下面的例子中，多个语句作为一个字符串发送给exec：
+
+>>> exec """
+... x = 0
+... print 'x is currently:', x
+... while x < 5:
+...	x += 1
+...	print 'incrementing x to:', x
+... """
+x is currently: 0 incrementing x to: 1 incrementing x to: 2 incrementing x to: 3 incrementing x to: 4 incrementing x to: 5
+
+Finally,  exec can  also  accept  a  valid  file  object  to  a  (valid)  Python file. If we take the code in the multi-line string above and create a file called xcount.py, then we could also execute the same code with the
+following
+最后, exec还可以接受有效的python文件对象。如果我们用上面的多行代码创建一个叫xcount.py的文件，那么也可以用下面的方法执行相同的代码
+
+>>> f = open('xcount.py')	# open the file
+>>> exec f	# execute the file
+x is currently: 0
+
+
+
+
+
+
+try execution again
+尝试再一次执行
+
+oops, it failed... why?
+哦，失败了....为什么？
+
+
+
+
+
+
+
+
+
+
+
+
+14.3	Executable Object Statements and Built-in Functions	641
+	可执行对象语句和内建函数
+
+Note  that  once  execution  has  completed,  a  successive  call  to  exec fails. Well, it doesn’t really fail . . . it just doesn’t do anything, which may have caught you by surprise. In reality, exec has read all the data in the file  and  is  sitting  at  the  end-of-file  (EOF).  When  exec is  called  again with the same file object, there is no more code to execute, so it does not do anything, hence the behavior seen above. How do we know that it is at EOF?
+注意一旦执行完毕，继续对exec的调用就会失败。呃，并不是真正的失败。。。只是不再做任何事，这或许让你感到吃惊。事实上，exec已从文件中读取了全部的数据且停留在文件末尾(EOF)。当用相同文件对象对exec进行调用的时候，便没有可以执行的代码了，所以exec什么都不做，如同上面看见的行为。我们如何知道它在EOF呢？
+
+　We use the file object’s tell() method to tell us where we are in the file and  then  use  os.path.getsize() to  tell  us  how  large  our  xcount.py script was. As you can see, there is an exact match:
+我们用文件对象的tell()方法来告诉我们处于文件的何处，然后用os.path.getsize()来告诉我们xcount.py脚本有多大。这样你就会发现，两个数字完全一样：
+
+>>> f.tell()	# where are we in the file?  # 我们在文件的什么地方？
+116
+>>> f.close()	# close the file  # 关闭文件
+>>> from os.path import getsize
+>>> getsize('xcount.py')	# what is the file size?  # 文件有多大？
+116
+　If we really want to run it again without closing and reopening the file, you can just seek() to the beginning of the file and call exec again. For example, let us assume that we did not call f.close() yet. Then we can do the fol- lowing:
+如果想在不关闭和重新打开文件的情况下再次运行它，可以用seek()到文件最开头并再次调用exec了。比如，假定我们还没有调用f.close()，那么我们可以这样做：
+
+>>> f.seek(0)	# rewind to beginning 倒会文件开头
+>>> exec f
+x is currently: 0 incrementing x to: 1 incrementing x to: 2 incrementing x to: 3 incrementing x to: 4 incrementing x to: 5
+>>> f.close()
+
+
+14.3.5  input()
+
+The   input() BIF   is   the   same   as   the   composite   of   eval() and raw_input(),  equivalent  to  eval(raw_input()).  Like  raw_input(), input() has an optional parameter, which represents a string prompt to dis- play to the user. If not provided, the string has a default value of the empty string.
+内建函数input()是eval()和raw_input()的组合，等价于eval(raw_input())。类似于raw_input()，input()有一个可选的参数，该参数代表了给用户的字符串提示。如果不给定参数的话，该字符串默认为空串。
+
+　Functionally, input() differs from raw_input() because raw_input() always returns a string containing the user’s input, verbatim.  input() per- forms the same task of obtaining user input; however, it takes things one step further by evaluating the input as a Python expression. This means that the data returned by input() are a Python object, the result of performing the evaluation of the input expression. 
+从功能上看,input不同于raw_input()，因为raw_input()总是以字符串的形式，逐字地返回用户的输入。input()履行相同的的任务；而且，它还把输入作为python表达式进行求值。这意味着input()返回的数据是对输入表达式求值的结果：一个python对象。
+
+　One clear example is when the user inputs a list. raw_input() returns the string representation of a list, while input() returns the actual list:
+    下面的例子会让人更加清楚：当用户输入一个列表时，raw_input()返回一个列表的字符串描绘，而input()返回实际的列表：
+
+>>> aString = raw_input('Enter a list: ') Enter a list: [ 123, 'xyz', 45.67 ]
+>>> aString
+"[ 123, 'xyz', 45.67 ]"
+>>> type(aString)
+<type 'str'>
+
+The above was performed with raw_input(). As you can see, everything is a string. Now let us see what happens when we use input() instead:
+上面用raw_input()运行。正如你看见的，每样东西都是字符串。现在来看看当用input()的时候会发生什么：
+
+>>> aList = input('Enter a list: ') Enter a list: [ 123, 'xyz', 45.67 ]
+>>> aList
+[123, 'xyz', 45.67]
+>>> type(aList)
+<type 'list'>
+
+　Although the user input a string, input() evaluates that input as a Python object and returns the result of that expression.
+  虽然用户输入字符串，但是input()把输入作为python对象来求值并返回表达式的结果。
+
+
+14.3.6  Using Python to Generate and Execute
+Python Code at Runtime
+使用Python在运行时生成和执行Python代码
+
+In  this  section,  we  will  look  at  two  examples  of  Python  scripts  that  take Python code as strings and execute them at runtime. The first example is more  dynamic,  but  the  second  shows  off  function  attributes  at  the  same time.
+在这个小节中，我们将看到两个python脚本的例子，这两个例子在运行时刻把python代码作为字符串并执行。第一个例子更加动态，但第二个突出了函数属性。
+
+
+Creating Code at Runtime and Executing It
+在运行时生成和执行Python代码
+
+The first example is loopmake.py script, which is a simple computer-aided software engineering (CASE) that generates and executes loops on-the-fly. It prompts the user for the various parameters (i.e., loop type (while or for), type of data to iterate over [numbers or sequences]), generates the code string, and executes it.
+第一个例子是loopmake.py脚本，一个简单的、迅速生成和执行循环的计算机辅助软件工程(CASE)。它提示用户给出各种参数（比如，循环类型（while或for), 迭代的数据类型[数字或序列]),生成代码字串，并执行它
+
+Example 14.1  Dynamically Generating and Executing Python Code
+动态生成和执行Python代码
+(loopmake.py)
+
+1	#!/usr/bin/env python
+2
+3	dashes = '\n' + '-' * 50 # dashed line   #破折号行
+4	exec_dict = {
+5
+6	'f': """	# for loop  for循环
+7	for %s in %s:
+8	print %s
+9	""",
+10
+11   's': """	# sequence while loop  while循环序列
+12   %s = 0
+13   %s = %s
+14   while %s < len(%s):
+15	print %s[%s]
+16	%s = %s + 1
+17   """,
+18
+19   'n': """	# counting while loop  点数while循环
+20   %s = %d
+21   while %s < %d:
+22	print %s
+23	%s = %s + %d
+24   """
+25   }
+26
+27   def main():
+28
+
+
+
+
+32	if dtype == 'n':
+(For/While) ')
+(Number/Seq) ')
+33	start = input('Starting value? ')
+input('Ending value (non-inclusive)? ')
+input('Stepping value? ')
+str(range(start, stop, step))
+
+38	else:
+39	seq = raw_input('Enter sequence: ')
+40
+41	var = raw_input('Iterative variable name? ')
+42
+43	if ltype == 'f':
+44	exec_str = exec_dict['f'] % (var, seq, var)
+45
+46	elif ltype == 'w':
+47	if dtype == 's':
+48	svar = raw_input('Enter sequence name? ')
+49	exec_str = exec_dict['s'] % \
+50	(var, svar, seq, var, svar, svar, var, var, var)
+51
+
+Example 14.1   Dynamically Generating and Executing Python Code
+(loopmake.py) (continued)
+
+52	elif dtype == 'n':
+53	exec_str = exec_dict['n'] % \
+54	(var, start, var, stop, var, var, var, step)
+55
+56	print dashes
+57	print 'Your custom-generated code:' + dashes
+58	print exec_str + dashes
+59	print 'Test execution of the code:' + dashes
+60	exec exec_str
+61	print dashes
+62
+
+
+
+
+Here are a few example executions of this script:
+以下脚本执行的例子
+
+% loopmake.py
+Loop type? (For/While) f
+Data type? (Number/Sequence) n
+Starting value? 0
+Ending value (non-inclusive)? 4
+
+Stepping value? 1
+Iterative variable name? counter
+
+-------------------------------------------------- The custom-generated code for you is:--------------------------------------------------
+
+for counter in [0, 1, 2, 3]:
+print counter
+
+-------------------------------------------------- Test execution of the code:--------------------------------------------------
+0
+1
+2
+3
+
+--------------------------------------------------
+% loopmake.py
+Loop type? (For/While) w
+Data type? (Number/Sequence) n
+Starting value? 0
+Ending value (non-inclusive)? 4
+Stepping value? 1
+Iterative variable name? counter
+
+-------------------------------------------------- Your custom-generated code:--------------------------------------------------
+
+counter = 0
+while counter < 4:
+print counter
+counter = counter + 1
+
+-------------------------------------------------- Test execution of the code:--------------------------------------------------
+0
+1
+2
+3
+
+--------------------------------------------------
+
+% loopmake.py
+Loop type? (For/While) f
+Data type? (Number/Sequence) s
+Enter sequence: [932, 'grail', 3.0, 'arrrghhh'] Iterative variable name? eachItem
+
+-------------------------------------------------- Your custom-generated code:--------------------------------------------------
+
+for eachItem in [932, 'grail', 3.0, 'arrrghhh']:
+print eachItem
+
+-------------------------------------------------- Test execution of the code:--------------------------------------------------
+932
+grail
+3.0
+arrrghhh
+
+--------------------------------------------------
+% loopmake.py
+Loop type? (For/While) w
+Data type? (Number/Sequence) s
+
+
+Enter sequence: [932, 'grail', 3.0, 'arrrghhh'] Iterative variable name? eachIndex
+Enter sequence name? myList
+
+-------------------------------------------------- Your custom-generated code:--------------------------------------------------
+
+eachIndex = 0
+myList = [932, 'grail', 3.0, 'arrrghhh']
+while eachIndex < len(myList): print myList[eachIndex] eachIndex = eachIndex + 1
+
+-------------------------------------------------- Test execution of the code:--------------------------------------------------
+932
+grail
+3.0
+arrrghhh
+
+--------------------------------------------------
+
+Line-by-Line Explanation
+逐行解释
+
+Lines 1–25
+In this first part of the script, we are setting up two global variables. The first is a static string consisting of a line of dashes (hence the name) and the sec- ond is a dictionary of the skeleton code we will need to use for the loops we are going to generate. The keys are “f” for a for loop, “s” for a while loop iterating through a sequence, and “n” for a counting while loop.
+在脚本的第一部分，我们设置了两个全局变量。第一个是由一行破折号（即是名字）组成的静态字符串，第二个则是由用于生成循环的骨架代码组成的字典。for循环的健值是'f'，用于迭代序列的while循环的则是"s"，而记数while循环的是'n‘
+
+Lines 27–30
+Here we prompt the user for the type of loop he or she wants and what data types to use.
+这里我们提示用户输入他（她）想要的循环类型和数据类型
+
+Lines 32–36
+Numbers have been chosen; they provide the starting, stopping, and incre- mental values. In this section of code, we are introduced to the input() BIF for  the  first  time.  As  we  shall  see  in  Section  14.3.5,  input() is  similar  to raw_input() in  that  it  prompts  the  user  for  string  input,  but  unlike raw_input(),  input() also  evaluates  the  input  as  a  Python  expression, rendering a Python object even if the user typed it in as a string.
+选定数字；给出开始，停止，以及增量值。在这个部分的代码中，第一次引入了内建函数input()。我们将在14.3.5小节中看到，input()和raw_input()相似，因为它提示用户给出字符串输入，但是不同于raw_input()，input()会把输入当成python表达式来求值，即使用户以字符串的形式输入，也会返回一个python对象
+
+Lines 38–39
+A sequence was chosen; enter the sequence here as a string.
+选定序列；这里以字符串的形式输入一个序列
+
+Line 41
+Get the name of the iterative loop variable that the user wants to use.
+给出用户想要使用的迭代循环变量的名字
+
+Lines 43–44
+Generate the for loop, filling in all the customized details.
+生成添加自定义内容的for循环。
+
+Lines 46–50
+Generate a while loop which iterates through a sequence.
+生成迭代序列的while循环。
+
+Lines 52–54
+Generate a counting while loop.
+生成计数的while循环
+
+Lines 56–61
+Output the generated source code as well as the resulting output from execu- tion of the aforementioned generated code.
+输出生成的源代码及其执行后的结果
+
+Lines 63–64
+Execute main() only if this module was invoked directly.
+当直接调用该模块的时候，执行main()
+
+　To keep the size of this script to a manageable size, we had to trim all the comments and error checking from the original script. You can find both the original as well as an alternate version of this script on the book’s Web site.
+    为了很好地控制脚本的大小，我们从原来的脚本中剔除了所有的注释和错误检测。在本书的web站点上,都可以找到原来的和修改后的版本。
+
+　The extended version includes extra features such as not requiring enclos- ing quotation marks for string input, default values for input data, and detec- tion of invalid ranges and identifiers; it also does not permit built-in names or keywords as variable names.
+扩展的版本包括了额外的特性，比如用于字符串输入的不必要的引号，输入数据的默认值，以及检测无效的返回和标识符；也不允许以关键字和内建名字作为变量名字
+
+Conditionally Executing Code
+有条件地执行代码
+
+Our  second  example  highlights  the  usefulness  of  function  attributes  intro- duced back in Chapter 11, “Functions”, inspired by the example in PEP 232. Let us assume that you are a software QA developer encouraging your engi- neers to install either regression testers or regression instruction code into the main source but do not want the testing code mixed with the production code. You can tell your engineers to create a string representing the testing code. When your test framework executes, it checks to see if that function has defined a test body, and if so, (evaluates and) executes it. If not, it will skip and continue as normal.
+第二个例子着重描写了在第11章"函数"引入的函数属性，它是从Python增强提议232（PEP 232）中的例子得到的灵感。假设你是一位负责质量控制的软件开发者，你鼓励你的工程师将回归测试或回归指令代码放到主代码中，但又不想让测试代码混合到产品代码中。你可以让工程师创建字符串形式的测试代码。当你的测试框架执行的时候，它会检测函数是否定义了测试体，如果是的话，(求值并）执行它。如果不是，便跳过，像通常一样执行。
+
+Example 14.2  Function Attributes (funcAttrs.py)
+
+Calling sys.exit() causes the Python interpreter to quit. Any integer argument to exit() will be returned to the caller as the exit status, which has a default value of 0.
+调用sys.exit()使python解释器退出。exit()的任何整数参数作为退出状态会返回给调用者，该值默认为0
+
+1	#!/usr/bin/env python
+2
+3	def foo():
+4	return True
+5
+6	def bar():
+7	'bar() does not do much'
+8	return True
+9
+10    foo.__doc__ = 'foo() does not do much'
+
+
+13	print 'PASSED'
+14    else:
+15	print 'FAILED'
+16    '''
+17
+18    for eachAttr in dir():
+19	obj = eval(eachAttr)
+20	if isinstance(obj, type(foo)):
+21	if hasattr(obj, '__doc__'):
+22	print '\nFunction "%s" has a doc
+string:\n\t%s' % (eachAttr, obj.__doc__)
+23	if hasattr(obj, 'tester'):
+24	print 'Function "%s" has a tester... execut-
+ing' % eachAttr
+25	exec obj.tester
+26	else:
+27	print 'Function "%s" has no tester... skip-
+ping' % eachAttr
+28	else:
+29	print '"%s" is not a function' % eachAttr
+
+
+Lines 1–8
+We define foo() and bar() in the first part of this script. Neither function does anything other than return True. The one difference between the two is that foo() has no attributes while bar() gets a documentation string.
+我们在脚本的开始部分定义了foo()和bar()。两个函数都只是返回True。不同点在于foo()没有属性而bar()有文档字串。
+
+Lines 10–16
+Using function attributes, we add a doc string and a regression or unit tester string to foo(). Note that the tester string is actually comprised of real lines of Python code.
+使用函数属性，我们给foo()加入了文档字串以及退化或单元测试字符串。注意检测字符串实际上由python代码组成。
+
+Lines 18–29
+Okay, the real work happens here. We start by iterating through the current (global)  namespace  using  the  dir() BIF.  It  returns  a  list  of  the  object names.  Since  these  are  all  strings,  we  need  line  19  to  turn  them  into  real Python objects.
+好了，真正的工作在这里开始。我们从用内建函数dir()迭代现在(即全局）名字空间开始。它返回的列表包含了所有对象的名字。因为这些都是字符串，我们需要在第19行将它们转化为真正的python对象。
+
+　Other  than  the  expected  system  variables,  i.e.,  __builtins__,  we expect our functions to show up. We are only interested in functions; the code in line 20 will let us skip any non-function objects encountered. Once we know we have a function, we check to see if it has a doc string, and if so, we display it. Lines  23–27  perform  some  magic.  If  the  function  has  a   tester attribute, then execute it, otherwise let the user know that no unit tester is available. The last few lines display the names of non-function objects encountered. Upon executing the script, we get the following output:
+除了预期的系统变量，比如，__builtins__，我们还期望显示函数。我们只对函数有兴趣；第20行的代码让我们跳过了所有遇到的非函数对象。一旦我们知道我们有某个函数，就可以检查它是否有文档字串，如果有的话，把它显示出来。23-27行表演了魔法。如果函数有检测属性，那么就执行它，否则告诉用户没有可用的单元测试。最后的几行显示出遇到的非函数对象的名字。执行代码后，我们得到如下的输出：
+
+$ python funcAttr.py
+"__builtins__" is not a function
+"__doc__" is not a function
+"__file__" is not a function
+"__name__" is not a function
+
+Function "bar" has a doc string:
+bar() does not do much
+Function "bar" has no tester... skipping
+
+Function "foo" has a doc string:
+foo() does not do much
+Function "foo" has a tester... executing
+PASSED
+
+
+
+14.4 Executing Other (Python) Programs
+执行其他（Python）程序
+
+When we discuss the execution of other programs, we distinguish between Python programs and all other non-Python programs, which include binary executables or other scripting language source code. We will cover how to run other Python programs first, then how to use the os module to invoke external programs.
+当讨论执行其他程序时，我们把它们分类为python程序和其他所有的非python程序，后者包括了二进制可执行文件或其他脚本语言的源代码。我们先讨论如何运行其他的python程序，然后是如何用os模块调用外部程序。
+14.4.1  Import
+导入
+
+During  runtime,  there  are  a  number  of  ways  to  execute  another  Python script. As we discussed earlier, importing a module the first time will cause the code at the top level of that module to execute. This is the behavior of Python importing, whether desired or not. We remind you that the only code that belongs to the top level of a module are global variables, and class and function declarations.
+在运行时刻，有很多执行另外python脚本的方法。正如我们先前讨论的，第一次导入模块会执行模块最高级的代码。不管你是否需要，这就是python导入的行为。提醒，只有属于模块最高级的代码才是全局变量，全局类，和全局函数声明。
+
+
+
+CORE NOTE: All modules executed when imported
+核心笔记：当模块导入后，就执行所有的模块
+
+This is just a friendly reminder: As already alluded to earlier in Chapters 3 and 12, we will tell you one more time that Python modules are executed when they are imported! When you import the foo module, it runs all of the top-level (not indented) Python code, i.e., “main()”. If foo contains a declaration for the bar function, then def foo(...) is executed. Why is that again? Well, just think what needs to be done in order for the call foo.bar() to succeed. Somehow bar has to be recognized as a valid name in the foo module (and in foo’s namespace), and second, the interpreter needs to know it is a declared function, just like any other function in your local module. Now that we know what we need to do, what do we do with code that we do not want executed every time our module is imported? Indent it and put it in the suite for the if __name__ == '__main__'.
+这只是一个善意的提醒：在先前的第3章和第12章已经谈过了，现在再说一次，当导入python模块后，就执行所有的模块!当导入python模块后，会执行该模块!当你导入foo模块时候，它运行所有最高级别的（即没有缩进的）python代码，比如，'main()’。如果foo含有bar函数的声明，那么便执行def foo(...)。再问一次为什么会这样做呢？…… 由于某些原因，bar必须被识别为foo模块中一个有效的名字，也就是说bar在foo的名字空间中，其次，解释器要知道它是一个已声明的函数，就像本地模块中的任何一个函数。现在我们知道要做什么了，那么如何处理那些不想每次导入都执行的代码呢？缩进它，并放入if __name__ == '__main__' 的内部。
+
+
+
+　These should be followed by an if statement that checks __name__ to determine if a script is invoked, i.e., “if __name__ == '__main__'”. In these cases, your script can then execute the main body of code, or, if this script was meant to be imported, it can run a test suite for the code in this module.
+跟着应该是一个if语句，它通过检测__name__来确定是否要调用脚本，比如，“if__name__ == '__main__'”。如果相等的话，你的脚本会执行main内代码；否则只是打算导入这个脚本，那么可以在这个模块内对代码进行测试。
+
+　One  complication  arises  when  the  imported  module  itself  contains import statements.  If  the  modules  in  these  import statements  have  not been  loaded  yet,  they  will  be  loaded  and  their  top-level  code  executed, resulting in recursive import behavior. We present a simple example below. We have two modules import1 and import2, both with print statements at their outermost level. import1 imports import2 so that when we import import1 from within Python, it imports and “executes” import2 as well. Here are the contents of import1.py:
+当导入python模块后，会执行该模块!当你导入foo模块时候，它运行所有最高级别的（即没有缩进的）python代码，…… 再问一次为什么会这样做呢？…… 由于某些原因，bar必须被识别为foo模块中一个有效的名字，也就是说bar在foo的名字空间中，其次，解释器要知道它是一个已声明的函数，就像本地模块中的任何一个函数。现在我们知道要做什么了，那么如何处理那些不想每次导入都执行的代码呢？缩进它，并放入if __name__ == '__main__' 的内部。
+
+# import1.py
+print 'loaded import1'
+import import2
+And here are the contents of import2.py:
+这里是import2.py的内容：
+
+# import2.py
+print 'loaded import2'
+Here is the output when we import import1 from Python:
+这是当我们导入import1时的输出
+
+>>> import import1 loaded import1 loaded import2
+>>>
+　Following our suggested workaround of checking the value of __name__, we can change the code in import1.py and import2.py so that this behav- ior does not occur.
+    根据建议检测__name__值的迂回工作法，我们改变了import1.py和import2.py里的代码，这样的情况就不会发生了
+
+Here is the modified version of import1.py:
+这里是修改后的import.py版本：
+
+# import1.py
+import import2
+if __name__ == '__main__':
+print 'loaded import1'
+The following is the code for import2.py, changed in the same manner:
+接着是import2.py的代码，以相同的方式修改：
+
+# import2.py
+if __name__ == '__main__'
+print 'loaded import2'
+We no longer get any output when we import import1 from Python:
+当从python中导入import1的时候，我们不再会得到任何输出
+
+>>> import import1
+>>>
+　Now it does not necessarily mean that this is the behavior you should code for all situations. There may be cases where you  want to display output to confirm a module import. It all depends on your situation. Our goal is to pro- vide pragmatic programming examples to prevent unintended side effects.
+这不意味着在任何的情况下，都该这样编写代码。在某些情况中，你可能想要显示输出来确定输入模块。这取决于你自身的情况。我们的目标是提供实效的编程例子来屏蔽副作用。
+    
+
+14.4.2  execfile()
+
+It  should  seem  apparent  that  importing  a  module  is  not  the  preferred method of executing a Python script from within another Python script; that is not what the importing process is. One side effect of importing a module is the execution of the top-level code.
+显然，导入模块不是从另外的python脚本中执行python脚本最可取的方法。那也就不是导入过程。导入模块的副作用是导致最高级代码运行。
+
+
+　Earlier in this chapter, we described how the exec statement can be used with a file object argument to read the contents of a Python script and exe- cute it. This can be accomplished with the following code segment:
+    这章一开始，我们描述了如何通过文件对象，使用exec语句来读取python脚本的内容并执行。下面的代码给出了例子：
+
+f = open(filename, 'r')
+exec f f.close()
+
+The three lines can be replaced by a single call to execfile():
+这3行可以调用execfile()来换掉：
+
+execfile(filename)
+
+　Although the code above does execute a module, it does so only in its cur- rent execution environment (i.e., its global and local namespace). There may be  a  desire  to  execute  a  module  with  a  different  set  of  global  and  local namespaces  instead  of  the  default  ones.  The  full  syntax  of  execfile() is very similar to that of eval():
+虽然上述代码执行了一个模块，但是仅可以在现有的执行环境下运行（比如，它自己的全局和局部的名字空间）。在某些情况下，可能需要用不同全局和局部的名字空间集合，而不是默认的集合来执行模块。execfile() 函数的语法非常类似于eval()函数的。
+
+execfile(filename, globals=globals(), locals=locals())
+
+　Like eval(), both globals and locals are optional and default to the executing environments’ namespaces if not given. If only globals is given, then locals defaults to globals. If provided, locals can be any mapping object [an object defining/overriding __getitem__()], although before 2.4, it was required to be a dictionary. Warning: be very careful with your local namespace (in terms of modifying it). It is much safer to pass in a dummy “locals”   dictionary   and   check   for   any   side   effects.   Altering   the   local namespace is not guaranteed by execfile()! See the Python Library Ref- erence Manual’s entry for execfile() for more details.
+类似eval()，globals和locals都是可选的，如果不提供参数值的话，默认为执行环境的名字空间。如果只给定globals，那么locals默认和globals相同。如果提供locals值的话，它可以是任何映射对象[一个定义/覆盖了__getitem__()的对象]。在在2.4之前，locals必须是一个字典。注意：（在修改的时候）小心局部名字空间。比较安全的做法是传入一个虚假的"locals"字典并检查是否有副作用。execfile()不保证不会修改局部名字空间。见python库参考手册对execfile()的解释
+
+
+14.4.3  Executing Modules as Scripts
+将模块作为脚本执行
+
+A new command-line option (or switch) was added in Python 2.4 that allows you to directly execute a module as a script from your shell or DOS prompt. When  you  are  writing  your  own  modules  as  scripts,  it  is  easy  to  execute them. From your working directory, you would just call your script on the command line:
+python2.4里加入了一个新的命令行选项（或开关），允许从shell或DOS提示符，直接把模块作为脚本来执行。当以脚本的方式来书写你的模块的时候，执行它们是很容易的。你可以使用命令行从你的工作目录调用你的脚本。
+
+$ myScript.py # or $ python myScript.py
+　This is not as easy if you are dealing with modules that are part of the stan- dard library, installed in site-packages, or just modules in packages, especially
+if they also share the same name as an existing Python module. For example, let us say you wanted to run the free Web server that comes with Python so that you can create and test Web pages and CGI scripts you wrote.
+如果模块是标准库的一部分，安装在site-packages里，或者仅仅是包里面的模块，处理这样的模块就不是那么容易了，尤其是它们共享了已存在的同名python模块。举例来说，你想运行免费的python web服务器，以便创建和测试你自己的web页面和CGI脚本。
+
+You would have to type something like the following at the command line:
+你将必须在命令行敲入如下的东西：
+
+$ python /usr/local/lib/python2x/CGIHTTPServer.py
+Serving HTTP on 0.0.0.0 port 8000 ...
+
+　That is a long line to type, and if it is a third-party, you would have to dig into site-packages to find exactly where it is located, etc. Can we run a module from the command line without the full pathname and let Python’s import mechanism do the legwork for us? That answer is yes. We can use the Python -c command-line switch:
+     这是段很长的命令，如果它是第三方的，你不得不深入到site-packages去找到它真正定位的地方。如果没给出完全的路径名，可以从命令行运行一个模块，并让python的导入机制为我们做这种跑腿工作吗？答案是肯定的。我们可以用python -c 命令行开关：
+
+$ python -c "import CGIHTTPServer; CGIHTTPServer.test()"
+　This option allows you to specify a Python statement you wish to run. So it does   work,   but   the   problem   is   that   the   __name__ module   is   not '__main__'. . . it is whatever module name you are using. (You can refer back to Section 3.4.1 for a review of __name__ if you need to.) The bottom line is that the interpreter has loaded your module by import and not as a script. Because of this, all of the code under if __name__ == '__main__' will not execute, so you have to do it manually like we did above calling the test() function of the module. So what we really want is the best of both worlds—being able to execute a module in your library but as a script and not as an imported module. That is the main motivation behind the -m option. Now you can run a script like this:
+该选项允许你指定你想要运行的python语句。虽然它可以这样工作，但问题是__name__模块不是‘__main__’........而是你正在使用的模块。(需要的话，你可以参阅前面的3.4.1小节复习__name__)在最后一行，解释器通过import装载了你的模块，并不是它当作脚本。因为如此，所有在if __name__ == '__main__' 之下的代码是不会执行的，所以你不得不手动地调用模块的test()函数，就如同前面我们所做的一样。所以我们想同时要两者的优点——能够在类库中执行作为脚本的模块而不是作为导入的模块。这就是-m参数的动机。现在可以像这样运行脚本：
+
+$ python -m CGIHTTPServer
+That is quite an improvement. Still, the feature was not as fully complete as some would have liked. So in Python 2.5, the  -m switch was given even more capability. Starting with 2.5, you can use the same option to run mod- ules  inside  packages  or  modules  that  need  special  loading,  such  as  those inside  ZIP  files,  a  feature  added  in  2.3  (see  Section  12.5.7  on  page  396). Python 2.4 only lets you execute standard library modules. So running special modules like PyChecker (Python’s “lint”), the debugger (pdb), or any of the profilers (note that these are modules that load and run other modules) was not solved with the initial -m solution but is fixed in 2.5.
+这是不小的改进。尽管如此，还没有完全如预想那样实现特性。所以在python2.5中，-m开关有了更多的兼容性。从2.5开始，你可以用相同的参数来运行包内或需要特别加载的模块，比如zip文件里的模块，这是在2.3加入的特性（12.5.7小节，396页）。python2.4只让你执行标准的库模块。所以初始版本的-m选项是不能运行特殊的模块如PyCHecker(python的lint)，或其他的profiler(注意这些是装载和运行其他模块的模块）。但是2.5版本解决了这个问题。
+
+14.5 Executing Other (Non-Python) Programs
+执行其他（非Python）程序
+
+
+We  can  also  execute  non-Python  programs  from  within  Python.  These include binary executables, other shell scripts, etc. All that is required is a valid execution environment, i.e., permissions for file access and execution must  be  granted,  shell  scripts  must  be  able  to  access  their  interpreter (Perl, bash, etc.), binaries must be accessible (and be of the local machine’s architecture).
+在python程序里我们也可以执行非python程序。这些程序包括了二进制可执行文件，其他的shell脚本等等。所有的要求只是一个有效的执行环境，比如，允许文件访问和执行，脚本文件必须能访问它们的解释器(perl, bash,等等），二进制必须是可访问的（和本地机器的构架兼容）
+
+　Finally, the programmer must bear in mind whether our Python script is required  to  communicate  with  the  other  program  that  is  to  be  executed. Some programs require input, others return output as well as an error code upon  completion  (or  both).  Depending  on  the  circumstances,  Python  pro- vides a variety of ways to execute non-Python programs. All of the functions discussed in this section can be found in the os module. We provide a sum- mary for you in Table 14.6 (where appropriate, we annotate those that are available only for certain platforms) as an introduction to the remainder of this section.
+    最终，程序员必须考虑python脚本是否必须和其他将要执行的程序通信。有些程序需要输入，而有的程序返回输出以及执行完成时的错误代码，也许有的两者都做。针对不同的环境，python提供了各种执行非python程序的方法。在本节讨论的所有函数都可以在os模块中找到。在表14.6中，我们做了总结（我们会对那些只适合特定平台的函数进行标注），作为对本节剩余部分的介绍。
+
+
+Table 14.6  os Module Functions for External Program Execution
+                 执行外部程序的os模块函数
+( U  Unix only, W Windows only)
+(u 只对unix有效， w 只对windows有效）
+
+os Module Function	Description
+os模块函数		描述
+
+system(cmd)	Execute program cmd given as string, wait for pro- gram completion, and return the exit code (on Win- dows, the exit code is always 0)
+                            执行程序cmd（字符串），等待程序结束，返回退出代码（windows下，始终为0）
+
+fork()	Create a child process that runs in parallel to the parent process [usually used with exec*()];return twice... once for the parent and once for the child  U
+              创建一个和父进程并行的子进程[通常来说和exec*()一起使用]；返回两次....一次给父进程一次给子进程
+
+
+execl(file, arg0,
+arg1,...)
+
+Execute file with argument list arg0, arg1, etc.
+用参数列表arg0, arg1等等执行文件
+
+execv(file, arglist) Same as execl() except with argument vector (list or tuple) arglist
+                          除了使用参数向量列表，其他的和execl()相同
+
+
+execle(file, arg0,
+arg1,... env)
+
+execve(file,
+arglist, env)
+
+execlp(cmd, arg0,
+arg1,...)
+
+Same as execl() but also providing environment variable dictionary env
+和execl相同，但提供了环境变量字典env
+
+Same as execle() except with argument vector arglist
+  除了带有参数向量列表，其他的和execle()相同
+
+Same as execl() but search for full file pathname of cmd in user search path
+于execl()相同，但是在用户的搜索路径下搜索完全的文件路径名
+
+execvp(cmd, arglist) Same as execlp() except with argument vector
+arglist
+除了带有参数向量列表，与execlp()相同
+
+Table 14.6  os Module Functions for External Program Execution
+	 执行外部程序的os模块函数（续表）(u 只对unix有效， w 只对windows有效）
+( U  Unix only, W Windows only) (continued)
+
+
+os Module Function	Description
+os模块函数		描述
+
+
+execlpe(cmd, arg0, arg1,... env)
+
+execvpe(cmd,
+arglist, env)
+
+spawn*a(mode, file, args[, env])
+Same as execlp() but also providing environ-ment variable dictionary env
+和execlp相同，但提供了环境变量字典env
+
+Same as execvp() but also providing environ- ment variable dictionary env
+和execvp相同，但提供了环境变量字典env
+
+spawn*() family executes path in a new process given args as arguments and possibly an environ- ment variable dictionary env; mode is a magic number indicating various modes of operation
+spawn*()家族在一个新的进程中执行路径，args作为参数，也许还有环境变量的字典env;模式（mode）是个显示不同操作模式的魔术。
+
+wait()	Wait for child process to complete [usually used with fork() and exec*()]  U
+              等待子进程完成[通常和fock和exec*()一起使用] U
+
+
+waitpid(pid,
+options)
+
+Wait for specific child process to complete [usually used with fork() and exec*()]  U
+ 等待指定的子进程完成[通常和fock和exec*()一起使用] U
+
+
+popen(cmd, mode='r',
+buffering=-1)
+
+Execute cmd string, returning a file-like object as a communication handle to the running program, defaulting to read mode and default system buffering startfileb(path)	Execute path with its associated  application W
+执行字符串cmd，返回一个类文件对象作为运行程序通信句柄，默认为读取模式和默认系统缓冲startfileb(path)    用关联的应用程序执行路径 W
+
+a.	spawn*() functions named similarly to exec*() (both families have eight mem- bers); spawnv() and spawnve() new in Python 1.5.2 and the other six spawn*() functions  new  in  Python  1.6;  also  spawnlp(),  spawnlpe(),  spawnvp() and spawnvpe() are Unix-only.
+	spawn*()函数命名与exec*()相似（两个家族都有8个成员）；spawnv()和spawnve()在python 1.5.2加入,其他的六个spawn*()函数在python 1.6加入；spawnlp(),  spawnlpe(),  spawnvp() 和spawnvpe()只适用于unix平台。
+
+b.	New in Python 2.0.
+	python2.0是加入的
+
+As  we  get  closer  to  the  operating  system  layer  of  software,  you  will notice  that  the  consistency  of  executing  programs,  even  Python  scripts, across  platforms  starts  to  get  a  little  dicey.  We  mentioned  above  that  the functions described in this section are in the os module.  Truth is, there are multiple  os modules.  For  example,  the  one  for  Unix-based  systems  (i.e., Linux,  MacOS  X,  Solaris,  ?BSD,  etc.)  is  the  posix module.  The  one  for Windows is nt (regardless of which version of Windows you are running; DOS  users  get  the  dos module),  and  the  one  for  old  MacOS  is  the  mac module. Do not worry, Python will load the correct module when you call import os. You should never need to import a specific operating system module directly.
+随着越来越接近软件的操作系统层面，你就会发现执行跨平台程序（甚至是python脚本）的一致性开始有些不确定了。上面我们提到在这个小节中描述的程序在os模块中。事实上，有多个os模块。比如说，基于Unix衍生系统（例如Linux,MacOS X, Solaris,BSD等等）的模块是posix模块，windows的是nt(无论你现在用的是哪个版本的windows;dos用户有dos模块），旧的macOS为mac模块。不用担心，当你调用import os的时候，python会装载正确的模块。你不需要直接导入特定的操作系统模块。
+
+
+　Before we take a look at each of these module functions, we want to point out  for  those  of  you  using  Python  2.4  and  newer,  there  is  a  subprocess module that pretty much can substitute for all of these functions. We will show you later on in this chapter how to use some of these functions, then at the end give the equivalent using the subprocess.Popen class and sub- process.call() function.
+    在我们看看每个模块函数之前，对于python2.4或者更新版本的用户，这里有个subprocess模块，可以作为上面所有函数很好的替代品。我们本章稍后部分演示如何使用这些函数，然后在最后给出subprocess.Popen类和subprocess.call()函数的等价使用方法。
+
+14.5.1  os.system()
+
+The first function on our list is system(), a rather simplistic function that takes a system command as a string name and executes it. Python execution is  suspended  while  the  command  is  being  executed.  When  execution  has completed, the exit status will be given as the return value from system() and Python execution resumes.
+我们列表中的第一个函数是system()，一个非常简单的函数，接收字符串形式的系统命令并执行它。当执行命令的时候，python的运行是挂起的。当我们的执行完成之后，将会以system()的返回值形式给出退出状态，python的执行也会继续。
+
+　system() preserves the current standard files, including standard output, meaning that executing any program or command displaying output will be passed on to standard output. Be cautious here because certain applications such as common gateway interface (CGI) programs will cause Web browser errors  if  output  other  than  valid  Hypertext  Markup  Language  (HTML) strings are sent back to the client via standard output. system() is generally used with commands producing no output, some of which include programs to compress or convert files, mount disks to the system, or any other com- mand to perform a specific task that indicates success or failure via its exit status rather than communicating via input and/or output. The convention adopted is an exit status of 0 indicating success and non-zero for some sort of failure.
+    system()保留了现有的标准文件，包括标准的输出，意味着执行任何的命令和程序显示输出都会传到标准输出上。这里要当心，因为特定应用程序比如公共网关接口(CGI)，如果将除了有效的超文本标示语言(HTML)字符串之外的输出，经过标准输出发送回客户端，会引起web浏览器错误。system()通常和不会产生输出的命令一起使用，其中的一些命令包括了压缩或转换文件的程序，挂载磁盘到系统的程序，或其他执行特定任务的命令---通过退出状态显示成功或失败而不是通过输入和/或输出通信。通常的约定是利用退出状态，0表示成功，非零表示其他类型的错误。
+
+　For the purpose of providing an example, we will execute two commands that do have program output from the interactive interpreter so that you can observe how system() works.
+    为了给出一个例子，我们执行了两个从交互解释器中获取程序输入的命令，这样你便可以观察system（）是如何工作的
+
+>>> import os
+>>> result = os.system('cat /etc/motd') Have a lot of fun...
+>>> result
+0
+>>> result = os.system('uname -a')
+Linux solo 2.2.13 #1 Mon Nov 8 15:08:22 CET 1999 i586 unknown
+>>> result
+0
+   You will notice the output of both commands as well as the exit status of their execution, which we saved in the result variable. Here is an example executing a DOS command:
+   可以看到两个命令的输出和它们执行的退出状态，我们将其保存到result变量中。下面是一个执行dos命令的例子：
+
+>>> import os
+>>> result = os.system('dir')
+
+Volume in drive C has no label Volume Serial Number is 43D1-6C8A Directory of C:\WINDOWS\TEMP
+
+.
+<DIR>
+01-08-98
+8:39a .
+..
+<DIR>
+01-08-98
+8:39a ..
+0 file(s)	0 bytes
+2 dir(s)	572,588,032 bytes free
+>>> result
+0
+
+
+
+14.5.2  os.popen()
+
+The popen() function is a combination of a file object and the system() function. It works in the same way as  system() does, but in addition, it has the ability to establish a one-way connection to that program and then
+to access it like a file. If the program requires input, then you would call popen() with a mode of  'w' to “write” to that command. The data that you send to the program will then be received through its standard input. Likewise,  a  mode  of  'r' will  allow  you  to  spawn  a  command,  then  as  it writes to standard output, you can read that through your file-like handle using the familiar read*() methods of file object. And just like for files, you will be a good citizen and close() the connection when you are finished. In  one  of  the  system() examples  we  used  above,  we  called  the  Unix uname program to give us some information about the machine and operat-ing system we are using. That command produced a line of output that went directly to the screen. If we wanted to read that string into a variable and per- form internal manipulation or store that string to a log file, we could, using popen(). In fact, the code would look like the following:
+popen()函数是文件对象和system()函数的结合。它工作方式和system()相同，但它可以建立一个指向那个程序的单向连接，然后如访问文件一样访问这个程序。如果程序要求输入，那么你要用'w'模式写入那个命令来调用popen()。你发送给程序的数据会通过标准输入接收到。同样地，'r'模式允许spawn命令，那么当它写入标准输出的时候，你就可以通过类文件句柄使用熟悉的file对象的read*()方法来读取输入。就像对于文件，当使用完毕以后，你应当close()连接。在上面其中一个使用system()的例子中，我们调用了unix程序uname来来给我们提供机器和使用的操作系统的相关信息。该命令产生了一行输出，并直接写到屏幕上。。如果想要把该字符串读入变量中并执行内部操作或者把它存储到日志文件中，我们可以使用popen()。实际上，代码如下所示：
+
+>>> import os
+>>> f = os.popen('uname -a')
+>>> data = f.readline()
+>>> f.close()
+>>> print data,
+Linux solo 2.2.13 #1 Mon Nov 8 15:08:22 CET 1999 i586 unknown
+
+　As you can see, popen() returns a file-like object; also notice that read- line(), as always, preserves the NEWLINE character found at the end of a line of input text.
+   如你所见，popen()返回一个类文件对象；注意readline(),往往，保留输入文本行尾的newline字符。
+
+14.5.3  os.fork(), os.exec*(),
+os.wait*()
+
+Without  a  detailed  introduction  to  operating  systems  theory,  we  present  a light introduction to processes in this section. fork() takes your single exe- cuting flow of control known as a process and creates a “fork in the road,” if you will. The interesting thing is that your system takes both forks—meaning that you will have two consecutive and parallel running programs (running the same code no less because both processes resume at the next line of code immediately succeeding the fork() call).The  original  process  that  called  fork() is  called  the  parent  process,and the new process created as a result of the call is known as the  child process.  When  the  child  process returns, its return value is always zero; when  the  parent  process  returns,  its  return  value  is  always  the  process identifier (aka process ID, or PID) of the child process (so the parent can keep  tabs  on  all  its  children).  The  PIDs  are  the  only  way  to  tell  them apart, too! We mentioned that both processes will resume immediately after the call to fork(). Because the code is the same, we are looking at identical execu- tion if no other action is taken at this time. This is usually not the intention. The main purpose for creating another process is to run another program, so we need to take divergent action as soon as parent and child return. As we stated above, the PIDs differ, so this is how we tell them apart.
+在这个小节中，我们不会对操作系统理论做详尽的介绍，只是稍稍地介绍一下进程（process）。fork()采用称为进程的单一执行流程控制，如果你喜欢的话，可称之为创建“岔路口”。有趣的事情发生了：用户系统同时接管了两个fork——也就是说让用户拥有了两个连续且并行的程序。（不用说，它们运行的是同一个程序，因为两个进程都是紧跟在fork()调用后的下一行代码开始执行的）。调用fork()的原始进程称为父进程，而作为该调用结果新创建的进程则称为子进程。当子进程返回的时候，其返回值永远是0；当父进程返回时，其返回值永远是子进程的进程标识符（又称进程ID,或PID)（这样父进程就可以监控所有的子进程了）PID也是唯一可以区分他们的方式！我们提到了两个进程会在调用fork()后立刻运行。因为代码是相同的，如果没有其他的动作，我们将会看到同样的执行结果。而这通常不是我们想要的结果。创建另外一个进程的主要目的是为了运行其他程序，所以我们必须在父进程和子进程返回时采取分流措施。正如上面我们所说，它们的PID是不同的，而这正是我们区分它们的方法。
+
+　The following snippet of code will look familiar to those who have experi- ence managing processes. However, if you are new, it may be difficult to see how it works at first, but once you get it, you get it.
+对于那些有进程管理经验的人来说，接下来的这段代码是再熟悉不过了。但是，如果你是新手的话，一开始就弄懂它是如何工作的可能就有点困难了，但是一旦你懂了，就会体会到其中的奥妙。
+
+ret = os.fork()	# spawn 2 processes, both return #产生两个进程，都返回
+if ret == 0:	# child returns with PID of 0 #子进程返回的PID是0
+child_suite	# child code #子进程的代码
+else:	# parent returns with child's PID #父进程返回是子进程的PID
+parent_suite	# parent code #父进程的代码
+
+　The call to fork() is made in the first line of code. Now both child and parent processes exist running simultaneously. The child process has its own copy of the virtual memory address space and contains an exact replica of the parent’s address space—yes, both processes are nearly identical. Recall that  fork() returns  twice,  meaning  that  both  the  parent  and  the  child return.  You  might  ask,  how  can  you  tell  them  apart  if  they  both  return? When the parent returns, it comes back with the PID of the child process. When the child returns, it has a return value of 0. This is how we can differ- entiate the two processes.
+在代码第一行便调用了fork()。现在子进程和父进程同时在运行。子进程本身有虚拟内存地址空间的拷贝，以及一份父进程地址空间的原样拷贝。-----是的，两者几乎都是相同的。fork()返回两次，意味着父进程和子进程都返回了。你或许会问，如果它们两个同时返回，如何区分两者呢？当父亲返回的时候，会带有进程的PID。而当子进程返回的时候，其返回值为0。这就是区分两个进程的方法。
+
+
+Using an if-else statement, we can direct code for the child to execute (i.e., the if clause) as well as the parent (the else clause). The code for the child is where we can make a call to any of the exec*() functions to run a completely different program or some function in the same program (as long as both child and parent take divergent paths of execution). The general convention  is  to  let  the  children  do  all  the  dirty  work  while  the  parent  either waits patiently for the child to complete its task or continues execution and checks later to see if the child finished properly.
+利用if-else语句，我们能给子进程（比如，if子句）和父进程（else子句）指定各自的执行代码。在子进程的代码中，我们可以调用任何exec*()函数来运行完全不同的程序，或者同一个程序中的其他的函数（只要子进程和父进程用不同的路径执行）。普遍做法是让子进程做所有的脏活，而父进程耐心等来子进程完成任务，或继续执行，稍后再来检查子进程是否正常结束。
+
+　All of the exec*() functions load a file or command and execute it with an argument list (either individually given or as part of an argument list). If applicable, an environment variable dictionary can be provided for the com- mand. These variables are generally made available to programs to provide a more accurate description of the user’s current execution environment. Some of the more well-known variables include the user name, search path, cur- rent shell, terminal type, localized language, machine type, operating system name, etc.
+   所有的exec*()函数装载文件或者命令，并用参数列表（分别给出或作为参数列表的一部分）来执行它。如果适用的话，也可以给命令提供环境变量字典。这些变量普遍用于给程序提供对当前执行环境的精确描述。其中一些著名的变量包括用户的名字，搜索路径，现在的shell，终端类型，本地化语言，机器类型，操作系统名字等等。
+  
+　All versions of exec*() will replace the Python interpreter running in the current  (child)  process  with  the  given  file  as  the  program  to  execute  now. Unlike system(), there is no return to Python (since Python was replaced). An exception will be raised if exec*() fails because the program cannot exe- cute for some reason.
+    所有版本的exec*()都会用给定文件作为现在要执行的程序取代当前（子）进程的Python解释器。和system()不一样，对于Python来说没有返回值（因为Python已经被替代了）。如果因为某种原因，程序不能执行，那么exec*()就会失败，进而导致引发异常。
+  
+　The following code starts up a cute little game called “xbill” in the child process while the parent continues running the Python interpreter. Because the child process never returns, we do not have to worry about any code for the child after calling exec*(). Note that the command is also a required first argument of the argument list.
+  接下来的代码在子进程中开始了一个称为“xbill"的可爱小巧的游戏，而父进程继续运行Python解释器。因为子进程从不返回，所以无需去顾虑调用exec*()后的子进程代码。注意该命令也是参数列表中的必须的第一个参数。
+
+ret = os.fork()
+if ret == 0:	# child code   #子进程代码 execvp('xbill', ['xbill'])  
+else:		# parent code #父进程代码   os.wait()
+
+　In this code, you also find a call to  wait(). When children processes have  completed,  they  need  their  parents  to  clean  up  after  them.  This task, known as “reaping a child,” can be accomplished with the wait*() functions.  Immediately  following  a  fork(),  a  parent  can  wait  for  the child to complete and do the clean-up then and there. A parent can also continue processing and reap the child later, also using one of the wait*() functions.
+在这段代码中，还可以看到对wait（）的调用。当子进程执行完毕，需要它们的父进程进行扫尾工作。这个任务，称为”收获孩子”（reaping a child），可以用wati*()函数完成。紧跟在fork()之后，父进程可以等待子进程完成并在那进行扫尾。父进程也可以继续运行，稍后再扫尾，同样也是用wait*()函数中的一个。
+  
+　Regardless  of  which  method  a  parent  chooses,  it  must  be  performed. When a child has finished execution but has not been reaped yet, it enters a limbo state and becomes known as a zombie process. It is a good idea to min- imize the number of zombie processes in your system because children in this state retain all the system resources allocated in their lifetimes, which do not get freed or released until they have been reaped by the parent.
+不管父进程选择了那个方法，该工作都必须进行。当子进程完成执行，还没有被收获的时候，它进入了闲置状态，变成了著名的僵尸进程。在系统中，应该尽量把僵尸进程的数目降到最少，因为在这种状态下的子进程仍保留着在存活时期分配给它们的系统资源，而这些资源只能在父进程收获它们之后才能释放掉。
+  
+　A call to wait() suspends execution (i.e., waits) until a child process (any child  process)  has  completed,  terminating  either  normally  or  via  a  signal. wait() will  then  reap  the  child,  releasing  any  resources.  If  the  child  has already  completed,  then  wait() just  performs  the  reaping  procedure. waitpid() performs the same functionality as wait() with the additional arguments’ PID to specify the process identifier of a specific child process to wait for plus options (normally zero or a set of optional flags logically OR’d together).
+调用wait（）会挂起执行（比如，waits），直到子进程（其他的子进程）正常执行完毕或通过信号终止。wait()将会收获子进程，释放所有的资源。如果子进程已经完成，那么wait()只是进行些收获的过程。waitpid()具有和wait（）相同的的功能，但是多了一个参数PID（指定要等待子进程的进程标识符），以及选项（通常是零或用‘OR’组成的可选标志集合）
+
+
+14.5.4  os.spawn*()
+
+The  spawn*() family  of  functions  are  similar  to  fork() and  exec*() in that they execute a command in a new process; however, you do not need to call two separate functions to create a new process and cause it to execute a command. You only need to make one call with the spawn*() family. With its simplicity, you give up the ability to “track” the execution of the parent and child processes; its model is more similar to that of starting a function in a thread. Another difference is that you have to know the magic mode parame- ter to pass to spawn*(). On  some  operating  systems  (especially  embedded  real-time  operating systems [RTOs]), spawn*() is much faster than fork(). (Those where this is not the case usually use copy-on-write tricks.) Refer to the Python Library Reference Manual for more details (see the Process Management section of the manual on the os module) on the spawn*() functions. Various mem- bers  of  the  spawn*() family  were  added  to  Python  between  1.5  and  1.6(inclusive).
+函数spawn*()家族和fork，exec*()相似，因为它们在新进程中执行命令；然而，你不需要分别调用两个函数来创建进程，并让这个进程执行命令。你只需调用一次spawn*()家族。由于其简单性，你放弃了“跟踪”父进程和子进程执行的能力；该模型类似于在线程中启动函数。还有点不同的是你必须知道传入spawn*()的魔法模式参数。在其他的操作系统中（尤其是嵌入式实时操作系统[RTOS]），spawn*()比fork（）快很多。不是这种情况的操作系统通常使用写实拷贝（copy-on-write）技术。参阅python库参考手册来获得更多spanw*()的资料。各种spanw*()家族成员是在1.5和1.6（含1.6）之间加入的。
+
+
+14.5.5  subprocess Module
+	subprocess 模块
+
+After Python 2.3 came out, work was begun on a module named  popen5. The naming continued the tradition of all the previous popen*() functions that came before, but rather than continuing this ominous trend, the module was  eventually  named  subprocess,  with  a  class  named  Popen that  has functionality  to  centralize  most  of  the  process-oriented  functions  we  have discussed  so  far  in  this  chapter.  There  is  also  a  convenience  function named  call() that  can  easily  slide  into  where  os.system() lives.  The subprocess module made its debut in Python 2.4. Below is an example of what it can do:
+在python2.3出来之后，一些关于popen5模块的工作开始展开。一开始该命名继承了先前popen*()函数的传统，但是并没有延续下来，该模块最终被命名为subproess，其中一个类叫Popen，集中了我们在这章讨论的大部分面向进程的函数。同样也有名为call()的便捷函数，可以轻易地取代了os.system()。在python2.4中，subprocess初次登场。下面就是演示该模块的例子：
+
+Replacing os.system()  替换 os.system()
+Linux Example:  Linux上的例子:
+
+>>> from subprocess import call
+>>> import os
+>>> res = call(('cat', '/etc/motd'))
+Linux starship 2.4.18-1-686 #4 Sat Nov 29 10:18:26 EST 2003 i686
+GNU/Linux
+>>> res
+0
+
+Win32 Example:  Win32例子
+
+>>> res = call(('dir', r'c:\windows\temp'), shell=True) Volume in drive C has no label.
+Volume Serial Number is F4C9-1C38
+
+Directory of c:\windows\temp
+
+03/11/2006
+02:08 AM
+<DIR>
+
+.
+03/11/2006
+02:08 AM
+<DIR>
+
+..
+02/21/2006
+08:45 PM
+
+851
+install.log
+02/21/2006
+07:02 PM
+
+444
+tmp.txt
+2 File(s)	1,295 bytes
+3 Dir(s)	55,001,104,384 bytes free
+
+
+Replacing os.popen() 
+取代os.popen()
+
+The syntax for creating an instance of Popen is only slightly more complex than calling the os.popen() function:
+创建Popen()实例的语法只比调用os.popen()函数复杂了一点
+
+>>> from subprocess import Popen, PIPE
+>>> f = Popen(('uname', '-a'), stdout=PIPE).stdout
+>>> data = f.readline()
+>>> f.close()
+>>> print data,
+Linux starship 2.4.18-1-686 #4 Sat Nov 29 10:18:26 EST 2003 i686
+GNU/Linux
+>>> f = Popen('who', stdout=PIPE).stdout
+>>> data = [ eachLine.strip() for eachLine in f ]
+>>> f.close()
+>>> for eachLine in data:
+...	print eachLine
+...
+
+
+
+
+
+wesc
+console
+Mar
+11
+12:44
+
+wesc
+ttyp1
+Mar
+11
+16:29
+
+wesc
+ttyp2
+Mar
+11
+16:40
+(192.168.1.37)
+wesc
+ttyp3
+Mar
+11
+16:49
+(192.168.1.37)
+wesc
+ttyp4
+Mar
+11
+17:51
+(192.168.1.34)
+14.5.6 Related Functions
+相关函数
+
+Table 14.7 lists some of the functions (and their modules) that can perform some of the tasks described.
+表14.7列出了可以执行上述任务的函数（及其模块）
+
+
+
+Table 14.7  Various Functions for File Execution
+表14.7 各种文件执行函数
+
+File Object Attribute	Description
+文件对象 属性 描述
+
+
+os/popen2.popen2a()
+Executes a file and open file read and write access from (stdout) and to (stdin) the newly created running program
+执行文件，打开文件，从新创建的运行程序读取(stdout)，或者向该程序写(stdin) 
+
+os/popen2.popen3a()	Executes a file and open file read and write access from (stdout and stderr) and (stdin) to the newly created running program
+执行文件，打开文件，从新创建的运行程序读取(stdout和stder) ，或者向该程序写(stdin) 
+
+
+os/popen2.popen4b()
+
+Executes a file and open file read and write access from (stdout and stderr combined) and
+(stdin) to the newly created running program
+执行文件，打开文件，从新创建的运行程序读取(结合stdout，stdout)，或者向该程序写(stdin) 
+
+commands.getoutput() Executes a file in a subprocess, returns all output as
+在子进程中执行文件，以字符串返回所有的输出 U
+a string U
+
+
+subprocess.callc()
+
+
+
+
+
+
+Convenience function that creates a subprocess.Popen, waits for the command to complete, then returns the status code; like os.system() but is a more flexible alternative
+创建subprocess的便捷函数。 Popen等待命令完成，然后返回状态代码;与os.system()类似，但是是较灵活的替代方案
+a.	New to os module in Python 2.0.
+    python2.0版新加入
+b.	New (to os and popen2 modules) in Python 2.0.
+python2.0时加入到os和popen2模块中
+
+c.	New in Python 2.4.
+python2.4时加入
+
+
+14.6  Restricted Execution
+受限执行
+
+At one time in Python’s history, there was the concept of restricted execu- tion using the rexec and Bastion modules. The first allowed you to mod- ify  the  built-in  objects  that  were  made  available  to  code  executing  in  a sandbox. The second served as an attribute filter and wrapper around your classes.  However,  due  to  a  well-known  vulnerability  and  the  difficulty  in fixing  the  security  hole,  these  modules  are  no  longer  used  or  accessible; their  documentation  serves  only  those  maintaining  old  code  using  these modules.
+在python历史某个时期内，存在着使用了rexec和bastion模块的限制执行的概念。第一个模块允许沙盒（sandbox）中的执行代码修改内建对象。第二个模块用来过滤属性和包装你的类。然而，由于一个显著的缺点和弥补安全漏洞的困难，这些模块便被废弃了。那些维护使用了这些模块的老代码的人员可能会用到这两个模块的文档。
+
+
+14.6 Terminating Execution
+结束执行
+
+Clean execution occurs when a program runs to completion, where all state- ments  in  the  top  level  of  your  module  finish  execution  and  your  program exits. There may be cases where you may want to exit from Python sooner, such as a fatal error of some sort. Another case is when conditions are not sufficient to continue execution.
+当程序运行完成，所有模块最高级的语句执行完毕后退出，我们便称这是干净的执行。可能有很多情况，需要从python提前退出，比如某种致命错误，或是不满足继续执行的条件的时候。
+
+　In Python, there are varying ways to respond to errors. One is via excep- tions  and  exception  handling.  Another  way  is  to  construct  a  “cleaner” approach so that the main portions of code are cordoned off with if state- ments to execute only in non-error situations, thus letting error scenarios ter- minate “normally.” However, you may also desire to exit the calling program with an error code to indicate that such an event has occurred.
+  在python中，有各种应对错误的方法。其中之一便是通过异常和异常处理。另外一个方法便是建造一个“清扫器”方法，这样便可以把代码的主要部分放在if语句里，在没有错误的情况下执行，因而可以让错误的情况“正常地“终结。然而，有时也需要在退出调用程序的时候，返回错误代码以表明发生何种事件。
+
+
+14.7.1  sys.exit() and SystemExit
+
+The primary way to exit a program immediately and return to the calling pro- gram  is  the  exit() function  found  in  the  sys module.  The  syntax  for sys.exit() is: 
+sys.exit(status=0)
+立即退出程序并返回调用程序的主要方式是sys模块中的exit()函数。sys.exit()的语法为：
+
+　When sys.exit() is called, a SystemExit exception is raised. Unless monitored  (in  a  try statement  with  an  appropriate  except clause),  this exception is generally not caught or handled, and the interpreter exits with the given status argument, which defaults to zero if not provided.  System Exit is the only exception that is not viewed as an error. It simply indicates the desire to exit Python.
+    当调用sys.exit()时，就会引发systemExit()异常。除非对异常进行监控（在一个try语句和合适的except子句中），异常通常是不会被捕捉到或处理的，解释器会用给定的状态参数退出，如果没有给出的话，该参数默认为0。System Exit是唯一不看作错误的异常。它仅仅表示要退出python的愿望。
+
+　One popular place to use sys.exit() is after an error is discovered in the way a command was invoked, in particular, if the arguments are incor- rect, invalid, or if there are an incorrect number of them. The following Example 14.4 (args.py) is just a test script we created to require that a certain number of arguments be given to the program before it can exe- cute properly.
+   sys.exit()经常用在命令调用的中途发现错误之后，比如，如果参数不正确，无效，或者参数数目不正确。下面的例子14.4（args.py)仅仅是一个测试脚本，在正确执行之前需要给出确定数目的参数。
+
+Executing this script we get the following output:
+执行这个脚本我们得到如下输出：
+
+$ args.py
+At least 2 arguments required (incl. cmd name). usage:	args.py arg1 arg2 [arg3... ]
+$ args.py XXX
+At least 2 arguments required (incl. cmd name). usage:	args.py arg1 arg2 [arg3... ]
+$ args.py 123 abc
+number of args entered: 3
+args (incl. cmd name) were: ['args.py', '123', 'abc']
+$ args.py -x -2 foo
+number of args entered: 4
+args (incl. cmd name) were: ['args.py', '-x', '-2',
+'foo']
+
+
+
+
+Example 14.4  Exiting Immediately (args.py) 立即退出 (args.py)
+
+Calling sys.exit() causes the Python interpreter to quit. Any integer argument to exit() will be returned to the caller as the exit status, which has a default value of  0.
+调用sys.exit()使python解释器退出。exit()的任何整数参数都会以退出状态返回给调用者，该值默认为0；
+
+1	#!/usr/bin/env python
+2
+3	import sys
+4
+5	def usage():
+6	print 'At least 2 arguments (incl. cmd name).'
+7	print 'usage: args.py arg1 arg2 [arg3... ]'
+8	sys.exit(1)
+9
+10   argc = len(sys.argv)
+11   if argc < 3:
+12	usage()
+13   print "number of args entered:", argc
+14   print "args (incl. cmd name) were:", sys.argv
+
+
+
+Many command-line-driven programs test the validity of the input before proceeding with the core functionality of the script. If the validation fails at any point, a call is made to a usage() function to inform the user what prob- lem caused the error as well as a usage “hint” to aid the user so that he or she will invoke the script properly the next time.
+许多命令行驱动的程序在进行之前，用脚本的核心功能测试了输入的有效性。如果验证失败，那么便调用usage()函数去告知用户什么样的问题会导致这个错误，并"提示"用户如何才能正确地调用脚本。
+
+
+
+
+14.7.2  sys.exitfunc()
+
+sys.exitfunc() is disabled by default, but can be overridden to provide additional functionality, which takes place when  sys.exit() is called and before the interpreter exits. This function will not be passed any arguments,
+so you should create your function to take no arguments.
+sys.exitfunc()默认是不可用的，但你可以改写它以提供额外的功能。当调用了sys.exit()并在解释器退出之前，就会用到这个函数了。这个函数不带任何参数的，所以你创建的函数也应该是无参的。
+　If  sys.exitfunc has  already  been  overridden  by  a  previously  defined exit function, it is good practice to also execute that code as part of your exit function.  Generally,  exit  functions  are  used  to  perform  some  type  of  shut- down activity, such as closing a file or network connection, and it is always a good idea to complete these maintenance tasks, such as releasing previously held system resources.
+如果sys.exitfunc已经被先前定义的exit函数覆盖了，最好的方法是把这段代码作为你exit()函数的一部分来执行。一般说来，exit函数用于执行某些类型的关闭活动，比如关闭文件和网络连接，最好用于完成维护任务，比如释放先前保留的系统资源。
+
+　Here is an example of how to set up an exit function, being sure to execute one if one has already been set:
+    下面的例子介绍了如何设置exit()函数，如果已经被设置了，则确保执行该函数：
+
+
+import sys
+
+prev_exit_func = getattr(sys, 'exitfunc', None)
+
+def my_exit_func(old_exit = prev_exit_func):
+#	:
+# perform cleanup  进行清理
+#	:
+if old_exit is not None and callable(old_exit):
+old_exit()
+
+sys.exitfunc = my_exit_func
+
+
+　We execute the old exit function after our cleanup has been performed. The getattr() call simply checks to see whether a previous exitfunc has been defined. If not, then None is assigned to prev_exit_func; otherwise, prev_exit_func becomes a new alias to the exiting function, which is then passed as a default argument to our new exit function, my_exit_func.
+在清理执行以后，我们执行了老的exit()函数。getattr()调用只是检查了先前的exitfunc()是否已经定义。如果没有，那么prev_exit_func赋值为None,否则， prev_exit_func变成exit函数新的别名，然后作为参数传入我们的新exit函数，my_exit_func。
+
+The call to getattr() could have been rewritten as:
+对getattr()的调用可以这样写：
+
+if hasattr(sys, 'exitfunc'):
+prev_exit_func = sys.exitfunc	# getattr(sys, 'exitfunc')
+else:
+prev_exit_func = None
+
+
+14.7.3  os._exit() Function  os._exit() 函数
+
+The _exit() function of the os module should not be used in general prac- tice. (It is platform-dependent and available only on certain platforms, i.e., Unix-based and Win32.) Its syntax is: 
+os模块的_exit()函数不应该在一般应用中使用。（平台相关，只适用特定的平台，比如基于Unix的平台，以及Win32平台）。其语法为：
+os._exit(status)
+
+　This function provides functionality opposite to that of sys.exit() and sys.exitfunc(),  exiting  Python  immediately  without  performing   any cleanup (Python or programmer-defined) at all. Unlike sys.exit(), the sta- tus argument is required. Exiting via sys.exit() is the preferred method of quitting the interpreter.
+这个函数提供的功能与sys.exit()和sys.exitfunc()相反，根本不执行任何清理便立即退出python。与sys.exit()不同，状态参数是必需的。通过sys.exit()退出是退出解释器的首选方法。
+
+
+14.7.4  os.kill() Function
+
+　The  kill() function  of  the  os module  performs  the  traditional  Unix function of sending a signal to a process. The arguments to kill() are the process identification number (PID) and the signal you wish to send to that process. The typical signal that is sent is either SIGINT, SIGQUIT, or more drastically, SIGKILL, to cause a process to terminate.
+   os模块的kill()函数模拟传统的unix函数来发送信号给进程。kill()参数是进程标识数(PID)和你想要发送到进程的信号。发送的典型信号为SIGINT, SIGQUIT,或更彻底地，SIGKILL,来使进程终结。
+
+
+
+14.8  Miscellaneous Operating
+System Interface
+各种操作系统接口
+
+In this chapter, we have seen various ways to interact with your  operat-ing system  (OS) via the  os module. Most of the functions we looked at dealt  with  either  files  or  external  process  execution.  There  are  a  few more  that  allow  for  more  specific  actions  for  the  current  user  and  pro-cess,  and  we  will  look  at  them  briefly  here.  Most  of  the  functions described   in   Table   14.8   work   on   POSIX   systems   only,   unless   also denoted for Windows environment. 
+在一章中，我们已看到各种通过os模块和操作系统进行交互的方法。我们看到的大多数函数都是处理文件或外部进程执行。这里有些 方法允许对现在的用户和进程有较特殊的动作，我们将简要地看看。表14.8中描述的大部分函数只在posix系统上工作，除非标明了适用于Windows环境。
+
+Table 14.8   Various os Module Attributes ( W  Also available for Win32)
+各种os模块属性
+
+os Module Attribute	Description
+os 模块属性		描述
+
+uname()	Obtains system information (hostname, operating system version, patch level, system architecture, etc.)
+              获得系统信息（主机名，操作系统版本，补丁级别， 系统构架等等）
+
+
+getuid()/
+setuid(uid)
+
+Gets/sets the real user ID of the current process
+获取/设置现在进程的真正的用户ID
+
+getpid()/getppid()	Gets real process ID (PID) of current/parent process W
+获取真正的现在/父进程ID（PID)   W
+
+
+getgid()/
+setgid(gid)
+
+Gets/sets real group ID (GID) of current process
+获取/设置现在进程的群组ID
+
+getsid()/setsid()	Gets session ID (SID) or create and return a new one
+获取会话ID(SID)或创建和返回新的SID。
+
+umask(mask)	Sets the current numeric umask while returning the previous one (mask is used for file permissions) W
+		设置现在的数字unmask，同时返回先前的那个（mask用于文件许可） W
+
+
+getenv(ev)/ putenv(ev, value), environ
+
+Gets/sets value of environment variable ev; the attribute os.environ is a dictionary representing all current environment variables W
+获取和设置 环境变量ev的值；os.envion属性是描述当前所有环境变量的字典
+
+geteuid()/setegid()	Gets/sets effective user ID (UID) of current process
+获取/设置当前进程的有效用户ID（GID）
+getegid()/setegid()	Gets/sets effective group ID (GID) of current process
+获取/设置当前进程的有效组ID（GID）
+
+getpgid(pid)/
+setpgid(pid, pgrp)
+
+Gets/sets process GID process pid; for get, if pid is 0, the process GID of the current process is returned
+获取和设置进程GID进程PID;对于get,如果pid为0，便返回现在进程的进程GID
+
+getlogin()	Returns login of user running current process
+	返回运行现在进程的用户登录
+
+times()	Returns tuple of various process times W
+	返回各种进程时期的元组 W
+
+strerror(code)	Returns error message corresponding to error code W
+		返回和错误代码对应的错误信息
+
+getloadavg()a	Returns tuple of values representing the system load average during the past 1, 5, and 15 minutes
+		返回代表在过去1，5，15分钟内的系统平均负载值的元组。
+
+a.	New in Python 2.3.
+	python2.3时加入
+
+Table 14.9  Execution Environment Related Modules
+表14.9      执行环境相关模块。
+
+Module	Description
+模块	描述
+
+atexita	Registers handlers to execute when Python interpreter exits
+	注册当python解释器退出时候的执行句柄
+
+popen2	Provides additional functionality on top of os.popen():
+	提供额外的在os.popen之上的功能：
+
+（provides ability to communicate via standard files to the other process; use subprocess for Python 2.4 and newer)
+提供通过标准文件和其他的进程交互的能力；对于python2.4和更新的版本，使用subpross）
+
+commands	Provides additional functionality on top of os.system(): saves all program output in a string which is returned (as opposed to just dumping output to the screen); use sub- process for Python 2.4 and newer) U
+	提供额外的在os.system之上的功能：把所有的程序输出保存在返回的字符串中（与输出到屏幕的相反）；对于python2.4和更新的版本，使用subpross
+
+getopt	Processes options and command-line arguments in such applications
+	在这样的应用程序中的处理选项和命令行参数
+
+site	Processes site-specific modules or packages 
+	处理site-specific模块或包
+
+platformb	    Attributes of the underlying platform and architecture
+	   底层平台和架构的属性
+
+subprocessc	Subprocess management (intended to replace old functions and modules such as os.system(), os.spawn*(), os.popen*(), popen2.*, commands.*)
+		Subprocess管理（计划替代旧的函数和模块，比如os.system()， os.spawn*()， os.popen*()， popen2.*, command.*)
+
+a.	New in Python 2.0. b.	New in Python 2.3. c.	New in Python 2.4.
+a.	python2.0时加入  b.    	python2.3时加入  c. 	python2.4时加入
+
+14.9 Related Modules
+相关模块
+
+In Table 14.9 you will find a list of modules other than os and sys that relate to the execution environment theme of this chapter.
+在表14.9中, 除了os和sys模块，你还可以找到与这章执行环境主题相关的模块列表。
+
+14.10  Exercises
+练习
+
+14–1.   Callable Objects. Name Python’s callable objects. exec versus eval(). What is the difference between the exec statement and the eval() BIF?
+           可调用对象。 说出python中的可调用对象。exec语句和内建函数eval()有什么不同？
+
+14–2.   input() versus raw.input(). What is the difference between the BIFs input() and raw_input()?
+           input()和raw.input()。 内建函数raw_input()和input()有什么不同？
+
+14–3.   Execution Environment. Create a Python script that runs other Python scripts.
+           执行环境。创建运行其他python脚本的python脚本
+
+
+14–4.   os.system(). Choose a familiar system command that per-forms a task without requiring input and either outputs to the screen or does not output at all. Use the os.system() call to run that program. 
+os.system()。选择熟悉的系统命令，该命令执行任务时不需要输入，也不输出到屏幕或根本不输出任何东西。调用os.system()运行程序
+
+Extra credit: Port your solution to subprocess.call(). 
+附加题：你的解决方案移植到subprocess.call()
+
+
+14–5.   commands.getoutput(). Solve the previous problem using commands.getoutput(). 
+	commands.getoutput().用commands.getoutput()解决前面的问题
+
+14–6.   popen() Family. Choose another familiar system command that takes text from standard input and manipulates or oth-erwise outputs the data. Use os.popen() to communicate with this program. Where does the output go? Try using popen2.popen2() instead.
+	popen()家族。选择熟悉的系统命令，该命令从标准输入获得文本，操作或输出数据。使用os.popen()与程序进行通信。输出到哪儿呢？使用popen2.popen2()代替。
+
+14–7.   subprocess Module. Take your solutions from the previous problem and port them to the subprocess module.
+	subprocess模块。把先前问题的解决方案移植到subprocess模块。
+
+14–8.   Exit Function. Design a function to be called when your pro-gram exits. Install it as sys.exitfunc(), run your program, and show that your exit function was indeed called.
+	exit函数。设计一个在程序退出时的函数。安装到sys.exitfunc()，运行程序，演示你exit函数确实被调用了。
+
+14–9.   Shells. Create a shell (operating system interface) program. Present a command-line interface that accepts operating system commands for execution (any platform).
+	shells。创建shell（操作系统接口）程序。给出接受操作系统命令的命令行接口（任意平台）
+
+Extra credit 1: Support pipes (see the dup(), dup2(),and pipe() functions in the os module). This piping proce-dure allows the standard output of one process to be con-nected to the standard input of another.
+附加题 1：支持管道（见os模块中的dup(), dub2(),和pipe()函数)。管道过程允许进程的标准输入连接到另一个进程的标准输入。
+
+Extra credit 2: Support inverse pipes using parentheses, giv- ing your shell a functional programming-like interface. In other words, instead of piping commands like. . .ps -ef | grep root | sort -n +1. . . support a more functional style like. . .sort(grep(ps -ef, root), -n, +1)
+附加题 2：用括号支持逆序的管道，给shell一个函数式编程接口。换句话说，支持更加函数式风格如. . .sort(grep(ps -ef, root), -n, +1)，而不是ps -ef | grep root | sort -n +1. . .这样的命令
+
+14–10. fork()/exec*() versus spawn*(). What is the difference between using the fork()-exec*() pairs vs. the spawn*() family of functions? Do you get more with one over the other?
+fork()/exec*()和spawn*()的比较.使用fork()-exec*()对和spawn*()家族函数有什么不同？那一组的功能更强？
+
+14–11. Generating and Executing Python Code. Take the funcAttrs.py script (Example 14.4) and use it to add testing code to functions that you have in some of your existing programs. Build a testing framework that runs your test code every time it encounters your special function attributes.
+生成和执行python代码。用funcAttrs.py脚本（例14.4）加入测试代码到已有程序的函数中。创建一个测试框架，每次遇到你特殊的函数属性，它都会运行你的测试代码。
+

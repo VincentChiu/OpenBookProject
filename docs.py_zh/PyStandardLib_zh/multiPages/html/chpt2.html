@@ -1,0 +1,1978 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Python Standard Library</TITLE>
+
+<!-- Included style.css -->
+<STYLE TYPE="text/css">
+body, td, {
+	font-family: verdana, sans-serif;
+	font-size: 12px;
+}
+
+body {
+	background-color: #FDFBFC;
+	margin:20px 20px 20px 20px;
+}
+
+
+p {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+a {font-weight:normal; text-decoration:underline;}
+a:link {color:#0000FF;}
+a:visited {color:#0000FF;}
+a:active {color:#0000FF;}
+a:hover {color:#700000;}
+
+strong a {
+    font-weight: bold;
+}
+
+.toc {
+	background-color: #EEEEFB;
+	border: 1px solid;
+	/*padding:10px 8px 10px 15px;*/
+	float : right ; width : 37%;
+	margin : 5px; padding: 5px;
+	margin: 5px;
+}
+
+.toc a:link , .toc a:visited  { color : #003399; }
+
+.toc a:hover { 
+	color : #EEEEFB;
+	text-decoration : none;
+	background-color: black;
+}
+
+.trailbold {
+	font-weight:bold;
+}
+
+.light {
+	background-color: #EFEFEF;
+}
+
+.dark {
+	background-color: #D2D2D2;
+}
+
+.smalllogo {
+	float:left;
+}
+
+.headerbar {
+	padding-bottom:60px;
+}
+	
+.header {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.smallheader {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.filelist {
+	font-size:14px;
+	margin: 10px 10px 10px 70px;
+	line-height:25px;
+}
+
+.dirheader {
+	font-size:13px;
+	margin: 10px 50px 10px 20px
+}
+
+.toolbar {
+	text-align:right;
+	margin: 0px 10px 0px 10px
+}
+
+.copyright {
+	padding-top: 30px;
+	text-align:center;
+	font-size:9px;
+	color: #5F5F5F;
+}
+
+.small {
+	font-size:9px;
+}
+
+.sforgelogo {
+	text-align:right;
+	height: 40px;
+}
+
+pre, .source {
+	width:auto;
+	border		: 1px solid #666;
+	background	: #eee;
+	margin		: 2em 4em;
+	padding		: 1em 2em;
+}
+
+/*code {
+	color		: #DB1416;
+	
+}*/
+code { 
+font-size: 1.2em;
+font-family:courier,courier new,monospace;
+background: #666666;
+border-top: 0.03em solid #000;
+border-right: 0.03em solid #000;
+border-bottom: 0.03em solid #ccc;
+border-left: 0.03em solid #ccc;
+color: white;
+}
+
+blockquote{
+  margin: 2em 5em ; 
+ } 
+
+
+</STYLE>
+
+</HEAD>
+<BODY BGCOLOR="green">
+<A NAME="toptop"></A>
+<DIV CLASS="header" ID="header">
+<H1>Python Standard Library</H1>
+<H2>翻译: Python 江湖群</H2>
+<H3>2008-03-28 13:35:33</H3>
+</DIV>
+
+<DIV CLASS="body" ID="body">
+<DIV CLASS="toc" ID="toc">
+  <OL>
+  <LI><A HREF="#toc1">更多标准模块</A>
+    <UL>
+    <LI><A HREF="#toc2">1.1. 概览</A>
+    <LI><A HREF="#toc3">1.2. fileinput 模块</A>
+    <LI><A HREF="#toc4">1.3. shutil 模块</A>
+    <LI><A HREF="#toc5">1.4. tempfile 模块</A>
+    <LI><A HREF="#toc6">1.5. StringIO 模块</A>
+    <LI><A HREF="#toc7">1.6. cStringIO 模块</A>
+    <LI><A HREF="#toc8">1.7. mmap 模块</A>
+    <LI><A HREF="#toc9">1.8. UserDict 模块</A>
+    <LI><A HREF="#toc10">1.9. UserList 模块</A>
+    <LI><A HREF="#toc11">1.10. UserString 模块</A>
+    <LI><A HREF="#toc12">1.11. traceback 模块</A>
+    <LI><A HREF="#toc13">1.12. errno 模块</A>
+    <LI><A HREF="#toc14">1.13. getopt 模块</A>
+    <LI><A HREF="#toc15">1.14. getpass 模块</A>
+    <LI><A HREF="#toc16">1.15. glob 模块</A>
+    <LI><A HREF="#toc17">1.16. fnmatch 模块</A>
+    <LI><A HREF="#toc18">1.17. random 模块</A>
+    <LI><A HREF="#toc19">1.18. whrandom 模块</A>
+    <LI><A HREF="#toc20">1.19. md5 模块</A>
+    <LI><A HREF="#toc21">1.20. sha 模块</A>
+    <LI><A HREF="#toc22">1.21. crypt 模块</A>
+    <LI><A HREF="#toc23">1.22. rotor 模块</A>
+    <LI><A HREF="#toc24">1.23. zlib 模块</A>
+    <LI><A HREF="#toc25">1.24. code 模块</A>
+    </UL>
+  </OL>
+
+</DIV>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<P>
+<A HREF="index.html">返回首页</A>
+</P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<A NAME="toc1"></A>
+<H1><A href='#toptop'> 1. 更多标准模块 </A></H1>
+	<BLOCKQUOTE>
+	"Now, imagine that your friend kept complaining that she didn't want to visit you since she found it too hard to climb up the drain pipe, and you kept telling her to use the friggin' stairs like everyone else..."
+	</BLOCKQUOTE>
+<P></P>
+	<BLOCKQUOTE>
+	- eff-bot, June 1998
+	</BLOCKQUOTE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc2"></A>
+<H2><A href='#toptop'> 1.1. 概览 </A></H2>
+<P>
+本章叙述了许多在 Python 程序中广泛使用的模块. 当然, 
+在大型的 Python 程序中不使用这些模块也是可以的, 但如果使用会节省你不少时间.
+</P>
+<H3><A href='#toptop'> 1.1.1. 文件与流 </A></H3>
+<P>
+<CODE>fileinput</CODE> 模块可以让你更简单地向不同的文件写入内容. 该模块提供了一个简单的封装类, 
+一个简单的 <CODE>for-in</CODE> 语句就可以循环得到一个或多个文本文件的内容. 
+</P>
+<P>
+<CODE>StringIO</CODE> 模块 (以及 <CODE>cStringIO</CODE> 模块, 作为一个的变种) 
+实现了一个工作在内存的文件对象. 你可以在很多地方用 <CODE>StringIO</CODE> 对象替换普通的文件对象. 
+</P>
+<H3><A href='#toptop'> 1.1.2. 类型封装 </A></H3>
+<P>
+<CODE>UserDict</CODE> , <CODE>UserList</CODE> , 以及 <CODE>UserString</CODE> 是对应内建类型的顶层简单封装. 
+和内建类型不同的是, 这些封装是可以被继承的. 这在你需要一个和内建类型行为相似但由额外新方法的类的时候很有用. 
+</P>
+<H3><A href='#toptop'> 1.1.3. 随机数字 </A></H3>
+<P>
+<CODE>random</CODE> 模块提供了一些不同的随机数字生成器. <CODE>whrandom</CODE> 模块与此相似, 但允许你创建多个生成器对象. 
+</P>
+<PRE>
+[!Feather 注: whrandom 在版本 2.1 时声明不支持. 请使用 random 替代.]
+</PRE>
+<P></P>
+<H3><A href='#toptop'> 1.1.4. 加密算法 </A></H3>
+<P>
+<CODE>md5</CODE> 和 <CODE>sha</CODE> 模块用于计算密写的信息标记( cryptographically strong message signatures , 
+所谓的 "message digests", 信息摘要).
+</P>
+<P>
+<CODE>crypt</CODE> 模块实现了 DES 样式的单向加密. 该模块只在 Unix 系统下可用. 
+</P>
+<P>
+<CODE>rotor</CODE> 模块提供了简单的双向加密. 版本 2.4 以后的朋友可以不用忙活了. 
+</P>
+<PRE>
+[!Feather 注: 它在版本 2.3 时申明不支持, 因为它的加密运算不安全.]
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc3"></A>
+<H2><A href='#toptop'> 1.2. fileinput 模块 </A></H2>
+<P>
+<CODE>fileinput</CODE> 模块允许你循环一个或多个文本文件的内容, 如 <A HREF="#eg-2-1">Example 2-1</A> 所示.
+</P>
+<A NAME="eg-2-1"></A>
+<H4><A href='#toptop'> 1.2.0.1. Example 2-1. 使用 fileinput 模块循环一个文本文件 </A></H4>
+<PRE>
+File: fileinput-example-1.py
+
+import fileinput
+import sys
+
+for line in fileinput.input("samples/sample.txt"):
+    sys.stdout.write("-&gt; ")
+    sys.stdout.write(line)
+
+*B*-&gt; We will perhaps eventually be writing only small
+-&gt; modules which are identified by name as they are
+-&gt; used to build larger ones, so that devices like
+-&gt; indentation, rather than delimiters, might become
+-&gt; feasible for expressing local structure in the
+-&gt; source language.
+-&gt;      -- Donald E. Knuth, December 1974*b*
+</PRE>
+<P></P>
+<P>
+你也可以使用 <CODE>fileinput</CODE> 模块获得当前行的元信息 (meta information). 其中包括 <CODE>isfirstline</CODE> , 
+<CODE>filename</CODE> , <CODE>lineno</CODE> , 如 <A HREF="#eg-2-2">Example 2-2</A> 所示.
+</P>
+<A NAME="eg-2-2"></A>
+<H4><A href='#toptop'> 1.2.0.2. Example 2-2. 使用 fileinput 模块处理多个文本文件 </A></H4>
+<PRE>
+File: fileinput-example-2.py
+
+import fileinput
+import glob
+import string, sys
+
+for line in fileinput.input(glob.glob("samples/*.txt")):
+    if fileinput.isfirstline(): # first in a file?
+        sys.stderr.write("-- reading %s --\n" % fileinput.filename())
+    sys.stdout.write(str(fileinput.lineno()) + " " + string.upper(line))
+
+*B*-- reading samples\sample.txt --
+1 WE WILL PERHAPS EVENTUALLY BE WRITING ONLY SMALL
+2 MODULES WHICH ARE IDENTIFIED BY NAME AS THEY ARE
+3 USED TO BUILD LARGER ONES, SO THAT DEVICES LIKE
+4 INDENTATION, RATHER THAN DELIMITERS, MIGHT BECOME
+5 FEASIBLE FOR EXPRESSING LOCAL STRUCTURE IN THE
+6 SOURCE LANGUAGE.
+7    -- DONALD E. KNUTH, DECEMBER 1974*b*
+</PRE>
+<P></P>
+<P>
+文本文件的替换操作很简单. 只需要把 <CODE>inplace</CODE> 关键字参数设置为 1 , 
+传递给 <CODE>input</CODE> 函数, 该模块会帮你做好一切. <A HREF="#eg-2-3">Example 2-3</A> 展示了这些.
+</P>
+<A NAME="eg-2-3"></A>
+<H4><A href='#toptop'> 1.2.0.3. Example 2-3. 使用 fileinput 模块将 CRLF 改为 LF </A></H4>
+<PRE>
+File: fileinput-example-3.py
+
+import fileinput, sys
+
+for line in fileinput.input(inplace=1):
+    # convert Windows/DOS text files to Unix files
+    if line[-2:] == "\r\n":
+        line = line[:-2] + "\n"
+    sys.stdout.write(line)
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc4"></A>
+<H2><A href='#toptop'> 1.3. shutil 模块 </A></H2>
+<P>
+<CODE>shutil</CODE> 实用模块包含了一些用于复制文件和文件夹的函数. 
+<A HREF="#eg-2-4">Example 2-4</A> 中使用的 <CODE>copy</CODE> 函数使用和 Unix 下 <CODE>cp</CODE> 命令基本相同的方式复制一个文件.
+</P>
+<A NAME="eg-2-4"></A>
+<H4><A href='#toptop'> 1.3.0.1. Example 2-4. 使用 shutil 复制文件 </A></H4>
+<PRE>
+File: shutil-example-1.py
+
+import shutil
+import os
+
+for file in os.listdir("."):
+    if os.path.splitext(file)[1] == ".py":
+        print file
+        shutil.copy(file, os.path.join("backup", file))
+
+*B*aifc-example-1.py
+anydbm-example-1.py
+array-example-1.py
+...*b*
+</PRE>
+<P></P>
+<P>
+<CODE>copytree</CODE> 函数用于复制整个目录树 (与 <CODE>cp -r</CODE> 相同), 而 <CODE>rmtree</CODE> 函数用于删除整个目录树 
+(与 <CODE>rm -r</CODE> ). 如 <A HREF="#eg-2-5">Example 2-5</A> 所示.
+</P>
+<A NAME="eg-2-5"></A>
+<H4><A href='#toptop'> 1.3.0.2. Example 2-5. 使用 shutil 模块复制/删除目录树 </A></H4>
+<PRE>
+File: shutil-example-2.py
+
+import shutil
+import os
+
+SOURCE = "samples"
+BACKUP = "samples-bak"
+
+# create a backup directory
+shutil.copytree(SOURCE, BACKUP)
+
+print os.listdir(BACKUP)
+
+# remove it
+shutil.rmtree(BACKUP)
+
+print os.listdir(BACKUP)
+
+*B*['sample.wav', 'sample.jpg', 'sample.au', 'sample.msg', 'sample.tgz',
+...
+Traceback (most recent call last):
+ File "shutil-example-2.py", line 17, in ?
+   print os.listdir(BACKUP)
+os.error: No such file or directory*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc5"></A>
+<H2><A href='#toptop'> 1.4. tempfile 模块 </A></H2>
+<P>
+<A HREF="#eg-2-6">Example 2-6</A> 中展示的 <CODE>tempfile</CODE> 模块允许你快速地创建名称唯一的临时文件供使用.
+</P>
+<A NAME="eg-2-6"></A>
+<H4><A href='#toptop'> 1.4.0.1. Example 2-6. 使用 tempfile 模块创建临时文件 </A></H4>
+<PRE>
+File: tempfile-example-1.py
+
+import tempfile
+import os
+
+tempfile = tempfile.mktemp()
+
+print "tempfile", "=&gt;", tempfile
+
+file = open(tempfile, "w+b")
+file.write("*" * 1000)
+file.seek(0)
+print len(file.read()), "bytes"
+file.close()
+
+try:
+    # must remove file when done
+    os.remove(tempfile)
+except OSError:
+    pass
+
+tempfile =&gt; C:\TEMP\~160-1
+1000 bytes
+</PRE>
+<P></P>
+<P>
+<CODE>TemporaryFile</CODE> 函数会自动挑选合适的文件名, 并打开文件, 如 <A HREF="#eg-2-7">Example 2-7</A> 所示. 
+而且它会确保该文件在关闭的时候会被删除. (在 Unix 下, 你可以删除一个已打开的文件, 这
+时文件关闭时它会被自动删除. 在其他平台上, 这通过一个特殊的封装类实现.) 
+</P>
+<A NAME="eg-2-7"></A>
+<H4><A href='#toptop'> 1.4.0.2. Example 2-7. 使用 tempfile 模块打开临时文件 </A></H4>
+<PRE>
+File: tempfile-example-2.py
+
+import tempfile
+
+file = tempfile.TemporaryFile()
+
+for i in range(100):
+    file.write("*" * 100)
+
+file.close() # removes the file!
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc6"></A>
+<H2><A href='#toptop'> 1.5. StringIO 模块 </A></H2>
+<P>
+<A HREF="#eg-2-8">Example 2-8</A> 展示了 <CODE>StringIO</CODE> 模块的使用. 它实现了一个工作在内存的文件对象
+(内存文件). 在大多需要标准文件对象的地方都可以使用它来替换.
+</P>
+<A NAME="eg-2-8"></A>
+<H4><A href='#toptop'> 1.5.0.1. Example 2-8. 使用 StringIO 模块从内存文件读入内容 </A></H4>
+<PRE>
+File: stringio-example-1.py
+
+import StringIO
+
+MESSAGE = "That man is depriving a village somewhere of a computer scientist."
+
+file = StringIO.StringIO(MESSAGE)
+
+print file.read()
+
+*B*That man is depriving a village somewhere of a computer scientist.*b*
+</PRE>
+<P></P>
+<P>
+<CODE>StringIO</CODE> 类实现了内建文件对象的所有方法, 此外还有 <CODE>getvalue</CODE> 方法用来返回它内部的字符串值. 
+<A HREF="#eg-2-9">Example 2-9</A> 展示了这个方法.
+</P>
+<A NAME="eg-2-9"></A>
+<H4><A href='#toptop'> 1.5.0.2. Example 2-9. 使用 StringIO 模块向内存文件写入内容 </A></H4>
+<PRE>
+File: stringio-example-2.py
+
+import StringIO
+
+file = StringIO.StringIO()
+file.write("This man is no ordinary man. ")
+file.write("This is Mr. F. G. Superman.")
+
+print file.getvalue()
+
+*B*This man is no ordinary man. This is Mr. F. G. Superman.*b*
+</PRE>
+<P></P>
+<P>
+<CODE>StringIO</CODE> 可以用于重新定向 Python 解释器的输出, 如 <A HREF="#eg-2-10">Example 2-10</A> 所示.
+</P>
+<A NAME="eg-2-10"></A>
+<H4><A href='#toptop'> 1.5.0.3. Example 2-10. 使用 StringIO 模块捕获输出 </A></H4>
+<PRE>
+File: stringio-example-3.py
+
+import StringIO
+import string, sys
+
+stdout = sys.stdout
+
+sys.stdout = file = StringIO.StringIO()
+
+print """
+According to Gbaya folktales, trickery and guile
+are the best ways to defeat the python, king of
+snakes, which was hatched from a dragon at the
+world's start. -- National Geographic, May 1997
+"""
+
+sys.stdout = stdout
+
+print string.upper(file.getvalue())
+
+*B*ACCORDING TO GBAYA FOLKTALES, TRICKERY AND GUILE
+ARE THE BEST WAYS TO DEFEAT THE PYTHON, KING OF
+SNAKES, WHICH WAS HATCHED FROM A DRAGON AT THE
+WORLD'S START. -- NATIONAL GEOGRAPHIC, MAY 1997*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc7"></A>
+<H2><A href='#toptop'> 1.6. cStringIO 模块 </A></H2>
+<P>
+<CODE>cStringIO</CODE> 是一个可选的模块, 是 <CODE>StringIO</CODE> 的更快速实现. 它的工作方式和 <CODE>StringIO</CODE> 基本相同, 
+但是它不可以被继承. <A HREF="#eg-2-11">Example 2-11</A> 展示了 <CODE>cStringIO</CODE> 的用法, 另参考前一节.
+</P>
+<A NAME="eg-2-11"></A>
+<H4><A href='#toptop'> 1.6.0.1. Example 2-11. 使用 cStringIO 模块 </A></H4>
+<PRE>
+File: cstringio-example-1.py
+
+import cStringIO
+
+MESSAGE = "That man is depriving a village somewhere of a computer scientist."
+
+file = cStringIO.StringIO(MESSAGE)
+
+print file.read()
+
+*B*That man is depriving a village somewhere of a computer scientist.*b*
+</PRE>
+<P></P>
+<P>
+为了让你的代码尽可能快, 但同时保证兼容低版本的 Python ,你可以使用一个小技巧在 <CODE>cStringIO</CODE> 
+不可用时启用 <CODE>StringIO</CODE> 模块, 如 <A HREF="#eg-2-12">Example 2-12</A> 所示.
+</P>
+<A NAME="eg-2-12"></A>
+<H4><A href='#toptop'> 1.6.0.2. Example 2-12. 后退至 StringIO </A></H4>
+<PRE>
+File: cstringio-example-2.py
+
+try:
+    import cStringIO
+    StringIO = cStringIO
+except ImportError:
+    import StringIO
+
+print StringIO
+
+*B*&lt;module  'StringIO' (built-in)&gt;*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc8"></A>
+<H2><A href='#toptop'> 1.7. mmap 模块 </A></H2>
+<P>
+(2.0 新增) <CODE>mmap</CODE> 模块提供了操作系统内存映射函数的接口, 如 <A HREF="#eg-2-13">Example 2-13</A> 所示. 
+映射区域的行为和字符串对象类似, 但数据是直接从文件读取的.
+</P>
+<A NAME="eg-2-13"></A>
+<H4><A href='#toptop'> 1.7.0.1. Example 2-13. 使用 mmap 模块 </A></H4>
+<PRE>
+File: mmap-example-1.py
+
+import mmap
+import os
+
+filename = "samples/sample.txt"
+
+file = open(filename, "r+")
+size = os.path.getsize(filename)
+
+data = mmap.mmap(file.fileno(), size)
+
+# basics
+print data
+print len(data), size
+
+# use slicing to read from the file
+# 使用切片操作读取文件
+print repr(data[:10]), repr(data[:10])
+
+# or use the standard file interface
+# 或使用标准的文件接口
+print repr(data.read(10)), repr(data.read(10))
+
+*B*&lt;mmap object at 008A2A10&gt;
+302 302
+'We will pe' 'We will pe'
+'We will pe' 'rhaps even'*b*
+</PRE>
+<P></P>
+<P>
+在 Windows 下, 这个文件必须以既可读又可写的模式打开( `r+` , `w+` , 或 `a+` ), 否则 <CODE>mmap</CODE> 调用会失败. 
+</P>
+<PRE>
+[!Feather 注: 经本人测试, a+ 模式是完全可以的, 原文只有 r+ 和 w+]
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-2-14">Example 2-14</A> 展示了内存映射区域的使用, 在很多地方它都可以替换普通字符串使用, 
+包括正则表达式和其他字符串操作.
+</P>
+<A NAME="eg-2-14"></A>
+<H4><A href='#toptop'> 1.7.0.2. Example 2-14. 对映射区域使用字符串方法和正则表达式 </A></H4>
+<PRE>
+File: mmap-example-2.py
+
+import mmap
+import os, string, re
+
+def mapfile(filename):
+    file = open(filename, "r+")
+    size = os.path.getsize(filename)
+    return mmap.mmap(file.fileno(), size)
+
+data = mapfile("samples/sample.txt")
+
+# search
+index = data.find("small")
+print index, repr(data[index-5:index+15])
+
+# regular expressions work too!
+m = re.search("small", data)
+print m.start(), m.group()
+
+*B*43 'only small\015\012modules '
+43 small*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc9"></A>
+<H2><A href='#toptop'> 1.8. UserDict 模块 </A></H2>
+<P>
+<CODE>UserDict</CODE> 模块包含了一个可继承的字典类 (事实上是对内建字典类型的 Python 封装).
+</P>
+<P>
+<A HREF="#eg-2-15">Example 2-15</A> 展示了一个增强的字典类, 允许对字典使用 "加/+" 
+操作并提供了接受关键字参数的构造函数.
+</P>
+<A NAME="eg-2-15"></A>
+<H4><A href='#toptop'> 1.8.0.1. Example 2-15. 使用 UserDict 模块 </A></H4>
+<PRE>
+File: userdict-example-1.py
+
+import UserDict
+
+class FancyDict(UserDict.UserDict):
+
+    def _ _init_ _(self, data = {}, **kw):
+        UserDict.UserDict._ _init_ _(self)
+        self.update(data)
+        self.update(kw)
+
+    def _ _add_ _(self, other):
+        dict = FancyDict(self.data)
+        dict.update(b)
+        return dict
+
+a = FancyDict(a = 1)
+b = FancyDict(b = 2)
+
+print a + b
+
+*B*{'b': 2, 'a': 1}*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc10"></A>
+<H2><A href='#toptop'> 1.9. UserList 模块 </A></H2>
+<P>
+<CODE>UserList</CODE> 模块包含了一个可继承的列表类 (事实上是对内建列表类型的 Python 封装).
+</P>
+<P>
+在 <A HREF="#eg-2-16">Example 2-16</A> 中, <I>AutoList</I> 实例类似一个普通的列表对象, 但它允许你通过赋值为列表添加项目.
+</P>
+<A NAME="eg-2-16"></A>
+<H4><A href='#toptop'> 1.9.0.1. Example 2-16. 使用 UserList 模块 </A></H4>
+<PRE>
+File: userlist-example-1.py
+
+import UserList
+
+class AutoList(UserList.UserList):
+
+    def _ _setitem_ _(self, i, item):
+        if i == len(self.data):
+            self.data.append(item)
+        else:
+            self.data[i] = item
+
+list = AutoList()
+
+for i in range(10):
+    list[i] = i
+
+print list
+
+*B*[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc11"></A>
+<H2><A href='#toptop'> 1.10. UserString 模块 </A></H2>
+<P>
+(2.0 新增) <CODE>UserString</CODE> 模块包含两个类, <I>UserString</I> 和 <I>MutableString</I> . 
+前者是对标准字符串类型的封装, 后者是一个变种, 允许你修改特定位置的字符(联想下列表就知道了).
+</P>
+<P>
+注意 <I>MutableString</I> 并不是效率很好, 许多操作是通过切片和字符串连接实现的. 如果性能很对你的脚本来说重要的话, 你最好使用字符串片断的列表或者 <CODE>array</CODE> 模块. 
+<A HREF="#eg-2-17">Example 2-17</A> 展示了 <CODE>UserString</CODE> 模块.
+</P>
+<A NAME="eg-2-17"></A>
+<H4><A href='#toptop'> 1.10.0.1. Example 2-17. 使用 UserString 模块 </A></H4>
+<PRE>
+File: userstring-example-1.py
+
+import UserString
+
+class MyString(UserString.MutableString):
+
+    def append(self, s):
+        self.data = self.data + s
+
+    def insert(self, index, s):
+        self.data = self.data[index:] + s + self.data[index:]
+
+    def remove(self, s):
+        self.data = self.data.replace(s, "")
+
+file = open("samples/book.txt")
+text = file.read()
+file.close()
+
+book = MyString(text)
+
+for bird in ["gannet", "robin", "nuthatch"]:
+    book.remove(bird)
+
+print book
+
+*B*...
+C: The one without the !
+P: The one without the -!!! They've ALL got the !! It's a
+Standard British Bird, the , it's in all the books!!!
+...*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc12"></A>
+<H2><A href='#toptop'> 1.11. traceback 模块 </A></H2>
+<P>
+<A HREF="#eg-2-18">Example 2-18</A> 展示了 <CODE>traceback</CODE> 模块允许你在程序里打印异常的跟踪返回
+(Traceback)信息, 类似未捕获异常时解释器所做的. 如 <A HREF="#eg-2-18">Example 2-18</A> 所示.
+</P>
+<A NAME="eg-2-18"></A>
+<H4><A href='#toptop'> 1.11.0.1. Example 2-18. 使用 traceback 模块打印跟踪返回信息 </A></H4>
+<PRE>
+File: traceback-example-1.py
+
+# note! importing the traceback module messes up the
+# exception state, so you better do that here and not
+# in the exception handler
+# 注意! 导入 traceback 会清理掉异常状态, 所以
+# 最好别在异常处理代码中导入该模块
+import traceback
+
+try:
+    raise SyntaxError, "example"
+except:
+    traceback.print_exc()
+
+*B*Traceback (innermost last):
+  File "traceback-example-1.py", line 7, in ?
+SyntaxError: example*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-2-19">Example 2-19</A> 使用 <CODE>StringIO</CODE> 模块将跟踪返回信息放在字符串中.
+</P>
+<A NAME="eg-2-19"></A>
+<H4><A href='#toptop'> 1.11.0.2. Example 2-19. 使用 traceback 模块将跟踪返回信息复制到字符串 </A></H4>
+<PRE>
+File: traceback-example-2.py
+
+import traceback
+import StringIO
+
+try:
+    raise IOError, "an i/o error occurred"
+except:
+    fp = StringIO.StringIO()
+    traceback.print_exc(file=fp)
+    message = fp.getvalue()
+
+    print "failure! the error was:", repr(message)
+
+*B*failure! the error was: 'Traceback (innermost last):\012  File
+"traceback-example-2.py", line 5, in ?\012IOError: an i/o error
+occurred\012'*b*
+</PRE>
+<P></P>
+<P>
+你可以使用 <CODE>extract_tb</CODE> 函数格式化跟踪返回信息, 得到包含错误信息的列表, 
+如 <A HREF="#eg-2-20">Example 2-20</A> 所示.
+</P>
+<A NAME="eg-2-20"></A>
+<H4><A href='#toptop'> 1.11.0.3. Example 2-20. 使用 traceback Module 模块编码 Traceback 对象 </A></H4>
+<PRE>
+File: traceback-example-3.py
+
+import traceback
+import sys
+
+def function():
+    raise IOError, "an i/o error occurred"
+
+try:
+    function()
+except:
+    info = sys.exc_info()
+    for file, lineno, function, text in traceback.extract_tb(info[2]):
+        print file, "line", lineno, "in", function
+        print "=&gt;", repr(text)
+    print "** %s: %s" % info[:2]
+
+*B*traceback-example-3.py line 8 in ?
+=&gt; 'function()'
+traceback-example-3.py line 5 in function
+=&gt; 'raise IOError, "an i/o error occurred"'
+** exceptions.IOError: an i/o error occurred*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc13"></A>
+<H2><A href='#toptop'> 1.12. errno 模块 </A></H2>
+<P>
+<CODE>errno</CODE> 模块定义了许多的符号错误码, 比如 <CODE>ENOENT</CODE> ("没有该目录入口") 以及 <CODE>EPERM</CODE> 
+("权限被拒绝"). 它还提供了一个映射到对应平台数字错误代码的字典. <A HREF="#eg-2-21">Example 2-21</A> 
+展示了如何使用 <CODE>errno</CODE> 模块.
+</P>
+<P>
+在大多情况下, <I>IOError</I> 异常会提供一个二元元组, 包含对应数值错误代码和一个说明字符串. 
+如果你需要区分不同的错误代码, 那么最好在可能的地方使用符号名称.
+</P>
+<A NAME="eg-2-21"></A>
+<H4><A href='#toptop'> 1.12.0.1. Example 2-21. 使用 errno 模块 </A></H4>
+<PRE>
+File: errno-example-1.py
+
+import errno
+
+try:
+    fp = open("no.such.file")
+except IOError, (error, message):
+    if error == errno.ENOENT:
+        print "no such file"
+    elif error == errno.EPERM:
+        print "permission denied"
+    else:
+        print message
+
+*B*no such file*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-2-22">Example 2-22</A> 绕了些无用的弯子, 不过它很好地说明了如何使用 
+<CODE>errorcode</CODE> 字典把数字错误码映射到符号名称( symbolic name ).
+</P>
+<A NAME="eg-2-22"></A>
+<H4><A href='#toptop'> 1.12.0.2. Example 2-22. 使用 errorcode 字典 </A></H4>
+<PRE>
+File: errno-example-2.py
+
+import errno
+
+try:
+    fp = open("no.such.file")
+except IOError, (error, message):
+    print error, repr(message)
+    print errno.errorcode[error]
+
+# 2 'No such file or directory'
+# ENOENT
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc14"></A>
+<H2><A href='#toptop'> 1.13. getopt 模块 </A></H2>
+<P>
+<CODE>getopt</CODE> 模块包含用于抽出命令行选项和参数的函数, 
+它可以处理多种格式的选项. 如 <A HREF="#eg-2-23">Example 2-23</A> 所示.
+</P>
+<P>
+其中第 2 个参数指定了允许的可缩写的选项. 选项名后的冒号(:) 意味这这个选项必须有额外的参数.
+</P>
+<A NAME="eg-2-23"></A>
+<H4><A href='#toptop'> 1.13.0.1. Example 2-23. 使用 getopt 模块 </A></H4>
+<PRE>
+File: getopt-example-1.py
+
+import getopt
+import sys
+
+# simulate command-line invocation
+# 模仿命令行参数
+sys.argv = ["myscript.py", "-l", "-d", "directory", "filename"]
+
+# process options
+# 处理选项
+opts, args = getopt.getopt(sys.argv[1:], "ld:")
+
+long = 0
+directory = None
+
+for o, v in opts:
+    if o == "-l":
+        long = 1
+    elif o == "-d":
+        directory = v
+
+print "long", "=", long
+print "directory", "=", directory
+print "arguments", "=", args
+
+*B*long = 1
+directory = directory
+arguments = ['filename']*b*
+</PRE>
+<P></P>
+<P>
+为了让 <CODE>getopt</CODE> 查找长的选项, 如 <A HREF="#eg-2-24">Example 2-24</A> 所示, 
+传递一个描述选项的列表做为第 3 个参数. 如果一个选项名称以等号(=) 结尾, 
+那么它必须有一个附加参数.
+</P>
+<A NAME="eg-2-24"></A>
+<H4><A href='#toptop'> 1.13.0.2. Example 2-24. 使用 getopt 模块处理长选项 </A></H4>
+<PRE>
+File: getopt-example-2.py
+
+import getopt
+import sys
+
+# simulate command-line invocation
+# 模仿命令行参数
+sys.argv = ["myscript.py", "--echo", "--printer", "lp01", "message"]
+
+opts, args = getopt.getopt(sys.argv[1:], "ep:", ["echo", "printer="])
+
+# process options
+# 处理选项
+echo = 0
+printer = None
+
+for o, v in opts:
+    if o in ("-e", "--echo"):
+        echo = 1
+    elif o in ("-p", "--printer"):
+        printer = v
+
+print "echo", "=", echo
+print "printer", "=", printer
+print "arguments", "=", args
+
+*B*echo = 1
+printer = lp01
+arguments = ['message']*b*
+</PRE>
+<P></P>
+<PRE>
+[!Feather 注: 我不知道大家明白没, 可以自己试下:
+myscript.py -e -p lp01 message
+myscript.py --echo --printer=lp01 message
+]
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc15"></A>
+<H2><A href='#toptop'> 1.14. getpass 模块 </A></H2>
+<P>
+<CODE>getpass</CODE> 模块提供了平台无关的在命令行下输入密码的方法. 如 <A HREF="#eg-2-25">Example 2-25</A> 所示.
+</P>
+<P>
+<CODE>getpass(prompt)</CODE> 会显示提示字符串, 关闭键盘的屏幕反馈, 然后读取密码. 
+如果提示参数省略, 那么它将打印出 "<CODE>Password:</CODE>".
+</P>
+<P>
+<CODE>getuser()</CODE> 获得当前用户名, 如果可能的话.
+</P>
+<A NAME="eg-2-25"></A>
+<H4><A href='#toptop'> 1.14.0.1. Example 2-25. 使用 getpass 模块 </A></H4>
+<PRE>
+File: getpass-example-1.py
+
+import getpass
+
+usr = getpass.getuser()
+
+pwd = getpass.getpass("enter password for user %s: " % usr)
+
+print usr, pwd
+
+*B*enter password for user mulder:
+mulder trustno1*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc16"></A>
+<H2><A href='#toptop'> 1.15. glob 模块 </A></H2>
+<P>
+<CODE>glob</CODE> 根据给定模式生成满足该模式的文件名列表, 和 Unix shell 相同.
+</P>
+<P>
+这里的模式和正则表达式类似, 但更简单. 星号(<CODE>*</CODE>) 匹配零个或更多个字符, 
+问号(<CODE>?</CODE>) 匹配单个字符. 你也可以使用方括号来指定字符范围, 
+例如 <CODE>[0-9]</CODE> 代表一个数字. 其他所有字符都代表它们本身.
+</P>
+<P>
+<CODE>glob(pattern)</CODE> 返回满足给定模式的所有文件的列表. <A HREF="#eg-2-26">Example 2-26</A> 展示了它的用法.
+</P>
+<A NAME="eg-2-26"></A>
+<H4><A href='#toptop'> 1.15.0.1. Example 2-26. 使用 glob 模块 </A></H4>
+<PRE>
+File: glob-example-1.py
+
+import glob
+
+for file in glob.glob("samples/*.jpg"):
+    print file
+
+samples/sample.jpg
+</PRE>
+<P></P>
+<P>
+注意这里的 <CODE>glob</CODE> 返回完整路径名, 这点和 <CODE>os.listdir</CODE> 函数不同. 
+<CODE>glob</CODE> 事实上使用了 <CODE>fnmatch</CODE> 模块来完成模式匹配.
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc17"></A>
+<H2><A href='#toptop'> 1.16. fnmatch 模块 </A></H2>
+<P>
+<CODE>fnmatch</CODE> 模块使用模式来匹配文件名. 如 <A HREF="#eg-2-27">Example 2-27</A> 所示.
+</P>
+<P>
+模式语法和 Unix shell 中所使用的相同. 星号(<CODE>*</CODE>) 匹配零个或更多个字符, 
+问号(<CODE>?</CODE>) 匹配单个字符. 你也可以使用方括号来指定字符范围, 
+例如 <CODE>[0-9]</CODE> 代表一个数字. 其他所有字符都匹配它们本身. 
+</P>
+<A NAME="eg-2-27"></A>
+<H4><A href='#toptop'> 1.16.0.1. Example 2-27. 使用 fnmatch 模块匹配文件 </A></H4>
+<PRE>
+File: fnmatch-example-1.py
+
+import fnmatch
+import os
+
+for file in os.listdir("samples"):
+    if fnmatch.fnmatch(file, "*.jpg"):
+        print file
+
+*B*sample.jpg*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-2-28">Example 2-28</A> 中的 <CODE>translate</CODE> 函数可以将一个文件匹配模式转换为正则表达式.
+</P>
+<A NAME="eg-2-28"></A>
+<H4><A href='#toptop'> 1.16.0.2. Example 2-28. 使用 fnmatch 模块将模式转换为正则表达式 </A></H4>
+<PRE>
+File: fnmatch-example-2.py
+
+import fnmatch
+import os, re
+
+pattern = fnmatch.translate("*.jpg")
+
+for file in os.listdir("samples"):
+    if re.match(pattern, file):
+        print file
+
+print "(pattern was %s)" % pattern
+
+*B*sample.jpg
+(pattern was .*\.jpg$)*b*
+</PRE>
+<P></P>
+<P>
+<CODE>glob</CODE> 和 <CODE>find</CODE> 模块在内部使用 <CODE>fnmatch</CODE> 模块来实现.
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc18"></A>
+<H2><A href='#toptop'> 1.17. random 模块 </A></H2>
+	<BLOCKQUOTE>
+	"Anyone who considers arithmetical methods of producing random digits is, of course, in a state of sin."
+	</BLOCKQUOTE>
+<P></P>
+	<BLOCKQUOTE>
+	- John von Neumann, 1951
+	</BLOCKQUOTE>
+<P></P>
+<P>
+<CODE>random</CODE> 模块包含许多随机数生成器. 
+</P>
+<P>
+基本随机数生成器(基于 Wichmann 和 Hill , 1982 的数学运算理论) 可以通过很多方法访问, 
+如 <A HREF="#eg-2-29">Example 2-29</A> 所示.
+</P>
+<A NAME="eg-2-29"></A>
+<H4><A href='#toptop'> 1.17.0.1. Example 2-29. 使用 random 模块获得随机数字 </A></H4>
+<PRE>
+File: random-example-1.py
+
+import random
+
+for i in range(5):
+
+    # random float: 0.0 &lt;= number &lt; 1.0
+    print random.random(),
+
+    # random float: 10 &lt;= number &lt; 20
+    print random.uniform(10, 20),
+
+    # random integer: 100 &lt;= number &lt;= 1000
+    print random.randint(100, 1000),
+
+    # random integer: even numbers in 100 &lt;= number &lt; 1000
+    print random.randrange(100, 1000, 2)
+
+*B*0.946842713956 19.5910069381 709 172
+0.573613195398 16.2758417025 407 120
+0.363241598013 16.8079747714 916 580
+0.602115173978 18.386796935 531 774
+0.526767588533 18.0783794596 223 344*b*
+</PRE>
+<P></P>
+<P>
+注意这里的 <CODE>randint</CODE> 函数可以返回上界, 
+而其他函数总是返回小于上界的值. 所有函数都有可能返回下界值.
+</P>
+<P>
+<A HREF="#eg-2-30">Example 2-30</A> 展示了 <CODE>choice</CODE> 函数, 它用来从一个序列里分拣出一个随机项目. 
+它可以用于列表, 元组, 以及其他序列(当然, 非空的).
+</P>
+<A NAME="eg-2-30"></A>
+<H4><A href='#toptop'> 1.17.0.2. Example 2-30. 使用 random 模块从序列取出随机项 </A></H4>
+<PRE>
+File: random-example-2.py
+
+import random
+
+# random choice from a list
+for i in range(5):
+    print random.choice([1, 2, 3, 5, 9])
+
+*B*2
+3
+1
+9
+1*b*
+</PRE>
+<P></P>
+<P>
+在 2.0 及以后版本, <CODE>shuffle</CODE> 函数可以用于打乱一个列表的内容
+(也就是生成一个该列表的随机全排列). <A HREF="#eg-2-31">Example 2-31</A> 展示了如何在旧版本中实现该函数.
+</P>
+<A NAME="eg-2-31"></A>
+<H4><A href='#toptop'> 1.17.0.3. Example 2-31. 使用 random 模块打乱一副牌 </A></H4>
+<PRE>
+File: random-example-4.py
+
+import random
+
+try:
+    # available in 2.0 and later
+    shuffle = random.shuffle
+except AttributeError:
+    def shuffle(x):
+        for i in xrange(len(x)-1, 0, -1):
+            # pick an element in x[:i+1] with which to exchange x[i]
+            j = int(random.random() * (i+1))
+            x[i], x[j] = x[j], x[i]
+
+cards = range(52)
+
+shuffle(cards)
+
+myhand = cards[:5]
+
+print myhand
+
+*B*[4, 8, 40, 12, 30]*b*
+</PRE>
+<P></P>
+<P>
+<CODE>random</CODE> 模块也包含了非恒定分布的随机生成器函数. <A HREF="#eg-2-32">Example 2-32</A> 
+使用了 gauss (高斯)函数来生成满足高斯分的布随机数字.
+</P>
+<A NAME="eg-2-32"></A>
+<H4><A href='#toptop'> 1.17.0.4. Example 2-32. 使用 random 模块生成高斯分布随机数 </A></H4>
+<PRE>
+File: random-example-3.py
+
+import random
+
+histogram = [0] * 20
+
+# calculate histogram for gaussian
+# noise, using average=5, stddev=1
+for i in range(1000):
+    i = int(random.gauss(5, 1) * 2)
+    histogram[i] = histogram[i] + 1
+
+# print the histogram
+m = max(histogram)
+for v in histogram:
+    print "*" * (v * 50 / m)
+
+
+*B*****
+**********
+*************************
+***********************************
+************************************************
+**************************************************
+*************************************
+***************************
+*************
+***
+**b*
+</PRE>
+<P></P>
+<P>
+你可以在 <I>Python Library Reference</I> 找到更多关于非恒定分布随机生成器函数的信息.
+</P>
+	<BLOCKQUOTE>
+	*Note*标准库中提供的随机数生成器都是伪随机数生成器. 不过这对于很多目的来说已经足够了, 比如模拟, 数值分析, 以及游戏. 可以确定的是它不适合密码学用途.*note*
+	</BLOCKQUOTE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc19"></A>
+<H2><A href='#toptop'> 1.18. whrandom 模块 </A></H2>
+<P>
+*Alert*这个模块早在 2.1 就被声明不赞成, 早废了. 请使用 <CODE>random</CODE> 代替. <BR> - Feather*alert*     
+</P>
+<P>
+<A HREF="#eg-2-33">Example 2-33</A> 展示了 <CODE>whrandom</CODE> , 它提供了一个伪随机数生成器. 
+(基于 Wichmann 和 Hill, 1982 的数学运算理论). 除非你需要不共享状态的多个生成器(如多线程程序), 
+请使用 <CODE>random</CODE> 模块代替.
+</P>
+<A NAME="eg-2-33"></A>
+<H4><A href='#toptop'> 1.18.0.1. Example 2-33. 使用 whrandom 模块 </A></H4>
+<PRE>
+File: whrandom-example-1.py
+
+import whrandom
+
+# same as random
+print whrandom.random()
+print whrandom.choice([1, 2, 3, 5, 9])
+print whrandom.uniform(10, 20)
+print whrandom.randint(100, 1000)
+
+*B*0.113412062346
+1
+16.8778954689
+799*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-2-34">Example 2-34</A> 展示了如何使用 <I>whrandom</I> 类实例创建多个生成器.
+</P>
+<A NAME="eg-2-34"></A>
+<H4><A href='#toptop'> 1.18.0.2. Example 2-34. 使用 whrandom 模块创建多个随机生成器 </A></H4>
+<PRE>
+File: whrandom-example-2.py
+
+import whrandom
+
+# initialize all generators with the same seed
+rand1 = whrandom.whrandom(4,7,11)
+rand2 = whrandom.whrandom(4,7,11)
+rand3 = whrandom.whrandom(4,7,11)
+
+for i in range(5):
+    print rand1.random(), rand2.random(), rand3.random()
+
+*B*0.123993532536 0.123993532536 0.123993532536
+0.180951499518 0.180951499518 0.180951499518
+0.291924111809 0.291924111809 0.291924111809
+0.952048889363 0.952048889363 0.952048889363
+0.969794283643 0.969794283643 0.969794283643*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc20"></A>
+<H2><A href='#toptop'> 1.19. md5 模块 </A></H2>
+<P>
+<CODE>md5</CODE> (Message-Digest Algorithm 5)模块用于计算信息密文(信息摘要).
+</P>
+<P>
+<CODE>md5</CODE> 算法计算一个强壮的128位密文. 这意味着如果两个字符串是不同的, 
+那么有极高可能它们的 <CODE>md5</CODE> 也不同. 也就是说, 给定一个 <CODE>md5</CODE> 密文, 
+那么几乎没有可能再找到另个字符串的密文与此相同. <A HREF="#eg-2-35">Example 2-35</A> 
+展示了如何使用 <CODE>md5</CODE> 模块.
+</P>
+<A NAME="eg-2-35"></A>
+<H4><A href='#toptop'> 1.19.0.1. Example 2-35. 使用 md5 模块 </A></H4>
+<PRE>
+File: md5-example-1.py
+
+import md5
+
+hash = md5.new()
+hash.update("spam, spam, and eggs")
+
+print repr(hash.digest())
+
+*B* 'L\005J\243\266\355\243u`\305r\203\267\020F\303'*b*
+</PRE>
+<P></P>
+<P>
+注意这里的校验和是一个二进制字符串. <A HREF="#eg-2-36">Example 2-36</A> 展示了如何获得一个十六进制或 
+base64 编码的字符串.
+</P>
+<A NAME="eg-2-36"></A>
+<H4><A href='#toptop'> 1.19.0.2. Example 2-36. 使用 md5 模块获得十六进制或 base64 编码的 md5 值 </A></H4>
+<PRE>
+File: md5-example-2.py
+
+import md5
+import string
+import base64
+
+hash = md5.new()
+hash.update("spam, spam, and eggs")
+
+value = hash.digest()
+print hash.hexdigest()
+# before 2.0, the above can be written as
+# 在 2.0 前, 以上应该写做:
+# print string.join(map(lambda v: "%02x" % ord(v), value), "")
+
+print base64.encodestring(value)
+
+*B*4c054aa3b6eda37560c57283b71046c3
+TAVKo7bto3VgxXKDtxBGww==*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-2-37">Example 2-37</A> 展示了如何使用 <CODE>md5</CODE> 
+校验和来处理口令的发送与应答的验证(不过我们将稍候讨论这里使用随机数字所带来的问题).
+</P>
+<A NAME="eg-2-37"></A>
+<H4><A href='#toptop'> 1.19.0.3. Example 2-37. 使用 md5 模块来处理口令的发送与应答的验证 </A></H4>
+<PRE>
+File: md5-example-3.py
+
+import md5
+import string, random
+
+def getchallenge():
+    # generate a 16-byte long random string.  (note that the built-
+    # in pseudo-random generator uses a 24-bit seed, so this is not
+    # as good as it may seem...)
+    # 生成一个 16 字节长的随机字符串. 注意内建的伪随机生成器
+    # 使用的是 24 位的种子(seed), 所以这里这样用并不好..
+    challenge = map(lambda i: chr(random.randint(0, 255)), range(16))
+    return string.join(challenge, "")
+
+def getresponse(password, challenge):
+    # calculate combined digest for password and challenge
+    # 计算密码和质询(challenge)的联合密文
+    m = md5.new()
+    m.update(password)
+    m.update(challenge)
+    return m.digest()
+
+#
+# server/client communication
+# 服务器/客户端通讯
+
+# 1. client connects.  server issues challenge.
+# 1. 客户端连接, 服务器发布质询(challenge)
+
+print "client:", "connect"
+
+challenge = getchallenge()
+
+print "server:", repr(challenge)
+
+# 2. client combines password and challenge, and calculates
+# the response.
+# 2. 客户端计算密码和质询(challenge)的组合后的密文
+
+client_response = getresponse("trustno1", challenge)
+
+print "client:", repr(client_response)
+
+# 3. server does the same, and compares the result with the
+# client response.  the result is a safe login in which the
+# password is never sent across the communication channel.
+# 3. 服务器做同样的事, 然后比较结果与客户端的返回, 
+# 判断是否允许用户登陆. 这样做密码没有在通讯中明文传输.
+
+server_response = getresponse("trustno1", challenge)
+
+if server_response == client_response:
+    print "server:", "login ok"
+
+*B*client: connect
+server: '\334\352\227Z#\272\273\212KG\330\265\032&gt;\311o'
+client: "l'\305\240-x\245\237\035\225A\254\233\337\225\001"
+server: login ok*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-2-38">Example 2-38</A> 提供了 <CODE>md5</CODE> 
+的一个变种, 你可以通过标记信息来判断它是否在网络传输过程中被修改(丢失).
+</P>
+<A NAME="eg-2-38"></A>
+<H4><A href='#toptop'> 1.19.0.4. Example 2-38. 使用 md5 模块检查数据完整性 </A></H4>
+<PRE>
+File: md5-example-4.py
+
+import md5
+import array
+
+class HMAC_MD5:
+    # keyed md5 message authentication
+
+    def _ _init_ _(self, key):
+        if len(key) &gt; 64:
+            key = md5.new(key).digest()
+        ipad = array.array("B", [0x36] * 64)
+        opad = array.array("B", [0x5C] * 64)
+        for i in range(len(key)):
+            ipad[i] = ipad[i] ^ ord(key[i])
+            opad[i] = opad[i] ^ ord(key[i])
+        self.ipad = md5.md5(ipad.tostring())
+        self.opad = md5.md5(opad.tostring())
+
+    def digest(self, data):
+        ipad = self.ipad.copy()
+        opad = self.opad.copy()
+        ipad.update(data)
+        opad.update(ipad.digest())
+        return opad.digest()
+
+#
+# simulate server end
+# 模拟服务器端
+
+key = "this should be a well-kept secret"
+message = open("samples/sample.txt").read()
+
+signature = HMAC_MD5(key).digest(message)
+
+# (send message and signature across a public network)
+# (经过由网络发送信息和签名)
+
+#
+# simulate client end
+#模拟客户端
+
+key = "this should be a well-kept secret"
+
+client_signature = HMAC_MD5(key).digest(message)
+
+if client_signature == signature:
+    print "this is the original message:"
+    print
+    print message
+else:
+    print "someone has modified the message!!!"
+</PRE>
+<P></P>
+<P>
+<CODE>copy</CODE> 方法会对这个内部对象状态做一个快照( snapshot ). 
+这允许你预先计算部分密文摘要(例如 <A HREF="#eg-2-38">Example 2-38</A> 中的 padded key).
+</P>
+<P>
+该算法的细节请参阅 
+<I>HMAC-MD5:Keyed-MD5 for Message Authentication</I> 
+( <A HREF="http://www.research.ibm.com/security/draft-ietf-ipsec-hmac-md5-00.txt">http://www.research.ibm.com/security/draft-ietf-ipsec-hmac-md5-00.txt</A> ) by Krawczyk, 或其他.
+</P>
+	<BLOCKQUOTE>
+	*Note*千万别忘记内建的伪随机生成器对于加密操作而言并不合适. 千万小心. *note*
+	</BLOCKQUOTE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc21"></A>
+<H2><A href='#toptop'> 1.20. sha 模块 </A></H2>
+<P>
+<CODE>sha</CODE> 模块提供了计算信息摘要(密文)的另种方法, 如 <A HREF="#eg-2-39">Example 2-39</A> 所示. 
+它与 <CODE>md5</CODE> 模块类似, 但生成的是 160 位签名.
+</P>
+<A NAME="eg-2-39"></A>
+<H4><A href='#toptop'> 1.20.0.1. Example 2-39. 使用 sha 模块 </A></H4>
+<PRE>
+File: sha-example-1.py
+
+import sha
+
+hash = sha.new()
+hash.update("spam, spam, and eggs")
+
+print repr(hash.digest())
+print hash.hexdigest()
+
+*B*'\321\333\003\026I\331\272-j\303\247\240\345\343Tvq\364\346\311'
+d1db031649d9ba2d6ac3a7a0e5e3547671f4e6c9*b*
+</PRE>
+<P></P>
+<P>
+关于 <CODE>sha</CODE> 密文的使用, 请参阅 <CODE>md5</CODE> 中的例子.
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc22"></A>
+<H2><A href='#toptop'> 1.21. crypt 模块 </A></H2>
+<P>
+(可选, 只用于 Unix) <CODE>crypt</CODE> 模块实现了单向的 DES 加密, Unix 
+系统使用这个加密算法来储存密码, 这个模块真正也就只在检查这样的密码时有用.
+</P>
+<P>
+<A HREF="#eg-2-40">Example 2-40</A> 展示了如何使用 <CODE>crypt.crypt</CODE> 来加密一个密码, 将密码和 
+<I>salt</I> 组合起来然后传递给函数, 这里的 <I>salt</I> 包含两位随机字符. 
+现在你可以扔掉原密码而只保存加密后的字符串了.
+</P>
+<A NAME="eg-2-40"></A>
+<H4><A href='#toptop'> 1.21.0.1. Example 2-40. 使用 crypt 模块 </A></H4>
+<PRE>
+File: crypt-example-1.py
+
+import crypt
+
+import random, string
+
+def getsalt(chars = string.letters + string.digits):
+    # generate a random 2-character 'salt'
+    # 生成随机的 2 字符 'salt'
+    return random.choice(chars) + random.choice(chars)
+
+print crypt.crypt("bananas", getsalt())
+
+*B*'py8UGrijma1j6'*b*
+</PRE>
+<P></P>
+<P>
+确认密码时, 只需要用新密码调用加密函数, 并取加密后字符串的前两位作为 <I>salt</I> 即可. 如
+果结果和加密后字符串匹配, 那么密码就是正确的. <A HREF="#eg-2-41">Example 2-41</A> 使用 
+<CODE>pwd</CODE> 模块来获取已知用户的加密后密码.
+</P>
+<A NAME="eg-2-41"></A>
+<H4><A href='#toptop'> 1.21.0.2. Example 2-41. 使用 crypt 模块身份验证 </A></H4>
+<PRE>
+File: crypt-example-2.py
+
+import pwd, crypt
+
+def login(user, password):
+    "Check if user would be able to log in using password"
+    try:
+        pw1 = pwd.getpwnam(user)[1]
+        pw2 = crypt.crypt(password, pw1[:2])
+        return pw1 == pw2
+    except KeyError:
+        return 0 # no such user
+
+user = raw_input("username:")
+password = raw_input("password:")
+
+if login(user, password):
+    print "welcome", user
+else:
+    print "login failed"
+</PRE>
+<P></P>
+<P>
+关于其他实现验证的方法请参阅 <CODE>md5</CODE> 模块一节.
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc23"></A>
+<H2><A href='#toptop'> 1.22. rotor 模块 </A></H2>
+<P>
+*Alert*这个模块在 2.3 时被声明不赞成, 2.4 时废了. 因为它的加密算法不安全. <BR> - Feather*alert*     
+</P>
+<P>
+(可选) <CODE>rotor</CODE> 模块实现了一个简单的加密算法. 如 <A HREF="#eg-2-42">Example 2-42</A> 所示. 
+它的算法基于 WWII Enigma engine.
+</P>
+<A NAME="eg-2-42"></A>
+<H4><A href='#toptop'> 1.22.0.1. Example 2-42. 使用 rotor 模块 </A></H4>
+<PRE>
+File: rotor-example-1.py
+
+import rotor
+
+SECRET_KEY = "spam"
+MESSAGE = "the holy grail"
+
+r = rotor.newrotor(SECRET_KEY)
+
+encoded_message = r.encrypt(MESSAGE)
+decoded_message = r.decrypt(encoded_message)
+
+print "original:", repr(MESSAGE)
+print "encoded message:", repr(encoded_message)
+print "decoded message:", repr(decoded_message)
+
+*B*original: 'the holy grail'
+encoded message: '\227\271\244\015\305sw\3340\337\252\237\340U'
+decoded message: 'the holy grail'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc24"></A>
+<H2><A href='#toptop'> 1.23. zlib 模块 </A></H2>
+<P>
+(可选) <CODE>zlib</CODE> 模块为 "zlib" 压缩提供支持. (这种压缩方法是 "deflate".) 
+</P>
+<P>
+<A HREF="#eg-2-43">Example 2-43</A> 展示了如何使用 <CODE>compress</CODE> 和 <CODE>decompress</CODE> 函数接受字符串参数.
+</P>
+<A NAME="eg-2-43"></A>
+<H4><A href='#toptop'> 1.23.0.1. Example 2-43. 使用 zlib 模块压缩字符串 </A></H4>
+<PRE>
+File: zlib-example-1.py
+
+import zlib
+
+MESSAGE = "life of brian"
+
+compressed_message = zlib.compress(MESSAGE)
+decompressed_message = zlib.decompress(compressed_message)
+
+print "original:", repr(MESSAGE)
+print "compressed message:", repr(compressed_message)
+print "decompressed message:", repr(decompressed_message)
+
+*B*original: 'life of brian'
+compressed message: 'x\234\313\311LKU\310OSH*\312L\314\003\000!\010\004\302'
+decompressed message: 'life of brian'*b*
+</PRE>
+<P></P>
+<P>
+文件的内容决定了压缩比率, <A HREF="#eg-2-44">Example 2-44</A> 说明了这点.
+</P>
+<A NAME="eg-2-44"></A>
+<H4><A href='#toptop'> 1.23.0.2. Example 2-44. 使用 zlib 模块压缩多个不同类型文件 </A></H4>
+<PRE>
+File: zlib-example-2.py
+
+import zlib
+import glob
+
+for file in glob.glob("samples/*"):
+
+    indata = open(file, "rb").read()
+    outdata = zlib.compress(indata, zlib.Z_BEST_COMPRESSION)
+
+    print file, len(indata), "=&gt;", len(outdata),
+    print "%d%%" % (len(outdata) * 100 / len(indata))
+
+*B*samples\sample.au 1676 =&gt; 1109 66%
+samples\sample.gz 42 =&gt; 51 121%
+samples\sample.htm 186 =&gt; 135 72%
+samples\sample.ini 246 =&gt; 190 77%
+samples\sample.jpg 4762 =&gt; 4632 97%
+samples\sample.msg 450 =&gt; 275 61%
+samples\sample.sgm 430 =&gt; 321 74%
+samples\sample.tar 10240 =&gt; 125 1%
+samples\sample.tgz 155 =&gt; 159 102%
+samples\sample.txt 302 =&gt; 220 72%
+samples\sample.wav 13260 =&gt; 10992 82%*b*
+</PRE>
+<P></P>
+<P>
+你也可以实时地压缩或解压缩数据, 如 <A HREF="#eg-2-45">Example 2-45</A> 所示.
+</P>
+<A NAME="eg-2-45"></A>
+<H4><A href='#toptop'> 1.23.0.3. Example 2-45. 使用 zlib 模块解压缩流 </A></H4>
+<PRE>
+File: zlib-example-3.py
+
+import zlib
+
+encoder = zlib.compressobj()
+
+data = encoder.compress("life")
+data = data + encoder.compress(" of ")
+data = data + encoder.compress("brian")
+data = data + encoder.flush()
+
+print repr(data)
+print repr(zlib.decompress(data))
+
+*B*'x\234\313\311LKU\310OSH*\312L\314\003\000!\010\004\302'
+'life of brian'*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-2-46">Example 2-46</A> 把解码对象封装到了一个类似文件对象的类中, 
+实现了一些文件对象的方法, 这样使得读取压缩文件更方便.
+</P>
+<A NAME="eg-2-46"></A>
+<H4><A href='#toptop'> 1.23.0.4. Example 2-46. 压缩流的仿文件访问方式 </A></H4>
+<PRE>
+File: zlib-example-4.py
+
+import zlib
+import string, StringIO
+
+class ZipInputStream:
+
+    def _ _init_ _(self, file):
+        self.file = file
+        self._ _rewind()
+
+    def _ _rewind(self):
+        self.zip = zlib.decompressobj()
+        self.pos = 0 # position in zipped stream
+        self.offset = 0 # position in unzipped stream
+        self.data = ""
+
+    def _ _fill(self, bytes):
+        if self.zip:
+            # read until we have enough bytes in the buffer
+            while not bytes or len(self.data) &lt; bytes:
+                self.file.seek(self.pos)
+                data = self.file.read(16384)
+                if not data:
+                    self.data = self.data + self.zip.flush()
+                    self.zip = None # no more data
+                    break
+                self.pos = self.pos + len(data)
+                self.data = self.data + self.zip.decompress(data)
+
+    def seek(self, offset, whence=0):
+        if whence == 0:
+            position = offset
+        elif whence == 1:
+            position = self.offset + offset
+        else:
+            raise IOError, "Illegal argument"
+        if position &lt; self.offset:
+            raise IOError, "Cannot seek backwards"
+
+        # skip forward, in 16k blocks
+        while position &gt; self.offset:
+            if not self.read(min(position - self.offset, 16384)):
+                break
+
+    def tell(self):
+        return self.offset
+
+    def read(self, bytes = 0):
+        self._ _fill(bytes)
+        if bytes:
+            data = self.data[:bytes]
+            self.data = self.data[bytes:]
+        else:
+            data = self.data
+            self.data = ""
+        self.offset = self.offset + len(data)
+        return data
+
+    def readline(self):
+        # make sure we have an entire line
+        while self.zip and "\n" not in self.data:
+            self._ _fill(len(self.data) + 512)
+        i = string.find(self.data, "\n") + 1
+        if i &lt;= 0:
+            return self.read()
+        return self.read(i)
+
+    def readlines(self):
+        lines = []
+        while 1:
+            s = self.readline()
+            if not s:
+                break
+            lines.append(s)
+        return lines
+
+#
+# try it out
+
+data = open("samples/sample.txt").read()
+data = zlib.compress(data)
+
+file = ZipInputStream(StringIO.StringIO(data))
+for line in file.readlines():
+    print line[:-1]
+
+*B*We will perhaps eventually be writing only small
+modules which are identified by name as they are
+used to build larger ones, so that devices like
+indentation, rather than delimiters, might become
+feasible for expressing local structure in the
+source language.
+    -- Donald E. Knuth, December 1974*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc25"></A>
+<H2><A href='#toptop'> 1.24. code 模块 </A></H2>
+<P>
+<CODE>code</CODE> 模块提供了一些用于模拟标准交互解释器行为的函数.
+</P>
+<P>
+<CODE>compile_command</CODE> 与内建 <CODE>compile</CODE> 函数行为相似, 但它会通过测试来保证你传递的是一个完成的 Python 语句.
+</P>
+<P>
+在 <A HREF="#eg-2-47">Example 2-47</A> 中, 我们一行一行地编译一个程序, 编译完成后会执行所得到的代码对象 
+(code object). 程序代码如下:
+</P>
+<PRE>
+a = (
+  1,
+  2,
+  3
+)
+print a
+</PRE>
+<P></P>
+<P>
+注意只有我们到达第 2 个括号, 元组的赋值操作能编译完成.
+</P>
+<A NAME="eg-2-47"></A>
+<H4><A href='#toptop'> 1.24.0.1. Example 2-47. 使用 code 模块编译语句 </A></H4>
+<PRE>
+File: code-example-1.py
+
+import code
+import string
+
+# 
+SCRIPT = [
+    "a = (",
+    "  1,",
+    "  2,",
+    "  3 ",
+    ")",
+    "print a"
+]
+
+script = ""
+
+for line in SCRIPT:
+    script = script + line + "\n"
+    co = code.compile_command(script, "&lt;stdin&gt;", "exec")
+    if co:
+        # got a complete statement.  execute it!
+        print "-"*40
+        print script,
+        print "-"*40
+        exec co
+        script = ""
+
+*B*----------------------------------------
+a = (
+  1,
+  2,
+  3 
+)
+----------------------------------------
+----------------------------------------
+print a
+----------------------------------------
+(1, 2, 3)*b*
+</PRE>
+<P></P>
+<P>
+<I>InteractiveConsole</I> 类实现了一个交互控制台, 类似你启动的 Python 解释器交互模式.
+</P>
+<P>
+控制台可以是活动的(自动调用函数到达下一行) 或是被动的(当有新数据时调用 <I>push</I> 方法). 
+默认使用内建的 <CODE>raw_input</CODE> 函数. 如果你想使用另个输入函数, 
+你可以使用相同的名称重载这个方法. <A HREF="#eg-2-48">Example 2-48</A> 展示了如何使用 <CODE>code</CODE> 
+模块来模拟交互解释器.
+</P>
+<A NAME="eg-2-48"></A>
+<H4><A href='#toptop'> 1.24.0.2. Example 2-48. 使用 code 模块模拟交互解释器 </A></H4>
+<PRE>
+File: code-example-2.py
+
+import code
+
+console = code.InteractiveConsole()
+console.interact()
+
+*B*Python 1.5.2
+Copyright 1991-1995 Stichting Mathematisch Centrum, Amsterdam
+(InteractiveConsole)
+&gt;&gt;&gt; a = (
+...     1,
+...     2,
+...     3
+... )
+&gt;&gt;&gt; print a
+(1, 2, 3)*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-2-49">Example 2-49</A> 中的脚本定义了一个 <CODE>keyboard</CODE> 函数. 
+它允许你在程序中手动控制交互解释器.
+</P>
+<A NAME="eg-2-49"></A>
+<H4><A href='#toptop'> 1.24.0.3. Example 2-49. 使用 code 模块实现简单的 Debugging </A></H4>
+<PRE>
+File: code-example-3.py
+
+def keyboard(banner=None):
+    import code, sys
+
+    # use exception trick to pick up the current frame
+    try:
+        raise None
+    except:
+        frame = sys.exc_info()[2].tb_frame.f_back
+
+    # evaluate commands in current namespace
+    namespace = frame.f_globals.copy()
+    namespace.update(frame.f_locals)
+
+    code.interact(banner=banner, local=namespace)
+
+def func():
+    print "START"
+    a = 10
+    keyboard()
+    print "END"
+
+func()
+
+*B*START
+Python 1.5.2
+Copyright 1991-1995 Stichting Mathematisch Centrum, Amsterdam
+(InteractiveConsole)
+&gt;&gt;&gt; print a
+10
+&gt;&gt;&gt; print keyboard
+&lt;function keyboard at 9032c8&gt;
+^Z
+END*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+</DIV>
+
+<!-- html code generated by txt2tags 2.4 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags chapter2.t2t -->
+</BODY></HTML>

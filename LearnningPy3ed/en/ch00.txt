@@ -1,0 +1,194 @@
+
+
+1Preface
+This book provides an introduction to the Python programming language. Python is a popular programming language used for both standalone programs and scripting applications in a wide variety of domains. It is free, portable, powerful, and remarkably easy to use.
+Whether you are new to programming or a professional developer, this book's goal is to bring you quickly up to speed on the fundamentals of the core Python language. After reading this book, you will know enough about Python to apply it in whatever application domains you choose to explore.
+About This Third Edition
+In the four years since the second edition of this book was published in late 2003, there have been substantial changes in Python itself, and in the topics I present in Python training sessions. Although I have attempted to retain as much of the prior version of this text as possible, this new edition reflects many recent changes in the Python language and in Python training, as well as a handful of structural changes.
+This Edition's Python Language Changes
+On the language front, this edition has been thoroughly updated to reflect Python 2.5 and all changes to the language since the publication of the second edition. (The second edition was based largely on Python 2.2, with some 2.3 features grafted on at the end of the project.) In addition, discussions of anticipated changes in the upcoming Python 3.0 release have been incorporated where appropriate. Here are some of the major language topics of which you'll find new or expanded coverage in this edition:
+	*	The new B if A else C conditional expression (Chapter 12).
+	*	with/as context managers (Chapter 27).
+	*	try/except/finally unification (Chapter 27).
+	*	Relative import syntax (Chapter 21).
+	*	Generator expressions (Chapter 17).
+	*	New generator function features (Chapter 17).
+	*	Function decorators (Chapter 26).
+	*	The set object type (Chapter 5).
+	*	New built-in functions: sorted, sum, any, all, enumerate (Chapters 4 and 13).
+	*	The decimal fixed-precision object type (Chapter 5).
+	*	New and expanded material on files, list comprehensions, iterators, and more (Chapters 13 and 17).
+	*	New development tools coverage: Eclipse, distutils, unittest and doctest, IDLE enhancements, Shedskin, and so on (Chapters 3 and 29).
+Smaller language changes (for instance, the widespread use of True and False, the new sys.exc_info for fetching exception details, and the demise of string-based exceptions, string methods, and the apply and reduce built-ins) are discussed throughout the book. In addition, some of the features that were new in the prior edition enjoy substantially expanded coverage here, including three-limit slices, and the arbitrary arguments call syntax that subsumes apply.
+This Edition's Python Training Changes
+Besides such language changes, this edition has been augmented with new topics and examples presented in the Python training sessions I have held in recent years. For example, you'll find:
+	*	A new chapter introducing built-in types (Chapter 4).
+	*	A new chapter introducing statement syntax (Chapter 10).
+	*	A new full chapter on dynamic typing, with enhanced coverage (Chapter 6).
+	*	An expanded OOP introduction (Chapter 22).
+	*	New examples for files, scopes, statement nesting, classes, exceptions, and more.
+Many additions and changes were made with Python beginners in mind, and some topics have been moved to appear at the places where they have proved simplest to digest in training classes. List comprehensions and iterators, for example, now make their initial appearance in conjunction with the for loop statement, instead of later with functional tools. 
+You'll also find that the coverage of many original core language topics has been substantially expanded in this edition, with new discussions and examples added. Because this text has become something of a de facto standard resource for learning the core Python language, the presentation has been made more complete and augmented with new use cases throughout.
+In addition, this entire edition integrates a new set of Python tips and tricks, gleaned from teaching classes during the last 10 years, and using Python for real work over the last 15. The exercises have also been updated and expanded to reflect current Python best practices, new language features, and common beginners' mistakes witnessed firsthand in classes. Overall, the core language coverage provided by this edition is larger than in previous editions, both because Python is larger, and because I've added contextual information that has proved to be important in practice.
+This Edition's Structural Changes
+As in the prior edition, to accommodate the fact that this book is now more complete, its material has been split into bite-sized chunks. That is, I've organized the core language material into many multichapter parts to make the material easier to tackle. Types and statements, for instance, are now two top-level parts, with one chapter for each major type and statement topic. This new structure is designed to allow the book to say more without intimidating readers. In the process, exercises and "gotchas" (common mistakes) were moved from chapter ends to part ends-they now appear at the end of the last chapter in each part.
+In this third edition, I've also augmented the end-of-part exercises with end-of-chapter summaries and end-of-chapter quizzes to help you review chapters as you complete them. Each chapter concludes with a set of questions to help you review and test your understanding of the chapter's material. Unlike the end-of-part exercises, whose solutions are presented in Appendix B, the solutions to the end-of-chapter quizzes appear immediately after the questions; I encourage you to look at the solutions even if you're sure you've answered the questions correctly because the answers are a sort of review in themselves.
+Despite all the new topics, this book is still oriented toward Python newcomers, and is designed to be a first Python text for programmers. It retains much of the first two editions' material, structure, and focus. Where appropriate, I've expanded introductions for newcomers, and isolated the more advanced new topics from the main thread of discussion to avoid obscuring the fundamentals. Moreover, because it is largely based on time-tested training experience and materials, this edition, like the first two, can still serve as a self-paced introductory Python class.
+This Edition's Scope Changes
+This third edition is intended as a tutorial on the core Python language, and nothing else. It's about learning the language in an in-depth fashion, before applying it in application-level programming. The presentation here is bottom-up and gradual, but it provides a complete look at the entire language, in isolation from its application roles.
+For some, "learning Python" involves spending an hour or two going through a tutorial on the Web. This works for already advanced programmers up to a point; Python is, after all, relatively simple by comparison to other languages. The problem with this fast-track approach is that its practitioners eventually stumble onto unusual cases and get stuck-variables change out from under them, mutable default arguments mutate inexplicably, and so on. The goal here is instead to provide a solid grounding in Python fundamentals, so that even the unusual cases will make sense when they crop up.
+This scope is deliberate. By restricting our gaze to language fundamentals, we can investigate them here in more satisfying depth. Other texts, such as O'Reilly's Programming Python, Python Cookbook, Python in a Nutshell, and Python Pocket Reference, pick up where this book leaves off and provide a more complete look at application-level topics and reference materials. The purpose of the book you are reading now is solely to teach Python itself so that you can apply it to whatever domain you happen to work in.
+Because of that focus change, some of the prior edition's reference and more advanced sections (that is, roughly 15 percent of the prior edition) have been cut to expand the core language sections. In exchange, readers of this edition will find a more thorough look at the core language, and a more useful first Python book. A handful of more advanced examples were also added as self-study programs as the final exercise in this edition (see Chapter 29).
+About This Book
+This section underscores some important points about this book in general, regardless of its edition number. No book addresses every possible audience, so it's important to understand a book's goals up front.
+This Book's Prerequisites
+There are no absolute prerequisites to speak of, really. Both true beginners and crusty programming veterans have used this book successfully. If you are motivated to learn Python, this text will probably work for you. In general, though, I have found that any exposure to programming or scripting before this book can be helpful, even if not required for every reader.
+This book is designed to be an introductory-level Python text for programmers. It may not be an ideal text for someone who has never touched a computer before (for instance, we're not going to spend any time exploring what a computer is), but I haven't made many assumptions about your programming background or education.
+On the other hand, I won't insult readers by assuming they are "dummies" either, whatever that means-it's easy to do useful things in Python, and this book will show you how. The text occasionally contrasts Python with languages such as C, C++, Java?, and Pascal, but you can safely ignore these comparisons if you haven't used such languages in the past.
+This Book's Scope and Other Books
+Although this book covers all the essentials of the Python language, I've kept its scope narrow in the interests of speed and size. To keep things simple, this book focuses on core concepts, uses small and self-contained examples to illustrate points, and sometimes omits the small details that are readily available in reference manuals. Because of that, this book is probably best described as an introduction and a stepping-stone to more advanced and complete texts.
+For example, we won't talk much about Python/C integration-a complex topic that is nevertheless central to many Python-based systems. We also won't talk much about Python's history or development processes. And popular Python applications such as GUIs, system tools, and network scripting get only a short glance, if they are mentioned at all. Naturally, this scope misses some of the big picture.
+By and large, Python is about raising the quality bar a few notches in the scripting world. Some of its ideas require more context than can be provided here, and I'd be remiss if I didn't recommend further study after you finish this book. I hope that most readers of this book will eventually go on to gain a more complete understanding of application-level programming from other texts.
+Because of its beginner's focus, Learning Python is designed to be naturally complemented by O'Reilly's other Python books. For instance, Programming Python, another book I authored, provides larger and more complete examples, along with tutorials on application programming techniques, and was explicitly designed to be a follow-up text to the one you are reading now. Roughly, the current editions of Learning Python and Programming Python reflect the two halves of their author's training materials-the core language, and application programming. In addition, O'Reilly's Python Pocket Reference serves as a quick reference supplement for looking up some of the finer details skipped here.
+Other follow-up books can also provide references, additional examples, or details about using Python in specific domains such as the Web and GUIs. For instance, O'Reilly's Python in a Nutshell and Sams's Python Essential Reference provide references, and O'Reilly's Python Cookbook offers a library of self-contained examples for people already familiar with application programming techniques. Because books are such a subjective experience, I encourage you to browse on your own to find advanced texts that suit your needs. Regardless of which books you choose, though, keep in mind that the rest of the Python story requires studying examples that are more realistic than there is space for here.
+Having said that, I think you'll find this book to be a good first text on Python, despite its limited scope (and perhaps because of it). You'll learn everything you need to get started writing useful standalone Python programs and scripts. By the time you've finished this book, you will have learned not only the language itself, but also how to apply it well to your day-to-day tasks. And, you'll be equipped to tackle more advanced topics and examples as they come your way.
+This Book's Style and Structure
+This book is based on training materials developed for a three-day hands-on Python course. You'll find end-of-chapter quizzes at the end of each chapter, and end-of-part exercises at the end of the last chapter of each part. Solutions to chapter quizzes appear in the chapters themselves, and solutions to part exercises show up in Appendix B. The quizzes are designed to review material, while the exercises are designed to get you coding right away and are usually one of the highlights of the course.
+I strongly recommend working through the quizzes and exercises along the way, not only to gain Python programming experience, but also because some of the exercises raise issues not covered elsewhere in the book. The solutions in the chapters and in Appendix B should help you if you get stuck (and you are encouraged to peek at the answers as much and as often as you like).
+The overall structure of this book is also derived from class materials. Because this text is designed to introduce language basics quickly, I've organized the presentation by major language features, not examples. We'll take a bottom-up approach here: from built-in object types, to statements, to program units, and so on. Each chapter is fairly self-contained, but later chapters draw upon ideas introduced in earlier ones (e.g., by the time we get to classes, I'll assume you know how to write functions), so a linear reading makes the most sense for most readers. 
+In general terms, this book presents the Python language in a bottom-up fashion. It is organized with one part per major language feature-types, functions, and so forth-and most of the examples are small and self-contained (some might also call the examples in this text artificial, but they illustrate the points it aims to make). More specifically, here is what you will find:
+Part I, Getting Started
+We begin with a general overview of Python that answers commonly asked initial questions-why people use the language, what it's useful for, and so on. The first chapter introduces the major ideas underlying the technology to give you some background context. Then the technical material of the book begins, as we explore the ways that both we and Python run programs. The goal of this part of the book is to give you just enough information to be able to follow along with later examples and exercises.
+Part II, Types and Operations
+Next, we begin our tour of the Python language, studying Python's major built-in object types in depth: numbers, lists, dictionaries, and so on. You can get a lot done in Python with these tools alone. This is the most substantial part of the book because we lay groundwork here for later chapters. We'll also look at dynamic typing and its references-keys to using Python well-in this part.
+Part III, Statements and Syntax
+The next part moves on to introduce Python's statements-the code you type to create and process objects in Python. It also presents Python's general syntax model. Although this part focuses on syntax, it also introduces some related tools, such as the PyDoc system, and explores coding alternatives.
+Part IV, Functions
+This part begins our look at Python's higher-level program structure tools. Functions turn out to be a simple way to package code for reuse and avoid code redundancy. In this part, we will explore Python's scoping rules, argument-passing techniques, and more.
+Part V, Modules
+Python modules let you organize statements and functions into larger components, and this part illustrates how to create, use, and reload modules. We'll also look at some more advanced topics here, such as module packages, module reloading, and the _  _name_  _ variable.
+Part VI, Classes and OOP
+Here, we explore Python's object-oriented programming (OOP) tool, the class-an optional but powerful way to structure code for customization and reuse. As you'll see, classes mostly reuse ideas we will have covered by this point in the book, and OOP in Python is mostly about looking up names in linked objects. As you'll also see, OOP is optional in Python, but can shave development time substantially, especially for long-term strategic project development.
+Part VII, Exceptions and Tools
+We wrap up the text with a look at Python's exception handling model and statements, plus a brief overview of development tools that will become more useful when you start writing larger programs (debugging and testing tools, for instance). This part comes last, exceptions should now all be classes.
+Part VIII, Appendixes
+The book ends with a pair of appendixes that give platform-specific tips for using Python on various computers (Appendix A) and provide solutions to the end-of-part exercises (Appendix B). Solutions to end-of-chapter quizzes appear in the chapters themselves. 
+Note that the index and table of contents can be used to hunt for details, but there are no reference appendixes in this book (this book is a tutorial, not a reference). As mentioned earlier, you can consult the Python Pocket Reference (O'Reilly), as well as other books, and the free Python reference manuals maintained at http://www.python.org, for syntax and built-in tool details.
+Book Updates
+Improvements happen (and so do mis^H^H^H typos). Updates, supplements, and corrections for this book will be maintained (or referenced) on the Web at one of the following sites:
+http://www.oreilly.com/catalog/9780596513986/ (O'Reilly's web page for the book)
+http://www.rmi.net/~lutz (the author's site)
+http://www.rmi.net/~lutz/about-lp.html (the author's web page for the book)
+The last of these three URLs points to a web page for this book where I will post updates, but be sure to search the Web if this link becomes invalid. If I could be more clairvoyant, I would, but the Web changes faster than printed books.
+About the Programs in This Book
+This book, and all the program examples in it, is based on Python version 2.5. In addition, although I won't try to predict the future, discussion of some ideas in the anticipated 3.0 release are mixed in along the way.
+Because this text focuses on the core language, however, you can be fairly sure that most of what it has to say won't change very much in future releases of Python. Most of this book applies to earlier Python versions, too, except when it does not; naturally, if you try using extensions added after the release you've got, all bets are off. 
+As a rule of thumb, the latest Python is the best Python. Because this book focuses on the core language, most of it also applies to Jython, the Java-based Python language implementation, as well other Python implementations described in Chapter 2.
+Source code for the book's examples, as well as exercise solutions, can be fetched from the book's web site at http://www.oreilly.com/catalog/9780596513986/. So how do you run the examples? We'll study startup details in Chapter 3, so please stay tuned for details on this front.
+Preparing for Python 3.0
+The first alpha release of Python 3.0 came out just before this book went to the printer, and after it had been written. Officially speaking, this edition of this book is based on the Python 2.x line (specifically, version 2.5), but it has been augmented with numerous notes about anticipated changes in the upcoming Python 3.0 release.
+Version 3.0 won't be officially released until roughly one year after this book has been published, and it isn't expected to be in wide use for at least two years. Nevertheless, if you've picked up this book after 3.0 is in common use, this section provides a brief description of some of the changes in the language you will likely encounter to help you make the transition.
+Although there are a few notable exceptions, most of the Python language in version 3.0 will be the same as described in this book, and the impact on typical and practical applications code will be minor. That is, the fundamentals of Python presented in this book will not change from release to release, and readers will benefit by studying those fundamentals here first before dealing with release-specific details.
+To help you retarget code in the future, though, the following list highlights the major differences in Python 3.0. Pointers to the chapters in this edition that either discuss or are impacted by these changes are noted as well, and the list is ordered by relevant chapter number. Some of these changes can be coded today in Python 2.5, and some cannot. Because much of the following list won't make sense to most readers at this point, I suggest you first study this book at large to learn the fundamentals of Python, and return to this list later to see the changes in 3.0. In Python 3.0:
+	*	The current execfile() built-in function is removed; use exec() instead (see Chapter 3).
+	*	The reload() built-in functions may be removed; an alternative is not yet known (see Chapters 3 and 19).
+	*	The 'X' backquotes string conversion expression is removed: use repr(X) (see Chapter 5).
+	*	The X <> Y redundant inequality expression is removed: use X != Y (see Chapter 5).
+	*	Sets can be created with new literal syntax {1, 3, 2} equivalent to the current set([1, 3, 2]) (see Chapter 5).
+	*	Set comprehensions may be coded: {f(x) for x in S if P(x)}, which is the same as the current generator expression: set(f(x) for x in S if P(x)) (see Chapter 5).
+	*	True division is turned on: X / Y always returns a floating-point number that retains the remainder, even for integers; use X // Y to invoke today's truncating division (see Chapter 5).
+	*	There is only one integer type, int, which supports the arbitrary precision of the current long type (see Chapter 5).
+	*	Octal and binary literals: the current octal 0666 becomes an error: use 0o666 instead, and the oct() function's result has been changed accordingly; 0b1010 now equals 10, and bin(10) returns "0b1010" (see Chapter 5).
+	*	The string type str supports wide-character Unicode text, and a new bytes type represents short-character strings (e.g, when loaded from files in binary mode); bytes is a mutable sequence of small integers with a slightly different interface than str (see Chapter 7).
+	*	There is a new, optional technique for string formatting: "See {0}, {1} and {foo}".format("A", "B", foo="C") makes "See A, B and C" (see Chapter 7).
+	*	The dictionary D.has_key(X) method will be removed; use X in D membership instead (see Chapters 4 and 8).
+	*	Comparisons (and by proxy, sorts) of mixed non-numeric types raise exceptions instead of using the current arbitrary but fixed cross-type ordering (see Chapters 8 and 9).
+	*	Dictionary methods .keys(), .items() and .values() will return iterable-like "view" objects, instead of lists; use list() to force a list to be built if needed (see Chapter 8).
+	*	Because of the prior point, this coding pattern no longer works: k = D.keys(); k.sort(); use k = sorted(D) instead (see Chapters 4 and 8).
+	*	The file() built-in function may be removed; use open() instead (see Chapter 9).
+	*	The raw_input() built-in function will be renamed input(); use eval(input()) to get the behavior of today's input() function (see Chapter 10).
+	*	The exec code-string execution statement becomes a built-in function again (Chapter 10).
+	*	as, with, and nonlocal become new reserved words; exec no longer is reserved because of the prior point (see Chapter 11).
+	*	Printing is a function to support more features, not a statement: use print(x, y), not print x, y, and use the new function's keyword arguments to customize printing behavior: file=sys.stdout, sep=" ", and end="\n" (see Chapter 11).
+	*	Extended iterable unpacking: statement that supports generalized sequence assignment such as a, b, *rest = some_sequence now work, as does *rest, a = stuff; thus, the number of items on the left and right of an assignment statement no longer must match (see Chapter 11).
+	*	Automatic tuple parameter unpacking via sequence assignment is removed for functions; you can no longer write def foo(a, (b, c)):, and must use def foo(a, bc): b, c = bc to perform sequence assignment explicitly instead (see Chapter 11).
+	*	The current xrange() built-in function is renamed to range(); that is, there is only range() (see Chapter 13).
+	*	In the iterator protocol, the X.next() method is renamed to X.__next__(), and a new built-in function, next(X), calls the X.__next__() method on an object (see Chapters 13 and 17).
+	*	The built-in functions zip(), map(), and filter() return iterators; use list() to force construction of a list of results (see Chapters 13 and 17).
+	*	Functions may optionally include annotations describing arguments and results: def foo(x: "spam", y: list(range(3))) -> 42*2:, which are simply attached to the function object's foo.func_annotations dictionary attribute at runtime: {'x': "spam", 'y': [0, 1, 2], "return": 84} (see Chapter 15).
+	*	The new nonlocal x, y statement allows write access to variables in enclosing function scopes (see Chapter 16).
+	*	The apply(func, args, kws) function will be removed; use the func(*args, **kws) call syntax instead (see Chapters 16 and 17).
+	*	The reduce() built-in function is removed; code a loop like that shown in this book instead; lambda, map(), and filter() are retained in 3.0 (see Chapter 17).
+	*	All imports become absolute by default, and skip a package's own directory: use the new syntax from . import name to invoke today's relative imports instead (see Chapter 21).
+	*	All classes will be new style classes, and will support today's new style extensions (see Chapter 26).
+	*	The class Spam(object) derivation required today for new style classes will not be required for classes; in 3.0, both today's standalone "classic" and derived "new-style" classes are automatically considered what is called new-style today (see Chapter 26).
+	*	In a try statement, the form except name value becomes except name as value (see Chapter 27).
+	*	In a raise statement, raise E, V must be coded as raise E(V) to make an instance explicitly (see Chapter 27).
+	*	The with/as exceptions context manager feature described in this book is turned on (see Chapter 27).
+	*	All user-defined and built-in exceptions are identified by classes, not strings (see Chapter 28).
+	*	User-defined exceptions must derive from the built-in BaseException, the root of the exception hierarchy (Exception is its subclass, and suffices as your root class); the built-in StandardException class is removed (see Chapter 28).
+	*	The package structure of the standard library may be reorganized substantially (see Python 3.0 release notes).
+Although this list may seem somewhat daunting on first glance, remember that most of the core Python language described in this book will be the same in 3.0; in fact, much of the above is fairly fine details that will not impact programmers much, if at all.
+Also note that at this writing, the above list is still somewhat speculative, and ultimately may be neither complete nor accurate, so be sure to see Python 3.0 release notes for the official story. If you've written code for the Python 2.x line, also see the "2to3" automated 2.x to 3.0 code conversion script, which will be provided with Python 3.0.
+About This Series
+O'Reilly Learning books are written and designed for anyone who wants to build new skills and who prefers a structured approach to studying. Each title in this series makes use of learning principles that we (with your help) have found to be best at equipping you with the knowledge you need for joining that new project, for coping with that unexpected assignment from your manager, or for learning a new language in a hurry.
+To get the most out of any book in the Learning series, we recommend you work your way through each chapter in sequence. You'll find that you can get a quick grasp of a chapter's content by reading the instructional captions we've written for its figures. You can also use the Summary to preview each chapter's key takeaways and to review what you have learned. Finally, to help you test your mastery of the material in each chapter, we conclude with a Brain Builder section, which includes a short quiz. Each Part section also includes hands-on exercises. 
+Learning books work with you as you learn-much as you would expect from a trusted colleague or instructor-and we strive to make your learning experience enjoyable. Tell us how we've done by sending us praise, brickbats, or suggestions for improvements to learning@oreilly.com.
+Using Code Examples
+This book is here to help you get your job done. In general, you may use the code in this book in your programs and documentation. You do not need to contact us for permission unless you're reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O'Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product's documentation does require permission.
+We appreciate, but do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: "Learning Python, Third Edition, by Mark Lutz. Copyright 2008 O'Reilly Media Inc., 978-0-596-51398-6."
+If you feel your use of code examples falls outside fair use or the permission given above, feel free to contact us at permissions@oreilly.com.
+Font Conventions
+This book uses the following typographical conventions:
+Italic
+Used for email addresses, URLs, filenames, pathnames, and emphasizing new terms when they are first introduced
+Constant width
+Used for the contents of files and the output from commands, and to designate modules, methods, statements, and commands
+Constant width bold
+Used in code sections to show commands or text that would be typed by the user, and, occasionally, to highlight portions of code
+Constant width italic
+Used for replaceables and some comments in code sections
+<Constant width>
+Indicates a syntactic unit that should be replaced with real code
+
+Indicates a tip, suggestion, or general note relating to the nearby text.
+
+
+
+Indicates a warning or caution relating to the nearby text.
+
+
+In this book's examples, the % character at the start of a system command line stands for the system's prompt, whatever that may be on your machine (e.g., C:\Python25> in a DOS window). Don't type the % character yourself. Similarly, in interpreter interaction listings, do not type the >>> and ... characters shown at the start of lines-these are prompts that Python displays. Type just the text after these prompts. To help you remember this, user inputs are shown in bold font in this book. Also, you normally don't need to type text that starts with a # in listings; as you'll learn, these are comments, not executable code.
+Safari® Books Online
+When you see a Safari® Books Online icon on the cover of your favorite technology book, that means the book is available online through the O'Reilly Network Safari Bookshelf.
+Safari offers a solution that's better than e-books. It's a virtual library that lets you easily search thousands of top tech books, cut and paste code samples, download chapters, and find quick answers when you need the most accurate, current information. Try it for free at http://safari.oreilly.com.
+How to Contact Us
+Please address comments and questions concerning this book to the publisher:
+O'Reilly Media, Inc.
+1005 Gravenstein Highway North
+Sebastopol, CA 95472
+800-998-9938 (in the United States or Canada)
+707-829-0515 (international or local)
+707-829-0104 (fax)
+We will also maintain a web page for this book, where we list errata, examples, and any additional information. You can access this page at:
+http://www.oreilly.com/catalog/9780596513986
+To comment or ask technical questions about this book, send email to:
+bookquestions@oreilly.com
+For more information about our books, conferences, Resource Centers, and the O'Reilly Network, see our web site at:
+http://www.oreilly.com
+For book updates, be sure to also see the other links mentioned earlier in this Preface.
+Acknowledgments
+As I write this third edition of this book in 2007, I can't help but be in a sort of "mission accomplished" state of mind. I have now been using and promoting Python for 15 years, and have been teaching it for 10 years. Despite the passage of time and events, I am still constantly amazed at how successful Python has been over the years. It has grown in ways that most of us could not possibly have imagined in 1992. So, at the risk of sounding like a hopelessly self-absorbed author, you'll have to pardon a few words of reminiscing, congratulations, and thanks here.
+It's been a long and winding road. Looking back today, when I first discovered Python in 1992, I had no idea what an impact it would have on the next 15 years of my life. Two years after writing the first edition of Programming Python in 1995, I began traveling around the country and the world teaching Python to beginners and experts. Since finishing the first edition of Learning Python in 1999, I've been a full-time, independent Python trainer and writer, thanks largely to Python's exponentially growing popularity.
+As I write these words in mid-2007, I have written nine Python books; I have also been teaching Python for more than a decade, having taught some 200 Python training sessions in the U.S., Europe, Canada, and Mexico, and having met over 3,000 students along the way. Besides racking up frequent flyer miles, these classes helped me refine this text as well as my other Python books. Over the years, teaching honed the books, and vice versa. In fact, the book you're reading is derived almost entirely from my classes.
+Because of this, I'd like to thank all the students who have participated in my courses during the last 10 years. Along with changes in Python itself, your feedback played a huge role in shaping this text. (There's nothing quite as instructive as watching 3,000 students repeat the same beginner's mistakes!) This edition owes its changes primarily to classes held after 2003, though every class held since 1997 has in some way helped refine this book. I'd especially like to single out clients who hosted classes in Dublin, Mexico City, Barcelona, London, Edmonton, and Puerto Rico; better perks would be hard to imagine.
+I'd also like to express my gratitude to everyone who played a part in producing this book. To the editors who worked on this project: Tatiana Apandi on this edition, and many others on prior editions. To Liza Daly for taking part in the technical review of this book. And to O'Reilly for giving me a chance to work on those nine book projects-it's been net fun (and only feels a little like the movie Groundhog Day).
+I want to thank my original coauthor David Ascher as well for his work on earlier editions of this book. David contributed the "Outer Layers" part in prior editions, which we unfortunately had to trim to make room for new core language materials in this edition. I've added a handful of more advanced programs as a self-study final exercise in this edition, but this doesn't compensate for all the material that's been cut. See the prior notes in this Preface about follow-up application-level texts if you're feeling nostalgic about this material.
+For creating such an enjoyable and useful language, I owe additional thanks to Guido van Rossum and the rest of the Python community. Like most open source systems, Python is the product of many heroic efforts. After 15 years of programming Python, I still find it to be seriously fun. It's been my privilege to watch Python grow from a new kid on the scripting languages block to a widely used tool, deployed in some fashion by almost every organization writing software. That has been an exciting endeavor to be a part of, and I'd like to thank and congratulate the entire Python community for a job well done. 
+I also want to thank my original editor at O'Reilly, the late Frank Willison. This book was largely Frank's idea, and it reflects the contagious vision he had. In looking back, Frank had a profound impact on both my own career and that of Python itself. It is not an exaggeration to say that Frank was responsible for much of the fun and success of Python when it was new. We miss him still.
+Finally, a few personal notes of thanks. To OQO for the best toys so far. To the late Carl Sagan for inspiring an 18-year-old kid from Wisconsin. To Jon Stewart and Michael Moore for being patriots. And to all the large corporations I've come across over the years, for reminding me how lucky I have been to be self-employed.
+To my children, Mike, Sammy, and Roxy, for whatever futures they will choose to make. You were children when I began with Python, and you seem to have somehow grown up along the way; I'm proud of you. Life may compel us down paths all our own, but there will always be a path home.
+And most of all, to Vera, my best friend, my girlfriend, and my wife. The best day of my life was the day I finally found you. I don't know what the next 50 years hold, but I do know that I want to spend all of them holding you.
+-Mark Lutz
+Berthoud, Colorado
+July 2007

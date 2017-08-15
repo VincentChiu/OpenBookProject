@@ -1,0 +1,1167 @@
+ai
+Python
+Objects
+
+Python
+对象
+
+
+
+Chapter Topics
+本章主题
+
+?       Python Objects
+Python对象
+?       Built-in Types
+内建类型
+?       Standard Type Operators
+标准类型运算符
+?  Value Comparison
+值的比较
+?  Object Identity Comparison
+对象身份比较
+?  Boolean
+布尔类型
+?       Standard Type Built-in Functions
+标准类型内建函数
+?       Categorizing the Standard Types
+标准类型总览
+?       Miscellaneous Types
+各种类型
+?       Unsupported Types
+不支持的类型
+                                4
+
+e  will  now  begin  our  journey  to  the  core  part  of  the  language.
+First we will introduce what Python objects are, then discuss the most commonly used built-in types. We then discuss the standard
+type operators and built-in functions (BIFs), followed by an insightful discus- sion of the different ways to categorize the standard types to gain a better understanding  of  how  they  work.  Finally,  we  will  conclude  by  describing some types that Python does not have (mostly as a benefit for those of you with experience in another high-level language).
+      我们现在来学习Python语言的核心部分。首先我们来了解什么是Python对象，然后讨论最常用的内建类型，接下来我们讨论标准类型运算符和内建函数，之后给出对标准类型的不同分类方式。这有助于我们更好的理解他们如何工作。最后我们提一提Python目前还不支持的类型（这对那些有其他高级语言经验的人会有所帮助）。
+
+
+4.1 Python Objects
+    Python 对象
+
+Python uses the object model abstraction for data storage. Any construct that contains any type of value is an object. Although Python is classified as an
+“object-oriented programming (OOP) language,” OOP is not required to cre- ate perfectly working Python applications. You can certainly write a useful Python  script  without  the  use  of  classes  and  instances.  However,  Python’s object syntax and architecture encourage or “provoke” this type of behavior. Let us now take a closer look at what a Python object is.
+Python使用对象模型来存储数据。构造任何类型的值都是一个对象。尽管Python通常当成一种“面向对象的编程语言”，但你完全能够写出不使用任何类和实例的实用脚本。不过 Python的对象语法和架构鼓励我们使用这些特性，下面让我们仔细研究一下Python对象。
+
+All Python objects have the following three characteristics: an identity, a
+type, and a value.
+所有的Python对像都拥有三个特性：身份，类型和值。
+
+
+IDENTITY        Unique identifier that differentiates an object from all others. Any object’s identifier can be obtained using the id() built-
+in function (BIF). This value is as close as you will get to a
+“memory address” in Python (probably much to the relief of some of you). Even better is that you rarely, if ever, access
+this value, much less care what it is at all.
+身份：
+每一个对象都有一个唯一的身份标识自己，任何对象的身份可以使用内建函数id()来得到。这个值可以被认为是该对象的内存地址。您极少会用到这个值，也不用太关心它究竟是什么。
+TYPE    An object’s type indicates what kind of values an object can hold, what operations can be applied to such objects, and what behavioral rules these objects are subject to. You can use the type() BIF to reveal the type of a Python object. Since types are also objects in Python (did we mention that Python was object-oriented?), type() actually returns an object to you rather than a simple literal.
+类型            对象的类型决定了该对象可以保存什么类型的值，可以进行什么样的操作，以及遵循什么样的规则。您可以用内建函数type()查看Python对象的类型。因为在Python中类型也是对象（还记得我们提到Python是面向对象的这句话吗?)，所以type()返回的是对象而不是简单的字符串。
+
+VALUE   Data item that is represented by an object.
+值      对象表示的数据项
+
+
+All  three  are  assigned  on  object  creation  and  are  read-only  with  one exception,  the  value.  (For  new-style  types  and  classes,  it  may  possible  to change the type of an object, but this is not recommended for the beginner.)
+
+上面三个特性在对象创建的时候就被赋值，除了值之外，其它两个特性都是只读的。对于新风格的类型和类, 对象的类型也是可以改变的，不过对于初学者并不推荐这样做。
+
+If an object supports updates, its value can be changed; otherwise, it is also read-only. Whether an object’s value can be changed is known as an object’s mutability, which we will investigate later on in Section 4.7. These charac- teristics exist as long as the object does and are reclaimed when an object is deallocated.
+ 如果对象支持更新操作，那么它的值就可以改变，否则它的值也是只读的。对象的值是否可以更改被称为对象的可改变性（mutability），我们会在后面的小节4.7中讨论这个问题。只要一个对象还没有被销毁, 这些特性就一直存在。
+
+Python supports a set of basic (built-in) data types, as well as some auxiliary types that may come into play if your application requires them. Most appli- cations generally use the standard types and create and instantiate classes for all specialized data storage.
+Python有一系列的基本（内建）数据类型，必要时也可以创建自定义类型来满足你的应用程序的需求。绝大多数应用程序通常使用标准类型，对特定的数据存储则通过创建和实例化类来实现。
+
+4.1.1   Object Attributes
+对象属性
+
+Certain  Python  objects  have  attributes,  data  values  or  executable  code such as methods, associated with them. Attributes are accessed in the dotted attribute  notation,  which  includes  the  name  of  the  associated  object,  and were  introduced  in  the  Core  Note  in  Section  2.14.  The  most  familiar attributes  are  functions  and  methods,  but  some  Python  types  have  data attributes associated with them. Objects with data attributes include (but are not limited to): classes, class instances, modules, complex numbers, and files.
+某些Python对象有属性、值或相关联的可执行代码，比如方法（method）。Python用点（.）标记法来访问属性。属性包括相应对象的名字等等，在章节2.14的备注中曾做过介绍。最常用的属性是函数和方法，不过有一些Python类型也有数据属性。含有数据属性的对象包括（但不限于）：类、类实例、模块、复数和文件。
+
+4.2     Standard Types
+标准类型
+
+?       Numbers (separate subtypes; three are integer types)    数字（分为几个子类型，其中有三个是整型）
+?   Integer  整型
+?  Boolean  布尔型
+?  Long integer  长整型
+?   Floating point real number  浮点型
+?   Complex number  复数型
+?       String  字符串  
+?       List 列表
+?       Tuple 元组
+?       Dictionary 字典
+
+
+We will also refer to standard types as “primitive data types” in this text because these types represent the primitive data types that Python provides. We will go over each one in detail in Chapters 5, 6, and 7.
+在本书中，我们把标准类型也称作“基本数据类型”，因为这些类型是Python内建的基本数据类型，我们会在第5、6和7章详细介绍它们。
+
+4.3     Other Built-in Types
+其他内建类型
+
+       Type 类型
+       Null object(None) Null对象 (None)
+       File 文件
+       Set/Frozenset 集合/固定集合
+       Function/Method 函数/方法
+       Module 模块
+       Class 类
+
+These are some of the other types you will interact with as you develop
+as a Python programmer. We will also cover all of these in other chapters
+of this book with the exception of the type and None types, which we will discuss here.
+   
+?       类型
+?       Null对象 (None)
+?       文件
+?       集合/固定集合
+?       函数/方法
+?       模块
+?       类
+    这些是当你做Python开发时可能会用到的一些数据类型。我们在这里讨论Type和None类型的使用，除此之外的其他类型将在其他章节中讨论。
+
+4.3.1   Type Objects and the typeType Object
+类型对象和type类型对象
+
+It  may  seem  unusual  to  regard  types  themselves  as  objects  since  we  are attempting  to  just  describe  all  of  Python’s  types  to  you  in  this  chapter. However, if you keep in mind that an object’s set of inherent behaviors and characteristics (such as supported operators and built-in methods) must be defined somewhere, an object’s type is a logical place for this information. The amount of information necessary to describe a type cannot fit into a single string; therefore types cannot simply be strings, nor should this information be stored with the data, so we are back to types as objects.
+在本章我们要讨论所有的Python类型，虽然看上去把类型本身也当成对象有点特别，我们还是要在这里提一提。你一定还记得，对象的一系列固有行为和特性（比如支持哪些运算，具有哪些方法）必须事先定义好。从这个角度看，类型正是保存这些信息的最佳位置。描述一种类型所需要的信息不可能用一个字符串来搞定，所以类型不能是一个简单的字符串，这些信息不能也不应该和数据保存在一起， 所以我们将类型定义成对象。
+
+We will formally introduce the type() BIF below, but for now, we want
+to let you know that you can find out the type of an object by calling type()
+with that object:
+  下面我们来正式介绍内建函数type()。通过调用type()函数你能够得到特定对象的类型信息：
+
+>>> type(42)
+<type 'int'>
+
+Let us look at this example more carefully. It does not look tricky by any means, but examine the return value of the call. We get the seemingly inno- cent output of <type 'int'>, but what you need to realize is that this is not just a simple string telling you that 42 is an integer. What you see as <type
+'int'> is actually a type object. It just so happens that the string representa-
+tion chosen by its implementors has a string inside it to let you know that it is
+an int type object.
+  我们仔细研究一下这个例子，请注意看 type函数有趣的返回值。我们得到一个简洁的输出结果<type 'int'>。不过你应当意识到它并不是一个简简单单的告诉你 42 是个整数这样的字符串。您看到的<type 'int'>实际上是一个类型对象，碰巧它输出了一个字符串来告诉你它是个int型对象。
+
+Now you may ask yourself, so then what is the type of any type object?
+Well, let us find out:
+现在你该问自己了，那么类型对象的类型是什么？来， 我们试验一下：
+
+>>> type(type(42))
+<type 'type'>
+
+
+Yes, the type of all type objects is type. The type type object is also the mother  of  all  types  and  is  the  default  metaclass  for  all  standard  Python classes. It is perfectly fine if you do not understand this now. This will make sense as we learn more about classes and types.
+没错，所有类型对象的类型都是type，它也是所有Python类型的根和所有Python标准类的默认元类（metaclass）。你现在有点搞不明白，没关系，随着我们逐步深入的学习类和类型，你就会慢慢理解。
+
+With the unification of types and classes in Python 2.2, type objects are playing a more significant role in both object-oriented programming as well
+as  day-to-day  object  usage.  Classes  are  now  types,  and  instances  are  now objects of their respective types.
+随着 Python 2.2 中类型和类的统一，类型对象在面向对象编程和日常对象使用中扮演着更加重要的角色。从现在起， 类就是类型，实例是对应类型的对象。
+
+4.3.2   None, Python’s Null Object
+None, Python的 Null对象
+
+
+Python has a special type known as the Null object or NoneType. It has only one value, None. The type of None is NoneType. It does not have any opera- tors or BIFs. If you are familiar with C, the closest analogy to the None type
+is void, while the None value is similar to the C value of NULL. (Other similar objects and values include Perl’s undef and Java’s void type and null value.)
+
+Python有一个特殊的类型，被称作 Null 对象或者 NoneType，它只有一个值，那就是 None。它不支持任何运算也没有任何内建方法。如果非常熟悉C语言，和None类型最接近的C类型就是void，None类型的值和C的NULL值非常相似（其他类似的对象和值包括Perl的undef和Java的void类型与null值）。
+
+None has  no  (useful)  attributes  and  always  evaluates  to  having  a  Boolean
+False value.
+None没有什么有用的属性，它的布尔值总是False。
+
+CORE NOTE: Boolean values
+核心笔记：布尔值
+
+All standard type objects can be tested for truth value and compared to objects of the same type. Objects have inherent True or False values.
+Objects take a False value when they are empty, any numeric representation
+of zero, or the Null object None.
+所有标准对象均可用于布尔测试，同类型的对象之间可以比较大小。每个对象天生具有布尔 True 或 False 值。空对象、值为零的任何数字或者Null对象 None的布尔值都是False。
+
+
+The following are defined as having false values in Python:
+?       None
+?       False (Boolean)
+?       Any numeric zero:
+?       0 (integer)
+?       0.0 (float)
+?       0L (long integer)
+?       0.0+0.0j (complex)
+?       "" (empty string)
+?       [] (empty list)
+?       () (empty tuple)
+?       {} (empty dictionary)
+下列对象的布尔值是False。
+?       None
+?       False (布尔类型)
+?       所有的值为零的数：
+?       0 (整型)
+?       0.0 (浮点型)
+?       0L (长整型)
+?       0.0+0.0j (复数)
+?       "" (空字符串)
+?       [] (空列表)
+?       () (空元组)
+?       {} (空字典)
+
+Any value for an object other than those above is considered to have a true value, i.e., non-empty, non-zero, etc. User-created class instances have a false value when their nonzero (__nonzero__()) or length
+(__len__()) special methods, if defined, return a zero value.
+
+值不是上面列出来的任何值的对象的布尔值都是 True，例如non-empty、 non-zero等等。用户创建的类实例如果定义了nonzero(__nonzero__())或length（__len__()）且值为0，那么它们的布尔值就是 False。
+
+
+
+4.4     Internal Types
+内部类型
+
+?       Code   
+?       Frame  
+?       Traceback
+?       Slice
+?       Ellipsis
+?       Xrange
+?       代码  
+?       帧 
+?       跟踪记录
+?       切片
+?       省略
+?       Xrange
+
+
+We will briefly introduce these internal types here. The general application programmer would typically not interact with these objects directly, but we include  them  here  for  completeness.  Please  refer  to  the  source  code  or Python internal and online documentation for more information.
+我们在这里简要介绍一下这些内部类型，一般的程序员通常不会直接和这些对象打交道。不过为了这一章的完整性，我们还是在这里介绍一下它们。请参阅源代码或者Python的内部文档和在线文档获得更详尽的信息。
+In case you were wondering about exceptions, they are now implemented
+as  classes.  In  older  versions  of  Python,  exceptions  were  implemented  as strings.
+你如果对异常感到迷惑的话，可以告诉你它们是用类来实现的，在老版本的Python中，异常是用字符串来实现的。
+
+4.4.1   Code Objects
+代码对象
+
+Code objects are executable pieces of Python source that are byte-compiled, usually as return values from calling the compile() BIF. Such objects are appropriate for execution by either exec or by the eval() BIF. All this will be discussed in greater detail in Chapter 14.
+
+代码对象是编译过的Python源代码片段，它是可执行对象。通过调用内建函数compile()可以得到代码对象。代码对象可以被 exec 命令或 eval()内建函数来执行。在第14章将详细研究代码对象。
+
+Code objects themselves do not contain any information regarding their execution environment, but they are at the heart of every user-defined function, all of which do contain some execution context. (The actual byte-compiled code as a code object is one attribute belonging to a function.) Along with the code object, a function’s attributes also consist of the administrative support that a function requires, including its name, documentation string, default arguments, and global namespace.
+代码对象本身不包含任何执行环境信息， 它是用户自定义函数的核心， 在被执行时动态获得上下文。（事实上代码对象是函数的一个属性）一个函数除了有代码对象属性以外，还有一些其它函数必须的属性，包括函数名，文档字符串，默认参数，及全局命名空间等等。
+
+4.4.2  Frame Objects
+帧对象
+These  are  objects  representing  execution  stack  frames  in  Python.  Frame objects contain all the information the Python interpreter needs to know dur- ing a runtime execution environment. Some of its attributes include a link to the previous stack frame, the code object (see above) that is being executed, dictionaries for the local and global namespaces, and the current instruction. Each function call results in a new frame object, and for each frame object, a
+C stack frame is created as well. One place where you can access a frame object is in a traceback object (see the following section).
+帧对象表示 Python 的执行栈帧。帧对象包含Python解释器在运行时所需要知道的所有信息。它的属性包括指向上一帧的链接，正在被执行的代码对象（参见上文），本地及全局名字空间字典以及当前指令等。每次函数调用产生一个新的帧，每一个帧对象都会相应创建一个C栈帧。用到帧对象的一个地方是跟踪记录对象（参见下一节）
+
+4.4.3  Traceback Objects
+跟踪记录 对象
+When you make an error in Python, an exception is raised. If exceptions are not caught  or  “handled,”  the  interpreter  exits  with  some  diagnostic  information similar to the output shown below:
+当你的代码出错时， Python就会引发一个异常。如果异常未被捕获和处理， 解释器就会退出脚本运行，显示类似下面的诊断信息：
+Traceback (innermost last):
+File "<stdin>", line N?, in ???
+ErrorName: error reason
+The traceback object is just a data item that holds the stack trace informa- tion for an exception and is created when an exception occurs. If a handler is provided for an exception, this handler is given access to the traceback object.
+当异常发生时，一个包含针对异常的栈跟踪信息的跟踪记录对象被创建。如果一个异常有自己的处理程序，处理程序就可以访问这个跟踪记录对象。
+4.4.4  Slice Objects
+切片对象
+Slice  objects  are  created  using  the  Python  extended  slice  syntax.  This extended syntax allows for different types of indexing. These various types of indexing include stride indexing, multi-dimensional indexing, and indexing using  the  Ellipsis  type.  The  syntax  for  multi-dimensional  indexing  is sequence[start1 : end1, start2 : end2], or using the ellipsis, sequence
+[..., start1 : end1]. Slice objects can also be generated by the slice()
+BIF.
+Stride indexing for sequence types allows for a third slice element that allows for “step”-like access with a syntax of sequence[starting_index
+: ending_index : stride].
+Support for the stride element of the extended slice syntax have been in
+Python  for  a  long  time,  but  until  2.3  was  only  available  via  the  C  API  or
+Jython (and previously JPython). Here is an example of stride indexing:
+当使用Python扩展的切片语法时，就会创建切片对象。扩展的切片语法允许对不同的索引切片操作，包括步进切片， 多维切片，及省略切片。多维切片语法是 sequence[start1 : end1, start2 : end2]， 或使用省略号， sequence[...,start1 : end1 ]. 切片对象也可以由内建函数 slice()来生成。步进切片允许利用第三个切片元素进行步进切片，它的语法为 sequence[起始索引 : 结束索引 : 步进值]。Python 很早就支持扩展步进切片语法了，但直到Python2.3以前都必须依靠 C API 或 Jython才能工作。 下面是几个步进切片的例子：
+>>> foostr = 'abcde'
+>>> foostr[::-1]
+'edcba'
+>>> foostr[::-2]
+'eca'
+>>> foolist = [123, 'xba', 342.23, 'abc']
+>>> foolist[::-1]
+['abc', 342.23, 'xba', 123]
+
+
+4.4.5  Ellipsis Objects
+省略对象
+Ellipsis objects are used in extended slice notations as demonstrated above. These objects are used to represent the actual ellipses in the slice syntax ( . . . ). Like the Null object None, ellipsis objects also have a single name, Ellipsis, and have a Boolean True value at all times.
+省略对象用于扩展切片语法中，起记号作用。 这个对象在切片语法中表示省略号。类似Null对象 None, 省略对象有一个唯一的名字 Ellipsis, 它的布尔值始终为 True.
+
+4.4.6  XRange Objects
+XRange 对象
+XRange objects are created by the BIF xrange(), a sibling of the range() BIF,  and  used  when  memory  is  limited  and  when  range() generates  an unusually  large  data  set.  You  can  find  out  more  about   range() and xrange() in Chapter 8.
+For an interesting side adventure into Python types, we invite the reader
+to take a look at the types module in the standard Python library.
+调用内建函数 xrange() 会生成一个Xrange对象，xrange()是内建函数 range()的兄弟版本， 用于需要节省内存使用或 range()无法完成的超大数据集场合。在第8章你可以找到更多关于 range() 和 xrange() 的使用信息。
+
+4.5  Standard Type Operators
+标准类型运算符
+
+4.5.1   Object Value Comparison
+对象值的比较
+
+Comparison  operators  are  used  to  determine  equality  of  two  data  values between members of the same type. These comparison operators are supported for all built-in types. Comparisons yield Boolean True or False values, based on the validity of the comparison expression. (If you are using Python prior  to  2.3  when  the  Boolean  type  was  introduced,  you  will  see  integer values 1 for True and 0 for False.) A list of Python’s value comparison oper- ators is given in Table 4.1.
+比较运算符用来判断同类型对象是否相等，所有的内建类型均支持比较运算，比较运算返回布尔值 True 或 False。如果你正在使用的是早于 Python2.3 的版本，因为这些版本还没有布尔类型，所以会看到比较结果为整型值 1 （代表True）或 0 （代表False）。
+Note that comparisons performed are those that are appropriate for each data  type.  In  other  words,  numeric  types  will  be  compared  according  to numeric  value  in  sign  and  magnitude,  strings  will  compare  lexicographically, etc.
+注意，实际进行的比较运算因类型而异。换言之，数字类型根据数值的大小和符号比较，字符串按照字符序列值进行比较，等等。
+ 
+
+>>> 2 == 2
+True
+>>> 2.46 <= 8.33
+True
+>>> 5+4j >= 2-3j
+True
+>>> 'abc' == 'xyz' False
+>>> 'abc' > 'xyz' False
+>>> 'abc' < 'xyz' True
+>>> [3, 'abc'] == ['abc', 3] False
+>>> [3, 'abc'] == [3, 'abc'] True
+
+Also, unlike many other languages, multiple comparisons can be made on the same line, evaluated in left-to-right order:
+不同于很多其它语言，多个比较操作可以在同一行上进行，求值顺序为从左到右。
+
+>>> 3 < 4 < 7   # same as ( 3 < 4 ) and ( 4 < 7 ) True
+>>> 4 > 3 == 3  # same as ( 4 > 3 ) and ( 3 == 3 ) True
+>>> 4 < 3 < 5 != 2 < 7
+False
+
+We would like to note here that comparisons are strictly between object values, meaning that the comparisons are between the data values and not the actual  data  objects  themselves.  For  the  latter,  we  will  defer  to  the  object identity comparison operators described next.
+
+我们会注意到比较操作是针对对象的值进行的，也就是说比较的是对象的数值而不是对象本身。在后面的部分我们会研究对象身份的比较。
+
+Table 4.1  Standard Type Value Comparison Operators
+表4.1   标准类型值比较运算符
+
+Operator        Function
+运算符          功能
+
+expr1 < expr2   expr1 is less than expr2
+                expr1 小于 expr2
+expr1 > expr2   expr1 is greater than expr2
+                expr1 大于 expr2
+expr1 <= expr2  expr1 is less than or equal to expr2 
+                expr1 小于等于 expr2
+expr1 >= expr2  expr1 is greater than or equal to expr2 
+                expr1 大于等于 expr2
+expr1 == expr2  expr1 is equal to expr2
+                expr1 等于 expr2
+expr1 != expr2  expr1 is not equal to expr2 (C-style)
+                expr1 不等于 expr2 (C风格)
+expr1 <> expr2  expr1 is not equal to expr2 (ABC/Pascal-style)a
+                expr1 不等于 expr2 (ABC/Pascal风格)
+
+a.      This “not equal” sign will be phased out in future version of Python. Use != instead.
+注：    未来很有可能不再支持 <> 运算符，建议您一直使用 != 运算符。
+
+4.5.2  Object Identity Comparison 对象身份比较
+
+In addition to value comparisons, Python also supports the notion of directly comparing objects themselves. Objects can be assigned to other variables (by reference).  Because  each  variable  points  to  the  same  (shared)  data  object, any change effected through one variable will change the object and hence be reflected through all references to the same object.
+作为对值比较的补充，Python也支持对象本身的比较。对象可以被赋值到另一个变量（通过引用）。因为每个变量都指向同一个（共享的）数据对象，只要任何一个引用发生改变，该对象的其它引用也会随之改变。
+
+In order to understand this, you will have to think of variables as linking to objects now and be less concerned with the values themselves. Let us take a look at three examples.
+为了方便大家理解，最好先别考虑变量的值，而是将变量名看作对象的一个链接。让我们来看以下三个例子：
+
+Example 1: foo1 and foo2 reference the same object
+例1：  foo1 和 foo2指向相同的对象
+
+
+foo1 = foo2 = 4.3
+When you look at this statement from the value point of view, it appears that  you  are  performing  a  multiple  assignment  and  assigning  the  numeric value of 4.3 to both the foo1 and foo2 variables. This is true to a certain degree, but upon lifting the covers, you will find that a numeric object with the contents or value of 4.3 has been created. Then that object’s reference is assigned to both foo1 and foo2, resulting in both foo1 and foo2 aliased to the same object. Figure 4–1 shows an object with two references.
+
+当你从值的观点看这条语句时， 它表现的只是一个多重赋值，将4.3这个值赋给了foo1和foo2这两个变量。这当然是对的， 不过它还有另一层含义。 事实是一个值为4.3的数字对象被创建，然后这个对象的引用被赋值给foo1和foo2, 结果就是 foo1 和 foo2指向同一个对象。图4－1演示了一个对象两个引用。
+foo1
+
+
+foo2
+
+
+4.3
+
+
+Figure 4–1   foo1 and foo2 reference the same object
+图4–1  foo1 和 foo2指向相同的对象
+
+
+
+Example 2: foo1 and foo2 reference the same object
+例2: foo1 和 foo2指向相同的对象
+
+
+foo1 = 4.3
+foo2 = foo1
+
+This example is very much like the first: A numeric object with value 4.3 is created, then assigned to one variable. When foo2 = foo1 occurs, foo2 is directed to the same object as foo1 since Python deals with objects by passing references. foo2 then becomes a new and additional reference for the original value. So both foo1 and foo2 now point to the same object. The same figure above applies here as well.
+这个例子非常类似上一个，一个值为4.3的数值对象被创建，然后赋给一个变量， 当执行foo2 = foo1时， foo2被指向foo1所指向的同一个对象， 这是因为Python通过传递引用来处理对象。foo2 就成为原始值4.3的一个新的引用。 这样foo1和foo2就都指向了同一个对象。示意图也和图4－1一样。 
+
+Example 3: foo1 and foo2 reference different objects
+例3: foo1 和 foo2指向不同的对象
+
+
+foo1 = 4.3
+foo2 = 1.3 + 3.0
+
+This example is different. First, a numeric object is created, then assigned
+to foo1. Then a second numeric object is created, and this time assigned to foo2.  Although  both  objects  are  storing  the  exact  same  value,  there  are indeed two distinct objects in the system, with foo1 pointing to the first, and foo2 being a reference to the second. Figure 4–2 shows we now have two distinct objects even though both objects have the same value.
+Why did we choose to use boxes in our diagrams? Well, a good way to visualize this concept is to imagine a box (with contents inside) as an object. When a vari- able is assigned an object, that creates a “label” to stick on the box, indicating a reference has been made. Each time a new reference to the same object is made, another sticker is put on the box. When references are abandoned, then a label is removed. A box can be “recycled” only when all the labels have been peeled off the box. How does the system keep track of how many labels are on a box?
+这个例子有所不同。首先一个数字对象被创建，然后赋值给foo1. 然后第二个数值对象被创建并赋值给foo2. 尽管两个对象保存的是同样大小的值，但事实上系统中保存的都是两个独立的对象，其中foo1是第一个对象的引用， foo2 则是第二个对象的引用。图4－2演示给我们这里有两个不同的对象，尽管这两个对象有同样大小的数值。 我们为什么在示意图中使用盒子？没错，对象就象一个装着内容的盒子。当一个对象被赋值到一个变量，就象在这个盒子上贴了一个标签，表示创建了一个引用。每当这个对象有了一个新的引用，就会在盒子上新贴一张标签。当一个引用被销毁时， 这个标签就会被撕掉。当所有的标签都被撕掉时， 这个盒子就会被回收。那么，Python是怎么知道这个盒子有多少个标签呢？
+
+
+foo1    foo2
+
+4.3     4.3
+
+
+Figure 4–2   foo1 and foo2 reference different objects
+图4–2    foo1 和 foo2指向不同的对象
+
+Each object has associated with it a counter that tracks the total number of
+references that exist to that object. This number simply indicates how many variables are “pointing to” any particular object. This is the reference count that we introduced in Chapter 3, Sections 3.5.5–3.5.7. Python provides the is and is not operators to test if a pair of variables do indeed refer to the same object. Performing a check such as
+每个对象都天生具有一个计数器，记录它自己的引用次数。这个数目表示有多少个变量指向该对象。这也就是我们在第三章3.5.5-3.5.7小节提到的引用计数。Python提供了is和is not 运算符来测试两个变量是否指向同一个对象。象下面这样执行一个测试
+
+a is b
+
+is an equivalent expression to
+这个表达式等价于下面的表达式
+
+id(a) == id(b)
+
+The object identity comparison operators all share the same precedence level and are presented in Table 4.2.
+In the example below, we create a variable, then another that points to the same object.
+对象身份比较运算符拥有同样的优先级，表4.2列出了这些运算符。在下面这个例子里，我们创建了一个变量，然后将第二个变量指向同一个对象。
+
+>>> a = [ 5, 'hat', -9.3]
+>>> b = a
+>>> a is b
+True
+>>> a is not b
+False
+>>>
+>>> b = 2.5e-5
+>>> b
+2.5e-005
+>>> a
+[5, 'hat', -9.3]
+>>> a is b
+False
+>>> a is not b
+True
+Both the is and not identifiers are Python keywords.
+is 与 not 标识符都是 Python 关键字。
+
+Table 4.2  Standard Type Object Identity Comparison Operators
+表4.2  标准类型对象身份比较运算符
+Operator        Function
+运算符          功能
+obj1 is obj2    obj1 is the same object as obj2
+                obj1和obj2是同一个对象
+
+obj1 is not obj2        obj1 is not the same object as obj2
+                        obj1和obj2不是同一个对象
+
+CORE NOTE: Interning
+知识点：实践
+
+In the above examples with the foo1 and foo2 objects, you will notice
+that we use floating point values rather than integers. The reason for this is although integers and strings are immutable objects, Python sometimes caches them to be more efficient.This would have caused the examples to appear that Python is not creating a new object when it should have. For example:
+在上面的例子中，您会注意到我们使用的是浮点数而不是整数。为什么这样？整数对象和字符串对象是不可变对象，所以Python会很高效的缓存它们。这会造成我们认为Python应该创建新对象时，它却没有创建新对象的假象。看下面的例子：
+
+>>> a = 1
+>>> id(a)
+8402824
+>>> b = 1
+>>> id(b)
+8402824
+>>>
+>>> c = 1.0
+>>> id(c)
+8651220
+>>> d = 1.0
+>>> id(d)
+8651204
+In the above example, a and b reference the same integer object, but c and
+d do not reference the same float object. If we were purists, we would want
+a and b to work just like c and d because we really did ask to create a new
+integer object rather than an alias, as in b = a.
+在上面的例子中，a 和 b 指向了相同的整数对象，但是 c 和 d 并没有指向相同的浮点数对象。如果我们是纯粹主义者，我们会希望 a 与 b 能和 c 与 d一样，因为我们本意就是为了创建两个整数对象，而不是像 b = a 这样的结果。
+
+Python caches or interns only simple integers that it believes will be used frequently in any Python application. At the time of this writing, Python
+interns integers in the range(-1, 100) but this is subject to change, so do not code your application to expect this.
+Python仅缓存简单整数，因为它认为在Python应用程序中这些小整数会经常被用到。当我们在写作本书的时候，Python缓存的整数范围是(-1, 100)，不过这个范围是会改变的，所以请不要在你的应用程序使用这个特性。
+
+In Python 2.3, the decision was made to no longer intern strings that do not have at least one reference outside of the “interned strings table.” This means that without that reference, interned strings are no longer immortal and subject to garbage collection like everything else. A BIF introduced in 1.5 to
+request interning of strings, intern(), has now been deprecated as a result.
+Python 2.3中决定，在预定义缓存字符串表之外的字符串，如果不再有任何引用指向它，那这个字符串将不会被缓存。也就是说， 被缓存的字符串将不会象以前那样永生不灭，对象回收器一样可以回收不再被使用的字符串。从Python 1.5起提供的用于缓存字符的内建函数 intern() 也已经不再推荐使用， 即将被废弃。
+
+4.5.3  Boolean 布尔类型
+
+Expressions  may  be  linked  together  or  negated  using  the  Boolean  logical operators and, or, and not, all of which are Python keywords. These Boolean operations are in highest-to-lowest order of precedence in Table 4.3. The not operator  has  the  highest  precedence  and  is  immediately  one  level below  all  the  comparison  operators.  The  and and  or operators  follow, respectively.
+布尔逻辑运算符 and， or 和 not都是Python关键字，这些运算符的优先级按从高到低的顺序列于表4.3. not 运算符拥有最高优先级，只比所有比较运算符低一级。 and 和 or 运算符则相应的再低一级。
+
+Table 4.3  Standard Type Boolean Operators
+表4.3  标准类型布尔运算符
+
+Operator        Function
+运算符          功能
+not expr        Logical NOT of expr (negation)
+                expr的逻辑非 (否)
+expr1 and expr2 Logical AND of expr1 and expr2 (conjunction)
+                expr1 和 expr2的逻辑与
+expr1 or expr2  expr1 和 expr2的逻辑或
+
+>>> x, y = 3.1415926536, -1024
+>>> x < 5.0
+True
+>>> not (x < 5.0) False
+>>> (x < 5.0) or (y > 2.718281828) True
+>>> (x < 5.0) and (y > 2.718281828) False
+>>> not (x is y)
+True
+
+Earlier, we introduced the notion that Python supports multiple compari- sons within one expression. These expressions have an implicit and operator joining them together.
+前面我们提到过Python支持一个表达式进行多种比较操作， 其实这个表达式本质上是由多个隐式的 and 连接起来的多个表达式。
+
+>>> 3 < 4 < 7   # same as "( 3 < 4 ) and ( 4 < 7 )" True
+
+4.6     Standard Type Built-in Functions
+标准类型内建函数
+
+Along with generic operators, which we have just seen, Python also provides some BIFs that can be applied to all the basic object types: cmp(),  repr(), str(),  type(), and the single reverse or back quotes (‘‘) operator, which
+is functionally equivalent to repr().
+除了这些运算符， 我们刚才也看到， Python提供了一些内建函数用于这些基本对象类型： cmp(),  repr(), str(),  type(), 和等同于repr()函数的单反引号(``) 运算符。
+
+Table 4.4  Standard Type Built-in Functions
+表4.4    标准类型内建函数
+
+Function        Operation
+函数            功能
+cmp(obj1, obj2) Compares obj1 and obj2, returns integer i where:
+                比较 obj1 和 obj2, 根据比较结果返回整数 i:
+i < 0 if obj1 < obj2
+i > 0 if obj1 > obj2
+i == 0 if obj1 == obj2
+
+repr(obj) 或 `obj`  Returns evaluatable string representation of obj
+                    返回一个对象的字符串表示
+
+str(obj)        Returns printable string representation of obj
+                返回对象适合可读性好的字符串表示
+type(obj)       Determines type of obj and return type object
+                得到一个对象的类型，并返回相应的type对象
+
+4.6.1  type()   type()
+
+We  now  formally  introduce  type().  In  Python  versions  earlier  than  2.2, type() is a BIF. Since that release, it has become a “factory function.” We will discuss these later on in this chapter, but for now, you may continue to think of type() as a BIF. The syntax for type() is:
+我们现在来正式介绍 type()。在Python2.2以前， type() 是内建函数。不过从那时起，它变成了一个“工厂函数”。在本章的后面部分我们会讨论工厂函数， 现在你仍然可以将type()仅仅当成一个内建函数来看。 type() 的用法如下：
+type(object)
+
+type() takes an object and returns its type. The return value is a type object.
+type() 接受一个对象做为参数，并返回它的类型。它的返回值是一个类型对象。
+
+>>> type(4)     # int type
+<type 'int'>
+>>>
+>>> type('Hello World!')        # string type
+<type 'string'>
+>>>
+>>> type(type(4))       # type type
+<type 'type'>
+
+In the examples above, we take an integer and a string and obtain their types using the type() BIF; in order to also verify that types themselves are types, we call type() on the output of a type() call.
+Note the interesting output from the type() function. It does not look like
+a typical Python data type, i.e., a number or string, but is something enclosed
+by greater-than and less-than signs. This syntax is generally a clue that what you are looking at is an object. Objects may implement a printable string rep- resentation;  however,  this  is  not  always  the  case.  In  these  scenarios  where there  is  no  easy  way  to  “display”  an  object,  Python  “pretty-prints”  a  string representation of the object. The format is usually of the form: <object_some-
+thing_or_another>.  Any  object  displayed  in  this  manner  generally  gives
+the object type, an object ID or location, or other pertinent information.
+
+在上面的例子里， 我们通过内建函数 type() 得到了一个整数和一个字符串的类型；为了确认一下类型本身也是类型， 我们对type()的返回值再次调用type().  注意type()有趣的输出， 它看上去不象一个典型的Python数据类型， 比如一个整数或一个字符串，一些东西被一个大于号和一个小号包裹着。这种语法是为了告诉你它是一个对象。每个对象都可以实现一个可打印的字符串表示。不过并不总是这样， 对那些不容易显示的对象来说， Python会以一个相对标准的格式表示这个对象，格式通常是这种形式： <object_something_or_another>， 以这种形式显示的对象通常会提供对象类别，对象id或位置, 或者其它合适的信息。
+
+4.6.2  cmp()
+
+The cmp() BIF CoMPares two objects, say, obj1 and obj2, and returns a negative  number  (integer)  if  obj1 is  less  than  obj2,  a  positive  number  if obj1 is greater than obj2, and zero if obj1 is equal to obj2. Notice the sim- ilarity in return values as C’s strcmp(). The comparison used is the one that applies for that type of object, whether it be a standard type or a user-created class;  if  the  latter,  cmp() will  call  the  class’s  special  __cmp__() method. More on these special methods in Chapter 13, on Python classes. Here are some samples of using the cmp() BIF with numbers and strings.
+内建函数cmp()用于比较两个对象obj1和obj2， 如果obj1小于obj2, 则返回一个负整数，如果obj1大于obj2则返回一个正整数， 如果obj1等于obj2， 则返回0。它的行为非常类似于C语言的strcmp()函数。比较是在对象之间进行的，不管是标准类型对象还是用户自定义对象。如果是用户自定义对象， cmp()会调用该类的特殊方法__cmp__()。在第13章会详细介绍类的这些特殊方法。下面是几个使用cmp()内建函数的对数值和字符串对象进行比较的例子。
+
+>>> a, b = -4, 12
+>>> cmp(a,b)
+-1
+>>> cmp(b,a)
+1
+>>> b = -4
+>>> cmp(a,b)
+0
+>>>
+>>> a, b = 'abc', 'xyz'
+>>> cmp(a,b)
+-23
+>>> cmp(b,a)
+23
+>>> b = 'abc'
+>>> cmp(a,b)
+0
+We will look at using cmp() with other objects later.
+在后面我们会研究cmp()用于其它对象的比较操作。
+
+4.6.3   str() and repr() (and ‘‘ Operator) 
+str()和 repr() (及 `` 运算符)
+
+The str() STRing and repr() REPResentation BIFs or the single back or reverse quote operator ( `` ) come in very handy if the need arises to either re-create an object through evaluation or obtain a human-readable view of the contents of objects, data values, object types, etc. To use these operations, a Python object is provided as an argument and some type of string representation of that object is returned. In the examples that follow, we take some random Python types and convert them to their string representations.
+内建函数 str() 和 repr() 或反引号运算符(``) 可以方便的以字符串的方式获取对象的内容、类型、数值属性等信息。str()函数得到的字符串可读性好， 而repr()函数得到的字符串通常可以用来重新获得该对象, 通常情况下 obj == eval(repr(obj)) 这个等式是成立的。这两个函数接受一个对象做为其参数， 返回适当的字符串。在下面的例子里， 我们会随机取一些Python对象来查看他们的字符串表示。
+
+>>> str(4.53-2j)
+'(4.53-2j)'
+>>>
+>>> str(1)
+'1'
+>>>
+>>> str(2e10)
+'20000000000.0'
+>>>
+>>> str([0, 5, 9, 9])
+'[0, 5, 9, 9]'
+>>>
+>>> repr([0, 5, 9, 9])
+'[0, 5, 9, 9]'
+>>>
+>>> `[0, 5, 9, 9]`
+'[0, 5, 9, 9]'
+Although all three are similar in nature and functionality, only repr() and
+`` do exactly the same thing, and using them will deliver the “official” string representation of an object that can be evaluated as a valid Python expression (using the eval() BIF). In contrast, str() has the job of delivering a “print- able” string representation of an object, which may not necessarily be accept- able by eval(), but will look nice in a print statement. There is a caveat that while most return values from repr() can be evaluated, not all can:
+尽管str(),repr()和``运算在特性和功能方面都非常相似， 事实上 repr() 和 `` 做的是完全一样的事情，它们返回的是一个对象的“官方”字符串表示， 也就是说绝大多数情况下可以通过求值运算(使用eval()内建函数)重新得到该对象，但str()则有所不同。str() 致力于生成一个对象的可读性好的字符串表示，它的返回结果通常无法用于eval()求值， 但很适合用于 print 语句输出。需要再次提醒一下的是， 并不是所有repr()返回的字符串都能够用 eval()内建函数得到原来的对象：
+
+>>> eval(`type(type))`) File "<stdin>", line 1 eval(`type(type))`)
+^ SyntaxError: invalid syntax
+  语法错误，非法语法
+
+The executive summary is that  repr() is Python-friendly while  str() produces  human-friendly  output.  However,  with  that  said,  because  both types of string representations coincide so often, on many occasions all three return the exact same string.
+也就是说 repr() 输出对 Python比较友好， 而str()的输出对人比较友好。虽然如此，很多情况下这三者的输出仍然都是完全一样的。
+
+CORE NOTE: Why have both repr() and ``?
+
+核心笔记：为什么我们有了repr()还需要``？
+
+Occasionally in Python, you will find both an operator and a function that do exactly the same thing. One reason why both an operator and a function
+exist is that there are times where a function may be more useful than the operator, for example, when you are passing around executable objects like functions and where different functions may be called depending on the
+data item. Another example is the double-star ( ** ) and pow() BIF, which
+performs “x to the y power” exponentiation for x ** y or pow(x,y).
+在Python学习过程中，你偶尔会遇到某个运算符和某个函数是做同样一件事情。之所以如此是因为某些场合函数会比运算符更适合使用。举个例子， 当处理类似函数这样的可执行对象或根据不同的数据项调用不同的函数处理时，函数就比运算符用起来方便。另一个例子就是双星号(**)乘方运算和pow()内建函数，x ** y 和 pow(x,y) 执行的都是x的y次方。
+译者注：事实上Python社区目前已经不鼓励继续使用``运算符。
+4.6.4   type() and isinstance()
+type() 和 isinstance()
+
+Python does not support method or function overloading, so you are respon- sible for any “introspection” of the objects that your functions are called with.
+(Also see the Python FAQ 4.75.) Fortunately, we have the  type() BIF to help us with just that, introduced earlier in Section 4.3.1.
+What’s in a name? Quite a lot, if it is the name of a type. It is often advantageous  and/or  necessary  to  base  pending  computation  on  the  type  of  object that is received. Fortunately, Python provides a BIF just for that very purpose. type() returns the type for any Python object, not just the standard types. Using the interactive interpreter, let us take a look at some examples of what type() returns when we give it various objects.
+Python 不支持方法或函数重载， 因此你必须自己保证调用的就是你想要的函数或对象。（参阅Python常见问答4.75节）。幸运的是， 我们前面4.3.1小节提到的type()内建函数可以帮助你确认这一点。一个名字里究竟保存的是什么？相当多，尤其是这是一个类型的名字时。确认接收到的类型对象的身份有很多时候都是很有用的。为了达到此目的，Python提供了一个内建函数type(). type()返回任意Python对象对象的类型，而不局限于标准类型。让我们通过交互式解释器来看几个使用type()内建函数返回多种对象类型的例子：
+>>> type('')
+<type 'str'>
+>>>
+>>> s = 'xyz'
+>>> type(s)
+<type 'str'>
+>>>
+>>> type(100)
+<type 'int'>
+>>> type(0+0j)
+<type 'complex'>
+>>> type(0L)
+<type 'long'>
+>>> type(0.0)
+<type 'float'>
+>>>
+>>> type([])
+<type 'list'>
+>>> type(())
+<type 'tuple'>
+>>> type({})
+<type 'dict'>
+>>> type(type)
+<type 'type'>
+>>>
+>>> class Foo: pass     # new-style class
+...
+>>> foo = Foo()
+>>> class Bar(object): pass     # new-style class
+...
+>>> bar = Bar()
+>>>
+
+>>> type(Foo)
+<type 'classobj'>
+>>> type(foo)
+<type 'instance'>
+>>> type(Bar)
+<type 'type'>
+>>> type(bar)
+<class '__main__.Bar'>
+
+Types and classes were unified in Python 2.2. You will see output different from that above if you are using a version of Python older than 2.2:
+Python2.2统一了类型和类， 如果你使用的是低于Python2.2的解释器，你可能看到不一样的输出结果。
+>>> type('')
+<type 'string'>
+>>> type(0L)
+<type 'long int'>
+>>> type({})
+<type 'dictionary'>
+>>> type(type)
+<type 'builtin_function_or_method'>
+>>>
+>>> type(Foo)   # assumes Foo created as in above
+<type 'class'>
+>>> type(foo)   # assumes foo instantiated also
+<type 'instance'>
+
+In addition to type(), there is another useful BIF called isinstance(). We cover it more formally in Chapter 13 (Object-Oriented Programming), but here we can introduce it to show you how you can use it to help deter- mine the type of an object.
+除了内建函数type()， 还有一个有用的内建函数叫 isinstance(). 我们会在第13章（面向对象编程）正式研究这个函数，不过在这里我们还是要简要介绍一下你如何利用它来确认一个对象的类型。
+Example 举例
+
+We present a script in Example 4.1 that shows how we can use isinstance() and type() in a runtime environment. We follow with a discussion of the use of type() and how we migrated to using isinstance() instead for the bulk of the work in this example.
+
+在例4.1中我们提供了一段脚本来演示在运行时环境使用isinstance() 和 type()函数。随后我们讨论type()的使用以及怎么将这个例子移植为改用 isinstance()。
+
+Running typechk.py, we get the following output:
+运行 typechk.py, 我们会得到以下输出：
+
+-69 is a number of type: int
+9999999999999999999999 is a number of type: long
+98.6 is a number of type: float
+(-5.2+1.9j) is a number of type: complex xxx is not a number at all!!
+
+Example 4.1  Checking the Type (typechk.py)
+例4.1    检查类型(typechk.py)
+
+The function displayNumType() takes a numeric argument and uses the
+type() built-in to indicate its type (or “not a number,” if that is the case).
+函数displayNumType() 接受一个数值参数，它使用内建函数type()来确认数值的类型（或不是一个数值类型）。
+1       #!/usr/bin/env python
+2
+3       def displayNumType(num):
+4       print num, 'is',
+ 
+
+
+7       else:
+(int, long, float, complex)):
+of type:', type(num).__name__
+8       print 'not a number at all!!'
+9
+10   displayNumType(-69)
+11   displayNumType(9999999999999999999999L)
+12   displayNumType(98.6)
+13   displayNumType(-5.2+1.9j)
+14   displayNumType('xxx')
+
+
+
+The Evolution of This Example
+例子进阶
+
+Original 原始
+The  same  function  was  defined  quite  differently  in  the  first  edition  of this book:
+这个完成同样功能的函数与本书的第一版中的例子已经大不相同：
+
+def displayNumType(num):
+print num, "is",
+if type(num) == type(0):
+print 'an integer'
+elif type(num) == type(0L):
+print 'a long'
+elif type(num) == type(0.0):
+print 'a float'
+elif type(num) == type(0+0j):
+print 'a complex number'
+else:
+print 'not a number at all!!'
+
+As Python evolved in its slow and simple way, so must we. Take a look at our original conditional expression:
+由于Python奉行简单但是比较慢的方式，所以我们必须这么做，看一眼我们原来的条件表达式：
+if type(num) == type(0)...
+
+Reducing Number of Function Calls
+减少函数调用的次数
+If we take a closer look at our code, we see a pair of calls to type(). As you know, we pay a small price each time a function is called, so if we can reduce that number, it will help with performance.
+An alternative to comparing an object’s type with a known object’s type (as we  did  above  and  in  the  example  below)  is  to  utilize  the  types module, which we briefly mentioned earlier in the chapter. If we do that, then we can use  the  type  object  there  without  having  to  “calculate  it.”  We  can  then change our code to only having one call to the type() function:
+如果我们仔细研究一下我们的代码，会看到我们调用了两次 type()。要知道每次调用函数都会付出性能代价， 如果我们能减少函数的调用次数， 就会提高程序的性能。
+利用在本章我们前面提到的 types 模块， 我们还有另一种比较对象类型的方法，那就是将检测得到的类型与一个已知类型进行比较。如果这样， 我们就可以直接使用type对象而不用每次计算出这个对象来。那么我们现在修改一下代码，改为只调用一次type()函数： 
+
+>>> import types
+>>> if type(num) == types.IntType...
+
+Object Value Comparison versus Object Identity Comparison
+对象值比较 VS 对象身份比较
+We  discussed  object  value  comparison  versus  object  identity  comparison earlier in this chapter, and if you realize one key fact, then it will become clear that our code is still not optimal in terms of performance. During runtime, there is always only one type object that represents an integer. In other words, type(0), type(42), type(-100) are always the same object: <type 'int'> (and this is also the same object as types.IntType).
+在这一章的前面部分我们讨论了对象的值比较和身份比较, 如果你了解其中的关键点,你就会发现我们的代码在性能上还不是最优的.在运行时期,只有一个类型对象来表示整数类型. 也就是说,type(0),type(42),type(-100) 都是同一个对象: <type 'int'>(types.IntType 也是这个对象) 
+
+If  they  are  always  the  same  object,  then  why  do  we  have  to  compare their values since we already know they will be the same? We are “wasting time”  extracting  the  values  of  both  objects  and  comparing  them  if  they are  the  same  object,  and  it  would  be  more  optimal  to  just  compare  the objects  themselves.  Thus  we  have  a  migration  of  the  code  above  to  the following:
+如果它们是同一个对象, 我们为什么还要浪费时间去获得并比较它们的值呢(我们已经知道它们是相同的了!)? 所以比较对象本身是一个更好地方案.下面是改进后的代码:
+if type(num) is types.IntType... # or type(0)
+
+Does that make sense? Object value comparison via the equal sign requires
+a  comparison  of  their  values,  but  we  can  bypass  this  check  if  the  objects themselves are the same. If the objects are different, then we do not even need to check because that means the original variable must be of a different type (since there is only one object of each type). One call like this may not make  a  difference,  but  if  there  are  many  similar  lines  of  code  throughout your application, then it starts to add up.
+这样做有意义吗? 我们用对象身份的比较来替代对象值的比较。如果对象是不同的，那意味着原来的变量一定是不同类型的。(因为每一个类型只有一个类型对象)，我们就没有必要去检查(值)了。 一次这样的调用可能无关紧要，不过当很多类似的代码遍布在你的应用程序中的时候，就有影响了。
+
+
+
+Reduce the Number of Lookups 减少查询次数
+This  is  a  minor  improvement  to  the  previous  example  and  really  only makes a difference if your application performs makes many type compar- isons like our example. To actually get the integer type object, the inter- preter has to look up the types name first, and then within that module’s dictionary, find IntType. By using from-import, you can take away one lookup:
+这是一个对前一个例子较小的改进，如果你的程序像我们的例子中做很多次比较的话，程序的性能就会有一些差异。为了得到整数的对象类型，解释器不得不首先查找types这个模块的名字，然后在该模块的字典中查找IntType。通过使用from-import，你可以减少一次查询：
+from types import IntType
+if type(num) is IntType...
+
+Convenience and Style 
+惯例和代码风格
+The unification of types and classes in 2.2 has resulted in the expected rise in the use of the isinstance() BIF. We formally introduce isinstance() in Chapter  13  (Object-Oriented  Programming),  but  we  will  give  you  a  quick preview now.
+Python2.2对类型和类的统一导致 isinstance()内建函数的使用率大大增加。我们将在第13章（面向对象编程）正式介绍isinstance()，在这里我们简单浏览一下。
+
+This Boolean function takes an object and one or more type objects and returns  True if  the  object  in  question  is  an  instance  of  one  of  the  type objects. Since types and classes are now the same, int is now a type (object) and a class. We can use isinstance() with the built-in types to make our if statement more convenient and readable:
+这个布尔函数接受一个或多个对象做为其参数，由于类型和类现在都是一回事， int 现在既是一个类型又是一个类。我们可以使用 isinstance() 函数来让我们的if语句更方便，并具有更好的可读性。
+
+if isinstance(num, int)...
+Using isinstance() along with type objects is now also the accepted style  of  usage  when  introspecting  objects’  types,  which  is  how  we  finally arrive  at  our  updated  typechk.py application  above.  We  also  get  the added bonus of isinstance() accepting a tuple of type objects to check against our object with instead of having an if-elif-else if we were to use only type().
+在判断对象类型时也使用 isinstance() 已经被广为接受， 我们上面的 typechk.py 脚本最终与改成了使用 isinstance() 函数。值得一提的是， isinstance()接受一个类型对象的元组做为参数， 这样我们就不必像使用type()时那样写一堆 if-elif-else 判断了。
+
+4.6.5  Python Type Operator and BIF Summary
+      Python类型运算符和内建函数总结
+
+A  summary  of  operators  and  BIFs  common  to  all  basic  Python  types  is given  in  Table 4.5.  The  progressing  shaded  groups  indicate  hierarchical precedence  from  highest-to-lowest  order.  Elements  grouped  with  similar shading all have equal priority. Note that these (and most Python) operators are available as functions via the operator module.
+表4.5列出了所有运算符和内建函数，其中运算符顺序是按优先级从高到低排列的。同一种灰度的运算符拥有同样的优先级。注意在operator模块中有这些（和绝大多数Python)运算符相应的同功能的函数可供使用。
+
+Table 4.5  Standard Type Operators and Built-in Functions
+表4.5 标准类型运算符和内建函数
+
+Operator/Function       Description     Resulta
+运算符/函数             描述            结果
+字符串表示
+``              对象的字符串表示        str
+内建函数     
+cmp(obj1, obj2) 比较两个对象            int
+repr(obj)       对象的字符串表示        str
+str(obj)        对象的字符串表示        str
+type(obj)       检测对象的类型          type
+值比较               
+<       小于                            bool
+>       大于                            bool
+<=      小于或等于                      bool
+>=      大于或等于                      bool
+==      等于        bool
+!=      不等于    bool
+<>      不等于    bool
+对象比较
+is      是              bool
+is not  不是            bool
+布尔运算符
+not     Logical negation        bool
+        逻辑反
+and     Logical conjunction     bool
+        逻辑与
+or      Logical disjunction     bool
+        逻辑或
+a.      Boolean comparisons return either True or False.
+        布尔比较总是返回 True 或 False
+
+4.7     Type Factory Functions
+类型工厂函数
+
+Since Python 2.2 with the unification of types and classes, all of the built-in types are now classes, and with that, all of the “conversion” built-in functions like int(), type(), list(), etc., are now factory functions. This means that although they look and act somewhat like functions, they are actually class names, and when you call one, you are actually instantiating an instance of that type, like a factory producing a good.
+Python 2.2统一了类型和类， 所有的内建类型现在也都是类， 在这基础之上， 原来的所谓内建转换函数象int(), type(), list() 等等， 现在都成了工厂函数。 也就是说虽然他们看上去有点象函数， 实质上他们是类。当你调用它们时， 实际上是生成了该类型的一个实例， 就象工厂生产货物一样。
+The following familiar factory functions were formerly built-in functions:
+下面这些大家熟悉的工厂函数在老的Python版里被称为内建函数：
+
+?       int(), long(), float(), complex()
+?       str(), unicode(), basestring()
+?       list(), tuple()
+?       type()
+
+Other types that did not have factory functions now do. In addition, factory functions have been added for completely new types that support the new-style classes. The following is a list of both types of factory functions:
+以前没有工厂函数的其他类型，现在也都有了工厂函数。除此之外，那些支持新风格的类的全新的数据类型，也添加了相应的工厂函数。下面列出了这些工厂函数：
+
+?       dict()
+?       bool()
+?       set(), frozenset()
+?       object()
+?       classmethod()
+?       staticmethod()
+?       super()
+?       property()
+?       file()
+
+
+4.8     Categorizing the StandardTypes
+        标准类型的分类
+
+If  we  were  to  be  maximally  verbose  in  describing  the  standard  types,  we would probably call them something like Python’s “basic built-in data object primitive types.”
+如果让我们最啰嗦的描述标准类型，我们也许会称它们是Python的“基本内建数据对象原始类型”。
+?       “Basic,” indicating that these are the standard or core types that Python provides
+?       “Built-in,” due to the fact that these types come by default in
+Python
+?       “Data,” because they are used for general data storage
+?       “Object,” because objects are the default abstraction for data and functionality
+?       “Primitive,” because these types provide the lowest-level granularity of data storage
+?       “Types,” because that’s what they are: data types!
+
+?       “基本”，是指这些类型都是Python提供的标准或核心类型。
+?       “内建”，是由于这些类型是Python默认就提供的
+?       “数据”，因为他们用于一般数据存储
+?       “对象”，因为对象是数据和功能的默认抽象
+?       “原始”，因为这些类型提供的是最底层的粒度数据存储
+?       “类型”，因为他们就是数据类型
+
+However,  this  description  does  not  really  give  you  an  idea  of  how  each type works or what functionality applies to them. Indeed, some of them share certain characteristics, such as how they function, and others share commonality with regard to how their data values are accessed. We should also be interested in whether the data that some of these types hold can be updated and what kind of storage they provide.
+There are three different models we have come up with to help categorize the  standard  types,  with  each  model  showing  us  the  interrelationships between the types. These models help us obtain a better understanding of how the types are related, as well as how they work.
+
+不过， 上面这些描述实际上并没有告诉你每个类型如何工作以及它们能发挥什么作用。事实上， 几个类型共享某一些的特性，比如功能的实现手段， 另一些类型则在访问数据值方面有一些共同之处。我们感兴趣的还有这些类型的数据如何更新以及它们能提供什么样的存储。有三种不同的模型可以帮助我们对基本类型进行分类，每种模型都展示给我们这些类型之间的相互关系。这些模型可以帮助我们更好的理解类型之间的相互关系以及他们的工作原理。
+
+4.8.1   Storage Model
+存储模型
+
+The  first  way  we  can  categorize  the  types  is  by  how  many  objects  can  be stored in an object of this type. Python’s types, as well as types from most other languages, can hold either single or multiple values. A type which holds a single literal object we will call atomic or scalar storage, and those which can hold multiple objects we will refer to as  container  storage. (Container objects are also referred to as composite or compound objects in the docu- mentation, but some of these refer to objects other than types, such as class instances.) Container types bring up the additional issue of whether different types  of  objects  can  be  stored.  All  of  Python’s  container  types  can  hold objects  of  different  types.  Table  4.6  categorizes  Python’s  types  by  storage model.
+我们对类型进行分类的第一种方式， 就是看看这种类型的对象能保存多少个对象。Python的类型， 就象绝大多数其它语言一样，能容纳一个或多个值。一个能保存单个字面对象的类型我们称它为原子或标量存储，那些可容纳多个对象的类型，我们称之为容器存储。（容器对象有时会在文档中被称为复合对象，不过这些对象并不仅仅指类型，还包括类似类实例这样的对象）容器类型又带来一个新问题，那就是它是否可以容纳不同类型的对象。所有的Python容器对象都能够容纳不同类型的对象。表4.6 按存储模型对Python的类型进行了分类。
+
+Although strings may seem like a container type since they “contain” char- acters (and usually more than one character), they are not considered as such
+because Python does not have a character type (see Section 4.8). Thus strings
+are self-contained literals.
+字符串看上去像一个容器类型，因为它“包含”字符（并且经常多于一个字符），不过由于Python并没有字符类型（参见章节4.8），所以字符串是一个自我包含的文字类型。
+
+Table 4.6  Types Categorized by the Storage Model
+表4.6    以存储模型为标准的类型分类
+
+Storage Model
+存储模型
+Category        Python Types That Fit Category
+分类            Python 类型
+Scalar/atom     Numbers (all numeric types), strings (all are literals) 
+标量/原子类型   数值（所有的数值类型），字符串（全部是文字）
+Container       Lists, tuples, dictionaries
+容器类型        列表、元组、字典
+
+4.8.2   Update Model
+更新模型
+
+Another  way  of  categorizing  the  standard  types  is  by  asking  the  question,
+“Once  created,  can  objects  be  changed,  or  can  their  values  be  updated?” When we introduced Python types early on, we indicated that certain types allow their values to be updated and others do not. Mutable objects are those whose values can be changed, and immutable objects are those whose values cannot  be  changed.  Table 4.7  illustrates  which  types  support  updates  and which do not.
+另一种对标准类型进行分类的方式就是， 针对每一个类型问一个问题：“对象创建成功之后，它的值可以进行更新吗？” 在前面我们介绍Python数据类型时曾经提到，某些类型允许他们的值进行更新，而另一些则不允许。可变对象允许他们的值被更新，而不可变对象则不允许他们的值被更改。表4.7列出了支持更新和不支持更新的类型。
+
+Now after looking at the table, a thought that must immediately come to mind is, “Wait a minute! What do you mean that numbers and strings are immutable? I’ve done things like the following”:
+看完这个表之后，你可能马上冒出一个问题：“等等，你说数值和字符串对象是不可改变的？ 看看下面的例子！”：
+
+x = 'Python numbers and strings'
+x = 'are immutable?!? What gives?'
+i = 0
+i = i + 1
+
+“They  sure  as  heck  don’t  look  immutable  to  me!”  That  is  true  to  some degree,  but  looks  can  be  deceiving.  What  is  really  happening  behind  the scenes  is  that  the  original  objects  are  actually  being  replaced  in  the  above examples. Yes, that is right. Read that again.
+Rather than referring to the original objects, new objects with the new
+values  were  allocated  and  (re)assigned  to  the  original  variable  names,
+and  the  old  objects  were  garbage-collected.  One  can  confirm  this  by
+using  the  id() BIF  to  compare  object  identities  before  and  after  such
+assignments.
+
+“在我看来， 这可不象是不可变对象的行为！” 没错，是这样，不过你还没有搞清楚幕后的真相。上面的例子中，事实上是一个新对象被创建，然后它取代了旧对象。就是这样，请多读一遍这段。
+新创建的对象被关联到原来的变量名， 旧对象被丢弃，垃圾回收器会在适当的时机回收这些对象。你可以通过内建函数id()来确认对象的身份在两次赋值前后发生了变化。
+
+Table 4.7  Types Categorized by the Update Model
+表4.7     以更新模型为标准的类型分类
+
+Update Model
+更新模型
+
+Category        Python Types That Fit Category
+分类            Python类型
+Mutable         Lists, dictionaries
+可变类型        列表， 字典
+Immutable       Numbers, strings, tuples
+不可变类型      数字、字符串、元组
+
+If we added calls to id() in our example above, we may be able to see that the objects are being changed, as below:
+下面我们在上面的例子里加上id()调用， 就会清楚的看到对象实际上已经被替换了：
+
+>>> x = 'Python numbers and strings'
+>>> print id(x)
+16191392
+>>> x = 'are immutable?!? What gives?'
+>>> print id(x)
+16191232
+>>> i = 0
+>>> print id(i)
+7749552
+>>> i = i + 1
+>>> print id(i)
+7749600
+Your  mileage  will  vary  with  regard  to  the  object  IDs  as  they  will  differ between executions. On the flip side, lists can be modified without replacing the original object, as illustrated in the code below:
+你看到的身份数字很可能和我不同，每次执行这些数字也会不同，这是正常的。这个数字与该对象当时分配的内存地址密切相关。因此不同的机器， 不同的执行时间都会生成不同的对象身份。另一类对象， 列表可以被修改而无须替换原始对象， 看下面的例子：
+
+>>> aList = ['ammonia', 83, 85, 'lady']
+>>> aList
+['ammonia', 83, 85, 'lady']
+>>>
+>>> aList[2]
+85
+>>>
+>>> id(aList)
+135443480
+>>>
+>>> aList[2] = aList[2] + 1
+>>> aList[3] = 'stereo'
+>>> aList
+['ammonia', 83, 86, 'stereo']
+>>>
+>>> id(aList)
+135443480
+>>>
+>>> aList.append('gaudy')
+>>> aList.append(aList[2] + 1)
+>>> aList
+['ammonia', 83, 86, 'stereo', 'gaudy', 87]
+>>>
+>>> id(aList)
+135443480
+Notice how for each change, the ID for the list remained the same.
+注意列表的值不论怎么改变， 列表的 ID 始终保持不变。
+
+4.8.3   Access Model
+访问模型
+
+Although the previous two models of categorizing the types are useful when being introduced to Python, they are not the primary models for differentiating the types. For that purpose, we use the access model. By this, we mean, how do we access the values of our stored data? There are three categories under the access model: direct, sequence, and mapping. The different access models and which types fall into each respective category are given in Table 4.8.
+尽管前面两种模型分类方式在介绍Python时都很有用，它们还不是区分数据类型的首要模型。对这种目的，我们使用访问模型。也就是说根据访问我们存储的数据的方式对数据类型进行分类。在访问模型中共有三种访问方式：直接存取，顺序，和映射。表4.8按访问方式对数据类型进行了分类。
+
+Direct  types  indicate  single-element,  non-container  types.  All  numeric types fit into this category.
+对非容器类型可以直接访问。所有的数值类型都归到这一类。
+
+Sequence types are those whose elements are sequentially accessible via index values starting at 0. Accessed items can be either single elements or in groups,  better  known  as  slices.  Types  that  fall  into  this  category  include strings, lists, and tuples. As we mentioned before, Python does not support a character  type,  so,  although  strings  are  literals,  they  are  a  sequence  type because of the ability to access substrings sequentially.
+序列类型是指容器内的元素按从0开始的索引顺序访问。一次可以访问一个元素或多个元素， 也就是大家所了解的切片(slice)。字符串， 列表和元组都归到这一类。我们前面提到过， Python 不支持字符类型，因此，虽然字符串是简单文字类型，因为它有能力按照顺序访问子字符串，所以也将它归到序列类型。
+
+Mapping types are similar to the indexing properties of sequences, except instead  of  indexing  on  a  sequential  numeric  offset,  elements  (values)  are unordered  and  accessed  with  a  key,  thus  making  mapping  types  a  set  of hashed key-value pairs.
+映射类型类似序列的索引属性，不过它的索引并不使用顺序的数字偏移量取值， 它的元素无序存放， 通过一个唯一的key来访问， 这就是映射类型， 它容纳的是哈希键-值对的集合。
+
+We  will  use  this  primary  model  in  the  next  chapter  by  presenting  each access model type and what all types in that category have in common (such as operators and BIFs), then discussing each Python standard type that fits into those categories. Any operators, BIFs, and methods unique to a specific type will be highlighted in their respective sections.
+我们在以后的章节中将主要使用访问模型，详细介绍各种访问模型的类型， 以及某个分类的类型之间有哪些相同之处（比如运算符和内建函数）， 然后讨论每种Python标准类型。所有类型的特殊运算符，内建函数， 及方法都会在相应的章节特别说明。
+
+So why this side trip to view the same data types from differing perspectives? Well, first of all, why categorize at all? Because of the high-level data structures  that  Python  provides,  we  need  to  differentiate  the  “primitive” types  from  those  that  provide  more  functionality.  Another  reason  is  to be clear on what the expected behavior of a type should be. For example, if we minimize the number of times we ask ourselves, “What are the differences between lists and tuples again?” or “What types are immutable and which are
+not?” then we have done our job. And finally, certain categories have general characteristics that apply to all types in a certain category. A good craftsman
+(and craftswoman) should know what is available in his or her toolboxes.
+
+为什么要对同样的数据类型再三分类呢？首先， 我们为什么要分类？ 因为Python提供了高级的数据结构，我们需要将那些原始的类型和功能强大的扩展类型区分开来。另一个原因就是这有助于搞清楚某种类型应该具有什么行为。举例来说，如果我们基本上不用问自己“列表和元组有什么区别？”或“什么是可变类型和不可变类型？”这些问题的时候，我们也就达到了目的。最后，某些分类中的所有类型具有一些相同的特性。一个优秀的工匠应该知道他或她的工具箱里都有哪些宝贝。
+
+Table 4.8  Types Categorized by the Access Model
+表4.7     以访问模型为标准的类型分类
+
+Access Model 
+Category        Types That Fit Category
+
+Direct  Numbers
+
+Sequence        Strings, lists, tuples
+
+Mapping Dictionaries
+                   访问模型
+                     分类                          Python类型
+                     直接访问                         数字
+                     顺序访问                       字符串、列表、元组
+                     映射访问                           字典
+
+
+Table 4.9  Categorizing the Standard Types
+表4.9 标准类型分类
+
+
+Data Type       
+Storage Model   
+Update Model    
+Access Model
+Numbers Scalar  Immutable       Direct
+Strings Scalar  Immutable       Sequence
+Lists   Container       Mutable Sequence
+Tuples  Container       Immutable       Sequence
+Dictionaries    Container       Mutable Mapping
+   
+                           
+
+数据类型        
+存储模型        
+更新模型        
+访问模型l
+数字    标量  不可更改        直接访问  
+字符串  标量  不可更改        顺序访问
+列表    容器       可更改  顺序访问
+元组    容器       不可更改        顺序访问
+字典    容器       可更改  映射访问
+
+The second part of our inquiry asks, “Why all these different models or perspectives”? It seems that there is no one way of classifying all of the data types. They all have crossed relationships with each other, and we feel it best to expose the different sets of relationships shared by all the types. We also want to show how each type is unique in its own right. No two types map the same across all categories. (Of course, all numeric subtypes do, so we are cat- egorizing  them  together.)  Finally,  we  believe  that  understanding  all  these relationships will ultimately play an important implicit role during develop- ment. The more you know about each type, the more you are apt to use the correct ones in the parts of your application where they are the most appro- priate, and where you can maximize performance.
+另一个问题就是， “为什么要用这么多不同的模型或从不同的方面来分类？” 所有这些数据类型看上去是很难分类的。它们彼此都有着错综复杂的关系，所有类型的共同之处最好能揭示出来，而且我们还想揭示每种类型的独到之处。没有两种类型横跨所有的分类。(当然，所有的数值子类型做到了这一点， 所以我们将它们归纳到一类当中)。最后，我们确信搞清所有类型之间的关系会对你的开发工作有极大的帮助。你对每种类型的了解越多，你就越能在自己的程序中使用恰当的类型以达到最佳的性能。
+
+We summarize by presenting a cross-reference chart (see Table 4.9) that shows all the standard types, the three different models we use for categori- zation, and where each type fits into these models.
+我们提供了一个汇总表（表4.9）。表中列出了所有的标准类型， 我们使用的三个模型， 以及每种类型归入的分类。
+
+4.9     Unsupported Types
+不支持的类型
+
+Before we explore each standard type, we conclude this chapter by giving a list of types that are not supported by Python.
+在我们深入了解各个标准类型之前，我们在本章的结束列出Python目前还不支持的数据类型。
+
+char or byte
+char 或 byte
+
+Python does not have a char or byte type to hold either single character or 8-bit integers. Use strings of length one for characters and integers for 8-bit numbers.
+Python没有 char 或 byte 类型来保存单一字符或8比特整数。你可以使用长度为1的字符串表示字符或8比特整数。
+
+Pointer
+指针
+
+Since Python manages memory for you, there is no need to access pointer addresses. The closest to an address that you can get in Python is by look- ing at an object’s identity using the id() BIF. Since you have no control over this value, it’s a moot point. However, under Python’s covers, every- thing is a pointer.
+Python替你管理内存，因此没有必要访问指针。在Python中你可以使用id()函数得到一个对象的身份号， 这是最接近于指针的地址。因为你不能控制这个值，所以其实没有太大意义。其实在Python中， 一切都是指针。
+
+int versus short versus long
+int vs short vs long
+
+Python’s  plain  integers  are  the  universal  “standard”  integer  type,  obviating the need for three different integer types, e.g., C’s  int, short, and long. For the record, Python’s integers are implemented as C  longs. Also, since there is a close relationship between Python’s int and long types, users have even  fewer  things  to  worry  about.  You  only  need  to  use  a  single  type,  the Python integer. Even when the size of an integer is exceed, for example, mul- tiplying two very large numbers, Python automatically gives you a long back instead of overflowing with an error.
+int vs short vs long
+Python 的普通整数相当于标准整数类型，不需要类似C语言中的 int, short, long 这三种整数类型。事实上Python的整数实现等同于C语言的长整数。 由于Python的整型与长整型密切融合， 用户几乎不需要担心什么。 你仅需要使用一种类型， 就是Python的整型。即便数值超出整型的表达范围， 比如两个很大的数相乘， Python会自动的返回一个长整数给你而不会报错。
+
+float versus double
+float VS double
+C  has  both  a  single  precision  float type  and  double-precision  double type. Python’s float type is actually a C double. Python does not support a single-precision floating point type because its benefits are outweighed by the  overhead  required  to  support  two  types  of  floating  point  types.  For those wanting more accuracy and willing to give up a wider range of num- bers,  Python  has  a  decimal  floating  point  number  too,  but  you  have  to import  the  decimal module  to  use  the  Decimal type.  Floats  are  always estimations.  Decimals  are  exact  and  arbitrary  precision.  Decimals  make sense concerning things like money where the values are exact. Floats make sense  for  things  that  are  estimates  anyway,  such  as  weights,  lengths,  and other measurements.
+C语言有单精度和双精度两种浮点类型。 Python 的浮点类型实际上是C语言的双精度浮点类型。 Python认为同时支持两种浮点类型的好处与支持两种浮点类型带来的开销不成比例， 所以Python 决定不支持单精度浮点数。对那些宁愿放弃更大的取值范围而需要更高精确度的用户来说， Python 还有一种十进制浮点数类型 Decimal， 不过你必须导入decimal模块才可以使用它。浮点数总是不精确的。Decimals则拥有任意的精度。在处理金钱这类确定的值时， Decimal 类型就很有用。 在处理重量，长度或其它度量单位的场合， float 足够用了。
+
+4.10 Exercises
+     练习
+
+4–1.   Python Objects. What three attributes are associated with all
+Python objects? Briefly describe each one.
+Python对象。与所有Python对象有关的三个属性是什么？请简单的描述一下。
+4–2.   Types. What does immutable mean? Which Python types are mutable and which are not?
+      类型。不可更改（immutable）指的是什么？Python的哪些类型是可更改的（mutable），哪些不是？
+4–3.   Types. Which Python types are sequences, and how do they differ from mapping types?
+类型。哪些Python类型是按照顺序访问的，它们和映射类型的不同是什么？
+
+
+4–4.   type(). What does the type() built-in function do? What kind of object does type() return?
+        type()。内建函数type()做什么？type()返回的对象是什么？
+
+
+4–4.   str() and repr(). What are the differences between the str() and repr() built-in functions? Which is equivalent to the backquote (  ‘‘ ) operator?
+
+str() 和 repr()。内建函数str()与repr()之间的不同是什么？哪一个等价于反引号(``)运算符？。
+4–6.   Object Equality. What do you think is the difference between the expressions type(a) == type(b) and type(a) is type(b)? Why is the latter preferred? What does isinstance() have to do it all of this?
+     对象相等。您认为type(a) == type(b)和type(a) is type(b)之间的不同是什么？为什么会选择后者？函数isinstance()与这有什么关系？
+
+
+4–7.   dir() Built-in Function. In several exercises in Chapter 2, we experimented with a built-in function called dir(), which takes an object and reveals its attributes. Do the same
+thing for the types module. Write down the list of the types that you are familiar with, including all you know about each of these types; then create a separate list of those you are
+not familiar with. As you learn Python, deplete the
+“unknown” list so that all of them can be moved to the
+“familiar with” list.
+内建函数dir()。在第二章的几个练习中，我们用内建函数dir()做了几个实验，它接受一个对象，然后给出相应的属性。请对 types 模块做相同的实验。记下您熟悉的类型，包括您对这些类型的认识，然后记下你还不熟悉的类型。在学习Python的过程中，你要逐步将“不熟悉”的类型变得“熟悉”起来。
+
+4–8.   Lists and Tuples. How are lists and tuples similar? Different?
+       列表和元组。列表和元组的相同点是什么？不同点是什么？
+4–9.   ?Interning. Given the following assignments:
+                练习，给定以下赋值：
+
+a = 10
+b = 10
+c = 100
+d = 100
+e = 10.0
+f = 10.0
+What is the output of each of the following and why?
+请问下面各表达式的输出是什么？为什么？
+(a)  a is b
+(b)  c is d
+(c)  e is f
+

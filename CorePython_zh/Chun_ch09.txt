@@ -1,0 +1,1455 @@
+﻿Files and Input/Output 文件和输入输出
+:- andelf (gt:andelf@gmail.com)已认领 
+%%mtime(%c) 编译
+
+%% 句子有些复杂, 翻译完成后自己先校对下 -by andelf
+
+========================================================================
+
+%!target: html
+%!encoding: utf-8
+
+%!options: --css-sugar --style style.css --enum-title --toc --toc-level 2
+
+Chapter Topics
+
+	File Objects
+	File Built-in Functions
+	File Built-in Methods
+	File Built-in Attributes
+	Standard Files
+	Command-Line Arguments
+	File System
+	File Execution
+	Persistent Storage
+	Related Modules
+    
+本章主题
+ - 文件对象
+ - 文件内建函数
+ - 文件内建方法
+ - 文件内建属性
+ - 标准文件
+ - 命令行参数
+ - 文件系统
+ - 文件执行
+ - 持久存储
+ - 相关模块
+
+ 
+======================================================================= 
+
+this chapter is intended to give you an in-depth introduction to the
+use of files and related input/output capabilities of Python. We introduce the file object (its built-in function, and built-in methods and
+attributes), review the standard files, discuss accessing the file system, hint at file  execution,  and  briefly  mention  persistent  storage  and  modules  in  the standard library related to “file-mania.”
+
+本章将深入介绍 Python 的文件处理和相关输入输出能力. 我们将介绍文件对象(它的内建函数, 内建方法和属性), 标准文件, 同时讨论文件系统的访问方法, 文件执行, 最后 简洁地涉及持久存储和标准库中与文件有关的模块.
+
+
+= 文件对象 =
+9.1 File Objects
+
+
+File  objects  can  be  used  to  access  not  only  normal  disk  files,  but  also  any other type of “file” that uses that abstraction. Once the proper “hooks” are installed, you can access other objects with file-style interfaces in the same manner you would access normal files.
+
+文件对象不仅可以用来访问普通的磁盘文件, 而且也可以访问任何其它类型抽象层面上的"文件". 一旦设置了合适的"钩子", 你就可以访问具有文件类型接口的其它对象, 就好像访问的是普通文件一样.
+
+You will find many cases where you are dealing with “file-like” objects as you  continue  to  develop  your  Python  experience.  Some  examples  include “opening a URL” for reading a Web page in real-time and launching a command in a separate process and communicating to and from it like a pair of simultaneously open files, one for write and the other for read.
+
+随着你使用 Python 经验的增长. 您会遇到很多处理"类文件"对象的情况. 有很多这样的例子, 例如实时地"打开一个URL"来读取 Web 页面，在另一个独立的进程中执行一个命令进行通讯, 就好像是两个同时打开的文件, 一个用于读取, 另个用于写入.
+
+　　The open() built-in function (see below) returns a file object that is then used for all succeeding operations on the file in question. There are a large number of other functions that return a file or file-like object. One primary reason for this abstraction is that many input/output data structures prefer to adhere to a common interface. It provides consistency in behavior as well as implementation. Operating systems like Unix even feature files as an underly- ing and architectural interface for communication. Remember, files are simply a  contiguous  sequence  of  bytes.  Anywhere  data  need  to  be  sent  usually involves a byte stream of some sort, whether the stream occurs as individual bytes or blocks of data.
+
+内建函数 open() 返回一个文件对象(参见下一小节), 对该文件进行后继相关的操作都要用到它. 还有大量的函数也会返回文件对象或是类文件( file-like )对象. 进行这种抽象处理的主要原因是许多的输入/输出数据结构更趋向于使用通用的接口. 这样就可以在程序行为和实现上保持一致性. 甚至像 Unix 这样的操作系统把文件作为通信的底层架构接口. 请记住, 文件只是连续的字节序列. 数据的传输经常会用到字节流, 无论字节流是由单个字节还是大块数据组成.　　
+
+= 文件内建函数[open()和file()] =
+9.2  File Built-in Functions [open()
+and file()]
+
+As the key to opening file doors, the open() [and file()] built-in func- tion provides a general interface to initiate the file input/output (I/O) pro- cess. The open() BIF returns a file object on a successful opening of the file  or  else  results  in  an  error  situation.  When  a  failure  occurs,  Python generates  or  raises  an  IOError exception—we  will  cover  errors  and exceptions  in  the  next  chapter.  The  basic  syntax  of  the  open() built-in function is:
+
+作为打开文件之门的"钥匙", 内建函数 open() [以及 file() ]提供了初始化输入/输出(I/O)操作的通用接口. open() 内建函数成功打开文件后时候会返回一个文件对象, 否则引发一个错误. 当操作失败, Python 会产生一个 IOError 异常 - 我们会在下一章讨论错误和异常的处理. 内建函数 open() 的基本语法是：
+
+```
+file_object = open(file_name, access_mode='r', buffering=-1)
+```
+
+The file_name is a string containing the name of the file to open. It can be a relative or absolute/full pathname. The access_mode optional variable
+is also a string, consisting of a set of flags indicating which mode to open the file with. Generally, files are opened with the modes 'r,' 'w,'or 'a,' repre- senting read, write, and append, respectively. A 'U' mode also exists for uni- versal NEWLINE support (see below).
+
+file_name 是包含要打开的文件名字的字符串, 它可以是相对路径或者绝对路径. 可选变量 access_mode 也是一个字符串, 代表文件打开的模式. 通常, 文件使用模式 'r', 'w', 或是 'a' 模式来打开, 分别代表读取, 写入和追加. 还有个 'U' 模式, 代表通用换行符支持(见下).
+   
+Any file opened with mode 'r' or 'U' must exist. Any file opened with
+'w' will be truncated first if it exists, and then the file is (re)created. Any file
+opened with 'a' will be opened for append. All writes to files opened with
+'a' will be from end-of-file, even if you seek elsewhere during access. If the
+file does not exist, it will be created, making it the same as if you opened the
+file in 'w' mode. If you are a C programmer, these are the same file open modes used for the C library function fopen().
+
+使用 'r' 或 'U' 模式打开的文件必须是已经存在的. 使用 'w' 模式打开的文件若存在则首先清空, 然后(重新)创建. 以 'a' 模式打开的文件是为追加数据作准备的, 所有写入的数据都将追加到文件的末尾. 即使你 seek 到了其它的地方. 如果文件不存在, 将被自动创建, 类似以 'w' 模式打开文件. 如果你是一个 C 程序员, 就会发现这些也是 C 库函数 fopen() 中使用的模式.
+
+There  are  other  modes  supported  by  fopen() that  will  work  with Python’s open(). These include the '+' for read-write access and 'b' for binary access. One note regarding the binary flag: 'b' is antiquated on all Unix  systems  that  are  POSIX-compliant  (including  Linux)  because  they treat all files as binary files, including text files. Here is an entry from the Linux manual page for fopen(), from which the Python open() function is derived:
+　
+其它 fopen() 支持的模式也可以工作在 Python 的 open() 下. 包括 '+' 代表可读可写, 'b' 代表二进制模式访问. 关于 'b' 有一点需要说明, 对于所有 POSIX 兼容的 Unix 系统(包括 Linux)来说, 'b'是可由可无的, 因为它们把所有的文件当作二进制文件, 包括文本文件. 下面是从 Linux 手册的 fopen() 函数使用中摘录的一段, Python 语言中的 open() 函数就是从它衍生出的:
+
+The mode string can also include the letter “b” either as a last character or  as  a  character  between  the  characters  in  any  of  the  two-character strings  described  above.  This  is  strictly  for  compatibility  with  ANSI C3.159-1989  (“ANSI  C”)  and  has  no  effect;  the  “b”  is  ignored  on  all POSIX conforming systems, including Linux. (Other systems may treat text files and binary files differently, and adding the “b” may be a good idea if you do I/O to a binary file and expect that your program may be ported to non-Unix environments.)
+
+指示文件打开模式的字符串中也可以包含字符 "b" , 但它不能做为第一个字符出现.这样做的目的是为了严格地满足ANSI C3.159-1989 (即 ANSI C)中的规定; 事实上它没有任何效果, 所有 POSIX 兼容系统, 包括 Linux , 都会忽略 "b" (其它系统可能会区分文本文件和二进制文件, 如果你要处理一个二进制文件, 并希望你的程序可以移植到其它非Unix的环境中, 加上"b" 会是不错的主意)。
+
+You will find a complete list of file access modes, including the use of 'b'
+if you choose to use it, in Table 9.1. If access_mode is not given, it defaults
+automatically to 'r.'
+
+你可以在表 9.1 中找到关于文件访问模式的详细列表, 包括 'b' 的使用 - 如果你选择使用它的话. 如果没有给定 access_mode , 它将自动采用默认值 'r' . 
+ 
+The other optional argument, buffering, is used to indicate the type of
+buffering that should be performed when accessing the file. A value of 0 means
+no buffering should occur, a value of 1 signals line buffering, and any value greater than 1 indicates buffered I/O with the given value as the buffer size. The lack of or a negative value indicates that the system default buffering scheme should be used, which is line buffering for any teletype or tty-like device  and  normal  buffering  for  everything  else.  Under  normal  circum- stances, a buffering value is not given, thus using the system default.
+
+另外一个可选参数 buffering 用于指示访问文件所采用的缓冲方式. 其中 0 表示不缓冲, 1 表示只缓冲一行数据, 任何其它大于 1 的值代表使用给定值作为缓冲区大小. 不提供该参数或者给定负值代表使用系统默认缓冲机制, 既对任何类电报机( tty )设备使用行缓冲, 其它设备使用正常缓冲. 一般情况下使用系统默认方式即可.
+
+Table 9.1  Access Modes for File Objects
+
+	File Mode	Operation
+
+	r			Open for read
+	rU or Ua	Open for read with universal NEWLINE support (PEP 278)
+	w			Open for write (truncate if necessary)
+	a			Open for append (always works from EOF, create if necessary)
+	r+			Open for read and write
+	w+			Open for read and write (see w above) 
+	a+			Open for read and write (see a above) 
+	rb			Open for binary read
+	wb			Open for binary write (see w above)
+	ab			Open for binary append (see a above)
+	rb+			Open for binary read and write (see r+ above) 
+	wb+			Open for binary read and write (see w+ above) 
+	ab+			Open for binary read and write (see a+ above)
+	a.			New in Python 2.5.
+
+表 9.1  文件对象的访问模式
+
+	文件模式	操作
+
+	r			以读方式打开
+	rU 或 Ua	以读方式打开, 同时提供通用换行符支持 (PEP 278)
+	w			以写方式打开 (必要时清空)
+	a			以追加模式打开 (从 EOF 开始, 必要时创建新文件)
+	r+			以读写模式打开
+	w+			以读写模式打开 (参见 w ) 
+	a+			以读写模式打开 (参见 a ) 
+	rb			以二进制读模式打开
+	wb			以二进制写模式打开 (参见 w ) 
+	ab			以二进制追加模式打开 (参见 a ) 
+	rb+			以二进制读写模式打开 (参见 r+ ) 
+	wb+			以二进制读写模式打开 (参见 w+ ) 
+	ab+			以二进制读写模式打开 (参见 a+ )
+	a.			Python 2.3 中新增
+
+
+
+Here are some examples for opening files:
+
+这里是一些打开文件的例子:
+
+fp = open('/etc/motd')	# 以读方式打开
+fp = open('test', 'w')	# 以写方式打开
+fp = open('data', 'r+')	# 以读写方式打开
+fp = open(r'c:\io.sys', 'rb') # 以二进制读模式打开
+
+9.2.1 The file() Factory Function
+　　工厂函数file()
+
+
+The file() built-in function came into being in Python 2.2, during the types and  classes  unification.  At  this  time,  many  built-in  types  that  did  not  have associated built-in functions were given factory functions to create instances  of those objects, i.e., dict(), bool(), file(), etc., to go along with those that did, i.e., list(), str(), etc.
+
+在Python 2.2 中，类型和类被统一了起来，这时，加入了内建函数 file(). 当时, 很多的内建类型没有对应的内建函数来创建对象的实例。例如 dict(), bool(), file(), 等等, 然而，另一些却有对应的内建函数, 例如 list(), str(), 等等. 
+
+Both open() and file() do exactly the same thing and one can be used
+in place of the other. Anywhere you see references to open(), you can men-
+tally substitute file() without any side effects whatsoever.
+
+open() 和 file() 函数具有相同的功能, 可以任意替换. 
+您所看到任何使用 open() 的地方, 都可以使用 file() 替换它.
+
+For  foreseeable  versions  of  Python,  both  open() and  file() will  exist
+side by side, performing the exact same thing. Generally, the accepted style is
+that  you  use  open() for  reading/writing  files,  while  file() is  best  used when  you  want  to  show  that  you  are  dealing  with  file  objects,  i.e.,  if instance(f, file).
+
+可以预见, 在 将来的 Python 版本中, open() 和 file() 函数会同时存在, 完成相同的功能. 一般说来, 我们建议使用 open() 来读写文件, 在您想说明您在处理文件对象时使用 file() , 例如 if instance(f, file) .
+
+==通用换行符支持(UNS)==
+9.2.2 Universal NEWLINE Support (UNS)
+
+
+In an upcoming Core Note sidebar, we describe how certain attributes of the os module can help you navigate files across different platforms, all of which terminate lines with different endings, i.e., \n, \r, or \r\n. Well, the Python interpreter  has  to  do  the  same  thing,  too—the  most  critical  place  is  when importing modules. Wouldn’t it be nicer if you just wanted Python to treat all files the same way?
+
+在下一个核心笔记中, 我们将介绍如何使用 os 模块的一些属性来帮助你在不同平台下访问文件, 不同平台用来表示行结束的符号是不同的, 例如 \n, \r, 或者 \r\n . 所以, Python 的解释器也要处理这样的任务, 特别是在导入模块时分外重要。 你难道不希望 Python 用相同的方式处理所有文件吗?
+
+That is the whole point of the UNS, introduced in Python 2.3, spurred by PEP 278. When you use the 'U' flag to open a file, all line separators (or termi- nators) will be returned by Python via any file input method, i.e., read*(), as a NEWLINE character ( \n ) regardless of what the line-endings are. (The 'rU' mode is also supported to correlate with the 'rb' option.) This feature will also support  files  that  have  multiple  types  of  line-endings.  A  file.newlines attribute tracks the types of line separation characters “seen.”
+
+这就是 UNS 的关键所在, 作为 PEP 278 的结果, Python 2.3 引入了UNS. 当你使用 'U' 标志打开文件的时候, 所有的行分割符(或行结束符, 无论它原来是什么)通过 Python 的输入方法(例如 read*() )返回时都会被替换为换行符NEWLINE(\n). ('rU' 模式也支持 'rb' 选项) . 这个特性还支持包含不同类型行结束符的文件. 文件对象的newlines 属性会记录它曾“看到的”文件的行结束符.
+
+If the file has just been opened and no line-endings seen, file.newlines is None. After the first line, it is set to the terminator of the first line, and if one more type of line-ending is seen, then file.newlines becomes a tuple con-taining each type seen. Note that UNS only applies to reading text files. There is no equivalent handling of file output.
+
+如果文件刚被打开, 程序还没有遇到行结束符, 那么文件的newlines 为 None .在第一行被读取后, 它被设置为第一行的结束符. 如果遇到其它类型的行结束符, 文件的newlines 会成为一个包含每种格式的元组. 注意 UNS 只用于读取文本文件. 没有对应的处理文件输出的方法.
+
+UNS is turned on by default when Python is built. If you do not wish to have this feature, you can disable it by using the  --without-universal- newlines switch when running Python’s configure script. If you must man- age the line-endings yourself, then check out the Core Note and use those os module attributes!
+
+在编译 Python 的时候，UNS 默认是打开的. 如果你不需要这个特性, 在运行configure脚本时，你可以使用 --without-universal-newlines 开关关闭它. 如果你非要自己处理行结束符, 请查阅核心笔记，使用 os 模块的相关属性.
+
+
+=文件内建方法=
+9.3 File Built-in Methods
+
+
+Once open() has completed successfully and returned a file object, all sub- sequent access to the file transpires with that “handle.” File methods come in four  different  categories:  input,  output,  movement  within  a  file,  which  we will call “intra-file motion,” and miscellaneous. A summary of all file methods can be found in Table 9.3. We will now discuss each category.
+
+open() 成功执行并返回一个文件对象之后, 所有对该文件的后续操作都将通过这个"句柄"进行. 文件方法可以分为四类: 输入, 输出, 文件内移动, 以及杂项操作. 所有文件对象的总结被列在了表 9.3 . 我们现在来讨论每个类的方法.
+
+
+
+9.3.1 Input
+===输入===
+
+The read() method is used to read bytes directly into a string, reading at most the number of bytes indicated. If no size is given (the default value is set to integer -1) or size is negative, the file will be read to the end. It will be phased out and eventually removed in a future version of Python.
+
+read() 方法用来直接读取字节到字符串中, 最多读取给定数目个字节. 如果没有给定 size 参数(默认值为 -1)或者 size 值为负, 文件将被读取直至末尾. 未来的某个版本可能会删除此方法.
+ 
+The readline() method reads one line of the open file (reads all bytes until a line-terminating character like NEWLINE is encountered). The line, including termination character(s), is returned as a string. Like read(), there is also an optional size option, which, if not provided, defaults to -1, meaning read until the line-ending characters (or EOF) are found. If present, it is possible that an incomplete line is returned if it exceeds size bytes.
+
+readline() 方法读取打开文件的一行(读取下个行结束符之前的所有字节). 然后整行，包括行结束符，作为字符串返回. 和 read() 相同, 它也有一个可选的 size 参数, 默认为 -1, 代表读至行结束符. 如果提供了该参数, 那么在超过size个字节后会返回不完整的行.
+
+The  readlines() method  does  not  return  a  string  like  the  other  two input methods. Instead, it reads all (remaining) lines and returns them as a list of strings. Its optional argument, sizhint, is a hint on the maximum size desired in bytes. If provided and greater than zero, approximately sizhint bytes in whole lines are read (perhaps slightly more to round up to the next buffer size) and returned as a list.
+
+readlines() 方法并不像其它两个输入方法一样返回一个字符串. 它会读取所有(剩余的)行然后把它们作为一个字符串列表返回. 它的可选参数 sizhint 代表返回的最大字节大小. 如果它大于 0 , 那么返回的所有行应该大约有 sizhint 字节(可能稍微大于这个数字, 因为需要凑齐缓冲区大小).
+
+
+In Python 2.1, a new type of object was used to efficiently iterate over a set of lines from a file: the xreadlines object (found in the xreadlines mod- ule). Calling file.xreadlines() was equivalent to xreadlines.xread- lines(file).  Instead  of  reading  all  the  lines  in  at  once,  xreadlines() reads in chunks at a time, and thus were optimal for use with for loops in a memory-conscious way. However, with the introduction of iterators and the new file iteration in Python 2.3, it was no longer necessary to have an xread- lines() method because it is the same as using iter(file), or in a for loop, is replaced by for eachLine in file. Easy come, easy go.
+
+Python 2.1 中加入了一个新的对象类型用来高效地迭代文件的行: xreadlines 对象(可以在 xreadlines 模块中找到). 调用 file.xreadlines() 等价于 xreadlines.xreadlines(file). xreadlines() 不是一次性读取取所有的行, 而是每次读取一块, 所以用在 for 循环时可以减少对内存的占用. 不过, 随着 Python 2.3 中迭代器和文件迭代的引入, 没有必要再使用 xreadlines() 方法, 因为它和使用 iter(file) 的效果是一样的, 或者在 for 循环中, 使用 for eachLine in file 代替它. 它来得容易，去得也快。
+
+Another odd bird is the readinto() method, which reads the given num- ber of bytes into a writable buffer object, the same type of object returned by the  unsupported  buffer() built-in  function.  (Since  buffer() is  not  sup- ported, neither is readinto().)
+　
+另个废弃的方法是 readinto() , 它读取给定数目的字节到一个可写的缓冲器对象, 和废弃的 buffer() 内建函数返回的对象是同个类型. (由于 buffer() 已经不再支持, 所以 readinto() 被废弃.)
+
+9.3.2 Output
+==输出==
+
+The write() built-in method has the opposite functionality as read() and readline(). It takes a string that can consist of one or more lines of text data or a block of bytes and writes the data to the file.
+
+write() 内建方法功能与 read() 和 readline() 相反. 它把含有文本数据或二进制数据块的字符串写入到文件中去.
+
+The writelines() method operates on a list just like readlines(), but takes a list of strings and writes them out to a file. Line termination charac- ters are not inserted between each line, so if desired, they must be added to the end of each line before writelines() is called.
+
+和 readlines() 一样，writelines() 方法是针对列表的操作, 它接受一个字符串列表作为参数, 将它们写入文件. 行结束符并不会被自动加入, 所以如果需要的话, 你必须在调用writelines()前给每行结尾加上行结束符.
+　
+Note that there is no “writeline()” method since it would be equivalent to calling write() with a single line string terminated with a NEWLINE character.
+
+注意这里并没有 "writeline()" 方法, 因为它等价于使用以行结束符结尾的单行字符串调用 write() 方法.
+
+CORE NOTE: Line separators are preserved
+
+核心笔记：保留行分隔符
+
+When reading lines in from a file using file input methods like read() or
+readlines(), Python does not remove the line termination characters. It
+is up to the programmer. For example, the following code is fairly common
+to see in Python code:
+
+当使用输入方法如 read() 或者 readlines() 从文件中读取行时, Python 并不会删除行结束符. 这个操作被留给了程序员. 例如这样的代码在 Python 程序中很常见:
+
+```
+f = open('myFile', 'r')
+data = [line.strip() for line in f.readlines()]
+f.close()
+```
+
+Similarly, output methods like write() or writelines() do not add line terminators for the programmer… you have to do it yourself before
+writing the data to the file.
+
+类似地, 输出方法 write() 或 writelines() 也不会自动加入行结束符. 你应该在向文件写入数据前自己完成:
+
+
+9.3.3  Intra-file Motion
+==文件内移动==
+
+The seek() method (analogous to the fseek() function in C) moves the file pointer to different positions within the file. The offset in bytes is given along with a relative offset location, whence. A value of 0, the default, indicates dis- tance from the beginning of a file (note that a position measured from the beginning of a file is also known as the absolute offset), a value of 1 indicates movement from the current location in the file, and a value of 2 indicates that the offset is from the end of the file. If you have used fseek() as a C pro- grammer,  the  values  0,  1,  and  2 correspond  directly  to  the  constants SEEK_SET,  SEEK_CUR,  and  SEEK_END,  respectively.  Use  of  the  seek() method comes into play when opening a file for read and write access.
+
+seek() 方法(类似 C 中的 fseek() 函数)可以在文件中移动文件指针到不同的位置. offset 字节代表相对于某个位置偏移量. 位置的默认值为 0 , 代表从文件开头算起(即绝对偏移量), 1 代表从当前位置算起, 2 代表从文件末尾算起. 如果你是一个 C 程序员，并且使用过了 fseek() , 那么，0, 1, 2 分别对应着常量 SEEK_SET, SEEK_CUR, 以及 SEEK_END. 当人们打开文件进行读写操作的时候就会接触到seek()方法。
+
+tell() is  a  complementary  method  to  seek();  it  tells  you  the  current location of the file—in bytes from the beginning of the file.
+
+text() 方法是对 seek() 的补充; 它告诉你当前文件指针在文件中的位置 - 从文件起始算起, 单位为字节.
+
+9.3.3 File Iteration
+==文件迭代==
+
+Going through a file line by line is simple:
+
+一行一行访问文件很简单:
+
+for eachLine in f:
+    :
+
+Inside this loop, you are welcome to do whatever you need to with eachLine, representing  a  single  line  of  the  text  file  (which  includes  the  trailing  line separators).
+
+在这个循环里, eachLine代表文本文件的一行(包括末尾的行结束符)，你可以使用它做任何想做的事情.
+
+Before  Python  2.2,  the  best  way  to  read  in  lines  from  a  file  was  using file.readlines() to read in all the data, giving the programmer the abil- ity to free up the file resource as quickly as possible. If that was not a con- cern, then programmers could call file.readline() to read in one line at a time. For a brief time, file.xreadlines() was the most efficient way to read in a file.
+
+在 Python 2.2 之前, 从文件中读取行的最好办法是使用 file.readlines() 来读取所有数据, 这样程序员可以尽快释放文件资源. 如果不需要这样做, 那么程序员可以调用 file.readline() 一次读取一行. 曾有一段很短的时间, file.xreadlines() 是读取文件最高效的方法.
+
+Things all changed in 2.2 when Python introduced iterators and file itera- tion. In file iteration, file objects became their own iterators, meaning that users could now iterate through lines of a file using a for loop without having to   call   read*()  methods.   Alternatively,   the   iterator   next   method, file.next() could be called as well to read in the next line in the file. Like all other iterators, Python will raise StopIteration when no more lines are available.
+
+在 Python 2.2 中, 我们引进了迭代器和文件迭代, 这使得一切变得完全不同, 文件对象成为了它们自己的迭代器, 这意味着用户不必调用 read*() 方法就可以在for循环中迭代文件的每一行. 另外我们也可以使用迭代器的 next 方法, file.next() 可以用来读取文件的下一行. 和其它迭代器一样, Python 也会在所有行迭代完成后引发 StopIteration 异常.
+
+So remember, if you see this type of code, this is the “old way of doing it,” and you can safely remove the call to readline().
+
+所以请记得, 如果你见到这样的代码, 这是"完成事情的老方法", 你可以安全地删除对 readline() 的调用.
+
+for eachLine in f.readline():
+    :
+
+File iteration is more efficient, and the resulting Python code is easier to write (and read). Those of you new to Python now are getting all the great new features and do not have to worry about the past.
+
+文件迭代更为高效, 而且写（和读）这样的 Python 代码更容易. 如果你是 Python 新人, 那么请使用这些新特性, 不必担心它们过去是如何.
+
+9.3.5 Others
+==其它==
+
+The close() method completes access to a file by closing it. The Python gar- bage collection routine will also close a file when the file object reference has decreased to zero. One way this can happen is when only one reference exists to a file, say, fp = open(...), and fp is reassigned to another file object before the original file is explicitly closed. Good programming style suggests closing the file before reassignment to another file object. It is possible to lose output data that is buffered if you do not explicitly close a file.
+
+close() 通过关闭文件来结束对它的访问. Python 垃圾收集机制也会在文件对象的引用计数降至零的时候自动关闭文件. 这在文件只有一个引用时发生, 例如 fp = open(...), 然后 fp 在原文件显式地关闭前被赋了另一个文件对象. 良好的编程习惯要求在重新赋另个文件对象前关闭这个文件. 如果你不显式地关闭文件, 那么你可能丢失输出缓冲区的数据.
+ 
+The fileno() method passes back the file descriptor to the open file. This is an integer argument that can be used in lower-level operations such
+as those featured in the os module, i.e., os.read().
+
+fileno() 方法返回打开文件的描述符. 这是一个整数, 可以用在如 os 模块(  os.read() )的一些底层操作上.
+
+Rather than waiting for the (contents of the) output buffer to be written
+to disk, calling the flush() method will cause the contents of the internal buffer  to  be  written  (or  flushed)  to  the  file  immediately.  isatty() is  a Boolean built-in method that returns True if the file is a tty-like device and False otherwise. The truncate() method truncates the file to the size at the current file position or the given size in bytes.
+
+调用 flush() 方法会直接把内部缓冲区中的数据立刻写入文件, 而不是被动地等待输出缓冲区被写入. isatty() 是一个布尔内建函数, 当文件是一个类 tty 设备时返回 True , 否则返回 False . truncate() 方法将文件截取到当前文件指针位置或者到给定 size , 以字节为单位.
+
+9.3.6  File Method Miscellany
+==文件方法杂项==
+
+
+We will now reprise our first file example from Chapter 2:
+我们现在重新实现第二章中的第一个文件例子：
+
+filename = raw_input('Enter file name: ')
+f = open(filename, 'r') 
+allLines = f.readlines() 
+f.close()
+for eachLine in allLines:
+    print eachLine,	# suppress print’s NEWLINE
+
+We originally described how this program differs from most standard file access in that all the lines are read ahead of time before any display to the screen occurs. Obviously, this is not advantageous if the file is large. In that case, it may be a good idea to go back to the tried-and-true way of reading and displaying one line at a time using a file iterator:
+
+我们曾经介绍过这个程序. 与大多数标准的文件访问方法相比, 它的不同在于它读完所有的行才开始向屏幕输出数据. 很明显如果文件很大, 这个方法并不好. 这时最好还是回到最可靠的方法： 使用文件迭代器, 每次只读取和显示一行:
+
+filename = raw_input('Enter file name: ')
+f = open(filename, 'r')
+for eachLine in f:
+     print eachLine, f.close()
+
+CORE NOTE: Line separators and other file system inconsistencies
+核心笔记: 行分隔符和其它文件系统的差异
+
+One of the inconsistencies of operating systems is the line separator character that their file systems support. On POSIX (Unix family or Mac OS X) systems, the line separator is the NEWLINE ( \n ) character. For old MacOS, it is the RETURN ( \r ), and DOS and Win32 systems use both ( \r\n ). Check your operating system to determine what your line
+separator(s) are.
+
+操作系统间的差异之一是它们所支持的行分隔符不同. 在 POSIX (Unix 系列或 Mac OS X)系统上, 行分隔符是 换行符 NEWLINE ( \n ) 字符. 在旧的 MacOS 下是 RETURN ( \r ) , 而 DOS 和 Wind32 系统下结合使用了两者 ( \r\n ). 检查一下你所使用的操作系统用什么行分隔符。
+ 
+Other differences include the file pathname separator (POSIX uses “/”, DOS and Windows use “ \”, and the old MacOS uses “: ”), the separator used to delimit a set of file pathnames, and the denotations for the current and parent directories.
+
+另个不同是路径分隔符(POSIX 使用 "/", DOS 和 Windows 使用 "\", 旧版本的 MacOS 使用 ":"), 它用来分隔文件路径名, 标记当前目录和父目录.
+
+These inconsistencies generally add an irritating level of annoyance when creating applications that run on all three platforms (and more if more architectures and operating systems are supported). Fortunately, the designers of the os module in Python have thought of this for us.The
+os module has five attributes that you may find useful. They are listed
+in Table 9.2.
+
+当我们创建要跨这三个平台的应用的时候, 这些差异会让我们感觉非常麻烦（而且支持的平台越多越麻烦）。幸运的是 Python 的 os 模块设计者已经帮我们想到了这些问题. os  模块有五个很有用的属性. 它们被列在了表 9.2 中.
+
+Table 9.2  os Module Attributes to Aid in Multi-platform Development
+
+有助于跨平台开发的 os 模块属性
+
+os ModuleAttribute	Description
+os模块属性		描述
+
+linesep	 		String used to separate lines in a file
+                 	用于在文件中分隔行的字符串
+
+sep			String used to separate file pathname components 
+                 	用来分隔文件路径名的字符串
+
+pathsep			String used to delimit a set of file pathnames 
+			用于分隔文件路径的字符串
+
+curdir			String name for current working directory
+			当前工作目录的字符串名称
+
+pardir			String name for parent (of current working directory)
+			(当前工作目录的)父目录字符串名称
+
+Regardless of your platform, these variables will be set to the correct values when you import the os module: One less headache to worry about.
+
+不管你使用的是什么平台, 只要你导入了 os 模块, 这些变量自动会被设置为正确的值, 减少了你的麻烦.
+
+We would also like to remind you that the comma placed at the end of the print statement is to suppress the NEWLINE character that print normally adds at the end of output. The reason for this is because every line  from  the  text  file  already  contains  a  NEWLINE.  readline() and readlines() do not strip off any whitespace characters in your line (see exercises.) If we omitted the comma, then your text file display would be doublespaced  one  NEWLINE  which  is  part  of  the  input  and  another added by the print statement.
+
+还要提醒大家的是: print 语句默认在输出内容末尾后加一个换行符, 而在语句后加一个逗号就可以避免这个行为. readline() 和 readlines() 函数不对行里的空白字符做任何处理(参见本章练习), 所以你有必要加上逗号. 如果你省略逗号, 那么显示出的文本每行后会有两个换行符, 其中一个是输入是附带的, 另个是 print 语句自动添加的.
+
+File  objects  also  have  a  truncate() method,  which  takes  one  optional argument, size. If it is given, then the file will be truncated to, at most, size bytes. If you call truncate() without passing in a size, it will default to the current location in the file. For example, if you just opened the file and call truncate(),  your  file  will  be  effectively  deleted,  truncated  to  zero  bytes because  upon  opening  a  file,  the  “read  head”  is  on  byte  0,  which  is  what tell() returns.
+
+文件对象还有一个 truncate() 方法, 它接受一个可选的 size 作为参数. 如果给定, 那么文件将被截取到最多 size 字节处. 如果没有传递 size 参数, 那么默认将截取到文件的当前位置. 例如, 你刚打开了一个文件, 然后立即调用 truncate() 方法, 那么你的文件(内容)实际上被删除, 这时候你是其实是从 0 字节开始截取的( tell() 将会返回这个数值 ).
+
+Before moving on to the next section, we will show two more examples,
+the first highlighting output to files (rather than input), and the second per- forming both file input and output as well as using the seek() and tell() methods for file positioning.
+
+在学习下一小节之前, 我们再来看两个例子, 第一个展示了如何输出到文件, 第二个展示了文件的输出和输入, 以及用于文件定位的 seek() 和 tell() 方法的使用.
+
+filename = raw_input('Enter file name: ')
+fobj = open(filename, 'w')
+while True:
+    aLine = raw_input("Enter a line ('.' to quit): ")
+    if aLine != ".":
+        fobj.write('%s%s' % (aLine, os.linesep)
+    else:
+        break
+fobj.close()
+
+Here we ask the user for one line at a time, and send them out to the file. Our  call  to  the  write() method  must  contain  a  NEWLINE  because raw_input() does not preserve it from the user input. Because it may not be easy to generate an end-of-file character from the keyboard, the program uses the period ( . ) as its end-of-file character, which, when entered by the user, will terminate input and close the file.
+
+这里我们每次从用户接收一行输入, 然后将文本保存到文件中. 由于raw_input()不会保留用户输入的换行符，调用 write() 方法时必须加上换行符。而且，在键盘上很难输入一个EOF(end-of-file)字符，所以，程序使用句号( . )作为文件结束的标志, 当用户输入句号后会自动结束输入并关闭文件.
+
+The second example opens a file for read and write, creating the file from scratch (after perhaps truncating an already existing file). After writing data to the file, we move around within the file using  seek(). We also use the tell() method to show our movement.
+
+第二个例子以可读可写模式创建一个新的文件(可能是清空了一个现有的文件). 在向文件写入数据后, 我们使用 seek() 方法在文件内部移动, 使用 tell() 方法展示我们的移动过程.
+
+>>> f = open('/tmp/x', 'w+')
+>>> f.tell()
+0
+>>> f.write('test line 1\n')	# 加入一个长为12的字符串 [0-11]
+>>> f.tell()
+12
+>>> f.write('test line 2\n')	# 加入一个长为12的字符串 [12-23]
+>>> f.tell()	# 告诉我们当前的位置
+24
+>>> f.seek(-12, 1)	# 向后移12个字节
+>>> f.tell()	# 到了第二行的开头
+12
+>>> f.readline()
+'test line 2\012'
+>>> f.seek(0, 0)	# 回到最开始
+>>> f.readline()
+'test line 1\012'
+>>> f.tell()	# 又回到了第二行
+12
+>>> f.readline()
+'test line 2\012'
+>>> f.tell()	# 又到了结尾
+24
+>>> f.close()	# 关闭文件
+
+
+Table 9.3 lists all the built-in methods for file objects.
+表 9.3 文件对象的内建方法列表
+
+
+Table 9.3  Methods for File Objects
+
+File Object Method	Operation
+                 文件对象的方法                 操作
+
+file.close()	Closes file
+                关闭文件                
+file.fileno()	Returns integer file descriptor (FD) for file 
+	        返回文件的描述符(file descriptor ,FD, 整数值)
+file.flush()	Flushes internal buffer for file 
+	        刷新文件的内部缓冲区
+file.isatty()	Returns True if file is a tty-like device and False otherwise
+                判断 file 是否是一个类 tty 设备
+
+file.next()	Returns the next line in the file [similar to file.readline()] or raises StopIteration if no more lines are available
+		返回文件的下一行(类似于file.readline() ), 或在没有其它行时引发 StopIteration 异常
+
+file.read(size=-1)	Reads size bytes of file, or all remaining bytes if size not given or is negative, as a string and return it
+			从文件读取 size 个字节, 当未给定 size 或给定负值的时候, 读取剩余的所有字节, 然后作为字符串返回
+file.readinto(buf, size)	Reads size bytes from file into buffer buf (unsupported)
+				从文件读取 size 个字节到 buf 缓冲器(已不支持)
+
+file.readline(size=-1)	Reads and returns one line from file (includes line-ending characters), either one full line or a maximum of size characters
+			从文件中读取并返回一行(包括行结束符), 或返回最大 size 个字符
+
+file.readlines(sizhint=0) Reads and returns all lines from file as a list (includes all line termination characters); if sizhint given and > 0, whole lines are returned consisting of approximately sizhint bytes (could be rounded up to next buffer’s worth)
+
+			读取文件的所有行并作为一个列表返回(包含所有的行结束符);  如果给定 sizhint 且大于 0 , 那么将返回总和大约为 sizhint 字节的行(大小由缓冲器容量的下一个值决定）（ 比如说缓冲器的大小只能为4K的倍数，如果sizhint为15k，则最后返回的可能是16k———译者按)
+
+file.xreadlinesc()	Meant for iteration, returns lines in file read as chunks in a more efficient way than readlines()
+                            
+			用于迭代, 可以替换 readlines() 的一个更高效的方法
+
+file.seek(off, whence=0)	Moves to a location within file, off bytes offset from whence (0 == beginning of file, 1 == current location, or 2 == end of file)
+				在文件中移动文件指针, 从 whence ( 0 代表文件其始, 1 代表当前位置, 2代表文件末尾)偏移 off 字节
+file.tell()	Returns current location within file
+		返回当前在文件中的位置
+
+file.truncate(size=file.tell())
+
+Truncates file to at most size bytes, the default being the current file location
+
+截取文件到最大 size 字节, 默认为当前文件位置
+
+file.write(str)	Writes string str to file 
+		向文件写入字符串
+
+file.writelines(seq)	Writes seq of strings to file; seq should be an iterable producing strings; prior to 2.2, it was just a list of strings
+
+		向文件写入字符串序列 seq ; seq 应该是一个返回字符串的可迭代对象; 在 2.2 前, 它只是字符串的列表
+
+/// 文本文件不好搞下标
+a.	New in Python 2.2.  Python 2.2 中新增
+b.	New in Python 1.5.2 but unsupported.  Python 1.5.2 中新增, 不再支持
+c.	New in Python 2.1 but deprecated in Python 2.3. Python 2.1 中新增, 在 Python 2.3 中废弃
+
+
+
+9.4 File Built-in Attributes
+=文件内建属性=
+
+File objects also have data attributes in addition to methods. These attributes hold  auxiliary  data  related  to  the  file  object  they  belong  to,  such  as  the  file name (file.name), the mode with which the file was opened (file.mode), whether the file is closed (file.closed), and a flag indicating whether an additional space character needs to be displayed before successive data items when  using  the  print statement  (file.softspace).  Table 9.4  lists  these attributes along with a brief description of each.
+
+文件对象除了方法之外，还有一些数据属性. 这些属性保存了文件对象相关的附加数据, 例如文件名(file.name ), 文件的打开模式 ( file.mode ), 文件是否已被关闭 ( file.closed), 以及一个标志变量, 它可以决定使用 print 语句打印下一行前是否要加入一个空白字符( file.softspace ). 表9.4列出了这些属性并做了简短说明。
+
+Table 9.4  Attributes for File Objects
+
+表9.4 文件对象的属性
+
+File Object Attribute   Description
+文件对象的属性       描述
+file.closed	True if file is closed and False otherwise
+		True 表示文件已经被关闭, 否则为 False
+
+file.encoding	Encoding that this file uses—when Unicode strings are written to file, they will be converted to byte strings
+using file.encoding; a value of None indicates that the system default encoding for converting Unicode strings should be used
+
+		文件所使用的编码 - 当 Unicode 字符串被写入数据时, 它们将自动使用 file.encoding 转换为字节字符串; 若file.encoding为 None 时使用系统默认编码
+
+file.mode	Access mode with which file was opened
+		文件打开时使用的访问模式
+file.name	Name of file
+		文件名
+
+file.newlines	None if no line separators have been read, a string con- sisting of one type of line separator, or a tuple containing
+all types of line termination characters read so far
+
+		未读取到行分隔符时为 None , 只有一种行分隔符时为一个字符串, 当文件有多种类型的行结束符时，则为一个包含所有当前所遇到的行结束符的列表
+		
+file.softspace	0 if space explicitly required with print, 1 otherwise; rarely used by the programmer—generally for internal use only
+                为0表示在输出一数据后，要加上一个空格符，1表示不加。这个属性一般程序员用不着，由程序内部使用。
+		
+// 文本文件不好搞下标
+a.	New in Python 2.3.
+
+
+9.5 Standard Files
+=标准文件=
+
+There are generally three standard files that are made available to you when your program starts. These are standard input (usually the keyboard), stan- dard output (buffered output to the monitor or display), and standard error (unbuffered output to the screen). (The “buffered” or “unbuffered” output refers  to  that  third  argument  to  open()).  These  files  are  named  stdin, stdout, and stderr and take their names from the C language. When we say these files are “available to you when your program starts,” that means that these files are pre-opened for you, and access to these files may commence once you have their file handles.
+
+一般说来, 只要你的程序一执行, 那么你就可以访问三个标准文件. 它们分别是标准输入(一般是键盘), 标准输出(到显示器的缓冲输出)和标准错误(到屏幕的非缓冲输出). (这里所说的"缓冲"和"非缓冲"是指 open() 函数的第三个参数.) 这些文件沿用的是 C 语言中的命名, 分别为 stdin , stdout 和 stderr . 我们说"只要你的程序一执行就可以访问这三个标准文件", 意思是这些文件已经被预先打开了, 只要知道它们的文件句柄就可以随时访问这些文件.
+
+Python  makes  these  file  handles  available  to  you  from  the  sys module. Once  you  import  sys,  you  have  access  to  these  files  as   sys.stdin, sys.stdout, and sys.stderr. The print statement normally outputs to sys.stdout while  the  raw_input() built-in  function  receives  its  input from sys.stdin.
+　
+Python 中可以通过 sys 模块来访问这些文件的句柄. 导入 sys 模块以后, 就可以使用 sys.stdin , sys.stdout 和 sys.stderr 访问. print 语句通常是输出到 sys.stdout ; 而内建 raw_input() 则通常从 sys.stdin 接受输入.
+
+Just remember that since sys.* are files, you have to manage the line sep- aration characters. The print statement has the built-in feature of automati- cally adding one to the end of a string to output.
+
+记得 sys.* 是文件, 所以你必须自己处理好换行符. 而 print 语句会自动在要输出的字符串后加上换行符。
+
+9.6 Command-Line Arguments
+=命令行参数=
+
+The  sys module  also  provides  access  to  any  command-line  arguments  via sys.argv. Command-line arguments are those arguments given to the pro- gram  in  addition  to  the  script  name  on  invocation.  Historically,  of  course, these arguments are so named because they are given on the command line along  with  the  program  name  in  a  text-based  environment  like  a  Unix-  or DOS-shell.  However,  in  an  IDE  or  GUI  environment,  this  would  not  be the case. Most IDEs provide a separate window with which to enter your“command-line arguments.” These, in turn, will be passed into the program as if you started your application from the command line.
+
+sys 模块通过 sys.argv 属性提供了对命令行参数的访问。 命令行参数是调用某个程序时除程序名以外的其它参数. 这样命名是有历史原因的, 在一个基于文本的环境里(比如 UNIX 操作系统的 shell 环境或者 DOS-shell ), 这些参数和程序的文件名一同被输入的. 但在 IDE 或者 GUI 环境中可能就不会是这样了, 大多 IDE 环境都提供一个用来输入"命令行参数"的窗口; 这些参数最后会像命令行上执行那样被传递给程序.
+
+Those of you familiar with C programming may ask, “Where is argc?” The names “argc” and “argv” stand for “argument count” and “argument vec- tor,” respectively. The argv variable contains an array of strings consisting of each argument from the command line while the argc variable contains the number of arguments entered. In Python, the value for argc is simply the number  of  items  in  the  sys.argv list,  and  the  first  element  of  the  list, sys.argv[0], is always the program name. Summary:
+
+熟悉 C 语言的读者可能会问了, "argc 哪去了?" argc 和 argv 分别代表参数个数(argument count)和参数向量(argument vector).  argv 变量代表一个从命令行上输入的各个参数组成的字符串数组; argc 变量代表输入的参数个数. 在 Python 中, argc 其实就是 sys.argv 列表的长度, 而该列表的第一项 sys.argv[0] 永远是程序的名称. 
+总结如下:
+
+ - sys.argv is the list of command-line arguments
+ - len(sys.argv) is the number of command-line arguments (aka argc)
+
+ - sys.argv 是命令行参数的列表 
+ - len(sys.argv) 是命令行参数的个数(也就是 argc)
+
+Let us create a small test program called argv.py with the following lines:
+
+我们来创建这个名为 argv.py 的测试程序:
+
+```
+import sys
+
+print 'you entered', len(sys.argv), 'arguments...'
+print 'they were:', str(sys.argv)
+```
+
+Here is an example invocation and output of this script:
+
+下面是该脚本程序运行的输出:
+
+$ argv.py 76 tales 85 hawk you entered 5 arguments...
+they were: ['argv.py', '76', 'tales', '85', 'hawk']
+
+Are command-line arguments useful? Commands on Unix-based systems are typically programs that take input, perform some function, and send out- put as a stream of data. These data are usually sent as input directly to the next program, which does some other type of function or calculation and sends
+the new output to another program, and so on. Rather than saving the output
+of each program and potentially taking up a good amount of disk space, the output is usually “piped” into the next program as its input.
+
+命令行参数有用吗? Unix 操作系统中的命令通常会接受输入, 执行一些功能, 然后把结果作为流输出出来. 这些输出的结果还可能被作为下一个程序的输入数据, 在完成了一些其它处理后, 再把新的输出送到下一个程序, 如此延伸下去. 各个程序的输出一般是不保存的, 这样可以节省大量的磁盘空间, 各个程序的输出通常使用"管道"实现到下个程序输入的转换.
+
+This is accomplished by providing data on the command line or through standard  input.  When  a  program  displays  or  sends  output  to  the  standard output file, the result would be displayed on the screen—unless that program is also “piped” to another program, in which case that standard output file is really the standard input file of the next program. I assume you get the drift by now!
+
+这是通过向命令行提供数据或是通过标准输入实现的. 当一个程序显示或是发送它的输出到标准输出文件时, 内容就会出现在屏幕上 - 除非该程序被管道连接到下一个程序, 那么此时程序的标准输出就成为下个程序的标准输入. 你现在明白了吧?
+
+Command-line arguments allow a programmer or administrator to start a program perhaps with different behavioral characteristics. Much of the time, this execution takes place in the middle of the night and runs as a batch job without human interaction. Command-line arguments and program options enable this type of functionality. As long as there are computers sitting idle at night and plenty of work to be done, there will always be a need to run pro- grams in the background on our very expensive “calculators.”
+
+命令行参数使程序员可以在启动一个程序的时候对程序行为做出选择. 在大多情况下, 这些执行操作都不需要人为干预, 通过批处理执行. 命令行参数配合程序选项可以实现这样的处理功能. 让计算机在夜里有空闲时完成一些需要大量处理的工作.
+
+Python  has  two  modules  to  help  process  command-line  arguments. The  first  (and  original),  getopt is  easier  but  less  sophisticated,  while optparse, introduced in Python 2.3, is more powerful library and is much more object-oriented than its predecessor. If you are just getting started, we recommend getopt, but once you outgrow its feature set, then check out optparse.
+
+Python 还提供了两个模块用来辅助处理命令行参数. 其中一个(最原始的)是 getopt 模块, 它更简单些, 但是不是很精细. 而 Python 2.3 引入的 optparse 模块提供了一个更强大的工具, 而且它更面向对象. 如果你只是用到一些简单的选项, 我们推荐 getopt , 但如果你需要提供复杂的选项, 那么请参阅 optparse .
+
+9.7 File System
+=文件系统=
+
+Access to your file system occurs mostly through the Python os module. This module serves as the primary interface to your operating system facilities and services from Python. The os module is actually a front-end to the real mod- ule that is loaded, a module that is clearly operating system–dependent. This “real” module may be one of the following: posix (Unix-based, i.e., Linux, ? MacOS X, BSD, Solaris, etc.), nt (Win32), mac (old MacOS), dos (DOS), os2 (OS/2), etc. You should never import those modules directly. Just import os and  the  appropriate  module  will  be  loaded,  keeping  all  the  underlying work hidden from sight. Depending on what your system supports, you may not have access to some of the attributes, which may be available in other operating system modules.
+
+对文件系统的访问大多通过 Python 的 os 模块实现. 该模块是Python访问操作系统功能的主要接口. os 模块实际上只是真正加载的模块的前端, 而真正的那个"模块"明显要依赖与具体的操作系统. 这个"真正"的模块可能是以下几种之一: posix (适用于 Unix 操作系统), nt (Win32), mac(旧版本的 MacOS), dos (DOS), os2 (OS/2), 等. 你不需要直接导入这些模块. 只要导入 os 模块, Python 会为你选择正确的模块, 你不需要考虑底层的工作. 根据你系统支持的特性, 你可能无法访问到一些在其它系统上可用的属性.
+
+　In addition to managing processes and the process execution environment, the os module performs most of the major file system operations that the application developer may wish to take advantage of. These features include removing and renaming files, traversing the directory tree, and managing file accessibility. Table 9.5 lists some of the more common file or directory opera- tions available to you from the os module.
+
+除了对进程和进程运行环境进行管理外, os 模块还负责处理大部分的文件系统操作, 应用程序开发人员可能要经常用到这些. 这些功能包括删除/重命名文件, 遍历目录树, 以及管理文件访问权限等. 表 9.5 列出 os 模块提供的一些常见文件或目录操作函数.
+
+A  second  module  that  performs  specific  pathname  operations  is  also available.  The  os.path module  is  accessible  through  the  os module. Included  with  this  module  are  functions  to  manage  and  manipulate  file pathname components, obtain file or directory information, and make file path inquiries. Table 9.6 outlines some of the more common functions in os.path.
+
+另一个模块 os.path 可以完成一些针对路径名的操作. 它提供的函数可以完成管理和操作文件路径名中的各个部分, 获取文件或子目录信息, 文件路径查询等操作. 表 9.6 列出了 os.path 中的几个比较常用的函数.
+
+These two modules allow for consistent access to the file system regardless of platform  or  operating  system.  The  program  in  Example  9.1  (ospathex.py) test drives some of these functions from the os and os.path modules.
+
+这两个模块提供了与平台和操作系统无关的统一的文件系统访问方法. 例 9.1 (ospathex.py) 展示了 os 和 os.path 模块中部分函数的使用.
+
+
+Table 9.5  os Module File/Directory Access Functions
+
+表9.5 os 模块的文件/目录访问函数
+Function	Description
+
+
+File Processing 文件处理
+
+mkfifo()/mknod() a	Create named pipe/create filesystem node
+			创建命名管道/创建文件系统节点
+remove()/unlink()	Delete file 删除文件
+
+rename()/renames()b	Rename file 重命名文件
+
+*stat()	   Return file statistics 返回文件信息 
+symlink()	Create symbolic link  创建符号链接
+utime()	Update timestamp  更新时间戳
+tmpfile()	Create and open ('w+b') new temporary file
+		创建并打开('w+b')一个新的临时文件
+walk() a	Generate filenames in a directory tree
+		生成一个目录树下的所有文件名
+
+Directories/Folders 目录/文件夹
+
+chdir()/fchdir() a	Change working directory/via a file descriptor 
+		改变当前工作目录/通过一个文件描述符改变当前工作目录
+
+chroot()d	Change root directory of current process 
+		改变当前进程的根目录
+
+listdir()	List files in directory
+		列出指定目录的文件
+
+
+
+
+getcwd()/getcwdu() a	Return current working directory/same but in
+                   Unicode
+			返回当前工作目录/功能相同, 但返回一个 Unicode 对象
+mkdir()/makedirs()	Create directory(ies)
+			创建目录/创建多层目录
+rmdir()/removedirs()	Remove directory(ies)
+			删除目录/删除多层目录
+			
+Access/Permissions 访问/权限
+
+access()	Verify permission modes
+		检验权限模式
+chmod()		Change permission modes
+		改变权限模式
+chown()/lchown() a	Change owner and group ID/same, but do not follow links
+		改变 owner 和 group ID/功能相同, 但不会跟踪链接
+umask()	Set default permission modes
+		设置默认权限模式
+
+File Descriptor Operations 文件描述符操作
+
+open()	Low-level operating system open [for files, use the standard open() built-in functions
+	底层的操作系统 open (对于文件, 使用标准的内建 open() 函数) 
+read()/write()	Read/write data to a file descriptor
+		根据文件描述符读取/写入数据
+dup()/dup2()	Duplicate file descriptor/same but to another FD
+		复制文件描述符号/功能相同, 但是是复制到另一个文件描述符
+
+Device Numbers 设备号
+
+makedev() a	Generate raw device number from major and minor device numbers
+		从 major 和 minor 设备号创建一个原始设备号
+major() a /minor() a	Extract major/minor device number from raw device number
+			从原始设备号获得 major/minor 设备号
+
+///// 这里表格乱了, 下标没办法搞
+a.	New in Python 2.3.
+b.	New in Python 1.5.2.
+c.	Includes stat(), lstat(), xstat(). 
+d.	New in Python 2.2.
+
+
+
+
+Table 9.6  os.path Module Pathname Access Functions
+
+表 9.6 os.path 模块中的路径名访问函数
+
+Function	Description
+
+Separation  分隔
+
+basename()	Remove directory path and return leaf name 
+		去掉目录路径, 返回文件名
+dirname()	Remove leaf name and return directory path 
+		去掉文件名, 返回目录路径
+join()	Join separate components into single pathname 
+	将分离的各部分组合成一个路径名
+split()	Return (dirname(), basename()) tuple 
+	返回 (dirname(), basename()) 元组
+splitdrive()	Return (drivename, pathname) tuple 
+		返回 (drivename, pathname) 元组
+splitext()	Return (filename, extension) tuple
+		返回 (filename, extension) 元组
+
+Information 信息
+
+getatime()	Return last file access time 
+		返回最近访问时间
+getctime()	Return file creation time
+		返回文件创建时间
+getmtime()	Return last file modification time
+		返回最近文件修改时间
+getsize()	Return file size (in bytes)
+		返回文件大小(以字节为单位)
+
+Inquiry 查询
+
+exists()	Does pathname (file or directory) exist?
+		指定路径(文件或目录)是否存在
+isabs()	Is pathname absolute?
+	指定路径是否为绝对路径
+isdir()	Does pathname exist and is a directory?
+	指定路径是否存在且为一个目录
+isfile()	Does pathname exist and is a file?
+	指定路径是否存在且为一个文件
+islink()	Does pathname exist and is a symbolic link? 
+	指定路径是否存在且为一个符号链接
+ismount()	Does pathname exist and is a mount point? 
+	指定路径是否存在且为一个挂载点
+samefile()	Do both pathnames point to the same file?
+	两个路径名是否指向同个文件
+
+Example 9.1   os & os.path Modules Example (ospathex.py)
+
+例 9.1 os 和 os.path 模块例子(ospathex.py)
+
+This code exercises some of the functionality found in the os and os.path modules. It creates a test file, populates a small amount of data in it, renames the file, and dumps its contents. Other auxiliary file operations are performed as well, mostly pertaining to directory tree traversal and file pathname manipulation.
+
+这段代码练习使用一些 os 和 os.path 模块中的功能. 它创建一个文本文件, 写入少量数据, 然后重命名, 输出文件内容. 同时还进行了一些辅助性的文件操作, 比如遍历目录树和文件路径名处理.
+
+
+// 此段代码缩进无法修复,待校对
+1	#!/usr/bin/env python
+2
+3	import os
+4	for tmpdir in ('/tmp', r'c:\temp'):
+5		if os.path.isdir(tmpdir):
+6			break
+7		else:
+8			print 'no temp directory available'
+9			tmpdir = ''
+10
+11	if tmpdir:
+12		os.chdir(tmpdir)
+
+14	print '*** current temporary directory'
+15	print cwd
+16
+17	print '*** creating example directory...'
+18	os.mkdir('example')
+19	os.chdir('example')
+20	cwd =
+os.getcwd()
+21	print '*** new working directory:'
+22	print cwd
+23	print '*** original directory listing:'
+24	printCascading Style Sheets
+25
+os.listdir(cwd)
+26	print '*** creating test file...'
+27	fobj
+= open('test', 'w')
+28	fobj.write('foo\n')
+Cascading Style Sheets29	fobj.write('bar\n')
+30	fobj.close()
+31	print '*** updated directory listing:'
+32	print
+33
+os.listdir(cwd)
+34	print "*** renaming 'test' to 'filetest.txt'"
+35	os.rename('test', 'filetest.txt')
+36	print '*** updated directory listing:'
+37	print
+38
+os.listdir(cwd)
+39	path
+= os.path.join(cwd, os.listdir (cwd)[0])
+40	print '*** full file pathname'
+41	print path
+
+auxiliary
+
+Example 9.1   os & os.path Modules Example
+(ospathex.py) (continued)
+
+42	print '*** (pathname, basename) =='
+43	print os.path.split(path)
+44	print '*** (filename, extension) =='
+
+
+
+48	fobj = open(path)
+49	fauxiliaryor eachLine in fobj:
+50	print eachLine,
+51	fobj.close()
+52
+53	print '*** deleting test file'
+
+
+56	print os.listdir(cwd)
+
+
+
+
+
+
+
+The os.path submodule to os focuses more on file pathnames. Some of
+the more commonly used attributes are found in Table 9.6.
+Running this program on a Unix platform, we get the following output:
+
+os 的子模块 os.path 更多用于文件路径名处理. 比较常用的属性列于表 9.6 中. 
+在 Unix 平台下执行该程序, 我们会得到如下输出:
+
+
+$ ospathex.py
+*** current temporary directory
+/tmp
+*** creating example directory...
+*** new working directory:
+/tmp/example
+*** original directory listing:
+[]
+*** creating test file...
+*** updated directory listing:
+['test']
+*** renaming 'test' to 'filetest.txt'
+*** updated directory listing:
+['filetest.txt']
+*** full file pathname:
+/tmp/example/filetest.txt
+*** (pathname, basename) ==
+('/tmp/example', 'filetest.txt')
+
+
+
+*** (filename, extension) ==
+('filetest', '.txt')
+*** displaying file contents:
+foo bar
+*** deleting test file
+*** updated directory listing:
+[]
+*** deleting test directory
+*** DONE
+
+Running this example from a DOS window results in very similar execution:
+
+在 DOS 窗口下执行这个例子我们会得到非常相似的输出:
+
+C:\>python ospathex.py
+*** current temporary directory c:\windows\temp
+*** creating example directory...
+*** new working directory:
+c:\windows\temp\example
+*** original directory listing:
+[]
+*** creating test file...
+*** updated directory listing:
+['test']
+*** renaming 'test' to 'filetest.txt'
+*** updated directory listing:
+['filetest.txt']
+*** full file pathname:
+c:\windows\temp\example\filetest.txt
+*** (pathname, basename) ==
+('c:\\windows\\temp\\example', 'filetest.txt')
+*** (filename, extension) ==
+('filetest', '.txt')
+*** displaying file contents:
+foo bar
+*** deleting test file
+*** updated directory listing:
+[]
+*** deleting test directory
+*** DONE
+
+
+
+　Rather than providing a line-by-line explanation here, we will leave it to the reader as an exercise. However, we will walk through a similar interactive example (including errors) to give you a feel for what it is like to execute this cript one step at a time. We will break into the code every now and then to describe the code we just encountered.
+
+这里就不逐行解释这个例子了, 我们把这个留给读者做练习. 下面我们来看看一个类似的交互式例子(包括错误), 我们会把代码分成几个小段, 然后依次进行讲解.
+
+
+>>> import os
+>>> os.path.isdir('/tmp') 
+True
+>>> os.chdir('/tmp')
+>>> cwd = os.getcwd()
+>>> cwd
+'/tmp'
+
+This first block of code consists of importing the os module (which also grabs the os.path module). We verify that '/tmp' is a valid directory and change to that temporary directory to do our work. When we arrive, we call the getcwd() method to tell us where we are.
+
+代码的第一部分导入了 os 模块(同时也包含 os.path 模块). 然后检查并确认 '/tmp' 是一个合法的目录, 并切换到这个临时目录开始我们的工作. 之后我们用 getcwd() 方法确认我们当前位置.
+
+>>> os.mkdir('example')
+>>> os.chdir('example')
+>>> cwd = os.getcwd()
+>>> cwd
+'/tmp/example'
+>>>
+>>> os.listdir() # oops, forgot name
+Traceback (innermost last): File "<stdin>", line 1, in ?
+TypeError: function requires at least one argument
+>>>
+>>> os.listdir(cwd) # that's better :)
+[]
+
+Next, we create a subdirectory in our temporary directory, after which we will use the listdir() method to confirm that the directory is indeed empty
+(since we just created it). The problem with our first call to listdir() was
+that we forgot to give the name of the directory we want to list. That problem is
+quickly remedied on the next line of input.
+
+接下来, 我们在临时目录里创建了一个子目录, 然后用 listdir() 方法确认目录为空(因为我们刚创建它). 第一次调用 listdir() 调用时出现的问题是因为我们没有传递要列目录的路径名. 我们马上在第二次调用时修正了这个失误.
+
+>>> fobj = open('test', 'w')
+>>> fobj.write('foo\n')
+>>> fobj.write('bar\n')
+>>> fobj.close()
+>>> os.listdir(cwd)
+['test']
+
+We then create a test file with two lines and verify that the file has been created by listing the directory again afterward.
+
+这里我们创建了一个有两行内容的 test 文件, 之后列目录确认文件被成功创建.
+
+>>> os.rename('test', 'filetest.txt')
+>>> os.listdir(cwd)
+['filetest.txt']
+>>>
+>>> path = os.path.join(cwd, os.listdir(cwd)[0])
+>>> path
+'/tmp/example/filetest.txt'
+>>>
+>>> os.path.isfile(path) True
+>>> os.path.isdir(path) False
+>>>
+>>> os.path.split(path)
+('/tmp/example', 'filetest.txt')
+>>>
+>>> os.path.splitext(os.path.basename(path))
+('filetest', '.ext')
+
+This  section  is  no  doubt  an  exercise  of  os.path functionality,  testing join(), isfile(), isdir()which we have seen earlier, split(), base- name(),  and  splitext().  We  also  call  the  rename() function  from  os. Next, we display the file, and finally, we delete the temporary files and direc- tories:
+
+这一段代码使用了 os.path 的一些功能, 包括我们之前看到过的 join(), isfile(), isdir(), split(), basename(), 以及 splitext() . 我们还调用了os 下的rename() 函数. 接下来, 我们显示文件的内容, 之后, 删除之前创建的文件和目录:
+
+>>> fobj = open(path)
+>>> for eachLine in fobj:
+...	print eachLine,
+... foo bar
+>>> fobj.close()
+>>> os.remove(path)
+>>> os.listdir(cwd)
+[]
+>>> os.chdir(os.pardir)
+>>> os.rmdir('example')
+
+CORE MODULE(S): os (and os.path)
+
+核心模块: os (和 os.path )
+
+As you can tell from our lengthy discussion above, the os and os.path modules provide different ways to access the file system on your computer. Although our study in this chapter is restricted to file access only, the os module can do much more. It lets you manage your process environment, contains provisions for low-level file access, allows you to create and manage new processes, and even enables your running Python program to “talk” directly to another running program. You may find yourself a common user
+of this module in no time. Read more about the os module in Chapter 14.
+
+从上面这些长篇讨论可以看出, os 和 os.path 模块提供了访问计算机文件系统的不同方法. 我们在本章学习的只是文件访问方面, 事实上 os 模块可以完成更多工作. 我们可以通过它管理进程环境, 甚至可以让一个 Python 程序直接与另外一个执行中的程序"对话". 你很快就会发现自己离不开这个模块了. 更多关于 os 模块的内容请参阅第 14 章.
+
+9.8 File Execution
+=文件执行=
+
+
+Whether  we  want  to  simply  run  an  operating  system  command,  invoke  a binary executable, or another type of script (perhaps a shell script, Perl, or Tcl/Tk), this involves executing another file somewhere else on the system. Even  running  other  Python  code  may  call  for  starting  up  another  Python interpreter, although that may not always be the case. In any regard, we will defer this subject to Chapter 14, “Execution Environment.” Please proceed there if you are interested in how to start other programs, perhaps even com- municating with them, and for general information regarding Python’s execu- tion environment.
+
+无论你只是想简单地运行一个操作系统命令, 调用一个二进制可执行文件, 或者其它类型的脚本(可能是 shell 脚本, Perl, 或是 Tcl/Tk), 都需要涉及到运行系统其它位置的其它文件. 尽管不经常出现，但是有时甚至会需要启动另外一个 Python 解释器.我们将把这部分内容留到第 14 章去讨论. 如果读者有兴趣了解如何启动其它程序,以及如何与它们进行通讯, 或者是 Python 执行环境的一般信息, 都可以在 14 章里找到答案.
+
+9.9 Persistent Storage Modules
+=永久存储模块=
+
+In many of the exercises in this text, user input is required. After many itera- tions, it may be somewhat frustrating being required to enter the same data repeatedly. The same may occur if you are entering a significant amount of data for use in the future. This is where it becomes useful to have persistent storage, or a way to archive your data so that you may access them at a later time instead of having to re-enter all of that information. When simple disk files are no longer acceptable and full relational database management systems (RDBMSs) are overkill, simple persistent storage fills the gap. The majority of the persistent storage modules deals with storing strings of data, but there are ways to archive Python objects as well.
+
+在本书的很多练习里, 都需要用户输入数据. 这可能需要用户多次输入重复的数据. 尤其是如果你要输入大批数据供以后使用时, 你肯定会厌烦这样做. 这就是永久储存大显身手的地方了, 它可以把用户的数据归档保存起来供以后使用, 这样你就可以避免每次输入同样的信息. 在简单的磁盘文件已经不能满足你的需要, 而使用完整的关系数据库管理系统(relational database management systems即RDBMS) 又有些大材小用时, 简单的永久性储存就可以发挥它的作用. 大部分永久性储存模块是用来储存字符串数据的, 但是也有方法来归档 Python 对象.
+
+9.9.1 pickle and marshal Modules
+== pickle 和 marshal 模块 ==
+
+Python  provides  a  variety  of  modules  that  implement  minimal  persistent storage.  One  set  of  modules  (marshal and  pickle)  allows  for  pickling  of Python objects. Pickling is the process whereby objects more complex than primitive types can be converted to a binary set of bytes that can be stored or transmitted  across  the  network,  then  be  converted  back  to  their  original object forms. Pickling is also known as flattening, serializing, or marshalling. Another  set  of  modules  (dbhash/bsddb,  dbm,  gdbm,  dumbdbm)  and  their
+“manager”  (anydbm)  can  provide  persistent  storage  of  Python  strings  only.
+The last module (shelve) can do both.
+
+
+Python 提供了许多可以实现最小化永久性储存的模块. 其中的一组( marshal 和 pickle )可以用来转换并储存 Python 对象. 该过程将比基本类型复杂的对象转换为一个二进制数据集合, 这样就可以把数据集合保存起来或通过网络发送, 然后再重新把数据集合恢复原来的对象格式. 这个过程也被称为数据的扁平化, 数据的序列化, 或者数据的顺序化. 另外一些模块 (dbhash/bsddb,  dbm,  gdbm,  dumbdbm 等)以及它们的"管理器"( anydbm )只提供了 Python 字符串的永久性储存. 而最后一个模块( shelve ) 则两种功能都具备.
+
+As we mentioned before, both marshal and pickle can flatten Python objects. These modules do not provide “persistent storage” per se, since they
+do not provide a namespace for the objects, nor can they provide concurrent write  access  to  persistent  objects.  What  they  can  do,  however,  is  to  pickle
+Python objects to allow them to be stored or transmitted. Storage, of course, is  sequential  in  nature  (you  store  or  transmit  objects  one  after  another). The difference between  marshal and pickle is that marshal can handle only simple Python objects (numbers, sequences, mapping, and code) while pickle can  transform  recursive  objects,  objects  that  are  multi-referenced from  different  places,  and  user-defined  classes  and  instances.  The  pickle module is also available in a turbo version called cPickle, which implements all functionality in C.
+
+我们已经提到 marshal 和 pickle 模块都可以对 Python 对象进行储存转换. 这些模块本身并没有提供"永久性储存"的功能, 因为它们没有为对象提供名称空间, 也没有提供对永久性储存对象的并发写入访问( concurrent write access ). 它们只能储存转换 Python 对象, 为保存和传输提供方便. 数据储存是有次序的(对象的储存和传输是一个接一个进行的). marshal 和 pickle 模块的区别在于 marshal 只能处理简单的 Python 对象(数字, 序列, 映射, 以及代码对象), 而 pickle 还可以处理递归对象, 被不同地方多次引用的对象, 以及用户定义的类和实例. pickle 模块还有一个增强的版本叫 cPickle , 使用 C 实现了相关的功能.
+
+9.9.2 DBM-style Modules
+==DBM 风格的模块==      
+
+The  *db* series  of  modules  writes  data  in  the  traditional  DBM  format. There are a large number of different implementations:  dbhash/bsddb, dbm,   gdbm,  and  dumbdbm.  If  you  are  particular  about  any  specific  DBM module,  feel  free  to  use  your  favorite,  but  if  you  are  not  sure  or do not care, the generic anydbm module detects which DBM-compatible modules are  installed  on  your  system  and  uses  the  “best”  one  at  its  disposal.  The dumbdbm module is the most limited one, and is the default used if none of the other packages is available. These modules do provide a namespace for your objects, using objects that behave similar to a combination of a dictionary object and a file object. The one limitation of these systems is that they can store only strings. In other words, they do not serialize Python objects.
+
+*db* 系列的模块使用传统的 DBM 格式写入数据, Python 提供了 DBM 的多种实现:  dbhash/bsddb, dbm,   gdbm,  以及  dumbdbm 等. 你可以随便按照你的爱好使用, 如果你不确定的话, 那么最好使用 anydbm 模块, 它会自动检测系统上已安装的 DBM 兼容模块, 并选择"最好"的一个. dumbdbm 模块是功能最少的一个, 在没有其它模块可用时, anydbm 才会选择它. 这些模块为用户的对象提供了一个命名空间, 这些对象同时具备字典对象和文件对象的特点. 不过不足之处在于它们只能储存字符串, 不能对 Python 对象进行序列化.
+
+9.9.3 shelve Module
+==shelve 模块==
+
+Finally,  we  have  a  somewhat  more  complete  solution,  the  shelve mod- ule. The shelve module uses the anydbm module to find a suitable DBM module, then uses cPickle to perform the pickling process. The shelve module  permits  concurrent  read  access  to  the  database  file,  but  not shared  read/write  access.  This  is  about  as  close  to  persistent  storage  as you will find in the Python standard library. There may be other external extension modules that implement “true” persistent storage. The diagram
+in  Figure  9–1  shows  the  relationship  between  the  pickling  modules  and the persistent storage modules, and how the shelve object appears to be the best of both worlds.
+
+最后, 我们来看一个更为完整的解决方案, shelve 模块.  shelve 模块使用 anydbm 模块寻找合适的 DBM 模块, 然后使用 cPickle 来完成对储存转换过程. shelve 模块允许对数据库文件进行并发的读访问, 但不允许共享读/写访问. 这也许是我们在 Python 标准库里找到的最接近于永久性储存的东西了. 可能有一些第三方模块实现了"真正"的永久性储存. 图 9-1 展示了储存转换模块与永久性储存模块之间的关系, 以及为何 shelve 对象能成为两者的最好的选择的.
+
+
+
+//////////////////////////////
+// 这里的表很抽象
+//
+anydbm
+
+
+
+
+marshal
+
+
+pickle
+dbm
+
+
+gdbm
+
+
+dbhash
+
+
+dumbdbm
+
+ Provide serialization or pickling of Python objects
+ 提供 Python 对象的序列化或储存转换功能
+
+Provide dictionary- and file-like object to allow for persistent storage of strings
+提供一个类似字典和文件的对象, 可以完成字符串的永久性储存
+
+
+shelve
+
+Provides serialization or pickling of Python objects as well as a dictionary- and file-like object to allow for persistent storage of such flattened objects
+
+提供了 Python 对象的序列化和储存转换, 以及类似字典和文件的对象, 可以完成 Python 对象的永久性储存
+
+Figure 9–1    Python modules for serialization and persistency
+
+ 图9-1 用于序列化和永久性储存的 Python 模块
+
+CORE MODULE: pickle and cPickle
+
+核心模块: pickle 和 cPickle 
+
+The pickle module allows you to store Python objects directly to a file without having to convert them to strings or to necessarily write them out as binary files using low-level file access. Instead, the pickle module creates a Python-only binary version that allows you to cleanly read and write objects in their entirety without having to worry about all the file details. All you need is a valid file handle, and you are ready to read or write objects from or to disk.
+
+你可以使用 pickle 模块把 Python 对象直接保存到文件里, 而不需要把它们转化为字符串, 也不用底层的文件访问操作把它们写入到一个二进制文件里. pickle 模块会创建一个 Python 语言专用的二进制格式, 你不需要考虑任何文件细节, 它会帮你干净利索地完成读写对象操作, 唯一需要的只是一个合法的文件句柄.
+
+The two main functions in the pickle module are dump() and load(). The dump() function takes a file handle and a data object and saves the object in a format it understands to the given file. When a pickled object is loaded from disk using load(), it knows exactly how to restore that object to its original configuration before it was saved to disk. We recommend you take a look at pickle and its “smarter” brother, shelve, which gives you dictionary-like functionality so there is even less file overhead on your part.
+
+pickle 模块中的两个主要函数是 dump() 和 load() . dump() 函数接受一个文件句柄和一个数据对象作为参数, 把数据对象以特定格式保存到给定文件里. 当我们使用 load() 函数从文件中取出已保存的对象时, pickle 知道如何恢复这些对象到它们本来的格式. 我们建议你看一看 pickle 和更"聪明"的 shelve 模块, 后者提供了字典式的文件对象访问功能, 进一步减少了程序员的工作.
+
+cPickle is the faster C-compiled version of pickle.
+
+cPickle 是 pickle 的一个更快的 C 语言编译版本.
+
+9.10 Related Modules
+=相关模块=
+
+There  are  plenty  of  other  modules  related  to  files  and  input/output,  all  of which work on most of the major platforms. Table 9.7  lists some of the file- related modules.
+
+还有大量的其它模块与文件和输入/输出有关, 它们中的大多数都可以在主流平台上工作. 表 9.7 列出了一些文件相关的模块
+
+
+Table 9.7  Related File Modules
+表9.7 文件相关模块
+Module(s)	Contents
+模块 内容
+
+base64	Encoding/decoding of binary strings to/from text strings
+	提供二进制字符串和文本字符串间的编码/解码操作
+binascii	Encoding/decoding of binary and ASCII-encoded binary strings
+		提供二进制和ASCII编码的二进制字符串间的编码/解码操作
+bz2 a	Allows access to BZ2 compressed files
+	访问 BZ2 格式的压缩文件
+csv a	Allows access to comma-separated value files
+	访问 csv 文件(逗号分隔文件)
+filecmp b	Compares directories and files
+	用于比较目录和文件
+fileinput	Iterates over lines of multiple input text files 
+		提供多个文本文件的行迭代器
+getopt/optparse a	Provides command-line argument parsing/manipulation 
+		提供了命令行参数的解析/处理
+glob/fnmatch	Provides Unix-style wildcard character matching 
+		提供 Unix 样式的通配符匹配的功能
+gzip/zlib	Reads and writes GNU zip (gzip) files (needs zlib module for compression)
+		读写 GNU zip( gzip) 文件(压缩需要 zlib 模块)
+shutil	Offers high-level file access functionality
+	提供高级文件访问功能
+c/StringIO	Implements file-like interface on top of string objects
+		对字符串对象提供类文件接口
+tarfile a	Reads and writes TAR archive files, even compressed ones
+		读写 TAR 归档文件, 支持压缩文件
+tempfile	Generates temporary file names or files
+		创建一个临时文件(名)
+uu	uuencode and uudecode files
+	 uu 格式的编码和解码
+zipfile c	Tools and utilities to read and write ZIP archive files
+		用于读取 ZIP 归档文件的工具
+a.	New in Python 2.3.
+b.	New in Python 2.0. c.	New in Python 1.6.
+
+// 这里的表格格式还是很乱
+
+
+　The fileinput module iterates over a set of input files and reads their con- tents one line at a time, allowing you to iterate over each line, much like the way the Perl ( < > ) operator works without any provided arguments. File names that are not explicitly given will be assumed to be provided from the command-line.
+
+fileinput 模块遍历一组输入文件, 每次读取它们内容的一行, 类似 Perl 语言中的不带参数的 "<>" 操作符. 如果没有明确给定文件名, 则默认从命令行读取文件名.
+
+ The glob and fnmatch modules allow for file name pattern-matching in the good old-fashioned Unix shell-style, for example, using the asterisk ( * ) wildcard character for all string matches and the ( ? ) for matching single characters.
+
+glob 和 fnmatch 模块提供了老式 Unix shell 样式文件名的模式匹配, 例如使用星号( * )通配符代表任意字符串, 用问号( ? )匹配任意单个字符.
+
+Core Tip: Tilde ( ~ ) expansion via os.path.expanduser()
+
+核心提示: 使用os.path.expanduser() 的波浪号 (  ~ ) 进行扩展
+
+Although the glob and fnmatch allow for Unix-style pattern-matching,
+they do not enable the expansion of the tilde (home directory) character, ~.
+This is handled by the os.path.expanduser() function. You pass in a
+path containing a tilde, and it returns the equivalent absolute file path.
+Here are two examples, in a Unix-based environment and in Win32:
+
+虽然 glob 和 fnmatch 提供了 Unix 样式的模式匹配, 但它们没有提供对波浪号(用户目录)字符, ~ 的支持. 你可以使用 os.path.expanduser() 函数来完成这个功能, 传递一个带波浪号的目录, 然后它会返回对应的绝对路径. 这里是两个例子, 分别运行在 Unix 和 Win32 环境下:
+
+>>> os.path.expanduser('~/py')
+'/home/wesley/py'
+
+>>> os.path.expanduser('~/py')
+'C:\\Documents and Settings\\wesley/py'
+
+In addition, Unix-flavored systems also support the “~user” notation indicating the home directory for a specific user. Also, note that the Win32 version does
+not change forward slashes to the DOS backslashes in a directory path.
+
+另外 Unix 家族系统还支持 "~user" 这样的用法, 表示指定用户的目录. 还有, 注意 Win32 版本函数没有使用反斜杠来分隔目录路径.
+
+The gzip and zlib modules provide direct file access to the zlib com- pression  library.  The  gzip module,  written  on  top  of  the  zlib module, allows for standard file access, but provides for automatic gzip-compatible compression and decompression. bz2 is like gzip but for bzipped files.
+
+gzip 和 zlib 模块提供了对 zlib 压缩库直接访问的接口. gzip 模块是在 zlib 模块上编写的, 不但实现了标准的文件访问, 还提供了自动的 gzip 压缩/解压缩. bz2 类似于 gzip , 用于操作 bzip 压缩的文件.
+
+The zipfile module introduced in 1.6 allows the programmer to create, modify, and read zip archive files. (The tarfile module serves as an equiva- lent for TAR archive files.) In 2.3, Python was given the ability to import mod- ules archived in zip files as well. See Section 12.5.7 for more information.
+
+程序员可以通过 1.6 中新增的 zipfile 模块创建, 修改和读取 zip 归档文件. ( tarfile 文件实现了针对 tar 归档文件的相同功能 ). 在 2.3 版本中, Python 加入了导入归档 zip 文件中模块的功能. 更多细节请参阅 12.5.7 小节.
+
+The  shutil module  furnishes  high-level  file  access,  performing  such functions as copying files, copying file permissions, and recursive directory tree copying, to name a few.
+
+shutil 模块提供高级的文件访问功能, 包括复制文件, 复制文件的访问权限, 递归地目录树复制, 等等.
+
+The tempfile module can be used to generate temporary filenames and files.
+
+tempfile 模块用于生成临时文件(名). 
+
+In our earlier chapter on strings, we described the StringIO module (and
+its C-compiled companion cStringIO), and how it overlays a file interface
+on top of string objects. This interface includes all of the standard methods
+available to regular file objects.
+
+在关于字符串一章中, 我们介绍了 StringIO 模块(和它的 C 语言版本 cStringIO ), 并且介绍了它是如何在字符串对象顶层加入文件操作接口的. 这个接口包括文件对象的所有标准方法.
+
+The  modules  we  mentioned  in  the  Persistent  Storage  section  above
+(Section 9.9) include examples of a hybrid file- and dictionary-like object.
+
+我们在前面永久性储存一节( 9.9 节) 中介绍的模块还有文件和字典对象混合样式的例子.
+
+Some other Python modules that generate file-like objects include network
+and file socket objects (socket module), the popen*() file objects that con- nect your application to other running processes (os and popen2 modules), the fdopen() file object used in low-level file access (os module), and opening a network connection to an Internet Web server via its Uniform Resource Loca- tor (URL) address (urllib module). Please be aware that not all standard file methods may be implemented for these objects. Likewise, they may provide functionality in addition to what is available for regular files.
+
+
+其它的 Python 类文件对象还有网络和文件 socket 对象(  socket 模块), 用于管道连接的 popen*() 文件对象( os 和 popen2 模块), 用于底层文件访问的 fdopen() 文件对象(os模块), 通过 URL ( Uniform Resource Locator 统一资源定位器)建立的到指定 web 服务器的网络连接( urllib 模块)等. 需要注意的是并非所有的标准文件方法都能在这些对象上实现, 同样的，这些对象也提供了一些普通文件没有的功能. 
+
+Refer to the documentation for more details on these file access-related modules. In addition, you can find out more about file()/open(), files, file objects, and UNS at:
+
+具体内容请参考这些模块的相关文档. 你可以在下边这些地址中找到关于 file()/open() , 文件, 文件对象的更多信息.
+
+
+// 怎么没有 python standard lib
+
+http://docs.python.org/lib/built-in-funcs.html 
+http://docs.python.org/lib/bltin-file-objects.html 
+http://www.python.org/doc/2.3/whatsnew/node7.html 
+http://www.python.org/doc/peps/pep-0278/
+
+9.11  Exercises
+=练习=
+
+9–1.   File Filtering. Display all lines of a file, except those that start with a pound sign ( # ), the comment character for Python, Perl, Tcl, and most other scripting languages.
+Extra  credit:  Also  strip  out  comments  that  begin  after  the  first character.
+
+文件过滤. 显示一个文件的所有行, 忽略以井号( # )开头的行. 这个字符被用做 Python , Perl, Tcl, 等大多脚本文件的注释符号.
+附加题: 处理不是第一个字符开头的注释.
+
+
+9–2.   File Access. Prompt for a number N and file F, and display the first N lines of F.
+
+文件访问. 提示输入数字 N 和文件 F, 然后显示文件 F 的前 N 行.
+
+9–3.   File Information. Prompt for a filename and display the num- ber of lines in that text file.
+
+文件信息. 提示输入一个文件名, 然后显示这个文本文件的总行数.
+
+9–4.   File Access. Write a “pager” program. Your solution should prompt for a filename, and display the text file 25 lines at a time, pausing each time to ask the user to “press a key to continue.”
+
+文件访问. 写一个逐页显示文本文件的程序. 提示输入一个文件名, 每次显示文本文件的 25 行, 暂停并向用户提示"按任意键继续.", 按键后继续执行.
+
+9–5.   Test Scores. Update your solution to the test scores problems
+(Exercises 5–3 and 6–4) by allowing a set of test scores be loaded from a file. We leave the file format to your discretion.
+
+考试成绩. 改进你的考试成绩问题(练习 5 -3 和 6-4), 要求能从多个文件中读入考试成绩. 文件的数据格式由你自己决定.
+
+9–6.   File Comparison. Write a program to compare two text files.
+If they are different, give the line and column numbers in the files where the first difference occurs.
+
+文件比较. 写一个比较两个文本文件的程序. 如果不同, 给出第一个不同处的行号和列号.
+
+9–7.   Parsing Files. Win32 users: Create a program that parses a Windows .ini file. POSIX users: Create a program that parses the /etc/services file. All other platforms: Create a pro- gram that parses a system file with some kind of structure to it.
+
+解析文件. Win32 用户: 创建一个用来解析 Windows .ini 文件的程序. POSIX 用户: 创建一个解析 /etc/serves 文件的程序. 其它平台用户: 写一个解析特定结构的系统配置文件的程序.
+
+9–8.   Module Introspection. Extract module attribute information. Prompt the user for a module name (or accept it from the command line). Then, using dir() and other built-in func- tions, extract all its attributes, and display their names, types, and values.
+
+模块研究. 提取模块的属性资料. 提示用户输入一个模块名(或者从命令行接受输入). 然后使用 dir() 和其它内建函数提取模块的属性, 显示它们的名字, 类型, 值.
+
+9–9.   “PythonDoc.” Go to the directory where your Python stan- dard library modules are located. Examine each .py file and determine whether a __doc__ string is available for that module. If so, format it properly and catalog it. When your program has completed, it should present a nice list of those modules that have documentation strings and what they are. There should be a trailing list showing which modules do not have documentation strings (the shame list). Extra credit: Extract documentation for all classes and functions within the standard library modules.
+
+Python 文档字符串. 进入 Python 标准库所在的目录. 检查每个 .py 文件看是否有 __doc__ 字符串, 如果有, 对其格式进行适当的整理归类. 你的程序执行完毕后, 应该会生成一个漂亮的清单. 里边列出哪些模块有文档字符串, 以及文档字符串的内容. 清单最后附上那些没有文档字符串模块的名字.
+附加题: 提取标准库中各模块内全部类(class)和函数的文档.
+
+9–10.   Home Finances. Create a home finance manager. Your solu- tion should be able to manage savings, checking, money mar- ket, certificate of deposit (CD), and similar accounts. Providea menu-based interface to each account as well as operations such as deposits, withdrawals, debits, and credits. An option should be given to a user to remove transactions as well. The data should be stored to file when the user quits the applica- tion (but randomly during execution for backup purposes).
+
+家庭理财. 创建一个家庭理财程序. 你的程序需要处理储蓄, 支票, 金融市场, 定期存款等多种帐户. 为每种帐户提供一个菜单操作界面, 要有存款, 取款, 借, 贷等操作. 另外还要提供一个取消操作选项. 用户退出这个程序时相关数据应该保存到文件里去(出于备份的目的, 程序执行过程中也要备份.)
+
+9–11.   Web site Addresses.
+(a)  Write a URL bookmark manager. Create a text-driven menu-based application that allows the user to add, update, or delete entries. Entries include a site name, Web site URL address, and perhaps a one-line descrip-
+tion (optional). Allow search functionality so that a search
+“word” looks through both names and URLs for possible matches. Store the data to a disk file when the user quits
+the application, and load up the data when the user restarts.
+(b)  Upgrade your solution to part (a) by providing output of the bookmarks to a legible and syntactically correct HTML file (.htm or .html) so that users can then point their browsers to this output file and be presented with
+a list of their bookmarks. Another feature to implement
+is allowing the creation of “folders” to allow grouping of related bookmarks. Extra credit: Read the literature on regular expressions and the Python re module. Add regular expression validation of URLs that users enter into their databases.
+
+Web 站点地址.
+a) 编写一个 URL 书签管理程序. 使用基于文本的菜单, 用户可以添加, 修改或者删除书签数据项. 书签数据项中包含站点的名称, URL 地址, 以及一行简单说明(可选). 另外提供检索功能, 可以根据检索关键字在站点名称和 URL 两部分查找可能的匹配. 程序退出时把数据保存到一个磁盘文件中去; 再次执行时候加载保存的数据.
+
+b)改进 a) 的解决方案, 把书签输出到一个合法且语法正确的 HTML 文件(.html 或 htm )中, 这样用户就可以使用浏览器查看自己的书签清单. 另外提供创建"文件夹"功能, 对相关的书签进行分组管理. 
+
+附加题: 请阅读 Python 的 re 模块了解有关正则表达式的资料, 使用正则表达式对用户输入的 URL 进行验证.
+
+
+9–12.   Users and Passwords.
+Do Exercise 7–5, which keeps track of usernames and pass- words. Update your code to support a “last login time” (7–5a). See the documentation for the time module to obtain time- stamps for when users “log in” to the system.
+Also, create the concept of an “administrative” user that
+can dump a list of all the users, their passwords (you can add encryption on top of the passwords if you wish [7–5c]), and their last login times (7–5b).
+(a)  The data should be stored to disk, one line at a time, with fields delimited by colons ( : ), e.g., “joe:boohoo:
+953176591.145”, for each user. The number of lines in
+the file will be the number of users that are part of your
+system.
+(b)  Further update your example such that instead of writing out one line at a time, you pickle the entire data object and write that out instead. Read the documentation on
+the pickle module to find out how to flatten or serialize your object, as well as how to perform I/O using picked objects. With the addition of this new code, your solution should take up fewer lines than your solution in part (a).
+(c)  Replace your login database and explicit use of pickle by converting your code to use shelve files. Your resulting source file should actually take up fewer lines
+than your solution to part (b) because some of the main- tenance work is gone.
+
+用户名和密码.
+回顾练习 7-5 , 修改代码使之可以支持"上次登录时间". 请参阅 time 模块中的文档了解如何记录用户上次登录的时间. 另外提供一个"系统管理员", 它可以导出所有用户的用户名, 密码(如果想要的话，你可以把密码加密), 以及"上次登录时间". 
+a) 数据应该保存在磁盘中, 使用冒号( : )分割, 一次写入一行, 例如 "joe:boohoo:953176591.145", 文件中数据的行数应该等于你系统上的用户数.
+b) 进一步改进你的程序, 不再一次写入一行, 而使用 pickle 模块保存整个数据对象. 请参阅 pickle 模块的文档了解如何序列化/扁平化对象, 以及如何读写保存的对象. 一般来说, 这个解决方案的代码行数要比 a) 的少.
+c) 使用 shelve 模块替换 pickle 模块, 由于可以省去一些维护代码，这个解决方案的代码比 b) 的更少.
+
+9–13.   Command-Line Arguments.
+(a)  What are they, and why might they be useful?
+(b)  Write code to display the command-line arguments which were entered.
+
+命令行参数
+a) 什么是命令行参数, 它们有什么用?
+b) 写一个程序, 打印出所有的命令行参数.
+
+9–14.   Logging Results. Convert your calculator program
+(Exercise 5–6) to take input from the command line, i.e.,
+
+记录结果. 修改你的计算器程序(练习 5-6 )使之接受命令行参数. 例如:
+
+$ calc.py 1 + 2
+
+Output the result only. Also, write each expression and result to a disk file. Issuing a command of...
+
+只输出计算结果. 另外, 把每个表达式和它的结果写入到一个磁盘文件中. 当使用下面的命令时:
+
+$ calc.py print
+
+. . .  will cause the entire contents of the “register tape” to be dumped to the screen and file reset/truncated. Here is an example session:
+
+会把记录的内容显示到屏幕上, 然后重置文件. 这里是样例展示:
+
+
+$ calc.py 1 + 2
+3
+$ calc.py 3 ^ 3
+27
+$ calc.py print
+1 + 2
+3
+3 ^ 3
+27
+$ calc.py print
+$
+
+Extra credit: Also strip out comments that begin after the first character.
+
+附加题: 处理输入时候的注释.
+
+9–15.   Copying Files. Prompt for two filenames (or better yet, use command-line arguments). The contents of the first file should be copied to the second file.
+
+复制文件. 提示输入两个文件名(或者使用命令行参数). 把第一个文件的内容复制到第二个文件中去.
+
+9–16.   Text Processing. You are tired of seeing lines on your e-mail wrap because people type lines that are too long for your mail reader application. Create a program to scan a text file for all lines longer than 80 characters. For each of the offending lines, find the closest word before 80 characters and break
+the line there, inserting the remaining text to the next line
+(and pushing the previous next line down one). When you are done, there should be no lines longer than 80 characters.
+
+文本处理. 人们输入的文字常常超过屏幕的最大宽度. 编写一个程序, 在一个文本文件中查找长度大于 80 个字符的文本行. 从最接近 80 个字符的单词断行, 把剩余文件插入到下一行处.
+程序执行完毕后, 应该没有超过 80 个字符的文本行了.
+
+9–17.   Text Processing. Create a crude and elementary text file editor. Your solution is menu-driven, with the following options:
+(1) create file [prompt for filename and any number of lines of input],
+(2) display file [dump its contents to the screen],
+(3) edit file (prompt for line to edit and allow user to make changes),
+(4) save file, and
+(5) quit.
+
+文本处理. 创建一个原始的文本文件编辑器. 你的程序应该是菜单驱动的, 有如下这些选项:
+1) 创建文件(提示输入文件名和任意行的文本输入),
+2) 显示文件(把文件的内容显示到屏幕),
+3) 编辑文件(提示输入要修改的行, 然后让用户进行修改),
+4) 保存文件, 以及
+5) 退出.
+
+9–18.   Searching Files. Obtain a byte value (0–255) and a filename. Display the number of times that byte appears in the file.
+
+搜索文件. 提示输入一个字节值(0 - 255)和一个文件名. 显示该字符在文件中出现的次数.
+
+9–19.   Generating Files. Create a sister program to the previous problem. Create a binary data file with random bytes, but one particular byte will appear in that file a set number of times. Obtain the following three values:
+(1) a byte value (0–255),
+(2) the number of times that byte should appear in the data file, and
+(3) the total number of bytes that make up the data file.
+Your job is to create that file, randomly scatter the requested byte across the file, ensure that there are no duplicates, the file contains exactly the number of occurrences that byte was
+requested for, and that the resulting data file is exactly the size requested.
+
+创建文件. 创建前一个问题的辅助程序. 创建一个随机字节的二进制数据文件, 但某一特定字节会在文件中出现指定的次数. 该程序接受三个参数:
+1) 一个字节值( 0 - 255 ),
+2) 该字符在数据文件中出现的次数, 以及
+3) 数据文件的总字节长度.
+你的工作就是生成这个文件, 把给定的字节随机散布在文件里, 并且要求保证给定字符在文件中只出现指定的次数, 文件应精确地达到要求的长度.
+
+
+9–20.   Compressed Files. Write a short piece of code that will com- press and decompress gzipped or bzipped files. Confirm your solution works by using the command-line gzip or bzip2 programs or a GUI program like PowerArchiver, StuffIt, and/ or WinZip.
+
+压缩文件. 写一小段代码, 压缩/解压缩 gzip 或 bzip 格式的文件. 可以使用命令行下的 gzip 或 bzip2 以及 GUI 程序 PowerArchiver , StuffIt , 或 WinZip 来确认你的 Python 支持这两个库.
+
+9–21.   ZIP Archive Files. Create a program that can extract files
+from or add files to, and perhaps creating, a ZIP archive file.
+
+ZIP 归档文件. 创建一个程序, 可以往 ZIP 归档文件加入文件, 或从中提取文件, 有可能的话, 加入创建ZIP归档文件的功能.
+
+9–22.   ZIP Archive Files. The unzip -l command to dump the con- tents of ZIP archive is boring. Create a Python script called lszip.py that gives additional information such as: the com- pressed file size, the compressed percentage of each file (by comparing the original and compressed file sizes), and a full time.ctime() timestamp instead of the unzip output (of just the date and HH:MM). Hint: The date_time attribute of an archived file does not contain enough information to feed to time.mktime(). . . it is up to you!
+
+ZIP 归档文件. unzip -l 命令显示出的 ZIP 归档文件很无趣. 创建一个 Python 
+脚本 lszip.py , 使它可以显示额外信息: 压缩文件大小, 每个文件的压缩比率(通过比较压缩前后文件大小), 以及完成的 time.ctime() 时间戳, 而不是只有日期和 HH:MM . 
+提示: 归档文件的 date_time 属性并不完整, 无法提供给 time.mktime() 使用....这由你自己决定.
+
+9–23.	TAR Archive Files. Repeat the previous problem for TAR
+archive files. One difference between these two types of files
+is that ZIP files are generally compressed, but TAR files are not and usually require the support of gzip or bzip2. Add either type of compression support. Extra credit: Support both gzip and bzip2.
+
+TAR 归档文件. 为 TAR 归档文件建立类似上个问题的程序. 这两种文件的不同之处在于 ZIP 文件通常是压缩的, 而 TAR 文件不是, 只是在 gzip 和 bzip2 的支持下才能完成压缩工作. 加入任意一种压缩格式支持.
+附加题: 同时支持 gzip 和 bzip2 .
+
+9–24.	File Transfer Between Archive Files. Take your solutions from
+the previous two problems and write a program that moves files between ZIP (.zip) and TAR/gzip (.tgz/.tar.gz) or TAR/bzip2 (.tbz/.tar.bz2) archive files. The files may preexist; create them if necessary.
+
+归档文件转换. 参考前两个问题的解决方案, 写一个程序, 在 ZIP (.zip) 和 TAR/gzip (.tgz/.tar.gz) 或 TAR/bzip2 (.tbz/.tar.bz2) 归档文件间移动文件. 文件可能是已经存在的, 必要时请创建文件.
+
+9–25.	Universal Extractor. Create an application that will take any number of files in an archived and/or compression format,
+i.e., .zip, .tgz, .tar.gz, .gz, .bz2, .tar.bz2,  .tbz, and
+a target directory. The program will uncompress the stand-
+alone files to the target while all archived files will be extracted into subdirectories named the same as the archive file without the file extension. For example, if the target directory was incoming, and the input files were header.txt.gz and data.tgz, header.txt will be extracted to incoming while the files in data.tgz will be pulled out into incoming/data.
+
+通用解压程序. 创建一个程序, 接受任意数目的归档文件以及一个目标目录做为参数. 归档文件格式可以是 .zip, .tgz, .tar.gz, .gz, .bz2, .tar.bz2,  .tbz 中的一种或几种. 程序会把第一个归档文件解压后放入目标目录, 把其它归档文件解压后放入以对应文件名命名的目录下(不包括扩展名). 例如输入的文件名为 header.txt.gz 和 data.tgz ，目录为 incoming , header.txt 会被解压到 incoming 而 data.tgz 中的文件会被放入 incoming/data .

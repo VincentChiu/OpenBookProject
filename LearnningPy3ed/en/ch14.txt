@@ -1,0 +1,338 @@
+Chapter 14
+Chapter 14
+14The Documentation Interlude
+This chapter concludes Part III with a look at techniques and tools used for documenting Python code. Although Python code is designed to be readable, a few well-placed human-readable comments can do much to help others understand the workings of your programs. Python includes syntax and tools to make documentation easier. 
+Although this is something of a tools-related concept, the topic is presented here partly because it involves Python's syntax model, and partly as a resource for readers struggling to understand Python's toolset. For the latter purpose, I'll expand here on documentation pointers first given in Chapter 4. As usual, this chapter ends with some warnings about common pitfalls, a chapter quiz, and a set of exercises for this part of the text.
+Python Documentation Sources
+By this point in the book, you're probably starting to realize that Python comes with an amazing amount of prebuilt functionality-built-in functions and exceptions, predefined object attributes and methods, standard library modules, and more. Moreover, we've really only scratched the surface of each of these categories.
+One of the first questions that bewildered beginners often ask is: how do I find information on all the built-in tools? This section provides hints on the various documentation sources available in Python. It also presents documentation strings (docstrings), and the PyDoc system that makes use of them. These topics are somewhat peripheral to the core language itself, but they become essential knowledge as soon as your code reaches the level of the examples and exercises in this part of the book.
+As summarized in Table 14-1, there are a variety of places to look for information on Python with generally increasing verbosity. Because documentation is such a crucial tool in practical programming, we'll explore each of these categories in the sections that follow.
+
+Table 14-1
+Python documentation sources 
+Form	Role
+# comments	In-file documentation
+The dir function	Lists of attributes available in objects 
+Docstrings: _  _doc_  _	In-file documentation attached to objects
+PyDoc: The help function	Interactive help for objects
+PyDoc: HTML reports	Module documentation in a browser
+Standard manual set	Official language and library descriptions
+Web resources	Online tutorials, examples, and so on
+Published books	Commercially available reference texts
+
+# Comments
+Hash-mark comments are the most basic way to document your code. Python simply ignores all the text following a # (as long as it's not inside a string literal), so you can follow this character with words and descriptions meaningful to programmers. Such comments are accessible only in your source files, though; to code comments that are more widely available, use docstrings. 
+In fact, current best practice generally dictates that docstings are best for larger functional documentation (e.g., "my file does this"), and # comments are best limited to smaller code documentation (e.g., "this strange expression does this"). More on docstrings in a moment. 
+The dir Function
+The built-in dir function is an easy way to grab a list of all the attributes available inside an object (i.e., its methods and simpler data items). It can be called on any object that has attributes. For example, to find out what's available in the standard library's sys module, import it, and pass it to dir:
+>>> import sys
+>>> dir(sys)
+['_  _displayhook_  _', '_  _doc_  _', '_  _excepthook_  _', '_  _name_  _', 
+'_  _stderr_  _', '_  _stdin_  _', '_  _stdout_  _', '_getframe', 'argv',
+'builtin_module_names', 'byteorder', 'copyright', 'displayhook', 
+'dllhandle', 'exc_info', 'exc_type', 'excepthook', 
+...more names omitted...]
+Only some of the many names are displayed here; run these statements on your machine to see the full list. 
+To find out what attributes are provided in built-in object types, run dir on a literal of the desired type. For example, to see list and string attributes, you can pass empty objects:
+>>> dir([])
+['_  _add_  _', '_  _class_  _', ...more...
+'append', 'count', 'extend', 'index', 'insert', 'pop', 'remove',
+'reverse', 'sort']
+
+>>> dir('')
+['_  _add_  _', '_  _class_  _', ...more...
+'capitalize', 'center', 'count', 'decode', 'encode', 'endswith', 
+'expandtabs', 'find', 'index', 'isalnum', 'isalpha', 'isdigit', 
+'islower', 'isspace', 'istitle', 'isupper', 'join', 'ljust', 
+...more names omitted...]
+dir results for any built-in type include a set of attributes that are related to the implementation of that type (technically, operator overloading methods); they all begin and end with double underscores to make them distinct, and you can safely ignore them at this point in the book.
+Incidentally, you can achieve the same effect by passing a type name to dir instead of a literal:
+>>> dir(str) == dir('')             # Same result as prior example
+True
+>>> dir(list) == dir([])
+True
+This works because functions like str and list that were once type converters are actually names of types in Python today; calling one of these invokes its constructor to generate an instance of that type. I'll have more to say about constructors and operator overloading methods when we discuss classes in Part VI.
+The dir function serves as a sort of memory-jogger-it provides a list of attribute names, but it does not tell you anything about what those names mean. For such extra information, we need to move on to the next documentation source.
+Docstrings: _  _doc_  _
+Besides # comments, Python supports documentation that is automatically attached to objects, and retained at runtime for inspection. Syntactically, such comments are coded as strings at the tops of module files and function and class statements, before any other executable code (# comments are OK before them). Python automatically stuffs the string, known as a docstring, into the _  _doc_  _  attribute of the corresponding object.
+User-defined docstrings
+For example, consider the following file, docstrings.py. Its docstrings appear at the beginning of the file and at the start of a function and a class within it. Here, I've used triple-quoted block strings for multiline comments in the file and the function, but any sort of string will work. We haven't studied the def or class statements in detail yet, so ignore everything about them except the strings at their tops:
+"""
+Module documentation
+Words Go Here
+"""
+
+spam = 40
+
+def square(x):
+    """
+    function documentation
+    can we have your liver then?
+    """
+    return x **2
+
+class employee:
+    "class documentation"
+    pass
+
+print square(4)
+print square._  _doc_  _
+The whole point of this documentation protocol is that your comments are retained for inspection in _  _doc_  _ attributes, after the file is imported. Thus, to display the docstrings associated with the module and its objects, we simply import the file and print their _  _doc_  _ attributes, where Python has saved the text:
+>>> import docstrings
+16
+
+    function documentation
+    can we have your liver then?
+
+>>> print docstrings._  _doc_  _
+
+Module documentation
+Words Go Here
+
+>>> print docstrings.square._  _doc_  _
+
+    function documentation
+    can we have your liver then?
+    
+>>> print docstrings.employee._  _doc_  _
+    class documentation
+Note that you will generally want to explicitly say print to docstrings; otherwise, you'll get a single string with embedded newline characters.
+You can also attach docstrings to methods of classes (covered later), but because these are just def statements nested in classes, they're not a special case. To fetch the docstring of a method function inside a class within a module, follow the path, and go through the class: module.class.method._  _doc_  _ (see the example of method docstrings in Chapter 25).
+Docstring standards
+There is no broad standard about what should go into the text of a docstring (although some companies have internal standards). There have been various markup language and template proposals (e.g., HTML or XML), but they don't seem to have caught on in the Python world. And, frankly, convincing programmers to document their code using handcoded HTML is probably not going to happen in our lifetimes!
+Documentation tends to have a low priority amongst programmers in general. Usually, if you get any comments in a file at all, you count yourself lucky. I strongly encourage you to document your code liberally, though-it really is an important part of well-written code. The point here is that there is presently no standard on the structure of docstrings; if you want to use them, feel free to do so.
+Built-in docstrings
+As it turns out, built-in modules and objects in Python use similar techniques to attach documentation above and beyond the attribute lists returned by dir. For example, to see an actual human-readable description of a built-in module, import it and print its _  _doc_  _ string:
+>>> import sys
+>>> print sys._  _doc_  _
+This module provides access to some objects 
+used or maintained by the interpreter and to 
+...more text omitted... 
+
+Dynamic objects:
+
+argv -- command line arguments; argv[0] is the script pathname if known
+path -- module search path; path[0] is the script directory, else ''
+modules -- dictionary of loaded modules
+...more text omitted...
+Functions, classes, and methods within built-in modules have attached descriptions in their _  _doc_  _ attributes as well:
+>>> print sys.getrefcount._  _doc_  _
+getrefcount(object) -> integer
+
+Return the current reference count for the object.  
+...more text omitted...
+You can also read about built-in functions via their docstrings:
+>>> print int._  _doc_  _
+int(x[, base]) -> integer
+
+Convert a string or number to an integer, if possible.  
+...more text omitted...
+
+>>> print open._  _doc_  _
+file(name[, mode[, buffering]]) -> file object
+
+Open a file.  The mode can be 'r', 'w' or 'a' for reading 
+...more text omitted...
+You can get a wealth of information about built-in tools by inspecting their docstrings this way, but you don't have to-the help function, the topic of the next section, does this automatically for you.
+PyDoc: The help Function
+The docstring technique has proved to be so useful that Python now ships with a tool that makes them even easier to display. The standard PyDoc tool is Python code that knows how to extract docstrings together with automatically extracted structural information, and format them into nicely arranged reports of various types.
+There are a variety of ways to launch PyDoc, including command-line script options (see the Python library manual for details). Perhaps the two most prominent PyDoc interfaces are the built-in help function, and the PyDoc GUI/HTML interface. The help function invokes PyDoc to generate a simple textual report (which looks much like a "manpage" on Unix-like systems):
+>>> import sys
+>>> help(sys.getrefcount)
+Help on built-in function getrefcount:
+
+getrefcount(...)
+    getrefcount(object) -> integer
+    
+    Return the current reference count for the object.  
+    ...more omitted...
+Note that you do not have to import sys in order to call help, but you do have to import sys to get help on sys; it expects an object reference to be passed in. For larger objects such as modules and classes, the help display is broken down into multiple sections, a few of which are shown here. Run this interactively to see the full report:
+>>> help(sys)
+Help on built-in module sys:
+
+NAME
+    sys
+
+FILE
+    (built-in)
+
+DESCRIPTION
+    This module provides access to some objects used 
+    or maintained by the interpreter and to functions
+    ...more omitted...
+
+FUNCTIONS
+    _  _displayhook_  _ = displayhook(...)
+        displayhook(object) -> None
+        
+        Print an object to sys.stdout and also save it
+    ...more omitted...
+DATA
+    _  _name_  _ = 'sys'
+    _  _stderr_  _ = <open file '<stderr>', mode 'w' at 0x0082BEC0>
+    ...more omitted...
+Some of the information in this report is docstrings, and some of it (e.g., function call patterns) is structural information that PyDoc gleans automatically by inspecting objects' internals. You can also use help on built-in functions, methods, and types. To get help for a built-in type, use the type name (e.g., dict for dictionary, str for string, list for list). You'll get a large display that describes all the methods available for that type:
+>>> help(dict)
+Help on class dict in module _  _builtin_  _:
+
+class dict(object)
+ |  dict(  ) -> new empty dictionary.
+ ...more omitted...
+
+>>> help(str.replace)
+Help on method_descriptor:
+
+replace(...)
+    S.replace (old, new[, maxsplit]) -> string
+    
+    Return a copy of string S with all occurrences
+    ...more omitted...
+
+>>> help(ord)
+Help on built-in function ord:
+
+ord(...)
+    ord(c) -> integer
+    
+    Return the integer ordinal of a one-character string.
+Finally, the help function works just as well on your modules as built-ins. Here it is reporting on the docstrings.py file coded earlier; again, some of this is docstrings, and some is information automatically extracted by inspecting objects' structures:
+>>> help(docstrings.square)
+Help on function square in module docstrings:
+
+square(x)
+    function documentation
+    can we have your liver then?
+
+>>> help(docstrings.employee)
+...more omitted...
+
+>>> help(docstrings)
+Help on module docstrings:
+
+NAME
+    docstrings
+
+FILE
+    c:\python22\docstrings.py
+
+DESCRIPTION
+    Module documentation
+    Words Go Here
+
+CLASSES
+    employee
+    ...more omitted...
+
+FUNCTIONS
+    square(x)
+        function documentation
+        can we have your liver then?
+
+DATA
+    _  _file_  _ = 'C:\\PYTHON22\\docstrings.pyc'
+    _  _name_  _ = 'docstrings'
+    spam = 40
+PyDoc: HTML Reports
+The help function is nice for grabbing documentation when working interactively. For a more grandiose display, however, PyDoc also provides a GUI interface (a simple, but portable, Python/Tkinter script), and can render its report in HTML page format, viewable in any web browser. In this mode, PyDoc can run locally or as a remote server in client/server mode; reports contain automatically created hyperlinks that allow you to click your way through the documentation of related components in your application.
+To start PyDoc in this mode, you generally first launch the search engine GUI captured in Figure 14-1. You can start this either by selecting the Module Docs item in Python's Start button menu on Windows, or by launching the pydocgui.pyw script in Python's Tools directory (running pydoc.py with a -g command-line argument works, too). Enter the name of a module you're interested in, and press the Enter key; PyDoc will march down your module import search path (sys.path) looking for references to the requested module.
+
+Figure 14-1
+The Pydoc top-level search engine GUI: type a name of a module you want documentation for, press Enter, select the module, and then press "go to selected" (or use no module name, and press "open browser" to see all available modules).
+
+Once you've found a promising entry, select it, and click "go to selected." PyDoc will spawn a web browser on your machine to display the report rendered in HTML format. Figure 14-2 shows the information PyDoc displays for the built-in glob module.
+
+Figure 14-2
+When you find a module in the Figure 14-1 GUI and press "go to selected," the module's documentation is rendered in HTML and displayed in a web browser window like this one-a built-in standard library module.
+
+Notice the hyperlinks in the Modules section of this page-you can click these to jump to the PyDoc pages for related (imported) modules. For larger pages, PyDoc also generates hyperlinks to sections within the page. 
+Like the help function interface, the GUI interface works on user-defined modules as well. Figure 14-3 shows the page generated for our docstrings.py module file.
+
+Figure 14-3
+PyDoc can serve up documentation pages for both built-in and user-coded modules. Here is the page for a user-defined module, showing all its documentation strings (docstrings) extracted from the source file.
+
+PyDoc can be customized and launched in various ways we won't cover here; see its entry in Python's standard library manual for more details. The main thing to take away from this section is that PyDoc essentially gives you implementation reports "for free"-if you are good about using docstrings in your files, PyDoc does all the work of collecting and formatting them for display. PyDoc only helps for objects like functions and modules, but it provides an easy way to access a middle level of documentation for such tools-its reports are more useful than raw attribute lists, and less exhaustive than the standard manuals.
+
+Cool PyDoc trick of the day: if you leave the module name empty in the top input field of the window in Figure 14-1 and press the Open Browser button, PyDoc will produce a web page containing a hyperlink to every module you can possibly import on your computer. This includes Python standard library modules, modules of third-party extensions you may have installed, user-defined modules on your import search path, and even statically or dynamically linked-in C-coded modules. Such information is hard to come by otherwise without writing code that inspects a set of module sources.
+PyDoc can also be run to save the HTML documentation for a module in a file for later viewing or printing; see its documentation for pointers. Also, note that PyDoc might not work well if run on scripts that read from standard input-PyDoc imports the target module to inspect its contents, and there may be no connection for standard input text when it is run in GUI mode. Modules that can be imported without immediate input requirements will always work under PyDoc, though. 
+Standard Manual Set
+For the complete and most up-to-date description of the language and its toolset, Python's standard manuals stand ready to serve. Python's manuals ship in HTML and other formats, and are installed with the Python system on Windows-they are available in your Start button's menu for Python, and they can also be opened from the Help menu within IDLE. You can also fetch the manual set separately from http://www.python.org in a variety of formats, or read them online at that site (follow the Documentation link). On Windows, the manuals are a compiled help file to support searches, and the online versions at Python.org include a web-based search page.
+When opened, the Windows format of the manuals displays a root page like that in Figure 14-4. The two most important entries here are most likely the Library Reference (which documents built-in types, functions, exceptions, and standard library modules), and the Language Reference (which provides a formal description of language-level details). The tutorial listed on this page also provides a brief introduction for newcomers.
+
+Figure 14-4
+Python's standard manual set, available online at www.python.org, from IDLE's Help menu, and in the Windows Start button menu. It's a searchable help file on Windows, and there is a search engine for the online version. Of these, the Library manual is the one you'll want to use most of the time.
+
+Web Resources
+At the official Python programming language web site (http://www.python.org), you'll find links to various Python resources, some of which cover special topics or domains. Click the Documentation link to access an online tutorial and the Beginners Guide to Python. The site also lists non-English Python resources.
+You will find numerous Python wikis, blogs, web sites, and a host of other resources on the Web today. To sample the online community, try searching for "Python programming" in Google.
+Published Books
+As a final resource, you can choose from a large collection of reference books for Python. Bear in mind that books tend to lag behind the cutting edge of Python changes, partly because of the work involved in writing, and partly because of the natural delays built into the publishing cycle. Usually, by the time a book comes out, it's three or more months behind the current Python state. Unlike standard manuals, books are also generally not free.
+Still, for many, the convenience and quality of a professionally published text is worth the cost. Moreover, Python changes so slowly that books are usually still relevant years after they are published, especially if their authors post updates on the Web. See the Preface for pointers to other Python books.
+Common Coding Gotchas
+Before the programming exercises for this part of the book, let's run through some of the most common mistakes beginners make when coding Python statements and programs. Many of these are warnings I've thrown out earlier in this part of the book, collected here for ease of reference. You'll learn to avoid these pitfalls once you've gained a bit of Python coding experience, but a few words now might help you avoid falling into some of these traps initially:
+	*	Don't forget the colons. Always remember to type a : at the end of compound statement headers (the first line of an if, while, for, etc.). You'll probably forget at first (I did, and so have most of my 3,000 Python students over the years), but you can take some comfort from the fact that it will soon become an unconscious habit.
+	*	Start in column 1. Be sure to start top-level (unnested) code in column 1. That includes unnested code typed into module files, as well as unnested code typed at the interactive prompt.
+	*	Blank lines matter at the interactive prompt. Blank lines in compound statements are always ignored in module files, but when you're typing code at the interactive prompt, they end the statement. In other words, blank lines tell the interactive command line that you've finished a compound statement; if you want to continue, don't hit the Enter key at the ... prompt (or in IDLE) until you're really done.
+	*	Indent consistently. Avoid mixing tabs and spaces in the indentation of a block, unless you know what your text editor does with tabs. Otherwise, what you see in your editor may not be what Python sees when it counts tabs as a number of spaces. This is true in any block-structured language, not just Python-if the next programmer has her tabs set differently, she will not understand the structure of your code. It's safer to use all tabs or all spaces for each block.
+	*	Don't code C in Python. A reminder for C/C++ programmers: you don't need to type parentheses around tests in if and while headers (e.g., if (X==1):). You can, if you like (any expression can be enclosed in parentheses), but they are fully superfluous in this context. Also, do not terminate all your statements with semicolons; it's technically legal to do this in Python as well, but it's totally useless unless you're placing more than one statement on a single line (the end of a line normally terminates a statement). And remember, don't embed assignment statements in while loop tests, and don't use {} around blocks (indent your nested code blocks consistently instead).
+	*	Use simple for loops instead of while or range. Another reminder: a simple for loop (e.g., for x in seq:) is almost always simpler to code and quicker to run than a while- or range-based counter loop. Because Python handles indexing internally for a simple for, it can sometimes be twice as fast as the equivalent while. Avoid the temptation to count things in Python!
+	*	Beware of mutables in assignments. I mentioned this in Chapter 11: you need to be careful about using mutables in a multiple-target assignment (a = b = []), as well as in an augmented assignment (a += [1, 2]). In both cases, in-place changes may impact other variables. See Chapter 11 for details.
+	*	Don't expect results from functions that change objects in-place. We encountered this one earlier, too: in-place change operations like the list.append and list.sort methods introduced in Chapter 8 do not return values (other than None), so you should call them without assigning the result. It's not uncommon for beginners to say something like mylist = mylist.append(X) to try to get the result of an append, but what this actually does is assign mylist to None, not to the modified list (in fact, you'll lose your reference to the list altogether).
+A more devious example of this pops up when trying to step through dictionary items in a sorted fashion. It's fairly common to see code like for k in D.keys(  ).sort(  ):. This almost works-the keys method builds a keys list, and the sort method orders it-but because the sort method returns None, the loop fails because it is ultimately a loop over None (a nonsequence). To code this correctly, either use the newer sorted built-in function, which returns the sorted list, or split the method calls out to statements: Ks = D.keys(  ), then Ks.sort(  ), and, finally, for k in Ks:. This, by the way, is one case where you'll still want to call the keys method explicitly for looping, instead of relying on the dictionary iterators-iterators do not sort.
+	*	Always use parentheses to call a function. You must add parentheses after a function name to call it, whether it takes arguments or not (e.g., use function(  ), not function). In Part IV, we'll see that functions are simply objects that have a special operation-a call that you trigger with the parentheses.
+In classes, this problem seems to occur most often with files; it's common to see beginners type file.close to close a file, rather than file.close(  ). Because it's legal to reference a function without calling it, the first version with no parentheses succeeds silently, but it does not close the file!
+	*	Don't use extensions or paths in imports and reloads. Omit directory paths and file suffixes in import statements (e.g., say import mod, not import mod.py). (We discussed module basics in Chapter 3, and will continue studying modules in Part V.) Because modules may have other suffixes besides .py (.pyc, for instance), hardcoding a particular suffix is not only illegal syntax, but doesn't make sense. Any platform-specific directory path syntax comes from module search path settings, not the import statement.
+Chapter Summary
+This chapter took us on a tour of program documentation concepts-both documentation we write ourselves for our own programs, and documentation available for built-in tools. We met doctrings, explored the online and manual resources for Python reference, and learned how PyDoc's help function and web page interface provide extra sources of documentation. Because this is the last chapter in this part of the book, we also reviewed common coding mistakes to help you avoid them. 
+In the next part of this book, we'll start applying what we already know to larger program constructs: functions. Before moving on, however, be sure to work through the set of lab exercises for this part of the book that appear at the end of this chapter. And even before that, let's run through this chapter's quiz.
+Brain Builder
+Chapter Quiz
+	1.	When should you use documentation strings instead of hash-mark comments?
+	2.	Name three ways you can view documentation strings.
+	3.	How can you obtain a list of the available attributes in an object?
+	4.	How can you get a list of all available modules on your computer?
+	5.	Which Python book should you purchase after this one?
+Quiz Answers
+	1.	Documentation strings (docstrings) are considered best for larger, functional documentation, describing the use of modules, functions, classes, and methods in your code. Hash-mark comments are today best limited to micro-documentation about arcane expressions or statements. This is partly because docstrings are easier to find in a source file, but also because they can be extracted and displayed by the PyDoc system.
+	2.	You can see docstrings by printing an object's _  _doc_  _ attribute, by passing it to PyDoc's help function, and by selecting modules in PyDoc's GUI search engine in client/server mode. Additionally, PyDoc can be run to save a module's documentation in an HTML file for later viewing or printing.
+	3.	The built-in dir(X) function returns a list of all the attributes attached to any object.
+	4.	Run the PyDoc GUI interface, leave the module name blank, and select Open Browser; this opens a web page containing a link to every module available to your programs.
+	5.	Mine, of course. (Seriously, the Preface lists a few recommended follow-up books, both for reference and for application tutorials.)
+Brain Builder
+Part III Exercises
+Now that you know how to code basic program logic, the following exercises will ask you to implement some simple tasks with statements. Most of the work is in exercise 4, which lets you explore coding alternatives. There are always many ways to arrange statements, and part of learning Python is learning which arrangements work better than others.
+See "Part III, Statements and Syntax" in Appendix B for the solutions.
+	1.	Coding basic loops.
+	a.	Write a for loop that prints the ASCII code of each character in a string named S. Use the built-in function ord(character) to convert each character to an ASCII integer. (Test it interactively to see how it works.)
+	b.	Next, change your loop to compute the sum of the ASCII codes of all characters in a string.
+	c.	Finally, modify your code again to return a new list that contains the ASCII codes of each character in the string. Does the expression map(ord, S) have a similar effect? (Hint: see Part IV.)
+	2.	Backslash characters. What happens on your machine when you type the following code interactively?
+    for i in range(50):
+        print 'hello %d\n\a' % i
+Beware that if run outside of the IDLE interface, this example may beep at you, so you may not want to run it in a crowded lab. IDLE prints odd characters instead (see the backslash escape characters in Table 7-2).
+	3.	Sorting dictionaries. In Chapter 8, we saw that dictionaries are unordered collections. Write a for loop that prints a dictionary's items in sorted (ascending) order. Hint: use the dictionary keys and list sort methods, or the newer sorted built-in function.
+	4.	Program logic alternatives. Consider the following code, which uses a while loop and found flag to search a list of powers of 2 for the value of 2 raised to the 5th power (32). It's stored in a module file called power.py.
+    L = [1, 2, 4, 8, 16, 32, 64]
+    X = 5
+    
+    found = i = 0
+    while not found and i < len(L):
+        if 2 ** X == L[i]:
+            found = 1
+        else:
+            i = i+1
+    
+    if found:
+        print 'at index', i
+    else:
+        print X, 'not found'
+    
+    C:\book\tests> python power.py
+    at index 5
+As is, the example doesn't follow normal Python coding techniques. Follow the steps outlined here to improve it (for all the transformations, you may type your code interactively, or store it in a script file run from the system command line-using a file makes this exercise much easier):
+	a.	First, rewrite this code with a while loop else clause to eliminate the found flag and final if statement.
+	b.	Next, rewrite the example to use a for loop with an else clause, to eliminate the explicit list-indexing logic. Hint: to get the index of an item, use the list index method (L.index(X) returns the offset of the first X in list L).
+	c.	Next, remove the loop completely by rewriting the example with a simple in operator membership expression. (See Chapter 8 for more details, or type this to test: 2 in [1,2,3].)
+	d.	Finally, use a for loop and the list append method to generate the powers-of-2 list (L) instead of hardcoding a list literal.
+Deeper thoughts: 
+	e.	Do you think it would improve performance to move the 2 ** X expression outside the loops? How would you code that? 
+	f.	As we saw in exercise 1, Python includes a map(function, list) tool that can generate the powers-of-2 list, too: map(lambda x: 2 ** x, range(7)). Try typing this code interactively; we'll meet lambda more formally in Chapter 17.

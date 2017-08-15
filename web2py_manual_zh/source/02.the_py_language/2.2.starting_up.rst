@@ -1,0 +1,33 @@
+启动
+===============
+二进制编译版本的WEB2PY支持微软的Windows或苹果的OS X操作系统，在分发的包文件中已经包含了Python的解释器。
+
+在Windows操作系统中，您可以在DOS窗口中通过键入以下命令启动WEB2PY。
+
+::
+
+	web2py.exe -S welcome
+	
+在苹果的OS X操作系统中，您可以在终端窗口中键入一下命令启动（假设您当前在web2py.app的目录中）
+
+::
+
+	./web2py.app/Contents/MacOS/web2py -S welcome
+
+在Linux或其他的Unix命令窗口中，很可能Python已经安装过了，安装过的话，可以输入如下命令启动web2py：
+
+::
+
+	pythonweb2py.py -S welcome
+
+如果您还没有安装Python 2.5，在运行WEB2PY以前，您需要先下载并安装Python。
+
+“-S welcome”命令参数将会使WEB2PY在命令行交互模式下运行，并且welcome应用将会被控制器执行。在这个模式下，WEB2PY几乎所有的类、对象和方法都暴露给您使用。而这也是WEB2PY交互命令行模式和普通Python命令行模式唯一的区别。
+
+“admin”接口还为每个应用提供了一个给予web的命令行窗口。您可以通过如下方式访问“welcome”应用的命令行窗口：
+
+::
+
+	http://127.0.0.1:8000/admin/shell/index/welcome
+
+您还可以在普通终端命令窗口或基于web的命令窗口中尝试本章的例子。

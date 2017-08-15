@@ -1,0 +1,230 @@
+类型
+===============
+Python是动态类型语言，也就是说变量没有类型，也不用定义变量的类型。值，另一方面，则具有类型。你可以查询一个变量里存放值的类型：
+
+::
+
+	>>> a = 3
+	>>> print type(a)
+	<type 'int'>
+	>>> a = 3.14
+	>>> print type(a)
+	<type 'float'>
+	>>> a = 'hello python'
+	>>> print type(a)
+	<type 'str'>
+
+Python还包含原生支持的数据结构，例如列表(list)和字典(dictionary)。
+
+字符串
+"""""""""""""""""""""""
+
+Python支持两种不同的字符串：ASCII和Unicode字符串。ASCII字符串用特殊字符'...'，"..."，'''...'''或"""..."""来表示。其中三个引号表示多行字符串。Unicode字符由一个“u”起始，后面跟随要用Unicode表示的字符串内容。Unicode字符串可以通过如下代码转换为ASCII字符串。
+
+::
+
+	>>> a = 'thisisanASCIIstring'
+	>>> b = u'ThisisaUnicodestring'
+	>>> a = b.encode('utf8')
+
+再执行了上面三行代码之后，结果就是一个采用UTF8编码的ASCII字符串。WEB2PY被设计为内部采用UTF8编码格式。
+
+把变量写入字符串的方式多种多样：
+
+::
+
+	>>>print 'number is ' + str(3)
+	number is 3
+	>>>print 'number is %s ' % (3)
+	number is 3
+	>>>print 'number is %(number)s' % dict(number=3)
+	number is 3
+
+上面最后一行代码的类型转换更加明确，因此是值得推荐的方式。
+
+很多的Python对象，例如number对象，可以使用str或repr，串行化转换为字符串。下面两行代码看上去非常类似，不过结果确稍有不同：
+
+::
+
+	>>> for i in[3,'hello']:
+		 print str(i),repr(i) 
+	3 3
+	hello 'hello'
+
+在用户定义的类中，str和repr可以被定义和重新定义特别操作符__str__和__repr__来实现。在后续章节中这一问题将被再次讨论。想详细了解次问题可以参考官方Pyhon文档。repr永远有默认值。
+
+另一个Python重要的字符串特性就是，类似于列表，字符串是一个可以遍历的对象。
+
+::
+
+	>>> for i in 'hello':
+		 print i
+	h
+	e
+	l
+	l
+	o
+
+列表list
+"""""""""""""""""""""""
+Python中列表主要的方法是追加append，插入insert和删除delete：
+
+::
+
+	>>> a = [1, 2, 3]
+	>>> print type(a)
+	<type 'list'>
+	>>> a.append(8)
+	>>> a.insert(2,7)
+	>>> del a[0]
+	>>> print a
+	[2, 7, 3, 8]
+	>>> print len(a)
+	4
+
+列表可以被分割：
+
+::
+
+	>>> print a[:3]
+	[2, 7, 3]
+	>>> print a[1:]
+	[7, 3, 8]
+	>>> print a[-2:]
+	[3, 8]
+
+还可以被连接：
+
+::
+
+	>>> a = [2, 3]
+	>>> b = [5, 6]
+	>>> print a + b
+	[2, 3, 5, 6]
+
+列表可以被遍历，可以通过循环来访问：
+
+::
+
+	>>> a = [1, 2, 3]
+	>>> for i in a:
+		 print i
+	1
+	2
+	3
+
+同一列表的不同元素不一定非得是同一个类型，他们可以是任意Python对象。
+
+对tuple
+"""""""""""""""""""""""
+对tuple类似于列表，不过大小以及元素都是不可改变的，但是在列表中他们都是可变的。如果对的元素是对象，对象的属性是可以改变的。对是用一对圆括号来定义的。
+
+::
+
+	>>> a = (1, 2, 3)
+
+以下代码对于列表可用：
+
+::
+
+	>>> a = [1, 2, 3]
+	>>> a[1] = 5
+	>>> print a
+	[1, 5, 3]
+
+同样代码对于tuple则不能使用：
+
+::
+
+	>>> a = (1, 2, 3)
+	>>> print a[1]
+	2
+	>>> a[1] = 5
+	Traceback (most recent call last):
+	  File "<stdin>", line 1, in <module>
+	TypeError: 'tuple' object does not support item assignment
+
+tuple同列表一样，可以被遍历访问。要注意的是只含有一个元素的tuple需要在结尾加一个逗号，如下例所示：
+
+::
+
+	>>> a = (1)
+	>>> print type(a)
+	<type 'int'>
+	>>> a = (1,)
+	>>> print type(a)
+	<type 'tuple'>
+
+因为tuple是不能改变的，因此对于封装对象来说非常有用，括号经常被省略：
+
+::
+
+	>>> a = 2, 3, 'hello'
+	>>> x, y, z = a
+	>>> print x
+	2
+	>>> print z
+	hello
+
+字典dict
+"""""""""""""""""""""""
+
+在Python中字典dict对象是一个哈西表，将关键字对象同值对象关联在一起。
+
+例如：
+
+::
+
+	>>> a = { 'k':'v', 'k2':3}
+	>>> a['k']
+	'v'
+	>>> a['k2']
+	3
+	>>> a.has_key('k')
+	True
+	>>> a.has_key('v')
+	False
+
+关键字对象可以是任何能被存入哈西表中的类型（整型、字符串型或者任何支持__hash__方法的类）。值可以是任何类型。在字典中的不同关键字和值可以是不同的类型。如果关键字是字符或数字，字典还可以通过另一种方式定义：
+
+::
+
+	>>> a = dict(k='v', h2=3)
+	>>> a['k']
+	'v'
+	>>> print a
+	{'h2': 3, 'k': 'v'}
+
+有用的方法还有has_key，keys，values和items：
+
+::
+
+	>>> a = dict(k='v', k2=3)
+	>>> print a.keys()
+	['k2', 'k']
+	>>> print a.values()
+	[3, 'v']
+	>>> print a.items()
+	[('k2', 3), ('k', 'v')]
+
+items方法产生一个tuple的列表，每个tuple包含一组关键字和其对应的值。
+
+字典和列表元素可以用del命令删除：
+
+::
+
+	>>> a = [1, 2, 3]
+	>>> del a[1]
+	>>> print a
+	[1, 3]
+	>>> a = dict(k='v', h2=3)
+	>>> del a['h2']
+	>>> print a
+	{'k': 'v'}
+
+Python内部使用哈西hash操作来把对象转换为整数，并且使用该整数来决定值存放的位置。
+
+::
+
+	>>> hash("hello world") 
+	-1500746465

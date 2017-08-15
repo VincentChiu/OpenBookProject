@@ -1,0 +1,589 @@
+HTML辅助函数
+============================================
+
+在本节的开始，我们先来看一段可能在显示层中很常见的代码：
+
+::
+    
+    {{=DIV('this', 'is', 'a', 'test', _id='123', _class='myclass')}}
+
+它会被渲染成以下的HTML代码：
+
+::
+    
+    <div id="123" class="myclass">thisisatest</div> 
+
+在这个地方，DIV是一个辅助函数。什么是辅助函数呢？通俗的说，就是一段可以用来生成HTML代码的程序。它相当于HTML中的<div>标记。
+
+形式参数会被解释成在HTML的开始标记和结束标记之间的文本内容。用一个下划线开头的命名参数则会被解释成HTML的标记属性（属性名没有下划线）。还有另一类不用下划线开头的命名参数，他的特点是只在某些特定的标记中存在。
+
+下面是所有辅助函数的集合：
+
+::
+     
+    A, B, BODY, BR, CENTER, DIV, EM, EMBED, FORM, H1, H2, H3, H4, H5, H6, HEAD, HR, HTML, IMG, INPUT, LABEL, LI, LINK, OL, UL, META, MENU, OBJECT, ON, OPTION, P, PRE, SCRIPT, SELECT, SPAN, STYLE, TABLE, THEAD, TBODY, TFOOT, TD, TEXTAREA, TH,TITLE, TR, TT
+
+这些辅助函数功能强大，可以用它们写出十分复杂的表达式，而这些表达式将会在模板渲染过程中被解析成XML语句。例如：
+
+::
+
+    {{=DIV(B(I("hello", "<world>"))), _class="myclass")}}
+
+将会被渲染成以下的HTML：
+
+::
+    
+    <div class="myclass"><b><i>hello &lt;world&gt;</i></b></div>
+
+这些辅助函数的作用不仅仅是一个可以不用字符串来生成HTML的系统。它更大的意义在于提供了一套服务器端生成DOM的方法。
+
+有一个很方便的特性是，辅助函数中所有包含的组成对象，都能通过他们的位置访问到。并且，对辅助函数可以像操作列表一样的操作它包含的对象：
+
+::
+
+    >>> a = DIV(SPAN('a', 'b'), 'c') 
+    >>> print a
+    <div><span>ab</span>c</div>
+    >>> del a[1]
+    >>> a.append(B('x'))
+    >>> a[0][0] = 'y'
+    >>> print a
+    <div><span>yb</span><b>x</b></div>
+
+辅助函数的属性可以用他们的名字来获得，并且，辅助函数在处理属性的时候，就像操作一个字典一样：
+
+::
+
+    >>> a = DIV(SPAN('a', 'b'),'c')
+    >>> a['_class'] = 's'
+    >>> a[0]['_class'] = 't'
+    >>> print a
+    <div class="s"><span class="t">ab</span>c</div>
+    
+辅助函数也可以被定位和更新:
+
+::
+
+    >>> a = DIV(DIV(DIV('a', _id='target')))
+    >>> a.element(_id='target')[0] = 'changed'
+    >>> print a
+    <div><div><div>changed</div></div></div>
+
+任何一个属性都可以用来定位一个元素（不仅仅只是_id），包括多个属性（函数元素可以接受多个命名的参数），但是只有第一个匹配的元素会被返回。
+
+XML
+-------------
+
+XML是一个常用的对象，他的作用是用来压缩那些不应该被转义的文本。这些文本有可能包含被许可的XML。举个例子来说，它可能包含JavaScript。
+
+下面的这个例子里面的文本都是被转义的：
+
+::
+
+    >>> print DIV("<b>hello</b>")
+    &lt;b&gt;hello&lt;/b&gt;
+
+但是，用XML对象，你可以防止这些文本被转义：
+
+::
+
+    >>> print DIV(XML("<b>hello</b>"))
+    <b>hello</b>
+
+有时候，你想要生成一些HTML代码，然后把这些代码存在一个变量里面，但是，这些HTML代码可能包含一些不安全的标签，比如scirpt：
+
+::
+
+    >>> print XML('<script>alert("unsafe!")</script>')
+    <script>alert("unsafe!")</script>
+
+像这样可执行的代码，如果不被转义（举个例子，如果有人在一个博客的评论里面输入这样的代码）是非常不安全的，因为它可以被用来做跨站脚本（Cross Site Scripting 简写成XSS）攻击其他的访客。
+
+WEB2PY的XML辅助函数可以对文本进行分析，防止注入并且转义所有的的标签，除了那些你确定想要不转义的。下面是一个例子：
+
+::
+
+    >>> print XML('<script>alert("unsafe!")</script>', sanitize=True)
+    &lt;script&gt;alert(&quot;unsafe!&quot;)&lt;/script&gt;
+
+XML对象的构造函数默认情况下是认为部分标签和他们的部分属性是安全的。只要使用permitted-tags和allowed-atributes这两个参数，你就可以重载这些默认值。这里有一些默认值的实例。
+
+::
+
+    XML(text,sanitize=False, 
+        permitted_tags=['a', 'b', 'blockquote', 'br/', 'i', 'li',
+            'ol', 'ul', 'p', 'cite', 'code', 'pre', 'img/'],
+        allowed_attributes={'a':['href', 'title'],
+            'img':['src', 'alt'], 'blockquote':['type']})
+    
+
+内置的辅助函数
+-----------------------------------
+
+**A** 这个辅助函数用来生成链接。
+
+::
+
+    >>> print A('<click>', XML('<b>me</b>'),
+        _href='http://www.web2py.com')
+    <a href='http://www.web2py.com'>&lt;click&gt;<b>me/b></a>
+
+**B** 这个辅助函数用来使它的内容变成粗体。
+
+::
+
+    >>> print B('<hello>', XML('<i>world</i>'), _class='test', _id=0)
+    <b id="0" class="test">&lt;hello&gt;<i>world</i></b>
+
+**BODY** 这个辅助函数生成一个页面的主体。
+
+::
+
+    >>> print BODY('<hello>', XML('<b>world</b>'), _bgcolor='red')
+    <body bgcolor="red">&lt;hello&gt;<b>world</b></body> 
+
+**CENTER** 这个辅助函数使它包含的内容居中。
+
+::
+
+    >>> print CENTER('<hello>', XML('<b>world</b>'),
+    >>>	                _class='test',_id=0)
+    <center id="0" class="test">&lt;hello&gt;<b>world</b></center>
+
+**CODE** 这个辅助函数主要用来对Python，C，C++，HTML和WEB2PY的代码进行语法高亮，然后用PRE标签展示代码。于此同时，这个函数也可以给WEB2PY的API文档创建链接。
+
+下面有一个给Python代码做语法高亮的示例。
+
+::
+
+    >>> print CODE('print "hello"', language='python').xml()         
+    <table><tr valign="top"><td style="width:40px; text-align:right;"><
+        pre style=" 
+            font-size: 11px; font-family: Bitstream Vera Sans Mono,monospace;
+            background-color: transparent;
+                margin: 0;
+                padding: 5px;
+                border: none;
+            background-color: #E0E0E0;
+            color: #A0A0A0;
+        ">1.</pre></td><td><pre style="
+            font-size: 11px; font-family: Bitstream Vera Sans Mono,monospace;
+            background-color: transparent;
+                margin: 0;
+                padding: 5px;
+                border: none;
+                overflow: auto;
+            "><span style="color:#185369; font-weight: bold">print </span><
+                span style="color: #FF9966">"hello"</span></pre></td></tr></
+                table>
+
+这里也有一些类似的HTML的例子。
+
+::
+
+    >> >print CODE(
+    >>>     '<html><body>{{=request.env.remote_add}}</body></html>',
+    >>>     language='html')
+    <table><tr valign="top"><td style="width:40px; text-align:right;"><
+        pre style=".... 
+        "><span style="font-weight: bold">&lt;</span>html<span style="
+                font-weight: bold">&gt;&lt;</span>body<span style="font-
+                weight: bold">&gt;{{=</span><span style="text-decoration:None
+                ;color:#FF5C1F;">request</span><span style="font-weight: bold
+                ">.</span>env<span style="font-weight: bold">.</span>
+                remote_add<span style="font-weight: bold">}}&lt;/</span>body<
+                span style="font-weight: bold">&gt;&lt;/</span>html<span
+                style="font-weight: bold">&gt;</span></pre></td></tr></table>
+
+下面是CODE辅助函数的默认参数：
+
+::
+
+    CODE("print 'helloworld'", language='python', link=None, counter=1,
+    styles={})
+
+language参数支持的值包括“python”，“html_plain”，“c”，“cpp”，“web2py”，“html”。其中，“html”解析{{和}}标签，把他们当作是“web2py”代码。但是“html_plain”就不会这样做。
+
+如果一个link值被设置了，比如说“/examples/global/vars/”，那么WEB2PY的API就会把这一段代码链接到这个链接之中。举个例子来说，如果：“request”应该被链接到“/examples/global/vars/request”。那么在这里面，URL就会被在“examples”应用的“global.py”控制器中的“var”操作处理。
+
+counter参数被用来计算行数。它可以被设置成任意的3个不同的类型的值。如果是“None”，那么就不会显示行号。如果是一个数字，那么就是行号的起始数。如果是一个字符串，那么它就会被解释为一个提示符。
+
+**DIV** 所有的除了XML以外的对象都是从这个对象继承而来的。
+
+::
+
+    >>> print DIV('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <div id="0" class="test">&lt;hello&gt;<b>world</b></div>
+
+**EM** 强调它所包含的内容。
+
+::
+
+    >>> print EM('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <em id="0" class="test">&lt;hello&gt;<b>world</b></em>
+
+**FIELDSET** 这个被用来构建一个含有标签的输入框。
+
+::
+
+    >>> print FIELDSET('Height:', INPUT(_name='height'), _class='test')
+    <fieldset class="test">Height:<input name="height"/></fieldset>
+
+**FROM** 这是最重要的辅助函数之一。最简单的来说，这个函数可能仅仅只是生成一对<form>..</form>标签，但是，因为辅助函数都是对象，并且可以包含其他的对象。所以，这个辅助函数可以生成很复杂的可提交的表单（比如说验证表单域的内容）。这些将会在第7章中详细讨论。
+
+::
+
+    >>> print FORM(INPUT(_type='submit'), _action='', _method='post')
+    <form enctype="multipart/form-data" action="" method="post">
+    <input type="submit"/></form>
+
+“enctype”属性默认值就是“multipart/form-data”。
+
+一个FORM对象，或者一个SQLFORM对象的构造函数，可以接受一个十分特别的参数叫做hidden。党一个字典以hidden的形式被传递时，它所有的条目都会被翻译成“hidden”的INPUT域。举个例子来说：
+
+::
+
+    >>> print FORM(hidden=dict(a='b'))
+    <form enctype="multipart/form-data" action="" method="post">
+    <input value="b" type="hidden" name="a"/></form>
+
+**H1** ， **H2** ， **H3** ， **H4** ， **H5** ， **H6** 这些辅助函数都是用来生成段落的标题和子标题：
+
+::
+
+    >>> print H1('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <h1 id="0" class="test">&lt;hello&gt;<b>world</b></h1>
+    >>> print HEAD(TITLE('<hello>', XML('<b>world</b>')))
+    <head><title>&lt;hello&gt;<b>world</b></title></head>
+    
+**HTML** 这个辅助函数有一些特别。除了生成<html>标签以外，它还可以生成doctype字符串。
+
+::
+
+    >>> print HTML(BODY('<hello>', XML('<b>world</b>')))
+    <!DOCTYPE HTML PUBLIC "-//W3C//DTDHTML4.01Transitional//EN" "http
+        ://www.w3.org/TR/html4/loose.dtd">
+    <html><body>&lt;hello&gt;<b>world</b></body></html>
+
+该辅助函数还能接受一些特别的可选的参数。下面时这些参数的默认值：
+
+::
+
+    HTML(..., lang='en', doctype='transitional')
+
+而这里的doctype属性可以设置成“static”，“transitional”，“frameset”，“html5”或者一个完整的doctype字符串。
+
+**XHTML** XHTML和HTML很相似，只不过它生成的时XHTML的doctype。
+
+::
+
+    XHTML(..., lang='en', doctype='transitional', xmlns='http://www.w3. 
+        org/1999/xhtml')
+
+而这里的doctype参数可以接受的值是“strict”，“transitional”，“frameset”或者一个完整的doctype字符串。
+
+**INPUT** 创建一个<input .../>标签。一个input标签不能包含其他的标签，并且，它是以/>而不是>结尾的。input标签有一个可选的属性_type，用来指定这个标签究竟是什么类型。默认的类型是“text”，其他可选的类型有“submit”，“checkbox”或者“radio”。
+
+::
+
+    >>> print INPUT(_name='test', _value='a')
+    <input value="a" name="test"/>
+
+除了_type之外，它还有一个特殊的可选参数叫做“value”。需要注意的是，这个“value”参数和“_value”是不同的。后者设置input域的默认值，而前者设置的是它现有的值。对于一个类型为“text”的input标签来说，前者会重载后者：
+
+::
+
+    >>> print INPUT(_name='test', _value='a', value='b')
+    <input value="b" name="test"/>
+
+对于一个radio按钮来说，这两个属性就决定了它是否被选中（checked属性）：
+
+::
+
+    >>> for v in['a','b','c']:
+    >>>	    print INPUT(_type='radio', _name='test', _value=v, value='b')
+        ,v
+    <input value="a" type="radio" name="test"/> a
+    <input value="b" type="radio" checked="checked" name="test"/>b
+    <input value="c" type="radio" name="test"/>c
+
+checkbox的效果也是类似的：
+
+::
+
+    >>> print INPUT(_type='checkbox', _name='test', _value='a', value= True)
+    <input value="a" type="checkbox" checked="checked" name="test"/>
+    >>> print INPUT(_type='checkbox', _name='test', _value='a', value=
+        False)
+    <input value="a" type="checkbox" name="test"/>
+
+**IFRAME** 这个辅助函数使得现在的网页里面可以包含其他的网页。而那个网页的url可以通过“_src”属性来设置。
+
+**LABEL** 这个辅助函数用来为一个INPUT域生成LABEL标签。
+
+::
+
+    >>> print LABEL('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <label id="0" class="test">&lt;hello&gt;<b>world</b></label>
+
+**LI** 这个辅助函数生成一个列表项。它可以被包含在UL或者OL标签当中。
+
+::
+
+    >>>print LI('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <li id="0" class="test">&lt;hello&gt;<b>world</b></li>
+
+
+**LEGEND** 这个标签用来在一个表单当中生成一个legend标签。
+
+::
+
+    >>> print LEGEND('Name', _for='somefield')
+    <legend for="somefield">Name</legend>
+
+**META** 这个辅助函数用来生成HTML头当中的META标签。
+
+::
+
+    >>> print META(_name='security', _content='high')
+    <meta name="security" content="high"/>
+
+**OBJECT** 用来生成HTML中内嵌的对象（比如一个flash播放器）。
+
+::
+
+    >>> print OBJECT('<hello>', XML('<b>world</b>'),
+    >>>	                _src='http://www.web2py.com')
+    <object src="http://www.web2py.com">&lt;hello&gt;<b>world</b></object
+        >
+
+**OL** 它代表的意思是Ordered List，即有序的列表。这个列表包含了许多的LI标签。非常智能的是，所有OL参数里面，不是LI的对象都会被自动的包含在<li>...</li>标签中。
+
+::
+
+    >>> print OL('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <ol id="0" class="test"><li>&lt;hello&gt;</li><li><b>world</b></li></
+        ol>
+
+**ON** 这个函数的目的是为了向后兼容。它就是一个True的别名。它用在checkbox对象里面用来标记是否被选中。推荐使用True因为True更加的Pythonic。
+
+::
+
+    >>>print INPUT(_type='checkbox', _name='test', _checked=ON)
+    <input checked="checked" type="checkbox" name="test"/>
+
+**OPTION** 这个对象应该用来作为SELECT/OPTION组合的一部分。
+
+::
+
+    >>> print OPTION('<hello>', XML('<b>world</b>'), _value='a')
+    <option value="a">&lt;hello&gt;<b>world</b></option>
+
+就和INPUT一样，WEB2PY在这里对“_value”和“value”之间做了区分。
+
+::
+
+    >>> print SELECT('a', 'b', value='b'):
+    <select>
+    <option value="a">a</option>
+    <option value="b" selected="selected">b</option>
+    </select>
+
+**P** 这是一个用来分段的标签。
+
+::
+
+    >>> print P('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <p id="0" class="test">&lt;hello&gt;<b>world</b></p>
+
+**PRE** 生产一对<pre>...</pre>标签对，用来显示预格式化的文本。与之相比，CODE辅助函数更加适合用来展现程序代码。
+
+::
+
+    >>> print PRE('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <pre id="0" class="test">&lt;hello&gt;<b>world</b></pre>
+
+**SCRIPT** 这个常常用来包含，或者链接到一段脚本，例如JavaScript脚本。在标签之间的内容会被渲染成一个HTML注释。目的就是为了适应老的浏览器。
+
+::
+
+    >>> print SCRIPT('alert("helloworld");', _language='javascript')
+    <script language="javascript"><!--
+    alert("helloworld"); 
+    //--></script>
+
+**SELECT** 生成一对<select>...</select>标签。它和OPTION辅助函数一起使用。需要注意的是，所有不是OPTION的参数都会被自动转换成OPTION。
+
+::
+
+    >>> print SELECT('<hello>', XML('<b>world</b>'), _class='test', _id =0)
+    <select id="0" class="test"><option value="&lt;hello&gt;">&lt;hello& gt;</option><option value="&lt;b&gt;world&lt;/b&gt;"><b>world</b ></option></select>
+
+**SPAN** 与DIV类似，但是作用是包含一个inline属性（而不是block）的内容。
+
+::
+
+    >>> print SPAN('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <span id="0" class="test">&lt;hello&gt;<b>world</b></span>
+
+**STYLE** 类似于SCRIPT辅助函数，但是使用的时候，既可以直接包含，也可以链接到CSS代码。这是一个直接把CSS包含在参数里面的例子：
+
+::
+
+    >>> print STYLE(XML('body{color:white}'))
+    <style><!-- 
+    body{color:white} 
+    //--></style>
+
+下面这个是链接CSS代码的例子：
+    
+::
+    
+    >>> print STYLE(_src='style.css')
+    <style src="style.css"><!--
+    //--></style>
+
+**TABLE** ， **TR** ， **TD** 这些标签（同时也可以选择THEAD，TBODY，TFOOTER配合使用）用来生成HTML表单。
+
+::
+
+    >>> print TABLE(TR(TD('a'), TD('b')), TR(TD('c'), TD('d')))
+    <table><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></table>
+
+TR需要TD作为它的参数，所有不是TD对象的参数都会被自动地转化成TD。
+
+::
+
+    >>> print TABLE(TR('a','b'), TR('c','d'))
+    <table><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></table>
+
+这里有一个技巧，用Python的**函数参数操作符，可以很方便的把一个列表转换成HTML表格。 
+
+下面我们一行一行的来演示：
+
+::
+    
+    >>> table = [['a', 'b'], ['c', 'd']]
+    >>> print TABLE(TR(**table[0]), TR(**table[1]))
+    <table><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></table>
+
+现在，我们尝试把所有的行放在一起：
+
+::
+
+    >>> table = [['a', 'b'], ['c', 'd']]
+    >>> print TABLE(**[TR(**rows) for rows in table])
+    <table><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></table>
+
+**TBODY** 这用来标记所有在表格主体中的行，与标题行和尾行相对。同时，他们是可选的。
+
+::
+
+    >>> print TBODY(TR('<hello>'), _class='test', _id=0)
+    <tbody id="0" class="test"><tr><td>&lt;hello&gt;</td></tr></tbody>
+
+**TEXTAREA** 这个辅助函数生产一对<textarea>...</textarea>标签。
+
+::
+
+    >>> print TEXTAREA('<hello>', XML('<b>world</b>'), _class='test')
+    <textarea class="test" cols="40" rows="10">&lt;hello&gt;<b>world</b></textarea>
+
+有一个使用中值得注意的警告就是，可选的参数“value”的值会覆盖它的内容。
+
+::
+
+    >>> print TEXTAREA(value="<helloworld>", _class="test")
+    <textarea class="test" cols="40" rows="10">&lt;helloworld&gt;</textarea>
+
+**TFOOT** 这个标签用来生成尾行。
+
+::
+
+    >>> print TFOOT(TR(TD('<hello>')), _class='test', _id=0)
+    <tfoot id="0" class="test"><tr><td>&lt;hello&gt;</td></tr></tfoot>
+
+**TH** 用来生成标题格。
+
+::
+    
+    >>> print TH('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <th id="0" class="test">&lt;hello&gt;<b>world</b></th>
+    
+**THEAD** 用来生成表格的标题行。
+
+::
+
+    >>> print THEAD(TR(TD('<hello>')), _class='test', _id=0)
+    <thead id="0" class="test"><tr><td>&lt;hello&gt;</td></tr></thead>
+
+**TITLE** 这个函数用来在HTML的头部生成标题标签。
+
+**TR** 标记了表格中的一行。它应该用在TABLE标签内，同时又包含<td>...</td>标签。所有不是TD对象的参数都会被自动的转换成TD对象。
+
+::
+
+    >>> print TR('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <tr id="0" class="test"><td>&lt;hello&gt;</td><td><b>world</b></td></tr>
+
+**TT** 标签控制它的内容显示为打印机（等宽）字体。
+
+::
+
+    >>> print TT('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <tt id="0" class="test">&lt;hello&gt;<b>world</b></tt>
+
+**UL** 表示无序列表，并且应该包含LI对象。如果它的内容不是LI对象，那么就会被自动转换成LI对象。
+
+::
+
+    >>> print UL('<hello>', XML('<b>world</b>'), _class='test', _id=0)
+    <ul id="0" class="test"><li>&lt;hello&gt;</li><li><b>world</b></li></ul>
+
+自定义的辅助函数
+----------------------------
+
+有时候你需要自定义一个XML标签，这个时候应该怎么做呢？WEB2PY提供了TAG辅助函数，用来生成系统中没有的标签。
+
+::
+
+    {{=TAG.name('a', 'b', _c='d')}}
+
+以上代码会生成以下的XML：
+
+::
+
+    <name c="d">ab</name>
+
+需要注意传入的“a”，“b”，“d”都会被自动的转义。如果想要取消特性，就用XML辅助函数来处理。用TAG函数，你可以轻松的生成API没有提供的HTML/XML标签。同时TAG函数也可以用str()来压缩和序列化。
+
+一个等价的语句是：
+
+::
+
+    {{=TAG['name']('a', 'b', c='d')}}
+
+需要注意的一点是，TAG是一个对象，但是TAG.name或者TAG['name']都是函数。返回的是一个临时的辅助函数类。
+
+**MENU** 本辅助函数接受一个列表的列表，列表的格式按照response.menu（在第四章中提及）来配置，然后利用UL生成一个树状的结构，用来表现菜单。举个例子：
+
+::
+
+    >>> print MENU([['One', False, 'link1'], ['Two', False, 'link2']])
+    <ul class="web2py-menuweb2py-menu-vertical"><li><ahref="link1">One</a></li><li><a href="link2">Two</a></li></ul>
+
+每一个菜单项都可以接受第四个参数，作为子菜单：
+
+::
+
+    >>> print MENU([['One', False, 'link1', [['Two', False, 'link2']]]])
+    <ul class="web2py-menuweb2py-menu-vertical"><liclass="web2py-menu-expand"><a href="link1">One</a><ul class="web2py-menu-vertical">< li><a href="link2">Two</a></li></ul></li></ul>
+
+MENU辅助函数可以接受以下的可选参数：
+
+- _class：默认值是“web2py-menu web2py-menu-vertical”，用来设置外层UL元素的class。
+- ul.class：默认值是“web2py-menu-vertical”，用来设置内层UL元素的class。
+- li.class：默认值是“web2py-menu-expand”，用来设置内层LI元素的class。
+
+系统自带的模板里面的“base.css”能够理解这几个基本的菜单类型：“web2py-menu web2py-menu-vertical”和“web2py- menu web2py-menu-horizontal”。
+    

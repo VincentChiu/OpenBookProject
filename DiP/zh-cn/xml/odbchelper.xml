@@ -1,0 +1,1181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chapter id="odbchelper">
+<?dbhtml filename="getting_to_know_python/index.html"?>
+<title>第一个 &python; 程序</title>
+<titleabbrev id="odbchelper.numberonly">第 2 章</titleabbrev>
+<abstract>
+<title/>
+<para>大家都很清楚，其他书籍是如何一步步从编程基础讲述到构建完整的可运行程序的，但还是让我们跳过这个部分吧！
+</para>
+
+</abstract>
+<section id="odbchelper.divein">
+<title>概览</title>
+<abstract>
+<title/>
+<para>这是一个完整的、可执行的 &python; 程序。</para>
+</abstract>
+<para>它可能对您来说根本无法理解。别着急，我们将逐行地进行剖析。不过首先把代码通读一遍，看一看是否有些可以理解的内容。</para>
+<example>
+<title>&odbchelper_filename;</title>
+&para_download;
+<programlisting>
+&odbchelper_full;</programlisting>
+</example>
+<para>现在运行一下这个程序，看一看结果是什么。</para>
+<tip id="tip.run.windows">
+<title>在 &windows; 上运行</title>
+<para>在 &windows; 的 &activepython; &ide; 中，可以选择
+<menuchoice>
+<shortcut>
+<keycombo>
+<keycap>Ctrl</keycap>
+<keysym>R</keysym>
+</keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem><accel>R</accel>un...</guimenuitem>
+</menuchoice> 来运行 &python; 程序。输出结果将显示在交互窗口中。</para>
+</tip>
+<tip id="tip.run.mac">
+<title>在 &macos; 上运行</title>
+<para>在 &macos; 的 &python; &ide; 中，可以选择
+<menuchoice>
+<shortcut>
+<keycombo>
+<keycap>Cmd</keycap>
+<keysym>R</keysym>
+</keycombo>
+</shortcut>
+<guimenu>Python</guimenu>
+<guimenuitem>Run window...</guimenuitem>
+</menuchoice> 来运行 &python; 程序，但首先要设置一个重要的选项。在 &ide; 中打开 <filename>.py</filename> 模块，点击窗口右上角的黑色三角，弹出这个模块的选项菜单，然后将 <menuchoice><guimenuitem>Run as __main__</guimenuitem></menuchoice> 选中。 这个设置是同模块一同保存的，所以对于每个模块您都需要这样做。</para>
+</tip>
+<tip id="tip.run.unix">
+<title>在 &unix; 上运行</title>
+<para>在 &unix; 兼容的操作系统中 (包括 &macosx;)，可以通过命令行：<userinput>python &odbchelper_filename;</userinput></para> 运行模块。
+</tip>
+<informalexample id="odbchelper.output">
+<!--<title>Output of &odbchelper_filename;</title>-->
+<para>&odbchelper_filename; 的输出结果：</para>
+<screen><computeroutput>&odbchelper_output;</computeroutput></screen>
+</informalexample>
+</section>
+<section id="odbchelper.funcdef">
+<?dbhtml filename="getting_to_know_python/declaring_functions.html"?>
+<title>函数声明</title>
+<abstract>
+<title/>
+<para>与其它大多数语言一样 &python; 有函数，但是它没有像 &cpp; 一样的独立的头文件；或者像 &pascal; 一样的分离的 <literal>interface</literal>/<literal>implementation</literal> 段。在需要函数时，像下面这样声明即可：</para>
+</abstract>
+<informalexample>
+<!--<title>Declaring the &odbchelper_function; function</title>-->
+<programlisting>
+&odbchelper_funcdef;</programlisting>
+</informalexample>
+<para>首先，函数声明以关键字 &def; 开始，接着为函数名，再往后为参数，参数放在小括号里。多个参数之间 (这里没有演示)用逗号分隔。</para>
+<para>其次，函数没有定义返回的数据类型。&python; 不需要指定返回值的数据类型；甚至不需要指定是否有返回值。实际上，每个 &python; 函数都返回一个值；如果函数执行过 &return; 语句，它将返回指定的值，否则将返回 &none; (&python; 的空值)。
+</para>
+<note id="compare.funcdef.vb" role="compare" vendor="vb">
+<title>&python; &vs; &vb; 的返回值</title>
+<para>在 &vb; 中，函数 (有返回值) 以 <literal>function</literal> 开始，而子程序 (无返回值) 以 <literal>sub</literal> 开始。在 &python; 中没有子程序。只有函数，所有的函数都有返回值 (尽管可能为 &none;)，并且所有的函数都以 &def; 开始。
+</para>
+</note>
+<para>最后需要指出的是，在 &python; 中参数，<literal>params</literal> 不需要指定数据类型。&python; 会判定一个变量是什么类型，并在内部将其记录下来。</para>
+<note id="compare.funcdef.java" role="compare" vendor="java">
+<title>&python; &vs; &java; 的返回值</title>
+<para>在 &java;、&cpp; 和其他静态类型语言中，必须要指定函数返回值和每个函数参数的数据类型。在 &python; 中，永远也不需要明确指定任何东西的数据类型。&python; 会根据赋给它的值在内部将其数据类型记录下来。</para>
+</note>
+<section role="sidebar">
+<title>&python; 和其他编程语言数据类型的比较</title>
+<para>一位博学的读者发给我 &python; 如何与其它编程语言的比较的解释：</para>
+<variablelist>
+<varlistentry>
+<term>静态类型语言</term>
+<listitem><para>一种在编译期间就确定数据类型的语言。大多数静态类型语言是通过要求在使用任一变量之前声明其数据类型来保证这一点的。&java; 和 &c; 是静态类型语言。</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>动态类型语言</term>
+<listitem><para>一种在运行期间才去确定数据类型的语言，与静态类型相反。&vbscript; 和 &python; 是动态类型的，因为它们确定一个变量的类型是在您第一次给它赋值的时候。</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>强类型语言</term>
+<listitem><para>一种总是强制类型定义的语言。&java; 和 &python; 是强制类型定义的。您有一个整数，如果不明确地进行转换 ，不能将把它当成一个字符串。</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>弱类型语言</term>
+<listitem><para>一种类型可以被忽略的语言，与强类型相反。&vbscript; 是弱类型的。在 &vbscript; 中，您可以将字符串 <literal>'12'</literal> 和整数 <literal>3</literal> 进行连接得到字符串<literal>'123'</literal>，然后可以把它看成整数 <literal>123</literal> ，所有这些都不需要任何的显示转换。</para></listitem>
+</varlistentry>
+</variablelist>
+<para>所以说 &python; 既是<emphasis>动态类型语言</emphasis> (因为它不使用显示数据类型声明)，又是<emphasis>强类型语言</emphasis> (因为只要一个变量获得了一个数据类型，它实际上就一直是这个类型了)。</para>
+</section>
+</section>
+<section id="odbchelper.docstring">
+<?dbhtml filename="getting_to_know_python/documenting_functions.html"?>
+<title>文档化函数</title>
+<abstract>
+<title/>
+<para>可以通过给出一个 &docstring; (文档字符串) 来文档化一个 &python; 函数。</para>
+</abstract>
+<example id="odbchelper.triplequotes">
+<title>定义 &odbchelper_function; 函数的 &docstring;</title>
+<programlisting>
+&odbchelper_funcdef;
+&odbchelper_doc;</programlisting>
+<para>三重引号表示一个多行字符串。在开始与结束引号间的所有东西都被视为单个字符串的一部分，包括硬回车和其它的引号字符。您可以在任何地方使用它们，但是您可能会发现，它们经常被用于定义 &docstring;。</para>
+</example>
+<note id="compare.quoting.perl" role="compare" vendor="perl">
+<title>&python; &vs; &perl; 中的引号</title>
+<para>三重引号也是一种定义既包含单引号又包含双引号的字符串的简单方法，就像 &perl; 中的 <literal>qq/.../</literal> 。</para>
+</note>
+<para>在三重引号中的任何东西都是这个函数的 &docstring;，它们用来说明函数可以做什么。如果存在 &docstring;，它必须是一个函数要定义的第一个内容 (也就是说，在冒号后面的第一个内容)。在技术上不要求给出函数的 &docstring;，但是您应该这样做。我相信在您上过的每一种编程课上都听到过这一点，但是 &python; 带给您一些额外的动机：&docstring; 在运行时可作为函数的属性。</para>
+<note id="tip.docstring">
+<title>为什么使用 &docstring; 是种好选择</title>
+<para>许多 &python; &ide; 使用 &docstring; 来提供上下文敏感的文档信息，所以当键入一个函数名时，它的 &docstring; 显示为一个工具提示。这一点可以说非常有用，但是它的好坏取决于您书写的 &docstring; 的好坏。</para>
+</note>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para><ulink url="http://www.python.org/peps/pep-0257.html">PEP 257</ulink> 定义了 &docstring; 规范。</para></listitem>
+<listitem><para>&pythonstyleguide; 讨论了如何编写一个好的 &docstring;。</para></listitem>
+<listitem><para>&pythontutorial; 讨论了<ulink url="&url_pythontutorial;node6.html#SECTION006750000000000000000">在 &docstring; 中如何使用空白</ulink>。</para></listitem>
+</itemizedlist>
+</section>
+<section id="odbchelper.objects">
+<?dbhtml filename="getting_to_know_python/everything_is_an_object.html"?>
+<title>万物皆对象</title>
+<para>也许您没在意，我刚才的意思是 &python; 函数有属性，并且这些属性在运行时是可用的。</para>
+<abstract>
+<title/>
+<para>在 &python; 中，函数同其它东西一样也是对象。</para>
+</abstract>
+<para>打开您习惯使用的 &python; &ide; 执行如下的操作：</para>
+<example id="odbchelper.import">
+<title>访问 &odbchelper_function; 函数的 &docstring;</title>
+<screen>&prompt;<userinput>import &odbchelper_name;</userinput>                              <co id="odbchelper.objects.1.1"/>
+&prompt;<userinput>params = {"server":"mpilgrim", "database":"master", "uid":"sa", "pwd":"secret"}</userinput>
+&prompt;<userinput>print &odbchelper_name;.&odbchelper_funcname;(params)</userinput> <co id="odbchelper.objects.1.2"/>
+<computeroutput>&odbchelper_output;</computeroutput>
+&prompt;<userinput>print &odbchelper_name;.&odbchelper_funcname;.__doc__</userinput> <co id="odbchelper.objects.1.3"/>
+<computeroutput>Build a connection string from a dictionary
+
+Returns string.</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.objects.1.1">
+<para>第一行将 <filename class="headerfile">&odbchelper_name;</filename> 程序作为模块导入。模块是指一个可以交互使用，或者从另一 &python; 程序访问的代码段。(您在 <xref linkend="apihelper" endterm="apihelper.numberonly"/> 将会看到多模块 &python; 程序的许多例子。)
+只要导入了一个模块，就可以引用它的任何公共的函数、类或属性。模块可以通过这种方法来使用其它模块的功能，您也可以在 &ide; 中这样做。这是一个很重要的概念，在后面我们将谈得更多。</para>
+</callout>
+<callout arearefs="odbchelper.objects.1.2">
+<para>当使用在被导入模块中定义的函数时，必须包含模块的名字。所以不能只使用 &odbchelper_function;，而应该使用 <function>&odbchelper_name;.&odbchelper_funcname;</function>。如果您用过 &java; 的类，对此应该不感到陌生。</para>
+</callout>
+<callout arearefs="odbchelper.objects.1.3">
+<para>访问函数的 &doc; 属性不像您想象的那样是通过函数调用。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="compare.import.perl" role="compare" vendor="perl">
+<title>&python; &vs; &perl;: &import;</title>
+<para>在 &python; 中的 &import; 就像 &perl; 中的 &require;。&import; 一个 &python; 模块后，您就可以使用 <literal><replaceable>module</replaceable>.<replaceable>function</replaceable></literal> 来访问它的函数；&require; 一个 &perl; 模块后，您就可以使用 <literal><replaceable>module</replaceable>::<replaceable>function</replaceable></literal> 来访问它的函数。</para>
+</note>
+<section>
+<title>模块导入的搜索路径</title>
+<para>在我们继续之前，我想简要地提一下库的搜索路径。当导入一个模块时，&python; 在几个地方进行搜索。明确地，它会对定义在 <varname>sys.path</varname> 中的目录逐个进行搜索。它只是一个list (列表)，您可以容易地查看它或通过标准的list方法来修改它。(在本章的后面我们将学习更多关于list的知识。)</para>
+<example id="odbchelper.objects.sys.path">
+<title>模块导入的搜索路径</title>
+<screen>
+&prompt;<userinput>import sys</userinput>                 <co id="odbchelper.objects.2.1"/>
+&prompt;<userinput>sys.path</userinput>                   <co id="odbchelper.objects.2.2"/>
+<computeroutput>['', '/usr/local/lib/python2.2', '/usr/local/lib/python2.2/plat-linux2',
+'/usr/local/lib/python2.2/lib-dynload', '/usr/local/lib/python2.2/site-packages',
+'/usr/local/lib/python2.2/site-packages/PIL', '/usr/local/lib/python2.2/site-packages/piddle']</computeroutput>
+&prompt;<userinput>sys</userinput>                        <co id="odbchelper.objects.2.3"/>
+<computeroutput>&lt;module 'sys' (built-in)></computeroutput>
+&prompt;<userinput>sys.path.append('/my/new/path')</userinput> <co id="odbchelper.objects.2.4"/></screen>
+<calloutlist>
+<callout arearefs="odbchelper.objects.2.1">
+<para>导入 &sys; 模块，使得它的所有函数和属性都有效。</para>
+</callout>
+<callout arearefs="odbchelper.objects.2.2">
+<para>&syspath; 是一个指定当前搜索路径的目录列表。(您的输出结果可能有所不同，这取决于您的操作系统、正在运行的 &python; 版本和初始安装的位置。)&python; 将搜索这些目录 (按顺序) 来查找一个与您正试着导入的模块名相匹配的 <literal>.py</literal> 文件。</para>
+</callout>
+<callout arearefs="odbchelper.objects.2.3">
+<para>实际上，我没说实话。真实情况要比这更复杂，因为不是所有的模块都保存为 <literal>.py</literal> 文件。有一些模块 (像 &sys;)，是“内置模块”，它们实际上是置于 &python; 内部的。内置模块的行为如同一般的模块，但是它们的 &python; 源代码是不可用的，因为它们不是用 &python; 写的！(&sys; 模块是用 &c; 写的。)</para>
+</callout>
+<callout arearefs="odbchelper.objects.2.4">
+<para>在运行时，通过向 &syspath; 追加目录名，就可以在 &python; 的搜索路径中增加新的目录，然后当您导入模块时，&python; 也会在那个目录中进行搜索。这个作用在 &python; 运行时一直生效。(在 <xref linkend="datatypes" endterm="datatypes.numberonly"/> 我们将讨论更多的关于 &append; 和其它的 list 方法。)</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section>
+<title>何谓对象？</title>
+<para>在 &python; 中一切都是对象，并且几乎一切都有属性和方法。所有的函数都有一个内置的 &doc; 属性，它会返回在函数源代码中定义的 &docstring;；&sys; 模块是一个对象，它有一个叫作 <varname>path</varname> 的属性；等等。</para>
+<para>我们仍然在回避问题的实质，究竟何谓对象？不同的编程语言以不同的方式定义 <quote>对象</quote> 。
+某些语言中，它意味着<emphasis>所有</emphasis> 对象<emphasis>必须</emphasis> 有属性和方法；另一些语言中，它意味着所有的对象都可以子类化。在 &python; 中，定义是松散的；某些对象既没有属性也没有方法 (关于这一点的说明在 <xref linkend="datatypes" endterm="datatypes.numberonly"/>)，而且不是所有的对象都可以子类化 (关于这一点的说明在<xref linkend="fileinfo" endterm="fileinfo.numberonly"/>)。但是万物皆对象从感性上可以解释为：一切都可以赋值给变量或作为参数传递给函数 (关于这一点的说明在<xref linkend="apihelper" endterm="apihelper.numberonly"/>)。</para>
+<para>这一点太重要了，所以我会在刚开始就不止一次地反复强调它，以免您没注意到：在 &python; 中<emphasis>万物皆对象</emphasis>。字符串是对象。列表是对象。函数是对象。甚至模块也是对象，这一点我们很快会看到。</para>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythonlanguagereference; 确切解释了<ulink url="&url_pythonlanguagereference;objects.html">在 &python; 中万物皆对象的含义</ulink>，因为有些书生气十足的人，喜欢花时间讨论这类的问题。</para></listitem>
+<listitem><para>&effbot; 总结了 <ulink url="&url_effbot;python-objects.htm">&python; 对象</ulink>.</para></listitem>
+</itemizedlist>
+</section>
+</section>
+<section id="odbchelper.indenting">
+<?dbhtml filename="getting_to_know_python/indenting_code.html"?>
+<title>代码缩进</title>
+<abstract>
+<title/>
+<para>&python; 函数没有明显的 <literal>begin</literal> 和 <literal>end</literal>，没有标明函数的开始和结束的花括号。唯一的分隔符是一个冒号 (<literal>:</literal>)，接着代码本身是缩进的。</para>
+</abstract>
+<example>
+<title>缩进 &odbchelper_function; 函数</title>
+<programlisting>
+&odbchelper_function_full;</programlisting>
+</example>
+<para>代码块是通过它们的缩进来定义的。我所说的“代码块”是指：函数、&if; 语句、&for; 循环、&while; 循环，等等。开始缩进表示块的开始，取消缩进表示块的结束。不存在明显的括号，大括号或关键字。这就意味着空白是重要的，并且要一致。在这个例子中，函数代码 (包括 &docstring;) 缩进了 4 个空格。不一定非要是 4 个，只要一致就可以了。没有缩进的第一行则被视为在函数体之外。</para>
+<para><xref linkend="odbchelper.indenting.if"/> 展示了一个 &if; 语句缩进的例子。</para>
+<example id="odbchelper.indenting.if">
+<title>&if; 语句</title>
+<programlisting>
+def fib(n):                   <co id="odbchelper.indenting.2.1"/>
+    print 'n =', n            <co id="odbchelper.indenting.2.2"/>
+    if n > 1:                 <co id="odbchelper.indenting.2.3"/>
+        return n * fib(n - 1)
+    else:                     <co id="odbchelper.indenting.2.4"/>
+        print 'end of the line'
+        return 1
+</programlisting>
+<calloutlist>
+<callout arearefs="odbchelper.indenting.2.1">
+<para>这是一个名为 <function>fib</function> 的函数，有一个参数 <varname>n</varname>。在函数内的所有代码都是缩进的。</para>
+</callout>
+<callout arearefs="odbchelper.indenting.2.2">
+<para>在 &python; 中向屏幕输出内容非常容易，只要使用 &print; 即可。&print; 语句可以接受任何数据类型，包括字符串、整数和其它类型，如字典和列表 (我们将在下一章学习)。甚至可以混在一起输出，只需用逗号隔开。所有值都输出到同一行，用空格隔开 (逗号并不打印出来)。所以当用 <literal>5</literal> 来调用 <function>fib</function> 时，将输出“n = 5”。</para>
+</callout>
+<callout arearefs="odbchelper.indenting.2.3">
+<para>&if; 语句是一种的代码块。如果 &if; 表达式计算为 true，紧跟着的缩进块会被执行，否则进入 &else; 块执行。</para>
+</callout>
+<callout arearefs="odbchelper.indenting.2.4">
+<para>当然 &if; 和 &else; 块可以包含许多行，只要它们都同样缩进。这个 &else; 块中有两行代码。对于多行代码块没有其它特殊的语法，只要缩进就行了。</para>
+</callout>
+</calloutlist>
+</example>
+<para>在经过一些最初的抗议和几个与 &fortran; 的嘲讽的类比之后，您会心平气和地对待代码缩进，并且开始看到它的好处。一个主要的好处就是所有的 &python; 程序看上去都差不多，因为缩进是一种语言的要求而不是一种风格。这样就使得阅读和理解他人的 &python; 代码容易得多。</para>
+<note id="compare.lineend.java" role="compare" vendor="java">
+<title>&python; &vs; &java;: 语句和语句块分割</title>
+<para>&python; 使用硬回车来分割语句，冒号和缩进来分割代码块。&cpp; 和 &java; 使用分号来分割语句，花括号来分割代码块。</para>
+</note>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythonlanguagereference; 讨论了交叉缩进问题，并且<ulink url="&url_pythonlanguagereference;indentation.html">演示了各种各样的缩进错误</ulink>。</para></listitem>
+<listitem><para>&pythonstyleguide; 讨论了良好的缩进风格。</para></listitem>
+</itemizedlist>
+</section>
+<section id="odbchelper.testing">
+<?dbhtml filename="getting_to_know_python/testing_modules.html"?>
+<title>测试模块</title>
+<abstract>
+<title/>
+<para>所有的 &python; 模块都是对象，并且有几个有用的属性。您可以使用这些属性方便地测试您所编写的模块。下面是一个使用 &if; &name; 的技巧。</para>
+</abstract>
+<informalexample id="odbchelper.ifnametrick">
+<!--<title>The &if; &name; trick</title>-->
+<programlisting>
+&odbchelper_if;</programlisting>
+</informalexample>
+<para>在继续学习新东西之前，有几个重要的观察结果。首先，&if; 表达式无需使用圆括号括起来。其次，&if; 语句以冒号结束，紧跟其后的是<link linkend="odbchelper.indenting">缩进代码</link>。</para>
+<note id="compare.equals.c" role="compare" vendor="c">
+<title>&python; &vs; &c;: 比较和赋值</title>
+<para>与 &c; 一样，&python; 使用 &comparisonequals; 做比较，使用 &assignmentequals; 做赋值。与 &c; 不一样，&python; 不支持行内赋值，所以不会出现想要进行比较却意外地出现赋值的情况。</para>
+</note>
+<para>那么为什么说这个特殊的 &if; 语句是一个技巧呢？模块是对象，并且所有的模块都有一个内置属性 &name;。一个模块的 &name; 的值取决于您如何应用模块。如果 &import; 模块，那么 &name; 的值通常为模块的文件名，不带路径或者文件扩展名。但是您也可以像一个标准的程序一样直接运行模块，在这种情况下 &name; 的值将是一个特别的缺省值，&main;。</para>
+<informalexample>
+<!--<title>An imported module's &name;</title>-->
+<screen>&prompt;<userinput>import &odbchelper_name;</userinput>
+&prompt;<userinput>&odbchelper_name;.&name;</userinput>
+<computeroutput>'&odbchelper_name;'</computeroutput></screen>
+</informalexample>
+<para>只要了解到这一点，您就可以在模块内部为您的模块设计一个测试套件，在其中加入这个 &if; 语句。当您直接运行模块，&name; 的值是 &main;，所以测试套件执行。当您导入模块，&name; 的值就是别的东西了，所以测试套件被忽略。这样使得在将新的模块集成到一个大程序之前开发和调试容易多了。</para>
+<tip id="tip.mac.runasmain">
+<title>&macos; 上的 &if; &name;</title>
+<para>在 &macpython; 上，需要一个额外的步聚来使得 &if; &name; 技巧有效。点击窗口右上角的黑色三角，弹出模块的属性菜单，确认 <menuchoice><guimenuitem>Run as __main__</guimenuitem></menuchoice> 被选中。</para>
+</tip>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythonlanguagereference; 讨论了<ulink url="&url_pythonlanguagereference;import.html">导入模块</ulink>的底层细节。</para></listitem>
+</itemizedlist>
+</section>
+</chapter>
+<!-- =================================================================================================== -->
+<chapter id="datatypes">
+<?dbhtml filename="native_data_types/index.html"?>
+<title>内置数据类型</title>
+<titleabbrev id="datatypes.numberonly">第 3 章</titleabbrev>
+<para>让我们用点儿时间来回顾一下您的第一个 &python; 程序。但首先，先说些其他的内容，因为您需要了解一下 dictionary (字典)、tuple (元组) 和 list (列表)(哦，我的老天！)。如果您是一个 &perl; hacker，当然可以撇开 dictionary 和 list，但是仍然需要注意 tuple。</para>
+<section id="odbchelper.dict">
+<?dbhtml filename="native_data_types/dictionaries.html"?>
+<title>Dictionary 介绍</title>
+<abstract>
+<title/>
+<para>Dictionary 是 &python; 的内置数据类型之一，它定义了键和值之间一对一的关系。</para>
+</abstract>
+<note id="compare.dict.perl" role="compare" vendor="perl">
+<title>&python; &vs; &perl;: Dictionary</title>
+<para>&python; 中的 dictionary 就像 &perl; 中的 hash (哈希数组)。在 &perl; 中，存储哈希值的变量总是以 <literal>&pct;</literal> 字符开始；在 &python; 中，变量可以任意取名，并且 &python; 在内部会记录下其数据类型。</para>
+</note>
+<note id="compare.dict.java" role="compare" vendor="java">
+<title>&python; &vs; &java;: Dictionary</title>
+<para>&python; 中的 dictionary 像 &java; 中的 <classname>Hashtable</classname> 类的实例。</para>
+</note>
+<note id="compare.dict.vb" role="compare" vendor="vb">
+<title>&python; &vs; &vb;: Dictionary</title>
+<para>&python; 中的 dictionary 像 &vb; 中的 <classname>Scripting.Dictionary</classname> 对象的实例。</para>
+</note>
+<section>
+<title>Dictionary 的定义</title>
+<example id="odbchelper.dict.define">
+<title>定义 Dictionary</title>
+<screen>&prompt;<userinput>d = {"server":"mpilgrim", "database":"master"}</userinput> <co id="odbchelper.dict.1.1"/>
+&prompt;<userinput>d</userinput>
+<computeroutput>{'server': 'mpilgrim', 'database': 'master'}</computeroutput>
+&prompt;<userinput>d["server"]</userinput>                                    <co id="odbchelper.dict.1.2"/>
+<computeroutput>'mpilgrim'</computeroutput>
+&prompt;<userinput>d["database"]</userinput>                                  <co id="odbchelper.dict.1.3"/>
+<computeroutput>'master'</computeroutput>
+&prompt;<userinput>d["mpilgrim"]</userinput>                                  <co id="odbchelper.dict.1.4"/>
+<computeroutput role="traceback">&traceback;
+KeyError: mpilgrim</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.dict.1.1">
+<para>首先我们创建了新 dictionary，它有两个元素，将其赋给变量 <varname>d</varname> 。每一个元素都是一个 key-value 对；整个元素集合用大括号括起来。</para>
+</callout>
+<callout arearefs="odbchelper.dict.1.2">
+<para><literal>'server'</literal> 是一个 key，它所关联的值是通过 <literal>d["server"]</literal> 来引用的，为 <literal>'mpilgrim'</literal>。</para>
+</callout>
+<callout arearefs="odbchelper.dict.1.3">
+<para><literal>'database'</literal> 是一个 key，它所关联的值是通过 <literal>d["database"]</literal> 来引用的，为 <literal>'master'</literal>。</para>
+</callout>
+<callout arearefs="odbchelper.dict.1.4">
+<para>您可以通过 key 来引用其值，但是不能通过值获取 key。所以 <literal>d["server"]</literal> 的值为 <literal>'mpilgrim'</literal>，而使用 <literal>d["mpilgrim"]</literal> 会引发一个异常，因为 <literal>'mpilgrim'</literal> 不是一个 key。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section>
+<title>Dictionary 的修改</title>
+<example id="odbchelper.dict.modify">
+<title>修改 Dictionary</title>
+<screen>&prompt;<userinput>d</userinput>
+<computeroutput>{'server': 'mpilgrim', 'database': 'master'}</computeroutput>
+&prompt;<userinput>d["database"] = "pubs"</userinput> <co id="odbchelper.dict.2.1"/>
+&prompt;<userinput>d</userinput>
+<computeroutput>{'server': 'mpilgrim', 'database': 'pubs'}</computeroutput>
+&prompt;<userinput>d["uid"] = "sa"</userinput>        <co id="odbchelper.dict.2.2"/>
+&prompt;<userinput>d</userinput>
+<computeroutput>{'server': 'mpilgrim', 'uid': 'sa', 'database': 'pubs'}</computeroutput></screen>
+</example>
+<calloutlist>
+<callout arearefs="odbchelper.dict.2.1">
+<para>在一个 dictionary 中不能有重复的 key。给一个存在的 key 赋值会覆盖原有的值。</para>
+</callout>
+<callout arearefs="odbchelper.dict.2.2">
+<para>在任何时候都可以加入新的 key-value 对。这种语法同修改存在的值是一样的。(是的，它可能某天会给您带来麻烦。假设你一次次地修改一个 dictionary，但其间您使用的 key 并未按照您的想法进行改变。您可能以为加入了新值，但实际上只是一次又一次地修改了同一个值。)</para>
+</callout>
+</calloutlist>
+<para>请注意新的元素 (key 为 <literal>'uid'</literal>，value 为 <literal>'sa'</literal>) 出现在中间。实际上，在第一个例子中的元素看上去是的有序不过是一种巧合。现在它们看上去的无序同样是一种巧合。</para>
+<note id="tip.dictorder">
+<title>Dictionary 是无序的</title>
+<para>Dictionary 没有元素顺序的概念。说元素 <quote>顺序乱了</quote> 是不正确的，它们只是序偶的简单排列。这是一个重要的特性，它会在您想要以一种特定的，可重现的顺序 (像以 key 的字母表顺序) 存取 dictionary 元素的时候骚扰您。有一些实现这些要求的方法，它们只是没有加到 dictionary 中去。</para>
+</note>
+<para>当使用 dictionary 时，您需要知道：dictionary 的 key 是大小写敏感的。</para>
+<example id="odbchelper.dict.case">
+<title>Dictionary 的 key 是大小写敏感的</title>
+<screen>
+&prompt;<userinput>d = {}</userinput>
+&prompt;<userinput>d["key"] = "value"</userinput>
+&prompt;<userinput>d["key"] = "other value"</userinput> <co id="odbchelper.dict.5.1"/>
+&prompt;<userinput>d</userinput>
+<computeroutput>{'key': 'other value'}</computeroutput>
+&prompt;<userinput>d["Key"] = "third value"</userinput> <co id="odbchelper.dict.5.2"/>
+&prompt;<userinput>d</userinput>
+<computeroutput>{'Key': 'third value', 'key': 'other value'}</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="odbchelper.dict.5.1">
+<para>为一个已经存在的 dictionary key 赋值，将简单覆盖原有的值。</para>
+</callout>
+<callout arearefs="odbchelper.dict.5.2">
+<para>这不会为一个已经存在的 dictionary key 赋值，因为在 &python; 中是区分大小写的，也就是说 <literal>'key'</literal> 与 <literal>'Key'</literal> 是不同的。所以这种情况将在 dictionary 中创建一个新的 key-value 对。虽然看上去很相近，但是在 &python; 眼里是完全不同的。</para>
+</callout>
+</calloutlist>
+</example>
+<example id="odbchelper.dictionarytypes">
+<title>在 dictionary 中混用数据类型</title>
+<screen>&prompt;<userinput>d</userinput>
+<computeroutput>{'server': 'mpilgrim', 'uid': 'sa', 'database': 'pubs'}</computeroutput>
+&prompt;<userinput>d["retrycount"] = 3</userinput> <co id="odbchelper.dict.3.1"/>
+&prompt;<userinput>d</userinput>
+<computeroutput>{'server': 'mpilgrim', 'uid': 'sa', 'database': 'master', 'retrycount': 3}</computeroutput>
+&prompt;<userinput>d[42] = "douglas"</userinput>   <co id="odbchelper.dict.3.2"/>
+&prompt;<userinput>d</userinput>
+<computeroutput>{'server': 'mpilgrim', 'uid': 'sa', 'database': 'master',
+42: 'douglas', 'retrycount': 3}</computeroutput></screen>
+</example>
+<calloutlist>
+<callout arearefs="odbchelper.dict.3.1">
+<para>Dictionary 不只是用于存储字符串。Dictionary 的值可以是任意数据类型，包括字符串、整数、对象，甚至其它的 dictionary。在单个 dictionary 里，dictionary 的值并不需要全都是同一数据类型，可以根据需要混用和匹配。</para>
+</callout>
+<callout arearefs="odbchelper.dict.3.2">
+<para>Dictionary 的 key 要严格多了，但是它们可以是字符串、整数或几种其它的类型 (后面还会谈到这一点)。也可以在一个 dictionary 中混用和匹配 key 的数据类型。</para>
+</callout>
+</calloutlist>
+</section>
+<section>
+<title>从 dictionary 中删除元素</title>
+<example id="odbchelper.dict.del">
+<title>从 dictionary 中删除元素</title>
+<screen>&prompt;<userinput>d</userinput>
+<computeroutput>{'server': 'mpilgrim', 'uid': 'sa', 'database': 'master',
+42: 'douglas', 'retrycount': 3}</computeroutput>
+&prompt;<userinput>del d[42]</userinput> <co id="odbchelper.dict.4.1"/>
+&prompt;<userinput>d</userinput>
+<computeroutput>{'server': 'mpilgrim', 'uid': 'sa', 'database': 'master', 'retrycount': 3}</computeroutput>
+&prompt;<userinput>d.clear()</userinput> <co id="odbchelper.dict.4.2"/>
+&prompt;<userinput>d</userinput>
+<computeroutput>{}</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.dict.4.1">
+<para>&del; 允许您使用 key 从一个 dictionary 中删除独立的元素。</para>
+</callout>
+<callout arearefs="odbchelper.dict.4.2">
+<para>&clear; 从一个 dictionary 中清除所有元素。注意空的大括号集合表示一个没有元素的 dictionary。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&howtothink; 讲授了 dictionary 和如何<ulink url="&url_howtothink;chap10.htm">使用 dictionary 模拟稀疏矩阵</ulink>。</para></listitem>
+<listitem><para>&pythonknowledgebase; 有许多<ulink url="&url_pythonknowledgebase;index.phtml/fid/541">使用 dictionary 的示例代码</ulink>。</para></listitem>
+<listitem><para>&pythoncookbook; 讨论了<ulink url="&url_pythoncookbook;Recipe/52306">如何通过 key 对 dictionary 的值进行排序</ulink>。</para></listitem>
+<listitem><para>&pythonlibraryreference; 总结了<ulink url="&url_pythonlibs;typesmapping.html">所有的 dictionary 方法</ulink>。</para></listitem>
+</itemizedlist>
+</section>
+</section>
+<section id="odbchelper.list">
+<?dbhtml filename="native_data_types/lists.html"?>
+<title>List 介绍</title>
+<abstract>
+<title></title>
+<para>List 是 &python; 中使用最频繁的数据类型。如果您对 list 仅有的经验就是在 &vb; 中的数组或 &powerbuilder; 中的数据存储，那么就打起精神学习 &python; 的 list 吧。</para>
+</abstract>
+<note id="compare.list.perl" role="compare" vendor="perl">
+<title>&python; &vs; &perl;: list</title>
+<para>&python; 的 list 如同 &perl; 中的数组。在 &perl; 中，用来保存数组的变量总是以 <literal>@</literal> 字符开始；在 &python; 中，变量可以任意取名，并且 &python; 在内部会记录下其数据类型。</para>
+</note>
+<note id="compare.list.java" role="compare" vendor="java">
+<title>&python; &vs; &java;: list</title>
+<para>&python; 中的 list 更像 &java; 中的数组 (您可以简单地这样理解，但 &python; 中的 list 远比 &java; 中的数组强大)。一个更好的类比是 <classname>ArrayList</classname> 类，它可以保存任意对象，并且可以在增加新元素时动态扩展。</para>
+</note>
+<section>
+<title>List 的定义</title>
+<example>
+<title>定义 List</title>
+<screen>&prompt;<userinput>li = ["a", "b", "mpilgrim", "z", "example"]</userinput> <co id="odbchelper.list.1.1"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'mpilgrim', 'z', 'example']</computeroutput>
+&prompt;<userinput>li[0]</userinput>                                       <co id="odbchelper.list.1.2"/>
+<computeroutput>'a'</computeroutput>
+&prompt;<userinput>li[4]</userinput>                                       <co id="odbchelper.list.1.3"/>
+<computeroutput>'example'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.list.1.1">
+<para>首先我们定义了一个有 5 个元素的 list。注意它们保持着初始的顺序。这不是偶然。List 是一个用方括号包括起来的有序元素的集合。</para>
+</callout>
+<callout arearefs="odbchelper.list.1.2">
+<para>List 可以作为以 0 下标开始的数组。任何一个非空 list 的第一个元素总是 <literal>li[0]</literal>。</para>
+</callout>
+<callout arearefs="odbchelper.list.1.3">
+<para>这个包含 5 个元素 list 的最后一个元素是 <literal>li[4]</literal>，因为列表总是从 0 开始。</para>
+</callout>
+</calloutlist>
+</example>
+<example id="odbchelper.negative.example">
+<title>负的 list 索引</title>
+<screen>&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'mpilgrim', 'z', 'example']</computeroutput>
+&prompt;<userinput>li[-1]</userinput> <co id="odbchelper.list.2.1"/>
+<computeroutput>'example'</computeroutput>
+&prompt;<userinput>li[-3]</userinput> <co id="odbchelper.list.2.2"/>
+<computeroutput>'mpilgrim'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.list.2.1">
+<para>负数索引从 list 的尾部开始向前计数来存取元素。任何一个非空的 list 最后一个元素总是 <literal>li[-1]</literal>。</para>
+</callout>
+<callout arearefs="odbchelper.list.2.2">
+<para>如果负数索引使您感到糊涂，可以这样理解：<literal>li[-n] == li[len(li) - n]</literal>。所以在这个 list 里，<literal>li[-3] == li[5 - 3] == li[2]</literal>。</para>
+</callout>
+</calloutlist>
+</example>
+<example id="odbchelper.list.slice">
+<title>list 的分片 (slice)</title>
+<screen>&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'mpilgrim', 'z', 'example']</computeroutput>
+&prompt;<userinput>li[1:3]</userinput>  <co id="odbchelper.list.3.1"/>
+<computeroutput>['b', 'mpilgrim']</computeroutput>
+&prompt;<userinput>li[1:-1]</userinput> <co id="odbchelper.list.3.2"/>
+<computeroutput>['b', 'mpilgrim', 'z']</computeroutput>
+&prompt;<userinput>li[0:3]</userinput>  <co id="odbchelper.list.3.3"/>
+<computeroutput>['a', 'b', 'mpilgrim']</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.list.3.1">
+<para>您可以通过指定 2 个索引得到 list 的子集，叫做一个 <quote>slice</quote> 。返回值是一个新的 list，它包含了 list 中按顺序从第一个 slice 索引 (这里为 <literal>li[1]</literal>) 开始，直到但是不包括第二个 slice 索引 (这里为 <literal>li[3]</literal>) 的所有元素。</para>
+</callout>
+<callout arearefs="odbchelper.list.3.2">
+<para>如果一个或两个 slice 索引是负数，slice 也可以工作。如果对您有帮助，您可以这样理解：从左向右阅读 list，第一个 slice 索引指定了您想要的第一个元素，第二个 slice 索引指定了第一个您不想要的元素。返回的值为在其间的每个元素。</para>
+</callout>
+<callout arearefs="odbchelper.list.3.3">
+<para>List 从 0 开始，所以 <literal>li[0:3]</literal> 返回 list 的前 3 个元素，从 <literal>li[0]</literal> 开始，直到但不包括 <literal>li[3]</literal>。</para>
+</callout>
+</calloutlist>
+</example>
+<example id="odbchelper.list.slicing.example">
+<title>Slice 简写</title>
+<screen>&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'mpilgrim', 'z', 'example']</computeroutput>
+&prompt;<userinput>li[:3]</userinput> <co id="odbchelper.list.4.1"/>
+<computeroutput>['a', 'b', 'mpilgrim']</computeroutput>
+&prompt;<userinput>li[3:]</userinput> <co id="odbchelper.list.4.2"/> <co id="odbchelper.list.4.3"/>
+<computeroutput>['z', 'example']</computeroutput>
+&prompt;<userinput>li[:]</userinput>  <co id="odbchelper.list.4.4"/>
+<computeroutput>['a', 'b', 'mpilgrim', 'z', 'example']</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.list.4.1">
+<para>如果左侧分片索引为 0，您可以将其省略，默认为 0。所以 <literal>li[:3]</literal> 同 <xref linkend="odbchelper.list.slice"/> 的 <literal>li[0:3]</literal> 是一样的。</para>
+</callout>
+<callout arearefs="odbchelper.list.4.2">
+<para>同样的，如果右侧分片索引是 list 的长度，可以将其省略。所以 <literal>li[3:]</literal> 同 <literal>li[3:5]</literal> 是一样的，因为这个 list 有 5 个元素。</para>
+</callout>
+<callout arearefs="odbchelper.list.4.3">
+<para>请注意这里的对称性。在这个包含 5 个元素的 list 中，<literal>li[:3]</literal> 返回前 3 个元素，而 <literal>li[3:]</literal> 返回后 2 个元素。实际上，<literal>li[:n]</literal> 总是返回前 <literal>n</literal> 个元素，而 <literal>li[n:]</literal> 将返回剩下的元素，不管 list 有多长。</para>
+</callout>
+<callout arearefs="odbchelper.list.4.4">
+<para>如果将两个分片索引全部省略，这将包括 list 的所有元素。但是与原始的名为 <varname>li</varname> 的 list 不同，它是一个新 list，恰好拥有与 <varname>li</varname> 一样的全部元素。<literal>li[:]</literal> 是生成一个 list 完全拷贝的一个简写。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section>
+<title>向 list 中增加元素</title>
+<example>
+<title>向 list 中增加元素</title>
+<screen>&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'mpilgrim', 'z', 'example']</computeroutput>
+&prompt;<userinput>li.append("new")</userinput>               <co id="odbchelper.list.5.1"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'mpilgrim', 'z', 'example', 'new']</computeroutput>
+&prompt;<userinput>li.insert(2, "new")</userinput>            <co id="odbchelper.list.5.2"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'new', 'mpilgrim', 'z', 'example', 'new']</computeroutput>
+&prompt;<userinput>li.extend(["two", "elements"])</userinput> <co id="odbchelper.list.5.3"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'new', 'mpilgrim', 'z', 'example', 'new', 'two', 'elements']</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.list.5.1">
+<para><function>append</function> 向 list 的末尾追加单个元素。</para>
+</callout>
+<callout arearefs="odbchelper.list.5.2">
+<para><function>insert</function> 将单个元素插入到 list 中。数值参数是插入点的索引。请注意，list 中的元素不必唯一，现在有两个独立的元素具有 <literal>'new'</literal> 这个值，<literal>li[2]</literal> 和 <literal>li[6]</literal>。</para>
+</callout>
+<callout arearefs="odbchelper.list.5.3">
+<para>&extend; 用来连接 list。请注意不要使用多个参数来调用 &extend;，要使用一个 list 参数进行调用。在本例中，这个 list 有两个元素。</para>
+</callout>
+</calloutlist>
+</example>
+<example id="odbchelper.list.append.vs.extend">
+<title><function>extend</function> (扩展) 与 <function>append</function> (追加) 的差别</title>
+<screen>
+&prompt;<userinput>li = ['a', 'b', 'c']</userinput>
+&prompt;<userinput>li.extend(['d', 'e', 'f'])</userinput> <co id="odbchelper.list.5.4"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'c', 'd', 'e', 'f']</computeroutput>
+&prompt;<userinput>len(li)</userinput>                    <co id="odbchelper.list.5.5"/>
+<computeroutput>6</computeroutput>
+&prompt;<userinput>li[-1]</userinput>
+<computeroutput>'f'</computeroutput>
+&prompt;<userinput>li = ['a', 'b', 'c']</userinput>
+&prompt;<userinput>li.append(['d', 'e', 'f'])</userinput> <co id="odbchelper.list.5.6"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'c', ['d', 'e', 'f']]</computeroutput>
+&prompt;<userinput>len(li)</userinput>                    <co id="odbchelper.list.5.7"/>
+<computeroutput>4</computeroutput>
+&prompt;<userinput>li[-1]</userinput>
+<computeroutput>['d', 'e', 'f']</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="odbchelper.list.5.4">
+<para>Lists 的两个方法 <function>extend</function> 和 <function>append</function> 看起来类似，但实际上完全不同。<function>extend</function> 接受一个参数，这个参数总是一个 list，并且把这个 list 中的每个元素添加到原 list 中。</para>
+</callout>
+<callout arearefs="odbchelper.list.5.5">
+<para>在这里 list 中有 3 个元素 (<literal>'a'</literal>、<literal>'b'</literal> 和 <literal>'c'</literal>)，并且使用另一个有 3 个元素 (<literal>'d'</literal>、<literal>'e'</literal> 和 <literal>'f'</literal>) 的 list 扩展之，因此新的 list 中有 6 个元素。</para>
+</callout>
+<callout arearefs="odbchelper.list.5.6">
+<para>另一方面，<function>append</function> 接受一个参数，这个参数可以是任何数据类型，并且简单地追加到 list 的尾部。在这里使用一个含有 3 个元素的 list 参数调用 <function>append</function> 方法。</para>
+</callout>
+<callout arearefs="odbchelper.list.5.7">
+<para>原来包含 3 个元素的 list 现在包含 4 个元素。为什么是 4 个元素呢？因为刚刚追加的最后一个元素<emphasis>本身是个 list</emphasis>。List 可以包含任何类型的数据，也包括其他的 list。这或许是您所要的结果，或许不是。如果您的意图是 <function>extend</function>，请不要使用 <function>append</function>。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section>
+<title>在 list 中搜索</title>
+<example id="odbchelper.list.search">
+<title>搜索 list</title>
+<screen>&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'new', 'mpilgrim', 'z', 'example', 'new', 'two', 'elements']</computeroutput>
+&prompt;<userinput>li.index("example")</userinput> <co id="odbchelper.list.6.1"/>
+<computeroutput>5</computeroutput>
+&prompt;<userinput>li.index("new")</userinput>     <co id="odbchelper.list.6.2"/>
+<computeroutput>2</computeroutput>
+&prompt;<userinput>li.index("c")</userinput>       <co id="odbchelper.list.6.3"/>
+<computeroutput role="traceback">&traceback;
+ValueError: list.index(x): x not in list</computeroutput>
+&prompt;<userinput>"c" in li</userinput>           <co id="odbchelper.list.6.4"/>
+<computeroutput>False</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.list.6.1">
+<para><function>index</function> 在 list 中查找一个值的首次出现并返回索引值。</para>
+</callout>
+<callout arearefs="odbchelper.list.6.2">
+<para><function>index</function> 在 list 中查找一个值的<emphasis>首次</emphasis> 出现。这里 <literal>'new'</literal> 在 list 中出现了两次，在 <literal>li[2]</literal> 和 <literal>li[6]</literal>，但 <function>index</function> 只返回第一个索引，<literal>2</literal>。</para>
+</callout>
+<callout arearefs="odbchelper.list.6.3">
+<para>如果在 list 中没有找到值，&python; 会引发一个异常。这一点与大部分的语言截然不同，大部分语言会返回某个无效索引。尽管这种处理可能令人讨厌，但它仍然是件好事，因为它说明您的程序会由于源代码的问题而崩溃，好于在后面当您使用无效索引而引起崩溃。</para>
+</callout>
+<callout arearefs="odbchelper.list.6.4">
+<para>要测试一个值是否在 list 内，使用 <function>in</function>。如果值存在，它返回 &true;，否则返为 &false; 。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="tip.boolean">
+<title>何谓 &python; 中的 True ？</title>
+<para>在 2.2.1 版本之前，&python; 没有单独的布尔数据类型。为了弥补这个缺陷，&python; 在布尔环境 (如 &if; 语句) 中几乎接受所有东西，遵循下面的规则：</para>
+<itemizedlist>
+<listitem><para>&zero; 为 false; 其它所有数值皆为 true。</para></listitem>
+<listitem><para>空串 (<literal>""</literal>) 为 false; 其它所有字符串皆为 true。</para></listitem>
+<listitem><para>空 list (<literal>[]</literal>) 为 false; 其它所有 list 皆为 true。</para></listitem>
+<listitem><para>空 tuple (<literal>()</literal>) 为 false; 其它所有 tuple 皆为 true。</para></listitem>
+<listitem><para>空 dictionary (<literal>{}</literal>) 为 false; 其它所有 dictionary 皆为 true。</para></listitem>
+</itemizedlist>
+<para>这些规则仍然适用于 &python; 2.2.1 及其后续版本，但现在您也可以使用真正的布尔值，它的值或者为 <literal>True</literal> 或者为 <literal>False</literal>。请注意第一个字母是大写的；这些值如同在 &python; 中的其它东西一样都是大小写敏感的。</para>
+</note>
+</section>
+<section>
+<title>从 list 中删除元素</title>
+<example id="odbchelper.list.removingelements">
+<title>从 list 中删除元素</title>
+<screen>&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'new', 'mpilgrim', 'z', 'example', 'new', 'two', 'elements']</computeroutput>
+&prompt;<userinput>li.remove("z")</userinput>   <co id="odbchelper.list.7.1"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'new', 'mpilgrim', 'example', 'new', 'two', 'elements']</computeroutput>
+&prompt;<userinput>li.remove("new")</userinput> <co id="odbchelper.list.7.2"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'mpilgrim', 'example', 'new', 'two', 'elements']</computeroutput>
+&prompt;<userinput>li.remove("c")</userinput>   <co id="odbchelper.list.7.3"/>
+<computeroutput role="traceback">&traceback;
+ValueError: list.remove(x): x not in list</computeroutput>
+&prompt;<userinput>li.pop()</userinput>         <co id="odbchelper.list.7.4"/>
+<computeroutput>'elements'</computeroutput>
+&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'mpilgrim', 'example', 'new', 'two']</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.list.7.1">
+<para><function>remove</function> 从 list 中删除一个值的首次出现。</para>
+</callout>
+<callout arearefs="odbchelper.list.7.2">
+<para><function>remove</function> <emphasis>仅仅</emphasis> 删除一个值的首次出现。在这里，<literal>'new'</literal> 在 list 中出现了两次，但 <literal>li.remove("new")</literal> 只删除了 <literal>'new'</literal> 的首次出现。</para>
+</callout>
+<callout arearefs="odbchelper.list.7.3">
+<para>如果在 list 中没有找到值，&python; 会引发一个异常来响应 <function>index</function> 方法。</para>
+</callout>
+<callout arearefs="odbchelper.list.7.4">
+<para><function>pop</function> 是一个有趣的东西。它会做两件事：删除 list 的最后一个元素，然后返回删除元素的值。请注意，这与 <literal>li[-1]</literal> 不同，后者返回一个值但不改变 list 本身。也不同于 <literal>li.remove(<replaceable>value</replaceable>)</literal>，后者改变 list 但并不返回值。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section>
+<title>使用 list 的运算符</title>
+<example id="odbchelper.list.operators">
+<title>List 运算符</title>
+<screen>&prompt;<userinput>li = ['a', 'b', 'mpilgrim']</userinput>
+&prompt;<userinput>li = li + ['example', 'new']</userinput> <co id="odbchelper.list.8.1"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'mpilgrim', 'example', 'new']</computeroutput>
+&prompt;<userinput>li += ['two']</userinput>                <co id="odbchelper.list.8.2"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>['a', 'b', 'mpilgrim', 'example', 'new', 'two']</computeroutput>
+&prompt;<userinput>li = [1, 2] * 3</userinput>              <co id="odbchelper.list.8.3"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>[1, 2, 1, 2, 1, 2]</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.list.8.1">
+<para>Lists 也可以用 <literal>+</literal> 运算符连接起来。<literal><replaceable>list</replaceable> = <replaceable>list</replaceable> + <replaceable>otherlist</replaceable></literal> 相当于 <literal><replaceable>list</replaceable>.extend(<replaceable>otherlist</replaceable>)</literal>。但 <literal>+</literal> 运算符把一个新 (连接后) 的 list 作为值返回，而 &extend; 只修改存在的 list。也就是说，对于大型 list 来说，&extend; 的执行速度要快一些。</para>
+</callout>
+<callout arearefs="odbchelper.list.8.2">
+<para>&python; 支持 <literal>+=</literal> 运算符。<literal>li += ['two']</literal> 等同于 <literal>li.extend(['two'])</literal>。<literal>+=</literal> 运算符可用于 list、字符串和整数，并且它也可以被重载用于用户自定义的类中 (更多关于类的内容参见 <xref linkend="fileinfo" endterm="fileinfo.numberonly"/>)。</para>
+</callout>
+<callout arearefs="odbchelper.list.8.3">
+<para><literal>*</literal> 运算符可以作为一个重复器作用于 list。<literal>li = [1, 2] * 3</literal> 等同于 <literal>li = [1, 2] + [1, 2] + [1, 2]</literal>，即将三个 list 连接成一个。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&howtothink; 讲述了list，并且重点讲述了如何<ulink url="&url_howtothink;chap08.htm">把 list 作为函数参数传递</ulink>。</para></listitem>
+<listitem><para>&pythontutorial; 展示了如何<ulink url="&url_pythontutorial;node7.html#SECTION007110000000000000000">把 list 作为堆栈和队列使用</ulink>。</para></listitem>
+<listitem><para>&pythonknowledgebase; 回答了<ulink url="&url_pythonknowledgebase;index.phtml/fid/534">有关 list 的常见问题</ulink>并且有许多<ulink url="&url_pythonknowledgebase;index.phtml/fid/540">使用 list 的示例代码</ulink>。</para></listitem>
+<listitem><para>&pythonlibraryreference; 总结了<ulink url="&url_pythonlibs;typesseq-mutable.html">所有的 list 方法</ulink>。</para></listitem>
+</itemizedlist>
+</section>
+</section>
+<section id="odbchelper.tuple">
+<?dbhtml filename="native_data_types/tuples.html"?>
+<title>Tuple 介绍</title>
+<abstract>
+<title></title>
+<para>Tuple 是不可变的 list。一旦创建了一个 tuple，就不能以任何方式改变它。</para>
+</abstract>
+<example>
+<title>定义 tuple</title>
+<screen>&prompt;<userinput>t = ("a", "b", "mpilgrim", "z", "example")</userinput> <co id="odbchelper.tuple.1.1"/>
+&prompt;<userinput>t</userinput>
+<computeroutput>('a', 'b', 'mpilgrim', 'z', 'example')</computeroutput>
+&prompt;<userinput>t[0]</userinput>                                       <co id="odbchelper.tuple.1.2"/>
+<computeroutput>'a'</computeroutput>
+&prompt;<userinput>t[-1]</userinput>                                      <co id="odbchelper.tuple.1.3"/>
+<computeroutput>'example'</computeroutput>
+&prompt;<userinput>t[1:3]</userinput>                                     <co id="odbchelper.tuple.1.4"/>
+<computeroutput>('b', 'mpilgrim')</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.tuple.1.1">
+<para>定义 tuple 与定义 list 的方式相同，但整个元素集是用小括号包围的，而不是方括号。</para>
+</callout>
+<callout arearefs="odbchelper.tuple.1.2">
+<para>Tuple 的元素与 list 一样按定义的次序进行排序。Tuples 的索引与 list 一样从 0 开始，所以一个非空 tuple 的第一个元素总是 <literal>t[0]</literal>。</para>
+</callout>
+<callout arearefs="odbchelper.tuple.1.3">
+<para>负数索引与 list 一样从 tuple 的尾部开始计数。</para>
+</callout>
+<callout arearefs="odbchelper.tuple.1.4">
+<para>与 list 一样分片 (slice) 也可以使用。注意当分割一个 list 时，会得到一个新的 list ；当分割一个 tuple 时，会得到一个新的 tuple。</para>
+</callout>
+</calloutlist>
+</example>
+<example id="odbchelper.tuplemethods">
+<title>Tuple 没有方法</title>
+<screen>&prompt;<userinput>t</userinput>
+<computeroutput>('a', 'b', 'mpilgrim', 'z', 'example')</computeroutput>
+&prompt;<userinput>t.append("new")</userinput>    <co id="odbchelper.tuple.2.1"/>
+<computeroutput role="traceback">&traceback;
+AttributeError: 'tuple' object has no attribute 'append'</computeroutput>
+&prompt;<userinput>t.remove("z")</userinput>      <co id="odbchelper.tuple.2.2"/>
+<computeroutput role="traceback">&traceback;
+AttributeError: 'tuple' object has no attribute 'remove'</computeroutput>
+&prompt;<userinput>t.index("example")</userinput> <co id="odbchelper.tuple.2.3"/>
+<computeroutput role="traceback">&traceback;
+AttributeError: 'tuple' object has no attribute 'index'</computeroutput>
+&prompt;<userinput>"z" in t</userinput>           <co id="odbchelper.tuple.2.4"/>
+<computeroutput>True</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.tuple.2.1">
+<para>您不能向 tuple 增加元素。Tuple 没有 <function>append</function> 或 <function>extend</function> 方法。</para>
+</callout>
+<callout arearefs="odbchelper.tuple.2.2">
+<para>您不能从 tuple 删除元素。Tuple 没有 <function>remove</function> 或 <function>pop</function> 方法。</para>
+</callout>
+<callout arearefs="odbchelper.tuple.2.3">
+<para>您不能在 tuple 中查找元素。Tuple 没有 <function>index</function> 方法。</para>
+</callout>
+<callout arearefs="odbchelper.tuple.2.4">
+<para>然而，您可以使用 <function>in</function> 来查看一个元素是否存在于 tuple 中。</para>
+</callout>
+</calloutlist>
+</example>
+<para>那么使用 tuple 有什么好处呢？</para>
+<itemizedlist>
+<listitem><para>Tuple 比 list 操作速度快。如果您定义了一个值的常量集，并且唯一要用它做的是不断地遍历它，请使用 tuple 代替 list。</para></listitem>
+<listitem><para>如果对不需要修改的数据进行 <quote>写保护</quote>，可以使代码更安全。使用 tuple 而不是 list 如同拥有一个隐含的 <literal>assert</literal> 语句，说明这一数据是常量。如果必须要改变这些值，则需要执行 tuple 到 list 的转换 (需要使用一个特殊的函数)。</para></listitem>
+<listitem><para>还记得我说过 <link linkend="odbchelper.dictionarytypes">dictionary keys</link> 可以是字符串，整数和 <quote>其它几种类型</quote>吗？Tuples 就是这些类型之一。Tuples 可以在 dictionary 中被用做 key，但是 list 不行。</para>
+<para>实际上，事情要比这更复杂。Dictionary key 必须是不可变的。Tuple 本身是不可改变的，但是如果您有一个 list 的 tuple，那就认为是可变的了，用做 dictionary key 就是不安全的。只有字符串、整数或其它对 dictionary 安全的 tuple 才可以用作 dictionary key。</para></listitem>
+<listitem><para>Tuples 可以用在字符串格式化中，我们会很快看到。</para></listitem>
+</itemizedlist>
+<note id="tip.tuple">
+<title>Tuple 到 list 再到 tuple</title>
+<para>Tuple 可以转换成 list，反之亦然。内置的 &tuple; 函数接收一个 list，并返回一个有着相同元素的 tuple。而 &list; 函数接收一个 tuple 返回一个 list。从效果上看，&tuple; 冻结一个 list，而 &list; 解冻一个 tuple。</para>
+</note>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&howtothink; 讲解了 tuple 并且展示了如何<ulink url="&url_howtothink;chap10.htm">连接 tuple</ulink>。</para></listitem>
+<listitem><para>&pythonknowledgebase; 展示了如何对<ulink url="&url_pythonknowledgebase;view.phtml/aid/4553/fid/587">一个 tuple 排序</ulink>。</para></listitem>
+<listitem><para>&pythontutorial; 展示了如何<ulink url="&url_pythontutorial;node7.html#SECTION007300000000000000000">定义一个只包含一个元素的 tuple</ulink>。</para></listitem>
+</itemizedlist>
+</section>
+<section id="odbchelper.vardef">
+<?dbhtml filename="native_data_types/declaring_variables.html"?>
+<title>变量声明</title>
+<para>现在您已经了解了有关 dictionary、tuple、和 list 的相关知识 (哦，我的老天！)，让我们回到 <xref linkend="odbchelper" endterm="odbchelper.numberonly"/> 的例子程序 &odbchelper_filename;。</para>
+<abstract>
+<title/>
+<para>&python; 与大多数其它语言一样有局部变量和全局变量之分，但是它没有明显的变量声明。变量通过首次赋值产生，当超出作用范围时自动消亡。</para>
+</abstract>
+<example id="myparamsdef">
+<title>定义 <varname>myParams</varname> 变量</title>
+<programlisting>
+&odbchelper_if;
+&odbchelper_dict;</programlisting>
+</example>
+<para>首先注意缩进。&if; 语句是代码块，需要像函数一样缩进。</para>
+<para>其次，变量的赋值是一条被分成了多行的命令，用反斜线 (<quote><literal>\</literal></quote>) 作为续行符。</para>
+<note id="tip.multiline">
+<title>书写多行命令</title>
+<para>当一条命令用续行符 (<quote><literal>\</literal></quote>) 分割成多行时，后续的行可以以任何方式缩进，此时 &python; 通常的严格的缩进规则无需遵守。如果您的 &python; &ide; 自由对后续行进行了缩进，您应该把它当成是缺省处理，除非您有特别的原因不这么做。</para>
+</note>
+<para id="tip.implicitmultiline">严格地讲，在小括号，方括号或大括号中的表达式 (如<link linkend="myparamsdef">定义一个 dictionary</link>) 可以用或者不用续行符 (<quote><literal>\</literal></quote>) 分割成多行。甚至在不是必需的时候，我也喜欢使用续行符，因为我认为这样会让代码读起来更容易，但那只是风格问题。</para>
+<para>第三，您从未声明过变量 <varname>myParams</varname>，您只是给它赋了一个值。这点就像是 &vbscript; 没有设置 <option>option explicit</option> 选项一样。幸运的是，与 &vbscript; 不同，&python; 不允许您引用一个未被赋值的变量，试图这样做会引发一个异常。</para>
+<section>
+<title>变量引用</title>
+<example id="odbchelper.unboundvariable">
+<title>引用未赋值的变量</title>
+<screen>&prompt;<userinput>x</userinput>
+<computeroutput role="traceback">&traceback;
+NameError: There is no variable named 'x'</computeroutput>
+&prompt;<userinput>x = 1</userinput>
+&prompt;<userinput>x</userinput>
+<computeroutput>1</computeroutput></screen>
+</example>
+<para>迟早有一天您会为此而感谢 &python; 。</para>
+</section>
+<section id="odbchelper.multiassign">
+<title>一次赋多值</title>
+<para>&python; 中比较 “酷” 的一种编程简写是使用序列来一次给多个变量赋值。</para>
+<example>
+<title>一次赋多值</title>
+<screen>&prompt;<userinput>v = ('a', 'b', 'e')</userinput>
+&prompt;<userinput>(x, y, z) = v</userinput>     <co id="odbchelper.multiassign.1.1"/>
+&prompt;<userinput>x</userinput>
+<computeroutput>'a'</computeroutput>
+&prompt;<userinput>y</userinput>
+<computeroutput>'b'</computeroutput>
+&prompt;<userinput>z</userinput>
+<computeroutput>'e'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.multiassign.1.1">
+<para><varname>v</varname> 是一个三元素的 tuple，并且 <literal>(x, y, z)</literal> 是一个三变量的 tuple。将一个 tuple 赋值给另一个 tuple，会按顺序将 <varname>v</varname> 的每个值赋值给每个变量。</para>
+</callout>
+</calloutlist>
+</example>
+<para>这种用法有许多种用途。我经常想要将一定范围的值赋给多个变量。在 &c; 语言中，可以使用 <literal>enum</literal> 类型，手工列出每个常量和其所对应的值，当值是连续的时候这一过程让人感到特别繁琐。而在 &python; 中，您可以使用内置的 &range; 函数和多变量赋值的方法来快速进行赋值。</para>
+<example id="odbchelper.multiassign.range">
+<title>连续值赋值</title>
+<screen>&prompt;<userinput>range(7)</userinput>                                                                    <co id="odbchelper.multiassign.2.1"/>
+<computeroutput>[0, 1, 2, 3, 4, 5, 6]</computeroutput>
+&prompt;<userinput>(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY) = range(7)</userinput> <co id="odbchelper.multiassign.2.2"/>
+&prompt;<userinput>MONDAY</userinput>                                                                      <co id="odbchelper.multiassign.2.3"/>
+<computeroutput>0</computeroutput>
+&prompt;<userinput>TUESDAY</userinput>
+<computeroutput>1</computeroutput>
+&prompt;<userinput>SUNDAY</userinput>
+<computeroutput>6</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.multiassign.2.1">
+<para>内置的 &range; 函数返回一个元素为整数的 list。这个函数的简化调用形式是接收一个上限值，然后返回一个初始值从 0 开始的 list，它依次递增，直到但不包含上限值。(如果您愿意，您可以传入其它的参数来指定一个非 &zero; 的初始值和非 &one; 的步长。也可以使用 <literal>print range.__doc__</literal> 来了解更多的细节。)</para>
+</callout>
+<callout arearefs="odbchelper.multiassign.2.2">
+<para><varname>MONDAY</varname>、<varname>TUESDAY</varname>、<varname>WEDNESDAY</varname>、<varname>THURSDAY</varname>、<varname>FRIDAY</varname>、<varname>SATURDAY</varname> 和 <varname>SUNDAY</varname> 是我们定义的变量。(这个例子来自 &calendar; 模块。它是一个很有趣的打印日历的小模块，像 &unix; 的 <filename>cal</filename> 命令。这个 &calendar; 模块定义了一星期中每天的整数常量表示。)</para>
+</callout>
+<callout arearefs="odbchelper.multiassign.2.3">
+<para>现在每个变量都拥有了自己的值：<varname>MONDAY</varname> 的值为 &zero;，<varname>TUESDAY</varname> 的值为 &one;，等等。</para>
+</callout>
+</calloutlist>
+</example>
+<para>您也可以使用多变量赋值来创建返回多个值的函数，只要返回一个包含所有值的 tuple 即可。调用者可以将其视为一个 tuple，或将值赋给独立的变量。许多标准的 &python; 库都是这样做的，包括 &os; 模块，我们将在 <xref linkend="filehandling" endterm="filehandling.numberonly"/> 中讨论。</para>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythonlanguagereference; 展示了<ulink url="&url_pythonlanguagereference;implicit-joining.html">什么时候可以忽略续行符</ulink>和<ulink url="&url_pythonlanguagereference;explicit-joining.html">什么时候您需要使用续行符</ulink>的例子。</para></listitem>
+<listitem><para>&howtothink; 演示了如何使用多变量赋值来<ulink url="&url_howtothink;chap09.htm">交换两个变量的值</ulink>。</para></listitem>
+</itemizedlist>
+</section>
+</section>
+<section id="odbchelper.stringformatting">
+<?dbhtml filename="native_data_types/formatting_strings.html"?>
+<title>格式化字符串</title>
+<abstract>
+<title/>
+<para>&python; 支持格式化字符串的输出 。尽管这样可能会用到非常复杂的表达式，但最基本的用法是将一个值插入到一个有字符串格式符 <literal>%s</literal> 的字符串中。</para>
+</abstract>
+<note id="compare.stringformatting.c" role="compare" vendor="c">
+<title>&python; &vs; &c;: 格式化字符串</title>
+<para>在 &python; 中，字符串格式化使用与 &c; 中 <function>sprintf</function> 函数一样的语法。</para>
+</note>
+<example>
+<title>字符串的格式化</title>
+<screen>&prompt;<userinput>k = "uid"</userinput>
+&prompt;<userinput>v = "sa"</userinput>
+&prompt;<userinput>"%s=%s" % (k, v)</userinput> <co id="odbchelper.stringformatting.1.1"/>
+<computeroutput>'uid=sa'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.stringformatting.1.1">
+<para>整个表达式的值为一个字符串。第一个 <literal>%s</literal> 被变量 <varname>k</varname> 的值替换；第二个 <literal>%s</literal> 被 <varname>v</varname> 的值替换。字符串中的所有其它字符 (在这个例子中，是等号) 按原样打印输出。</para>
+</callout>
+</calloutlist>
+</example>
+<para>注意 <literal>(k, v)</literal> 是一个 tuple。我说过它们对某些东西有用。</para>
+<para>您可能一直在想，做了这么多工作只不过是为了做简单的字符串连接。您想的不错，只不过字符串格式化不只是连接。它甚至不仅仅是格式化。它也是强制类型转换。</para>
+<example id="odbchelper.stringformatting.coerce">
+<title>字符串格式化与字符串连接的比较</title>
+<screen>&prompt;<userinput>uid = "sa"</userinput>
+&prompt;<userinput>pwd = "secret"</userinput>
+&prompt;<userinput>print pwd + " is not a good password for " + uid</userinput>      <co id="odbchelper.stringformatting.2.1"/>
+<computeroutput>secret is not a good password for sa</computeroutput>
+&prompt;<userinput>print "%s is not a good password for %s" % (pwd, uid)</userinput> <co id="odbchelper.stringformatting.2.2"/>
+<computeroutput>secret is not a good password for sa</computeroutput>
+&prompt;<userinput>userCount = 6</userinput>
+&prompt;<userinput>print "Users connected: %d" % (userCount, )</userinput>           <co id="odbchelper.stringformatting.2.3"/> <co id="odbchelper.stringformatting.2.4"/>
+<computeroutput>Users connected: 6</computeroutput>
+&prompt;<userinput>print "Users connected: " + userCount</userinput>                 <co id="odbchelper.stringformatting.2.5"/>
+<computeroutput role="traceback">&traceback;
+TypeError: cannot concatenate 'str' and 'int' objects</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.stringformatting.2.1">
+<para><literal>+</literal> 是字符串连接操作符。</para>
+</callout>
+<callout arearefs="odbchelper.stringformatting.2.2">
+<para>在这个简单例子中，字符串格式化实现与连接一样的结果。</para>
+</callout>
+<callout arearefs="odbchelper.stringformatting.2.3">
+<para><literal>(userCount, )</literal> 是一个只包含一个元素的 tuple。是的，语法有一点奇怪，但是使用它的理由就是：显示地指出它是一个 tuple，而不是其他。实际上，当定义一个 list、tuple 或 dictionary 时，您可以总是在最后一个元素后面跟上一个逗号，但是当定义一个只包含一个元素的 tuple 时逗号是必须的。如果省略逗号，&python; 不会知道 <literal>(userCount)</literal> 究竟是一个只包含一个元素的 tuple 还是变量 <varname>userCount</varname> 的值。</para>
+</callout>
+<callout arearefs="odbchelper.stringformatting.2.4">
+<para>字符串格式化通过将 <literal>&pct;s</literal> 替换成 <literal>&pct;d</literal> 即可处理整数。</para>
+</callout>
+<callout arearefs="odbchelper.stringformatting.2.5">
+<para>试图将一个字符串同一个非字符串连接会引发一个异常。与字符串格式化不同，字符串连接只能在被连接的每一个都是字符串时起作用。</para>
+</callout>
+</calloutlist>
+</example>
+<para>如同 <function>printf</function> 在 &c; 中的作用，&python; 中的字符串格式化是一把瑞士军刀。它有丰富的选项，不同的格式化格式符和可选的修正符可用于不同的数据类型。</para>
+<example id="odbchelper.stringformatting.numbers">
+<title>数值的格式化</title>
+<screen>
+&prompt;<userinput>print "Today's stock price: %f" % 50.4625</userinput>   <co id="odbchelper.stringformatting.3.1"/>
+<computeroutput>50.462500</computeroutput>
+&prompt;<userinput>print "Today's stock price: %.2f" % 50.4625</userinput> <co id="odbchelper.stringformatting.3.2"/>
+<computeroutput>50.46</computeroutput>
+&prompt;<userinput>print "Change since yesterday: %+.2f" % 1.5</userinput> <co id="odbchelper.stringformatting.3.3"/>
+<computeroutput>+1.50</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="odbchelper.stringformatting.3.1">
+<para><literal>%f</literal> 格式符选项对应一个十进制浮点数，不指定精度时打印 6 位小数。</para>
+</callout>
+<callout arearefs="odbchelper.stringformatting.3.2">
+<para>使用包含“.2”精度修正符的 <literal>%f</literal> 格式符选项将只打印 2 位小数。</para>
+</callout>
+<callout arearefs="odbchelper.stringformatting.3.3">
+<para>您甚至可以混合使用各种修正符。添加 <literal>+</literal> 修正符用于在数值之前显示一个正号或负号。注意“.2”精度修正符仍旧在它原来的位置，用于只打印 2 位小数。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythonlibraryreference; 总结了<ulink url="&url_pythonlibraryreference;typesseq-strings.html">所有字符串格式化所使用的格式符</ulink>。</para></listitem>
+<listitem><para>&gawkmanual; 讨论了<ulink url="&url_gawkmanual;Control+Letters">所有的格式符</ulink>和高级字符串格式化技术，如<ulink url="&url_gawkmanual;Format+Modifiers">指定宽度，精度和0填充</ulink>。</para></listitem>
+</itemizedlist>
+</section>
+<section id="odbchelper.map">
+<?dbhtml filename="native_data_types/mapping_lists.html"?>
+<title>映射 list</title>
+<abstract>
+<title></title>
+<para>&python; 的强大特性之一是其对 list 的解析，它提供一种紧凑的方法，可以通过对 list 中的每个元素应用一个函数，从而将一个 list 映射为另一个 list。</para>
+</abstract>
+<example>
+<title>List 解析介绍</title>
+<screen>&prompt;<userinput>li = [1, 9, 8, 4]</userinput>
+&prompt;<userinput>[elem*2 for elem in li]</userinput>      <co id="odbchelper.map.1.1"/>
+<computeroutput>[2, 18, 16, 8]</computeroutput>
+&prompt;<userinput>li</userinput>                           <co id="odbchelper.map.1.2"/>
+<computeroutput>[1, 9, 8, 4]</computeroutput>
+&prompt;<userinput>li = [elem*2 for elem in li]</userinput> <co id="odbchelper.map.1.3"/>
+&prompt;<userinput>li</userinput>
+<computeroutput>[2, 18, 16, 8]</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.map.1.1">
+<para>为了便于理解它，让我们从右向左看。<varname>li</varname> 是一个将要映射的 list。&python; 循环遍历 <varname>li</varname> 中的每个元素。对每个元素均执行如下操作：首先临时将其值赋给变量 <varname>elem</varname>，然后 &python; 应用函数 <literal><varname>elem</varname>*2</literal> 进行计算，最后将计算结果追加到要返回的 list 中。</para>
+</callout>
+<callout arearefs="odbchelper.map.1.2">
+<para>需要注意是，对 list 的解析并不改变原始的 list。</para>
+</callout>
+<callout arearefs="odbchelper.map.1.3">
+<para>将一个 list 的解析结果赋值给对其映射的变量是安全的。不用担心存在竞争情况或任何古怪事情的发生。&python; 会在内存中创建新的 list，当对 list 的解析完成时，&python; 将结果赋给变量。</para>
+</callout>
+</calloutlist>
+</example>
+<informalexample>
+<!--<title>List Comprehensions in &odbchelper_function;</title>-->
+<para>让我们回过头来看看位于 <xref linkend="odbchelper" endterm="odbchelper.numberonly"/> 的函数 &odbchelper_function; 对 list 的解析：</para>
+<programlisting>
+&odbchelper_listmapping;</programlisting>
+</informalexample>
+<para>首先，注意到你调用了dictionary <varname>params</varname> 的 <function>items</function>  函数。这个函数返回一个 dictionary 中所有数据的 tuple 的 list。</para>
+<example id="odbchelper.items">
+<title>&keys;, &values; 和 &items; 函数</title>
+<screen>&prompt;<userinput>params = {"server":"mpilgrim", "database":"master", "uid":"sa", "pwd":"secret"}</userinput>
+&prompt;<userinput>params.keys()</userinput>   <co id="odbchelper.map.2.1"/>
+<computeroutput>['server', 'uid', 'database', 'pwd']</computeroutput>
+&prompt;<userinput>params.values()</userinput> <co id="odbchelper.map.2.2"/>
+<computeroutput>['mpilgrim', 'sa', 'master', 'secret']</computeroutput>
+&prompt;<userinput>params.items()</userinput>  <co id="odbchelper.map.2.3"/>
+<computeroutput>[('server', 'mpilgrim'), ('uid', 'sa'), ('database', 'master'), ('pwd', 'secret')]</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.map.2.1">
+<para>Dictionary 的 &keys; 方法返回一个包含所有键的 list。这个 list 没按 dictionary 定义的顺序输出 (记住，元素在 dictionary 中是无序的)，但它是一个 list。</para>
+</callout>
+<callout arearefs="odbchelper.map.2.2">
+<para>&values; 方法返回一个包含所有值的 list。它同 &keys; 方法返回的 list 输出顺序相同，所以对于所有的 <varname>n</varname>，<literal>params.values()[n] == params[params.keys()[n]]</literal> 。</para>
+</callout>
+<callout arearefs="odbchelper.map.2.3">
+<para>&items; 方法返回一个由形如 <literal>(<replaceable>key</replaceable>，<replaceable>value</replaceable>)</literal> 组成的 tuple 的 list。这个 list 包括 dictionary 中所有的数据。</para>
+</callout>
+</calloutlist>
+</example>
+<para>现在让我们看一看 &odbchelper_function; 做了些什么。它接收一个 list，<literal><varname>params</varname>.&items;()</literal>，通过对每个元素应用字符串格式化将其映射为一个新 list。这个新 list 将与 <literal><varname>params</varname>.&items;()</literal> 一一对应：新 list 中的每个元素都是 dictionary <varname>params</varname> 中的一个键-值对构成的的字符串。</para>
+<example>
+<title>&odbchelper_function; 中的 list 解析</title>
+<screen>&prompt;<userinput>params = {"server":"mpilgrim", "database":"master", "uid":"sa", "pwd":"secret"}</userinput>
+&prompt;<userinput>params.items()</userinput>
+<computeroutput>[('server', 'mpilgrim'), ('uid', 'sa'), ('database', 'master'), ('pwd', 'secret')]</computeroutput>
+&prompt;<userinput>[k for k, v in params.items()]</userinput>                <co id="odbchelper.map.3.1"/>
+<computeroutput>['server', 'uid', 'database', 'pwd']</computeroutput>
+&prompt;<userinput>[v for k, v in params.items()]</userinput>                <co id="odbchelper.map.3.2"/>
+<computeroutput>['mpilgrim', 'sa', 'master', 'secret']</computeroutput>
+&prompt;<userinput>&odbchelper_listmapping;</userinput> <co id="odbchelper.map.3.3"/>
+<computeroutput>['server=mpilgrim', 'uid=sa', 'database=master', 'pwd=secret']</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.map.3.1">
+<para>请注意我们正在使用两个变量对 list <literal>params.items()</literal> 进行遍历。这是<link linkend="odbchelper.multiassign">多变量赋值</link>的另一种用法。<literal>params.items()</literal> 的第一个元素是 <literal>('server', 'mpilgrim')</literal>，所以在 list 解析的第一次遍历中，<varname>k</varname> 将为 <literal>'server'</literal>，<varname>v</varname> 将为 <literal>'mpilgrim'</literal>。在本例中，我们忽略了返回 list 中 <varname>v</varname> 的值，而只包含了 <varname>k</varname> 的值，所以这个 list 解析最后等于 <literal><varname>params</varname>.<function>keys</function>()</literal>。</para>
+</callout>
+<callout arearefs="odbchelper.map.3.2">
+<para>这里我们做着相同的事情，但是忽略了 <varname>k</varname> 的值，所以这个 list 解析最后等于 <literal><varname>params</varname>.<function>values</function>()</literal>。</para>
+</callout>
+<callout arearefs="odbchelper.map.3.3">
+<para>用一些简单的 <link linkend="odbchelper.stringformatting">字符串格式化</link>将前面两个例子合并起来 ，我们就得到一个包括了 dictionary 中每个元素的 key-value 对的 list。这个看上去有点像程序的<link linkend="odbchelper.output">输出结果</link>，剩下的就只是将这个 list 中的元素接起来形成一个字符串了。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythontutorial; 讨论了另一种方法来映射 list：<ulink url="&url_pythontutorial;node7.html#SECTION007130000000000000000">使用内置的 <function>map</function> 函数</ulink>。</para></listitem>
+<listitem><para>&pythontutorial; 展示了如何<ulink url="&url_pythontutorial;node7.html#SECTION007140000000000000000">对嵌套 list 的 list 进行解析</ulink>。</para></listitem>
+</itemizedlist>
+</section>
+<section id="odbchelper.join">
+<?dbhtml filename="native_data_types/joining_lists.html"?>
+<title>连接 list 与分割字符串</title>
+<abstract>
+<title></title>
+<para>您有了一个形如 <literal><replaceable>key</replaceable>=<replaceable>value</replaceable></literal> 的 key-value 对 list，并且想将它们合成为单个字符串。为了将任意包含字符串的 list 连接成单个字符串，可以使用字符串对象的 &join; 方法。</para>
+</abstract>
+<informalexample>
+<!--<title>Joining a List in &odbchelper_function;</title>-->
+<para>下面是一个在 &odbchelper_function; 函数中连接 list 的例子：</para>
+<programlisting>
+&odbchelper_code;</programlisting>
+</informalexample>
+<para>在我们继续之前有一个有趣的地方。我一直在重复函数是对象，字符串是对象，每个东西都是对象的概念。您也许认为我的意思是说字符串<emphasis>变量</emphasis> 是对象。但是不对，仔细地看一下这个例子，您将会看到字符串 <literal>";"</literal> 本身就是一个对象，您在调用它的 &join; 方法。</para>
+<para>总之，这里的 &join; 方法将 list 中的元素连接成单个字符串，每个元素用一个分号隔开。分隔符不必是一个分号；它甚至不必是单个字符。它可以是任何字符串。</para>
+<caution id="tip.join">
+<title>不能 &join; 非字符串</title>
+<para>&join; 只能用于元素是字符串的 list；它不进行任何的强制类型转换。连接一个存在一个或多个非字符串元素的 list
+ 将引发一个异常。</para>
+</caution>
+<example id="odbchelper.join.example">
+<title>&odbchelper_filename; 的输出结果</title>
+<screen>&prompt;<userinput>params = {"server":"mpilgrim", "database":"master", "uid":"sa", "pwd":"secret"}</userinput>
+&prompt;<userinput>&odbchelper_listmapping;</userinput>
+<computeroutput>['server=mpilgrim', 'uid=sa', 'database=master', 'pwd=secret']</computeroutput>
+&prompt;<userinput>&odbchelper_join;</userinput>
+<computeroutput>'&odbchelper_output;'</computeroutput></screen>
+</example>
+<para>上面的字符串是从 <function>odbchelper</function> 函数返回的，被调用块打印出来，这样就给出了您开始阅读本章时令人感到吃惊的输出结果。</para>
+<para>您可能在想是否存在一个适当的方法来将字符串分割成一个 list。当然有，它叫做 &split;。</para>
+<example id="odbchelper.split.example">
+<title>分割字符串</title>
+<screen>&prompt;<userinput>li = ['server=mpilgrim', 'uid=sa', 'database=master', 'pwd=secret']</userinput>
+&prompt;<userinput>s = ";".join(li)</userinput>
+&prompt;<userinput>s</userinput>
+<computeroutput>'server=mpilgrim;uid=sa;database=master;pwd=secret'</computeroutput>
+&prompt;<userinput>s.split(";")</userinput>    <co id="odbchelper.join.1.1"/>
+<computeroutput>['server=mpilgrim', 'uid=sa', 'database=master', 'pwd=secret']</computeroutput>
+&prompt;<userinput>s.split(";", 1)</userinput> <co id="odbchelper.join.1.2"/>
+<computeroutput>['server=mpilgrim', 'uid=sa;database=master;pwd=secret']</computeroutput></screen>
+<calloutlist>
+<callout arearefs="odbchelper.join.1.1">
+<para>&split; 与 &join; 正好相反，它将一个字符串分割成多元素 list。注意，分隔符 (<quote><literal>;</literal></quote>) 被完全去掉了，它没有在返回的 list 中的任意元素中出现。</para>
+</callout>
+<callout arearefs="odbchelper.join.1.2">
+<para>&split; 接受一个可选的第二个参数，它是要分割的次数。(<quote>哦，可选参数……</quote>，您将会在下一章中学会如何在您自己的函数中使用它。)</para>
+</callout>
+</calloutlist>
+</example>
+<tip id="tip.split">
+<title>用 &split; 搜索</title>
+<para><literal><replaceable>anystring</replaceable>.&split;(<replaceable>delimiter</replaceable>, 1)</literal> 是一个有用的技术，在您想要搜索一个子串，然后分别处理字符前半部分 (即 list 中第一个元素) 和后半部分 (即 list 中第二个元素) 时，使用这个技术。</para>
+</tip>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythonknowledgebase; 回答了<ulink url="&url_pythonknowledgebase;index.phtml/fid/480">关于字符串的常见问题</ulink>，并且有许多<ulink url="&url_pythonknowledgebase;index.phtml/fid/539">使用字符串的例子代码</ulink>。</para></listitem>
+<listitem><para>&pythonlibraryreference; 总结了<ulink url="&url_pythonlibraryreference;string-methods.html">所有字符串方法</ulink>。</para></listitem>
+<listitem><para>&pythonlibraryreference; 提供了 <ulink url="&url_pythonlibraryreference;module-string.html">&string; 模块</ulink>的文档。</para></listitem>
+<listitem><para>&pythonfaq; 解释了<ulink url="&url_pythonfaqjoin;">为什么 &join; 是字符串方法</ulink>而不是 list 方法。</para></listitem>
+</itemizedlist>
+<section role="sidebar">
+<title>字符串方法的历史注解</title>
+<para>
+当我开始学 &python; 时，我以为 &join; 是 list 的方法，它会使用分隔符作为一个参数。很多人都有同样的感觉：在 &join; 方法的背后有一段故事。在 &python; 1.6 之前，字符串完全没有这些有用的方法。有一个独立的 &string; 模块包含所有的字符串函数，每个函数使用一个字符串作为它的第一个参数。这些函数被认为足够重要，所以它们移到字符串中去了，这就使得诸如 <function>lower</function>、<function>upper</function> 和 <function>split</function> 之类的函数是有意义的。但许多核心的 &python; 程序员反对新的 &join; 方法，争论说应该换成是 list 的一个方法，或不应该移动而仅仅保留为旧的 &string; 模块 (现仍然还有许多有用的东西在里面) 的一部分。我只使用新的 &join; 方法，但是您还是会看到其它写法。如果它真的使您感到麻烦，您可以使用旧的 <function>string.join</function> 函数来替代。</para>
+</section>
+</section>
+<section id="odbchelper.summary">
+<?dbhtml filename="native_data_types/summary.html"?>
+<title>小结</title>
+<abstract>
+<title></title>
+<para>现在 &odbchelper_filename; 程序和它的输出结果都应该非常清楚了。</para>
+</abstract>
+<informalexample>
+<!--<title>&odbchelper_filename;</title>-->
+<programlisting>
+&odbchelper_full;</programlisting>
+</informalexample>
+<informalexample>
+<!--<title>Output of &odbchelper_filename;</title>-->
+<para>下面是 &odbchelper_filename; 的输出结果：</para>
+<screen><computeroutput>&odbchelper_output;</computeroutput></screen>
+</informalexample>
+<highlights>
+<para>在深入下一章学习之前，确保您可以无阻碍地完成下面的事情：</para>
+<itemizedlist>
+<listitem><para>使用 &python; &ide; 来交互式地测试表达式</para></listitem>
+<listitem><para>编写 &python; 程序并且<link linkend="odbchelper.testing">从 &ide; 运行</link>，或者从命令行运行</para></listitem>
+<listitem><para><link linkend="odbchelper.import">导入模块</link>及调用它们的函数</para></listitem>
+<listitem><para><link linkend="odbchelper.funcdef">声明函数</link>以及 <link linkend="odbchelper.docstring">&docstring;</link>、<link linkend="odbchelper.vardef">局部变量</link>和<link linkend="odbchelper.indenting">适当的缩进</link>的使用</para></listitem>
+<listitem><para>定义 <link linkend="odbchelper.dict">dictionary</link>、<link linkend="odbchelper.tuple">tuple</link> 和 <link linkend="odbchelper.list">list</link></para></listitem>
+<listitem><para><link linkend="odbchelper.objects">任意一个对象</link>的访问方法，包括：字符串、list、dictionary、函数和模块</para></listitem>
+<listitem><para>通过<link linkend="odbchelper.stringformatting">字符串格式化</link>连接值</para></listitem>
+<listitem><para>使用 list 解析<link linkend="odbchelper.map">映射 list</link> 为其他的 list</para></listitem>
+<listitem><para><link linkend="odbchelper.join">把字符串分割为 list</link> 和把 list 连接为字符串</para></listitem>
+</itemizedlist>
+</highlights>
+</section>
+</chapter>

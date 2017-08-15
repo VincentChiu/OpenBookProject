@@ -1,0 +1,1211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Python Standard Library</TITLE>
+
+<!-- Included style.css -->
+<STYLE TYPE="text/css">
+body, td, {
+	font-family: verdana, sans-serif;
+	font-size: 12px;
+}
+
+body {
+	background-color: #FDFBFC;
+	margin:20px 20px 20px 20px;
+}
+
+
+p {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+a {font-weight:normal; text-decoration:underline;}
+a:link {color:#0000FF;}
+a:visited {color:#0000FF;}
+a:active {color:#0000FF;}
+a:hover {color:#700000;}
+
+strong a {
+    font-weight: bold;
+}
+
+.toc {
+	background-color: #EEEEFB;
+	border: 1px solid;
+	/*padding:10px 8px 10px 15px;*/
+	float : right ; width : 37%;
+	margin : 5px; padding: 5px;
+	margin: 5px;
+}
+
+.toc a:link , .toc a:visited  { color : #003399; }
+
+.toc a:hover { 
+	color : #EEEEFB;
+	text-decoration : none;
+	background-color: black;
+}
+
+.trailbold {
+	font-weight:bold;
+}
+
+.light {
+	background-color: #EFEFEF;
+}
+
+.dark {
+	background-color: #D2D2D2;
+}
+
+.smalllogo {
+	float:left;
+}
+
+.headerbar {
+	padding-bottom:60px;
+}
+	
+.header {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.smallheader {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.filelist {
+	font-size:14px;
+	margin: 10px 10px 10px 70px;
+	line-height:25px;
+}
+
+.dirheader {
+	font-size:13px;
+	margin: 10px 50px 10px 20px
+}
+
+.toolbar {
+	text-align:right;
+	margin: 0px 10px 0px 10px
+}
+
+.copyright {
+	padding-top: 30px;
+	text-align:center;
+	font-size:9px;
+	color: #5F5F5F;
+}
+
+.small {
+	font-size:9px;
+}
+
+.sforgelogo {
+	text-align:right;
+	height: 40px;
+}
+
+pre, .source {
+	width:auto;
+	border		: 1px solid #666;
+	background	: #eee;
+	margin		: 2em 4em;
+	padding		: 1em 2em;
+}
+
+/*code {
+	color		: #DB1416;
+	
+}*/
+code { 
+font-size: 1.2em;
+font-family:courier,courier new,monospace;
+background: #666666;
+border-top: 0.03em solid #000;
+border-right: 0.03em solid #000;
+border-bottom: 0.03em solid #ccc;
+border-left: 0.03em solid #ccc;
+color: white;
+}
+
+blockquote{
+  margin: 2em 5em ; 
+ } 
+
+
+</STYLE>
+
+</HEAD>
+<BODY BGCOLOR="green">
+<A NAME="toptop"></A>
+<DIV CLASS="header" ID="header">
+<H1>Python Standard Library</H1>
+<H2>翻译: Python 江湖群</H2>
+<H3>2008-03-28 13:35:34</H3>
+</DIV>
+
+<DIV CLASS="body" ID="body">
+<DIV CLASS="toc" ID="toc">
+  <OL>
+  <LI><A HREF="#toc1">数据表示</A>
+    <UL>
+    <LI><A HREF="#toc2">1.1. 概览</A>
+    <LI><A HREF="#toc3">1.2. array 模块</A>
+    <LI><A HREF="#toc4">1.3. struct 模块</A>
+    <LI><A HREF="#toc5">1.4. xdrlib 模块</A>
+    <LI><A HREF="#toc6">1.5. marshal 模块</A>
+    <LI><A HREF="#toc7">1.6. pickle 模块</A>
+    <LI><A HREF="#toc8">1.7. cPickle 模块</A>
+    <LI><A HREF="#toc9">1.8. copy_reg 模块</A>
+    <LI><A HREF="#toc10">1.9. pprint 模块</A>
+    <LI><A HREF="#toc11">1.10. repr 模块</A>
+    <LI><A HREF="#toc12">1.11. base64 模块</A>
+    <LI><A HREF="#toc13">1.12. binhex 模块</A>
+    <LI><A HREF="#toc14">1.13. quopri 模块</A>
+    <LI><A HREF="#toc15">1.14. uu 模块</A>
+    <LI><A HREF="#toc16">1.15. binascii 模块</A>
+    </UL>
+  </OL>
+
+</DIV>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<P>
+<A HREF="index.html">返回首页</A>
+</P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<A NAME="toc1"></A>
+<H1><A href='#toptop'> 1. 数据表示 </A></H1>
+	<BLOCKQUOTE>
+	"PALO ALTO, Calif. - Intel says its Pentium Pro and new Pentium II chips have a flaw that can cause computers to sometimes make mistakes but said the problems could be fixed easily with rewritten software."
+	</BLOCKQUOTE>
+<P></P>
+	<BLOCKQUOTE>
+	- Reuters telegram
+	</BLOCKQUOTE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc2"></A>
+<H2><A href='#toptop'> 1.1. 概览 </A></H2>
+<P>
+本章描述了一些用于在 Python 对象和其他数据表示类型间相互转换的模块. 
+这些模块通常用于读写特定的文件格式或是储存/取出 Python 变量.
+</P>
+<H3><A href='#toptop'> 1.1.1. 二进制数据 </A></H3>
+<P>
+Python 提供了一些用于二进制数据解码/编码的模块. <CODE>struct</CODE> 模块用于在
+二进制数据结构(例如 C 中的 struct )和 Python 元组间转换. <CODE>array</CODE> 模块将二进制数据阵列
+( C arrays )封装为 Python 序列对象.
+</P>
+<H3><A href='#toptop'> 1.1.2. 自描述格式 </A></H3>
+<P>
+<CODE>marshal</CODE> 和 <CODE>pickle</CODE> 模块用于在不同的 Python 程序间共享/传递数据.
+</P>
+<P>
+<CODE>marshal</CODE> 模块使用了简单的自描述格式( Self-Describing Formats ), 它支持大多的内建数据类型, 
+包括 code 对象. Python 自身也使用了这个格式来储存编译后代码( .pyc 文件).
+</P>
+<P>
+<CODE>pickle</CODE> 模块提供了更复杂的格式, 它支持用户定义的类, 自引用数据结构等等. <CODE>pickle</CODE> 是用 
+Python 写的, 相对来说速度较慢, 不过还有一个 <CODE>cPickle</CODE> 模块, 使用 C 实现了相同的功能, 速度和 
+<CODE>marshal</CODE> 不相上下.
+</P>
+<H3><A href='#toptop'> 1.1.3. 输出格式 </A></H3>
+<P>
+一些模块提供了增强的格式化输出, 用来补充内建的 <CODE>repr</CODE> 函数和 <CODE>%</CODE> 字符串格式化操作符.
+</P>
+<P>
+<CODE>pprint</CODE> 模块几乎可以将任何 Python 数据结构很好地打印出来(提高可读性).
+</P>
+<P>
+<CODE>repr</CODE> 模块可以用来替换内建同名函数. 该模块与内建函数不同的是它限制了很多输出形式: 他只会
+输出字符串的前 30 个字符, 它只打印嵌套数据结构的几个等级, 等等.
+</P>
+<H3><A href='#toptop'> 1.1.4. 编码二进制数据 </A></H3>
+<P>
+Python 支持大部分常见二进制编码, 例如 <CODE>base64</CODE> , <CODE>binhex</CODE> (一种 Macintosh 格式) , 
+<CODE>quoted printable</CODE> , 以及 <CODE>uu</CODE> 编码.
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc3"></A>
+<H2><A href='#toptop'> 1.2. array 模块 </A></H2>
+<P>
+<CODE>array</CODE> 模块实现了一个有效的阵列储存类型. 阵列和列表类似, 但其中所有的项目必须为相同的
+类型. 该类型在阵列创建时指定.
+</P>
+<P>
+Examples 4-1 到 4-5 都是很简单的范例. <A HREF="#eg-4-1">Example 4-1</A> 创建了一个 <I>array</I> 对象, 
+然后使用 <CODE>tostring</CODE> 方法将内部缓冲区( internal buffer )复制到字符串.
+</P>
+<A NAME="eg-4-1"></A>
+<H4><A href='#toptop'> 1.2.0.1. Example 4-1. 使用 array 模块将数列转换为字符串 </A></H4>
+<PRE>
+File: array-example-1.py
+
+import array
+
+a = array.array("B", range(16)) # unsigned char
+b = array.array("h", range(16)) # signed short
+
+print a
+print repr(a.tostring())
+
+print b
+print repr(b.tostring())
+
+*B*array('B', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+'\000\001\002\003\004\005\006\007\010\011\012\013\014\015\016\017'
+
+array('h', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+'\000\000\001\000\002\000\003\000\004\000\005\000\006\000\007\000
+\010\000\011\000\012\000\013\000\014\000\015\000\016\000\017\000'*b*
+</PRE>
+<P></P>
+<P>
+<I>array</I> 对象可以作为一个普通列表对待, 如 <A HREF="#eg-4-2">Example 4-2</A> 所示. 不过, 
+你不能连接两个不同类型的阵列.
+</P>
+<A NAME="eg-4-2"></A>
+<H4><A href='#toptop'> 1.2.0.2. Example 4-2. 作为普通序列操作阵列 </A></H4>
+<PRE>
+File: array-example-2.py
+
+import array
+
+a = array.array("B", [1, 2, 3])
+
+a.append(4)
+
+a = a + a
+
+a = a[2:-2]
+
+print a
+print repr(a.tostring())
+for i in a:
+    print i,
+
+*B*array('B', [3, 4, 1, 2])
+'\003\004\001\002'
+3 4 1 2*b*
+</PRE>
+<P></P>
+<P>
+该模块还提供了用于转换原始二进制数据到整数序列(或浮点数数列, 具体情况决定)的方法, 
+如  <A HREF="#eg-4-3">Example 4-3</A> 所示.
+</P>
+<A NAME="eg-4-3"></A>
+<H4><A href='#toptop'> 1.2.0.3. Example 4-3. 使用阵列将字符串转换为整数列表 </A></H4>
+<PRE>
+File: array-example-3.py
+
+import array
+
+a = array.array("i", "fish license") # signed integer
+
+print a
+print repr(a.tostring())
+print a.tolist()
+
+*B*array('i', [1752394086, 1667853344, 1702063717])
+'fish license'
+[1752394086, 1667853344, 1702063717]*b*
+</PRE>
+<P></P>
+<P>
+最后, <A HREF="#eg-4-4">Example 4-4</A> 展示了如何使用该模块判断当前平台的字节序( endianess ) .
+</P>
+<A NAME="eg-4-4"></A>
+<H4><A href='#toptop'> 1.2.0.4. Example 4-4. 使用 array 模块判断平台字节序 </A></H4>
+<PRE>
+File: array-example-4.py
+
+import array
+
+def little_endian():
+    return ord(array.array("i",[1]).tostring()[0])
+
+if little_endian():
+    print "little-endian platform (intel, alpha)"
+else:
+    print "big-endian platform (motorola, sparc)"
+
+*B*big-endian platform (motorola, sparc)*b*
+</PRE>
+<P></P>
+<P>
+Python 2.0 以及以后版本提供了 <CODE>sys.byteorder</CODE> 属性, 可以更简单地判断字节序
+(属性值为 "<CODE>little</CODE>" 或 "<CODE>big</CODE>" ), 如 Example 4-5 所示.
+</P>
+<A NAME="eg-4-5"></A>
+<H4><A href='#toptop'> 1.2.0.5. Example 4-5. 使用 sys.byteorder 属性判断平台字节序( Python 2.0 及以后) </A></H4>
+<PRE>
+File: sys-byteorder-example-1.py
+
+import sys
+
+# 2.0 and later
+if sys.byteorder == "little":
+    print "little-endian platform (intel, alpha)"
+else:
+    print "big-endian platform (motorola, sparc)"
+
+*B*big-endian platform (motorola, sparc)*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc4"></A>
+<H2><A href='#toptop'> 1.3. struct 模块 </A></H2>
+<P>
+<CODE>struct</CODE> 模块用于转换二进制字符串和 Python 元组. <CODE>pack</CODE> 函数接受格式字符串以及额外参数, 
+根据指定格式将额外参数转换为二进制字符串. <CODE>upack</CODE> 函数接受一个字符串作为参数, 
+返回一个元组. 如 <A HREF="#eg-4-6">Example 4-6</A> 所示.
+</P>
+<A NAME="eg-4-6"></A>
+<H4><A href='#toptop'> 1.3.0.1. Example 4-6. 使用 struct 模块 </A></H4>
+<PRE>
+File: struct-example-1.py
+
+import struct
+
+# native byteorder
+buffer = struct.pack("ihb", 1, 2, 3)
+print repr(buffer)
+print struct.unpack("ihb", buffer)
+
+# data from a sequence, network byteorder
+data = [1, 2, 3]
+buffer = apply(struct.pack, ("!ihb",) + tuple(data))
+print repr(buffer)
+print struct.unpack("!ihb", buffer)
+
+# in 2.0, the apply statement can also be written as:
+# buffer = struct.pack("!ihb", *data)
+
+*B*'\001\000\000\000\002\000\003'
+(1, 2, 3)
+'\000\000\000\001\000\002\003'
+(1, 2, 3)*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc5"></A>
+<H2><A href='#toptop'> 1.4. xdrlib 模块 </A></H2>
+<P>
+<CODE>xdrlib</CODE> 模块用于在 Python 数据类型和 Sun 的 external data representation (XDR) 间相互转化, 如
+<A HREF="#eg-4-7">Example 4-7</A> 所示.
+</P>
+<A NAME="eg-4-7"></A>
+<H4><A href='#toptop'> 1.4.0.1. Example 4-7. 使用 xdrlib 模块 </A></H4>
+<PRE>
+File: xdrlib-example-1.py
+
+import xdrlib
+
+#
+# create a packer and add some data to it
+
+p = xdrlib.Packer()
+p.pack_uint(1)
+p.pack_string("spam")
+
+data = p.get_buffer()
+
+print "packed:", repr(data)
+
+#
+# create an unpacker and use it to decode the data
+
+u = xdrlib.Unpacker(data)
+
+print "unpacked:", u.unpack_uint(), repr(u.unpack_string())
+
+u.done()
+
+*B*packed: '\000\000\000\001\000\000\000\004spam'
+unpacked: 1 'spam'*b*
+</PRE>
+<P></P>
+<P>
+Sun 在 remote procedure call (RPC) 协议中使用了 XDR 格式. 
+<A HREF="#eg-4-8">Example 4-8</A> 虽然不完整, 但它展示了如何建立一个 RPC 请求包.
+</P>
+<A NAME="eg-4-8"></A>
+<H4><A href='#toptop'> 1.4.0.2. Example 4-8. 使用 xdrlib 模块发送 RPC 调用包 </A></H4>
+<PRE>
+File: xdrlib-example-2.py
+
+import xdrlib
+
+# some constants (see the RPC specs for details)
+RPC_CALL = 1
+RPC_VERSION = 2
+
+MY_PROGRAM_ID = 1234 # assigned by Sun
+MY_VERSION_ID = 1000
+MY_TIME_PROCEDURE_ID = 9999
+
+AUTH_NULL = 0
+
+transaction = 1
+
+p = xdrlib.Packer()
+
+# send a Sun RPC call package
+p.pack_uint(transaction)
+p.pack_enum(RPC_CALL)
+p.pack_uint(RPC_VERSION)
+p.pack_uint(MY_PROGRAM_ID)
+p.pack_uint(MY_VERSION_ID)
+p.pack_uint(MY_TIME_PROCEDURE_ID)
+p.pack_enum(AUTH_NULL)
+p.pack_uint(0)
+p.pack_enum(AUTH_NULL)
+p.pack_uint(0)
+
+print repr(p.get_buffer())
+
+*B*'\000\000\000\001\000\000\000\001\000\000\000\002\000\000\004\322
+\000\000\003\350\000\000\'\017\000\000\000\000\000\000\000\000\000
+\000\000\000\000\000\000\000'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc6"></A>
+<H2><A href='#toptop'> 1.5. marshal 模块 </A></H2>
+<P>
+<CODE>marshal</CODE> 模块可以把不连续的数据组合起来 - 与字符串相互转化, 
+这样它们就可以写入文件或是在网络中传输. 如 <A HREF="#eg-4-9">Example 4-9</A> 所示.
+</P>
+<P>
+<CODE>marshal</CODE> 模块使用了简单的自描述格式. 对于每个数据项目, 格式化后的字符串都包含一个类型代码, 
+然后是一个或多个类型标识区域. 整数使用小字节序( little-endian order )储存, 
+字符串储存时和它自身内容长度相同(可能包含空字节), 元组由组成它的对象组合表示.
+</P>
+<A NAME="eg-4-9"></A>
+<H4><A href='#toptop'> 1.5.0.1. Example 4-9. 使用 marshal 模块组合不连续数据 </A></H4>
+<PRE>
+File: marshal-example-1.py
+
+import marshal
+
+value = (
+    "this is a string",
+    [1, 2, 3, 4],
+    ("more tuples", 1.0, 2.3, 4.5),
+    "this is yet another string"
+    )
+
+data = marshal.dumps(value)
+
+# intermediate format
+print type(data), len(data)
+
+print "-"*50
+print repr(data)
+print "-"*50
+
+print marshal.loads(data)
+
+*B*&lt;type 'string'&gt; 118
+--------------------------------------------------
+'(\004\000\000\000s\020\000\000\000this is a string
+[\004\000\000\000i\001\000\000\000i\002\000\000\000
+i\003\000\000\000i\004\000\000\000(\004\000\000\000
+s\013\000\000\000more tuplesf\0031.0f\0032.3f\0034.
+5s\032\000\000\000this is yet another string'
+--------------------------------------------------
+('this is a string', [1, 2, 3, 4], ('more tuples',
+1.0, 2.3, 4.5), 'this is yet another string')*b*
+</PRE>
+<P></P>
+<P>
+<CODE>marshal</CODE> 模块还可以处理 code 对象(它用于储存预编译的 Python 模块). 
+如 <A HREF="#eg-4-10">Example 4-10</A> 所示.
+</P>
+<A NAME="eg-4-10"></A>
+<H4><A href='#toptop'> 1.5.0.2. Example 4-10. 使用 marshal 模块处理代码 </A></H4>
+<PRE>
+File: marshal-example-2.py
+
+import marshal
+
+script = """
+print 'hello'
+"""
+
+code = compile(script, "&lt;script&gt;", "exec")
+
+data = marshal.dumps(code)
+
+# intermediate format
+print type(data), len(data)
+
+print "-"*50
+print repr(data)
+print "-"*50
+
+exec marshal.loads(data)
+
+*B*&lt;type 'string'&gt; 81
+--------------------------------------------------
+'c\000\000\000\000\001\000\000\000s\017\000\000\00
+0\177\000\000\177\002\000d\000\000GHd\001\000S(\00
+2\000\000\000s\005\000\000\000helloN(\000\000\000\
+000(\000\000\000\000s\010\000\000\000&lt;script&gt;s\001
+\000\000\000?\002\000s\000\000\000\000'
+--------------------------------------------------
+hello*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc7"></A>
+<H2><A href='#toptop'> 1.6. pickle 模块 </A></H2>
+<P>
+<CODE>pickle</CODE> 模块同 <CODE>marshal</CODE> 模块相同, 将数据连续化, 便于保存传输. 它比 <CODE>marshal</CODE> 要慢一些, 
+但它可以处理类实例, 共享的元素, 以及递归数据结构等.
+</P>
+<A NAME="eg-4-11"></A>
+<H4><A href='#toptop'> 1.6.0.1. Example 4-11. 使用 pickle 模块 </A></H4>
+<PRE>
+File: pickle-example-1.py
+
+import pickle
+
+value = (
+    "this is a string",
+    [1, 2, 3, 4],
+    ("more tuples", 1.0, 2.3, 4.5),
+    "this is yet another string"
+    )
+
+data = pickle.dumps(value)
+
+# intermediate format
+print type(data), len(data)
+
+print "-"*50
+print data
+print "-"*50
+
+print pickle.loads(data)
+
+*B*&lt;type 'string'&gt; 121
+--------------------------------------------------
+(S'this is a string'
+p0
+(lp1
+I1
+aI2
+aI3
+aI4
+a(S'more tuples'
+p2
+F1.0
+F2.3
+F4.5
+tp3
+S'this is yet another string'
+p4
+tp5
+.
+--------------------------------------------------
+('this is a string', [1, 2, 3, 4], ('more tuples',
+1.0, 2.3, 4.5), 'this is yet another string')*b*
+</PRE>
+<P></P>
+<P>
+不过另一方面, <CODE>pickle</CODE> 不能处理 code 对象(可以参阅 <CODE>copy_reg</CODE> 模块来完成这个).
+</P>
+<P>
+默认情况下, pickle 使用急于文本的格式. 你也可以使用二进制格式, 这样数字和二进制
+字符串就会以紧密的格式储存, 这样文件就会更小点. 如 <A HREF="#eg-4-12">Example 4-12</A> 所示.
+</P>
+<A NAME="eg-4-12"></A>
+<H4><A href='#toptop'> 1.6.0.2. Example 4-12. 使用 pickle 模块的二进制模式 </A></H4>
+<PRE>
+File: pickle-example-2.py
+
+import pickle
+import math
+
+value = (
+    "this is a long string" * 100,
+    [1.2345678, 2.3456789, 3.4567890] * 100
+    )
+
+# text mode
+data = pickle.dumps(value)
+print type(data), len(data), pickle.loads(data) == value
+
+# binary mode
+data = pickle.dumps(value, 1)
+print type(data), len(data), pickle.loads(data) == value
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc8"></A>
+<H2><A href='#toptop'> 1.7. cPickle 模块 </A></H2>
+<P>
+(可选, 注意大小写) cPickle 模块是针对 pickle 模块的一个更快的实现. 
+如 <A HREF="#eg-4-13">Example 4-13</A> 所示.
+</P>
+<A NAME="eg-4-13"></A>
+<H4><A href='#toptop'> 1.7.0.1. Example 4-13. 使用 cPickle 模块 </A></H4>
+<PRE>
+File: cpickle-example-1.py
+
+try:
+    import cPickle
+    pickle = cPickle
+except ImportError:
+    import pickle
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc9"></A>
+<H2><A href='#toptop'> 1.8. copy_reg 模块 </A></H2>
+<P>
+你可以使用 <CODE>copy_reg</CODE> 模块注册你自己的扩展类型. 这样 <CODE>pickle</CODE> 和 <CODE>copy</CODE> 模块就会知道
+如何处理非标准类型.
+</P>
+<P>
+例如, 标准的 <CODE>pickle</CODE> 实现不能用来处理 Python code 对象, 如下所示:
+</P>
+<PRE>
+File: copy-reg-example-1.py
+
+import pickle
+
+CODE = """
+print 'good evening'
+"""
+
+code = compile(CODE, "&lt;string&gt;", "exec")
+
+exec code
+exec pickle.loads(pickle.dumps(code))
+
+*B*good evening
+Traceback (innermost last):
+...
+pickle.PicklingError: can't pickle 'code' objects*b*
+</PRE>
+<P></P>
+<P>
+我们可以注册一个 code 对象处理器来完成目标. 处理器应包含两个部分: 一个 <CODE>pickler</CODE> , 接受 code 对象
+并返回一个只包含简单数据类型的元组, 以及一个 <CODE>unpickler</CODE> , 作用相反, 接受这样的元组作为参数. 
+如 <A HREF="#eg-4-14">Example 4-14</A> 所示.
+</P>
+<A NAME="eg-4-14"></A>
+<H4><A href='#toptop'> 1.8.0.1. Example 4-14. 使用 copy_reg 模块实现 code 对象的 pickle 操作 </A></H4>
+<PRE>
+File: copy-reg-example-2.py
+
+import copy_reg
+import pickle, marshal, types
+
+#
+# register a pickle handler for code objects
+
+def code_unpickler(data):
+    return marshal.loads(data)
+
+def code_pickler(code):
+    return code_unpickler, (marshal.dumps(code),)
+
+copy_reg.pickle(types.CodeType, code_pickler, code_unpickler)
+
+#
+# try it out
+
+CODE = """
+print "suppose he's got a pointed stick"
+"""
+
+code = compile(CODE, "&lt;string&gt;", "exec")
+
+exec code
+exec pickle.loads(pickle.dumps(code))
+
+*B*suppose he's got a pointed stick
+suppose he's got a pointed stick*b*
+</PRE>
+<P></P>
+<P>
+如果你是在网络中传输 pickle 后的数据, 那么请确保自定义的 <CODE>unpickler</CODE> 在数据接收端也是可用的.
+</P>
+<P>
+Example 4-15 展示了如何实现 pickle 一个打开的文件对象.
+</P>
+<A NAME="eg-4-15"></A>
+<H4><A href='#toptop'> 1.8.0.2. Example 4-15. 使用 copy_reg 模块实现文件对象的 pickle 操作 </A></H4>
+<PRE>
+File: copy-reg-example-3.py
+
+import copy_reg
+import pickle, types
+import StringIO
+
+#
+# register a pickle handler for file objects
+
+def file_unpickler(position, data):
+    file = StringIO.StringIO(data)
+    file.seek(position)
+    return file
+
+def file_pickler(code):
+    position = file.tell()
+    file.seek(0)
+    data = file.read()
+    file.seek(position)
+    return file_unpickler, (position, data)
+
+copy_reg.pickle(types.FileType, file_pickler, file_unpickler)
+
+#
+# try it out
+
+file = open("samples/sample.txt", "rb")
+
+print file.read(120),
+print "&lt;here&gt;",
+print pickle.loads(pickle.dumps(file)).read()
+
+*B*We will perhaps eventually be writing only small
+modules, which are identified by name as they are
+used to build larger &lt;here&gt; ones, so that devices like
+indentation, rather than delimiters, might become
+feasible for expressing local structure in the
+source language.
+     -- Donald E. Knuth, December 1974*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc10"></A>
+<H2><A href='#toptop'> 1.9. pprint 模块 </A></H2>
+<P>
+<CODE>pprint</CODE> 模块( pretty printer )用于打印 Python 数据结构. 当你在命令行下打印
+特定数据结构时你会发现它很有用(输出格式比较整齐, 便于阅读).
+</P>
+<A NAME="eg-4-16"></A>
+<H4><A href='#toptop'> 1.9.0.1. Example 4-16. 使用 pprint 模块 </A></H4>
+<PRE>
+File: pprint-example-1.py
+
+import pprint
+
+data = (
+    "this is a string", [1, 2, 3, 4], ("more tuples",
+    1.0, 2.3, 4.5), "this is yet another string"
+    )
+
+pprint.pprint(data)
+
+*B*('this is a string',
+ [1, 2, 3, 4],
+ ('more tuples', 1.0, 2.3, 4.5),
+ 'this is yet another string')*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc11"></A>
+<H2><A href='#toptop'> 1.10. repr 模块 </A></H2>
+<P>
+<CODE>repr</CODE> 模块提供了内建 <CODE>repr</CODE> 函数的另个版本. 它限制了很多(字符串长度, 
+递归等). <A HREF="#eg-4-17">Example 4-17</A> 展示了如何使用该模块.
+</P>
+<A NAME="eg-4-17"></A>
+<H4><A href='#toptop'> 1.10.0.1. Example 4-17. 使用 repr 模块 </A></H4>
+<PRE>
+File: repr-example-1.py
+
+# note: this overrides the built-in 'repr' function
+from repr import repr
+
+# an annoyingly recursive data structure
+data = (
+    "X" * 100000,
+    )
+data = [data]
+data.append(data)
+
+print repr(data)
+
+*B*[('XXXXXXXXXXXX...XXXXXXXXXXXXX',), [('XXXXXXXXXXXX...XXXXXXXXXX
+XXX',), [('XXXXXXXXXXXX...XXXXXXXXXXXXX',), [('XXXXXXXXXXXX...XX
+XXXXXXXXXXX',), [('XXXXXXXXXXXX...XXXXXXXXXXXXX',), [(...), [...
+]]]]]]]*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc12"></A>
+<H2><A href='#toptop'> 1.11. base64 模块 </A></H2>
+<P>
+<CODE>base64</CODE> 编码体系用于将任意二进制数据转换为纯文本. 它将一个 3 字节的二进制字节组
+转换为 4 个文本字符组储存, 而且规定只允许以下集合中的字符出现:
+</P>
+<PRE>
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+0123456789+/
+</PRE>
+<P></P>
+<P>
+另外, <CODE>=</CODE> 用于填充数据流的末尾.
+</P>
+<P>
+<A HREF="#eg-4-18">Example 4-18</A> 展示了如何使用 <CODE>encode</CODE> 和 <CODE>decode</CODE> 函数操作文件对象.
+</P>
+<A NAME="eg-4-18"></A>
+<H4><A href='#toptop'> 1.11.0.1. Example 4-18. 使用 base64 模块编码文件 </A></H4>
+<PRE>
+File: base64-example-1.py
+
+import base64
+
+MESSAGE = "life of brian"
+
+file = open("out.txt", "w")
+file.write(MESSAGE)
+file.close()
+
+base64.encode(open("out.txt"), open("out.b64", "w"))
+base64.decode(open("out.b64"), open("out.txt", "w"))
+
+print "original:", repr(MESSAGE)
+print "encoded message:", repr(open("out.b64").read())
+print "decoded message:", repr(open("out.txt").read())
+
+original:  'life of brian'
+encoded message: 'bGlmZSBvZiBicmlhbg==\012'
+decoded message: 'life of brian'
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-4-19">Example 4-19</A> 展示了如何使用 <CODE>encodestring</CODE> 和 <CODE>decodestring</CODE> 函数在字符串间转换. 
+它们是 <CODE>encode</CODE> 和 <CODE>decode</CODE> 函数的顶层封装. 使用 <CODE>StringIO</CODE> 对象处理输入和输出.
+</P>
+<A NAME="eg-4-19"></A>
+<H4><A href='#toptop'> 1.11.0.2. Example 4-19. 使用 base64 模块编码字符串 </A></H4>
+<PRE>
+File: base64-example-2.py
+
+import base64
+
+MESSAGE = "life of brian"
+
+data = base64.encodestring(MESSAGE)
+
+original_data = base64.decodestring(data)
+
+print "original:", repr(MESSAGE)
+print "encoded data:", repr(data)
+print "decoded data:", repr(original_data)
+
+*B*original: 'life of brian'
+encoded data: 'bGlmZSBvZiBicmlhbg==\012'
+decoded data: 'life of brian'*b*
+</PRE>
+<P></P>
+<P>
+<A HREF="#eg-4-20">Example 4-20</A> 展示了如何将用户名和密码转换为 HTTP 基本身份验证字符串. 
+</P>
+<A NAME="eg-4-20"></A>
+<H4><A href='#toptop'> 1.11.0.3. Example 4-20. 使用 base64 模块做基本验证 </A></H4>
+<PRE>
+File: base64-example-3.py
+
+import base64
+
+def getbasic(user, password):
+    # basic authentication (according to HTTP)
+    return base64.encodestring(user + ":" + password)    
+
+print getbasic("Aladdin", "open sesame")
+
+'QWxhZGRpbjpvcGVuIHNlc2FtZQ=='
+</PRE>
+<P></P>
+<P>
+最后, <A HREF="#eg-4-21">Example 4-21</A> 展示了一个实用小工具, 它可以把 GIF 格式转换为 Python 脚本, 
+便于使用 Tkinter 库.
+</P>
+<A NAME="eg-4-21"></A>
+<H4><A href='#toptop'> 1.11.0.4. Example 4-21. 使用 base64 为 Tkinter 封装 GIF 格式 </A></H4>
+<PRE>
+File: base64-example-4.py
+
+import base64, sys
+
+if not sys.argv[1:]:
+    print "Usage: gif2tk.py giffile &gt;pyfile"
+    sys.exit(1)
+
+data = open(sys.argv[1], "rb").read()
+
+if data[:4] != "GIF8":
+    print sys.argv[1], "is not a GIF file"
+    sys.exit(1)
+
+print '# generated from', sys.argv[1], 'by gif2tk.py'
+print
+print 'from Tkinter import PhotoImage' 
+print
+print 'image = PhotoImage(data="""'
+print base64.encodestring(data),
+print '""")'
+
+*B*# generated from samples/sample.gif by gif2tk.py
+
+from Tkinter import PhotoImage
+
+image = PhotoImage(data="""
+R0lGODlhoAB4APcAAAAAAIAAAACAAICAAAAAgIAAgACAgICAgAQEBIwEBIyMBJRUlISE/LRUBAQE
+...
+AjmQBFmQBnmQCJmQCrmQDNmQDvmQEBmREnkRAQEAOw==
+""")*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc13"></A>
+<H2><A href='#toptop'> 1.12. binhex 模块 </A></H2>
+<P>
+<CODE>binhex</CODE> 模块用于到 Macintosh BinHex 格式的相互转化. 如 <A HREF="#eg-4-22">Example 4-22</A> 所示.
+</P>
+<A NAME="eg-4-22"></A>
+<H4><A href='#toptop'> 1.12.0.1. Example 4-22. 使用 binhex 模块 </A></H4>
+<PRE>
+File: binhex-example-1.py
+
+import binhex
+import sys
+
+infile = "samples/sample.jpg"
+
+binhex.binhex(infile, sys.stdout)
+
+*B*(This file must be converted with BinHex 4.0)
+
+:#R0KEA"XC5jUF'F!2j!)!*!%%TS!N!4RdrrBrq!!%%T'58B!!3%!!!%!!3!!rpX
+!3`!)"JB("J8)"`F(#3N)#J`8$3`,#``C%K-2&amp;"dD(aiG'K`F)#3Z*b!L,#-F(#J
+h+5``-63d0"mR16di-M`Z-c3brpX!3`%*#3N-#``B$3dB-L%F)6+3-[r!!"%)!)!
+!J!-")J!#%3%$%3(ra!!I!!!""3'3"J#3#!%#!`3&amp;"JF)#3S,rm3!Y4!!!J%$!`)
+%!`8&amp;"!3!!!&amp;p!3)$!!34"4)K-8%'%e&amp;K"b*a&amp;$+"ND%))d+a`495dI!N-f*bJJN*b*
+</PRE>
+<P></P>
+<P>
+该模块有两个函数 <CODE>binhex</CODE> 和 <CODE>hexbin</CODE> .
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc14"></A>
+<H2><A href='#toptop'> 1.13. quopri 模块 </A></H2>
+<P>
+<CODE>quopri</CODE> 模块基于 MIME 标准实现了引用的可打印编码( quoted printable encoding ).
+</P>
+<P>
+这样的编码可以将不包含或只包含一部分U.S. ASCII 文本的信息, 例如大多欧洲语言, 
+中文, 转换为只包含 U.S. ASCII 的信息. 在一些老式的 mail 代理中你会发现这很有用, 
+因为它们一般不支持特殊. 如 <A HREF="#eg-4-23">Example 4-23</A> 所示.
+</P>
+<A NAME="eg-4-23"></A>
+<H4><A href='#toptop'> 1.13.0.1. Example 4-23. 使用 quopri 模块 </A></H4>
+<PRE>
+File: quopri-example-1.py
+
+import quopri
+import StringIO
+
+# helpers (the quopri module only supports file-to-file conversion)
+
+def encodestring(instring, tabs=0):
+    outfile = StringIO.StringIO()
+    quopri.encode(StringIO.StringIO(instring), outfile, tabs)
+    return outfile.getvalue()
+
+def decodestring(instring):
+    outfile = StringIO.StringIO()
+    quopri.decode(StringIO.StringIO(instring), outfile)
+    return outfile.getvalue()
+
+#
+# try it out
+
+MESSAGE = "å i åa ä e ö!"
+
+encoded_message = encodestring(MESSAGE)
+decoded_message = decodestring(encoded_message)
+
+print "original:", MESSAGE
+print "encoded message:", repr(encoded_message)
+print "decoded message:", decoded_message
+
+*B*original: å i åa ä e ö!
+encoded message: '=E5 i =E5a =E4 e =F6!\012'
+decoded message: å i åa ä e ö!*b*
+</PRE>
+<P></P>
+<P>
+如 <A HREF="#eg-4-23">Example 4-23</A> 所示, 非 U.S. 字符通过等号 (<CODE>=</CODE>) 附加两个十六进制字符来表示. 
+这里需要注意等号也是使用这样的方式( "<CODE>=3D</CODE>" )来表示的, 以及换行符( "<CODE>=20</CODE>" ). 
+其他字符不会被改变. 所以如果你没有用太多的怪异字符的话, 编码后字符串依然可读性很好.
+</P>
+<P>
+(Europeans generally hate this encoding and strongly believe that certain U.S. programmers deserve to be slapped in the head with a huge great fish to the jolly music of Edward German....)
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc15"></A>
+<H2><A href='#toptop'> 1.14. uu 模块 </A></H2>
+<P>
+<CODE>uu</CODE> 编码体系用于将任意二进制数据转换为普通文本格式. 
+该格式在新闻组中很流行, 但逐渐被 <CODE>base64</CODE> 编码取代.
+</P>
+<P>
+<CODE>uu</CODE> 编码将每个 3 字节( 24 位)的数据组转换为 4 个可打印字符(每个字符 6 位), 使用从 chr(32) (空格) 
+到 chr(95) 的字符. uu 编码通常会使数据大小增加 40% .
+</P>
+<P>
+一个编码后的数据流以一个新行开始, 它包含文件的权限( Unix 格式)和文件名, 
+以 end 行结尾:
+</P>
+<PRE>
+begin 666 sample.jpg
+M_]C_X  02D9)1@ ! 0   0 !  #_VP!#  @&amp;!@&lt;&amp;!0@'!P&lt;)'0@*#!0-# L+
+...more lines like this...
+end
+</PRE>
+<P></P>
+<P>
+<CODE>uu</CODE> 模块提供了两个函数: <CODE>encode</CODE> 和 <CODE>decode</CODE> .
+</P>
+<P>
+<CODE>encode(infile, outfile, filename)</CODE> 函数从编码输入文件中的数据, 然后写入到输出文件中. 如 
+<A HREF="#eg-4-24">Example 4-24</A> 所示. infile 和 outfile 可以是文件名或文件对象. 
+filename 参数作为起始域的文件名写入.
+</P>
+<A NAME="eg-4-24"></A>
+<H4><A href='#toptop'> 1.14.0.1. Example 4-24. 使用 uu 模块编码二进制文件 </A></H4>
+<PRE>
+File: uu-example-1.py
+
+import uu
+import os, sys
+
+infile = "samples/sample.jpg"
+
+uu.encode(infile, sys.stdout, os.path.basename(infile))
+
+*B*begin 666 sample.jpg
+M_]C_X  02D9)1@ ! 0   0 !  #_VP!#  @&amp;!@&lt;&amp;!0@'!P&lt;)"0@*#!0-# L+
+M#!D2$P\4'1H?'AT:'!P@)"XG("(L(QP&lt;*#&lt;I+# Q-#0T'R&lt;Y/3@R/"XS-#+_
+MVP!# 0D)"0P+#!@-#1@R(1PA,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R
+M,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C+_P  1" "  ( # 2(  A$! Q$!_\0 
+M'P   04! 0$! 0$           $" P0%!@&lt;("0H+_\0 M1   @$# P($ P4%*b*
+</PRE>
+<P></P>
+<P>
+<CODE>decode(infile, outfile)</CODE> 函数用来解码 uu 编码的数据. 同样地, 参数可以是文件名也可以是文件对象. 
+如 <A HREF="#eg-4-25">Example 4-25</A> 所示.
+</P>
+<A NAME="eg-4-25"></A>
+<H4><A href='#toptop'> 1.14.0.2. Example 4-25. 使用 uu 模块解码 uu 格式的文件 </A></H4>
+<PRE>
+File: uu-example-2.py
+
+import uu
+import StringIO
+
+infile = "samples/sample.uue"
+outfile = "samples/sample.jpg"
+
+#
+# decode
+
+fi = open(infile)
+fo = StringIO.StringIO()
+
+uu.decode(fi, fo)
+
+#
+# compare with original data file
+
+data = open(outfile, "rb").read()
+
+if fo.getvalue() == data:
+    print len(data), "bytes ok"
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc16"></A>
+<H2><A href='#toptop'> 1.15. binascii 模块 </A></H2>
+<P>
+<CODE>binascii</CODE> 提供了多个编码的支持函数, 包括 <CODE>base64</CODE> ,  <CODE>binhex</CODE> , 
+以及 <CODE>uu</CODE> . 如 <A HREF="#eg-4-26">Example 4-26</A> 所示.
+</P>
+<P>
+2.0 及以后版本中, 你还可以使用它在二进制数据和十六进制字符串中相互转换.
+</P>
+<A NAME="eg-4-26"></A>
+<H4><A href='#toptop'> 1.15.0.1. Example 4-26. 使用 binascii 模块 </A></H4>
+<PRE>
+File: binascii-example-1.py
+
+import binascii
+
+text = "hello, mrs teal"
+
+data = binascii.b2a_base64(text)
+text = binascii.a2b_base64(data)
+print text, "&lt;=&gt;", repr(data)
+
+data = binascii.b2a_uu(text)
+text = binascii.a2b_uu(data)
+print text, "&lt;=&gt;", repr(data)
+
+data = binascii.b2a_hqx(text)
+text = binascii.a2b_hqx(data)[0]
+print text, "&lt;=&gt;", repr(data)
+
+# 2.0 and newer
+data = binascii.b2a_hex(text)
+text = binascii.a2b_hex(data)
+print text, "&lt;=&gt;", repr(data)
+
+*B*hello, mrs teal &lt;=&gt; 'aGVsbG8sIG1ycyB0ZWFs\012'
+hello, mrs teal &lt;=&gt; '/:&amp;5L;&amp;\\L(&amp;UR&lt;R!T96%L\012'
+hello, mrs teal &lt;=&gt; 'D\'9XE\'mX)\'ebFb"dC@&amp;X'
+hello, mrs teal &lt;=&gt; '68656c6c6f2c206d7273207465616c'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+</DIV>
+
+<!-- html code generated by txt2tags 2.4 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags chapter4.t2t -->
+</BODY></HTML>

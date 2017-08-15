@@ -1,0 +1,553 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Python Standard Library</TITLE>
+
+<!-- Included style.css -->
+<STYLE TYPE="text/css">
+body, td, {
+	font-family: verdana, sans-serif;
+	font-size: 12px;
+}
+
+body {
+	background-color: #FDFBFC;
+	margin:20px 20px 20px 20px;
+}
+
+
+p {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+a {font-weight:normal; text-decoration:underline;}
+a:link {color:#0000FF;}
+a:visited {color:#0000FF;}
+a:active {color:#0000FF;}
+a:hover {color:#700000;}
+
+strong a {
+    font-weight: bold;
+}
+
+.toc {
+	background-color: #EEEEFB;
+	border: 1px solid;
+	/*padding:10px 8px 10px 15px;*/
+	float : right ; width : 37%;
+	margin : 5px; padding: 5px;
+	margin: 5px;
+}
+
+.toc a:link , .toc a:visited  { color : #003399; }
+
+.toc a:hover { 
+	color : #EEEEFB;
+	text-decoration : none;
+	background-color: black;
+}
+
+.trailbold {
+	font-weight:bold;
+}
+
+.light {
+	background-color: #EFEFEF;
+}
+
+.dark {
+	background-color: #D2D2D2;
+}
+
+.smalllogo {
+	float:left;
+}
+
+.headerbar {
+	padding-bottom:60px;
+}
+	
+.header {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.smallheader {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.filelist {
+	font-size:14px;
+	margin: 10px 10px 10px 70px;
+	line-height:25px;
+}
+
+.dirheader {
+	font-size:13px;
+	margin: 10px 50px 10px 20px
+}
+
+.toolbar {
+	text-align:right;
+	margin: 0px 10px 0px 10px
+}
+
+.copyright {
+	padding-top: 30px;
+	text-align:center;
+	font-size:9px;
+	color: #5F5F5F;
+}
+
+.small {
+	font-size:9px;
+}
+
+.sforgelogo {
+	text-align:right;
+	height: 40px;
+}
+
+pre, .source {
+	width:auto;
+	border		: 1px solid #666;
+	background	: #eee;
+	margin		: 2em 4em;
+	padding		: 1em 2em;
+}
+
+/*code {
+	color		: #DB1416;
+	
+}*/
+code { 
+font-size: 1.2em;
+font-family:courier,courier new,monospace;
+background: #666666;
+border-top: 0.03em solid #000;
+border-right: 0.03em solid #000;
+border-bottom: 0.03em solid #ccc;
+border-left: 0.03em solid #ccc;
+color: white;
+}
+
+blockquote{
+  margin: 2em 5em ; 
+ } 
+
+
+</STYLE>
+
+</HEAD>
+<BODY BGCOLOR="green">
+<A NAME="toptop"></A>
+<DIV CLASS="header" ID="header">
+<H1>Python Standard Library</H1>
+<H2>翻译: Python 江湖群</H2>
+<H3>2008-03-28 13:35:36</H3>
+</DIV>
+
+<DIV CLASS="body" ID="body">
+<DIV CLASS="toc" ID="toc">
+  <OL>
+  <LI><A HREF="#toc1">多媒体相关模块</A>
+    <UL>
+    <LI><A HREF="#toc2">1.1. 概览</A>
+    <LI><A HREF="#toc3">1.2. imghdr 模块</A>
+    <LI><A HREF="#toc4">1.3. sndhdr 模块</A>
+    <LI><A HREF="#toc5">1.4. whatsound 模块</A>
+    <LI><A HREF="#toc6">1.5. aifc 模块</A>
+    <LI><A HREF="#toc7">1.6. sunau 模块</A>
+    <LI><A HREF="#toc8">1.7. sunaudio 模块</A>
+    <LI><A HREF="#toc9">1.8. wave 模块</A>
+    <LI><A HREF="#toc10">1.9. audiodev 模块</A>
+    <LI><A HREF="#toc11">1.10. winsound 模块</A>
+    </UL>
+  </OL>
+
+</DIV>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<P>
+<A HREF="index.html">返回首页</A>
+</P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<A NAME="toc1"></A>
+<H1><A href='#toptop'> 1. 多媒体相关模块 </A></H1>
+	<BLOCKQUOTE>
+	"Wot? No quote?"
+	</BLOCKQUOTE>
+<P></P>
+	<BLOCKQUOTE>
+	- Guido van Rossum
+	</BLOCKQUOTE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc2"></A>
+<H2><A href='#toptop'> 1.1. 概览 </A></H2>
+<P>
+Python 提供了一些用于处理图片和音频文件的模块.
+</P>
+<P>
+另请参阅 <I>Pythonware Image Library</I> ( PIL , <A HREF="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</A> ),
+以及 <I>PythonWare Sound Toolkit</I> (PST , <A HREF="http://www.pythonware.com/products/pst/">http://www.pythonware.com/products/pst/</A> ).
+</P>
+<P>
+译注: 别参阅 PST 了, 废了, 用 <CODE>pymedia</CODE> 代替吧.
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc3"></A>
+<H2><A href='#toptop'> 1.2. imghdr 模块 </A></H2>
+<P>
+<CODE>imghdr</CODE> 模块可识别不同格式的图片文件. 当前版本可以识别 <CODE>bmp</CODE> , <CODE>gif</CODE> , 
+<CODE>jpeg</CODE> , <CODE>pbm</CODE> , <CODE>pgm</CODE> , <CODE>png</CODE> , <CODE>ppm</CODE> , 
+<CODE>rast</CODE> (Sun raster), <CODE>rgb</CODE> (SGI), <CODE>tiff</CODE> , 以及 <CODE>xbm</CODE> 图像. 
+如 <A HREF="#eg-9-1">Example 9-1</A> 所示.
+</P>
+<A NAME="eg-9-1"></A>
+<H4><A href='#toptop'> 1.2.0.1. Example 9-1. 使用 imghdr 模块 </A></H4>
+<PRE>
+File: imghdr-example-1.py
+
+import imghdr
+
+result = imghdr.what("samples/sample.jpg")
+
+if result:
+    print "file format:", result
+else:
+    print "cannot identify file"
+
+*B*file format: jpeg*b*
+</PRE>
+<P></P>
+<PRE>
+# 使用 PIL 
+import Image
+
+im = Image.open("samples/sample.jpg")
+print im.format, im.mode, im.size
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc4"></A>
+<H2><A href='#toptop'> 1.3. sndhdr 模块 </A></H2>
+<P>
+<CODE>sndhdr</CODE> 模块, 可来识别不同的音频文件格式, 并提取文件内容相关信息. 如 <A HREF="#eg-9-2">Example 9-2</A> 所示.
+</P>
+<P>
+执行成功后, <CODE>what</CODE> 函数将返回一个由文件类型, 
+采样频率, 声道数, 音轨数和每个采样点位数组成的元组. 具体含义请参考 <CODE>help(sndhdr)</CODE> .
+</P>
+<A NAME="eg-9-2"></A>
+<H4><A href='#toptop'> 1.3.0.1. Example 9-2. 使用 sndhdr 模块 </A></H4>
+<PRE>
+File: sndhdr-example-1.py
+
+import sndhdr
+
+result = sndhdr.what("samples/sample.wav")
+
+if result:
+    print "file format:", result
+else:
+    print "cannot identify file"
+
+*B*file format: ('wav', 44100, 1, -1, 16)*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc5"></A>
+<H2><A href='#toptop'> 1.4. whatsound 模块 </A></H2>
+<P>
+(已废弃) <CODE>whatsound</CODE> 是 <CODE>sndhdr</CODE> 模块的一个别名. 如 <A HREF="#eg-9-3">Example 9-3</A> 所示.
+</P>
+<A NAME="eg-9-3"></A>
+<H4><A href='#toptop'> 1.4.0.1. Example 9-3. 使用 whatsound 模块 </A></H4>
+<PRE>
+File: whatsound-example-1.py
+
+import whatsound # same as sndhdr
+
+result = whatsound.what("samples/sample.wav")
+
+if result:
+    print "file format:", result
+else:
+    print "cannot identify file"
+
+*B*file format: ('wav', 44100, 1, -1, 16)*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc6"></A>
+<H2><A href='#toptop'> 1.5. aifc 模块 </A></H2>
+<P>
+<CODE>aifc</CODE> 模块用于读写 AIFF 和 AIFC 音频文件(在 SGI 和 Macintosh 的计算机上使用). 如 
+<A HREF="#eg-9-4">Example 9-4</A> 所示.
+</P>
+<A NAME="eg-9-4"></A>
+<H4><A href='#toptop'> 1.5.0.1. Example 9-4. 使用 aifc 模块 </A></H4>
+<PRE>
+File: SimpleAsyncHTTP.py
+
+import asyncore
+import string, socket
+import StringIO
+import mimetools, urlparse
+
+class AsyncHTTP(asyncore.dispatcher_with_send):
+    # HTTP requestor
+
+    def _ _init_ _(self, uri, consumer):
+        asyncore.dispatcher_with_send._ _init_ _(self)
+
+        self.uri = uri
+        self.consumer = consumer
+
+        # turn the uri into a valid request
+        scheme, host, path, params, query, fragment = urlparse.urlparse(uri)
+        assert scheme == "http", "only supports HTTP requests"
+        try:
+            host, port = string.split(host, ":", 1)
+            port = int(port)
+        except (TypeError, ValueError):
+            port = 80 # default port
+        if not path:
+            path = "/"
+        if params:
+            path = path + ";" + params
+        if query:
+            path = path + "?" + query
+
+        self.request = "GET %s HTTP/1.0\r\nHost: %s\r\n\r\n" % (path, host)
+
+        self.host = host
+        self.port = port
+
+        self.status = None
+        self.header = None
+
+        self.data = ""
+
+        # get things going!
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.connect((host, port))
+
+    def handle_connect(self):
+        # connection succeeded
+        self.send(self.request)
+
+    def handle_expt(self):
+        # connection failed; notify consumer (status is None)
+        self.close()
+        try:
+            http_header = self.consumer.http_header
+        except AttributeError:
+            pass
+        else:
+            http_header(self)
+
+    def handle_read(self):
+        data = self.recv(2048)
+        if not self.header:
+            self.data = self.data + data
+            try:
+                i = string.index(self.data, "\r\n\r\n")
+            except ValueError:
+                return # continue
+            else:
+                # parse header
+                fp = StringIO.StringIO(self.data[:i+4])
+                # status line is "HTTP/version status message"
+                status = fp.readline()
+                self.status = string.split(status, " ", 2)
+                # followed by a rfc822-style message header
+                self.header = mimetools.Message(fp)
+                # followed by a newline, and the payload (if any)
+                data = self.data[i+4:]
+                self.data = ""
+                # notify consumer (status is non-zero)
+                try:
+                    http_header = self.consumer.http_header
+                except AttributeError:
+                    pass
+                else:
+                    http_header(self)
+                if not self.connected:
+                    return # channel was closed by consumer
+
+        self.consumer.feed(data)
+
+    def handle_close(self):
+        self.consumer.close()
+        self.close()
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc7"></A>
+<H2><A href='#toptop'> 1.6. sunau 模块 </A></H2>
+<P>
+sunau 模块用于读写 Sun AU 音频文件. 如 <A HREF="#eg-9-5">Example 9-5</A> 所示.
+</P>
+<A NAME="eg-9-5"></A>
+<H4><A href='#toptop'> 1.6.0.1. Example 9-5. 使用 sunau 模块 </A></H4>
+<PRE>
+File: sunau-example-1.py
+
+import sunau
+
+w = sunau.open("samples/sample.au", "r")
+
+if w.getnchannels() == 1:
+    print "mono,",
+else:
+    print "stereo,",
+
+print w.getsampwidth()*8, "bits,",
+print w.getframerate(), "Hz sampling rate"
+
+*B*mono, 16 bits, 8012 Hz sampling rate*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc8"></A>
+<H2><A href='#toptop'> 1.7. sunaudio 模块 </A></H2>
+<P>
+<CODE>sunaudio</CODE> 模块用于识别 Sun AU 音频文件, 并提取其基本信息. 
+<CODE>sunau</CODE> 模块为 Sun AU 文件提供了更完成的支持. 如 Example 9-6 所示
+</P>
+<A NAME="eg-9-6"></A>
+<H4><A href='#toptop'> 1.7.0.1. Example 9-6. 使用 sunaudio 模块 </A></H4>
+<PRE>
+File: sunaudio-example-1.py
+
+import sunaudio
+
+file = "samples/sample.au"
+
+print sunaudio.gethdr(open(file, "rb"))
+
+*B*(6761, 1, 8012, 1, 'sample.au')*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc9"></A>
+<H2><A href='#toptop'> 1.8. wave 模块 </A></H2>
+<P>
+wave 模块用于读写 Microsoft WAV 音频文件, 如 Example 9-7 所示.
+</P>
+<A NAME="eg-9-7"></A>
+<H4><A href='#toptop'> 1.8.0.1. Example 9-7. 使用 wave 模块 </A></H4>
+<PRE>
+File: wave-example-1.py
+
+import wave
+
+w = wave.open("samples/sample.wav", "r")
+
+if w.getnchannels() == 1:
+    print "mono,",
+else:
+    print "stereo,",
+
+print w.getsampwidth()*8, "bits,",
+print w.getframerate(), "Hz sampling rate"
+
+*B*mono, 16 bits, 44100 Hz sampling rate*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc10"></A>
+<H2><A href='#toptop'> 1.9. audiodev 模块 </A></H2>
+<P>
+(只用于 Unix) <CODE>audiodev</CODE> 为 Sun 和 SGI 计算机提供了音频播放支持. 如 <A HREF="#eg-9-8">Example 9-8</A> 所示.
+</P>
+<A NAME="eg-9-8"></A>
+<H4><A href='#toptop'> 1.9.0.1. Example 9-8. 使用 audiodev 模块 </A></H4>
+<PRE>
+File: audiodev-example-1.py
+
+import audiodev
+import aifc
+
+sound = aifc.open("samples/sample.aiff", "r")
+
+player = audiodev.AudioDev()
+
+player.setoutrate(sound.getframerate())
+player.setsampwidth(sound.getsampwidth())
+player.setnchannels(sound.getnchannels())
+
+bytes_per_frame = sound.getsampwidth() * sound.getnchannels()
+bytes_per_second = sound.getframerate() * bytes_per_frame
+
+while 1:
+    data = sound.readframes(bytes_per_second)
+    if not data:
+        break
+    player.writeframes(data)
+
+player.wait()
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc11"></A>
+<H2><A href='#toptop'> 1.10. winsound 模块 </A></H2>
+<P>
+(只用于 Windows )  <CODE>winsound</CODE> 模块允许你在 Winodws 平台上播放 Wave 文件. 
+如 <A HREF="#eg-9-9">Example 9-9</A> 所示.
+</P>
+<A NAME="eg-9-9"></A>
+<H4><A href='#toptop'> 1.10.0.1. Example 9-9. 使用 winsound 模块 </A></H4>
+<PRE>
+File: winsound-example-1.py
+
+import winsound
+
+file = "samples/sample.wav"
+
+winsound.PlaySound(
+    file,
+    winsound.SND_FILENAME|winsound.SND_NOWAIT,
+    )
+</PRE>
+<P></P>
+<P>
+flag 变量说明:
+</P>
+<UL>
+<LI>SND_FILENAME - sound 是一个 wav 文件名
+<LI>SND_ALIAS - sound 是一个注册表中指定的别名
+<LI>SND_LOOP - 重复播放直到下一次 PlaySound ; 必须指定 SND_ASYNC
+<LI>SND_MEMORY - sound 是一个 wav 文件的内存映像
+<LI>SND_PURGE - 停止指定 sound 的所有实例
+<LI>SND_ASYNC - 异步播放声音, 声音开始播放后函数立即返回  
+<LI>SND_NODEFAULT - 找不到 sound 时不播放默认的 beep 声音
+<LI>SND_NOSTOP - 不打断当前播放中的任何 sound
+<LI>SND_NOWAIT - sound 驱动忙时立即返回
+</UL>
+
+<HR NOSHADE SIZE=5>
+<P></P>
+</DIV>
+
+<!-- html code generated by txt2tags 2.4 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags chapter9.t2t -->
+</BODY></HTML>

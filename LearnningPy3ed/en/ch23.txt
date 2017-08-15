@@ -1,0 +1,235 @@
+Chapter 23
+Chapter 23
+23Class Coding Basics
+Now that we've talked about OOP in the abstract, it's time to see how this translates to actual code. This chapter and the next will fill in the syntax details behind the class model in Python.
+If you've never been exposed to OOP in the past, classes can seem somewhat complicated if taken in a single dose. To make class coding easier to absorb, we'll begin our detailed exploration of OOP by taking a first look at some basic classes in action in this chapter. We'll expand on the details introduced here in later chapters of this part of the book, but in their basic form, Python classes are easy to understand.
+Classes have three primary distinctions. At a base level, they are mostly just namespaces, much like the modules we studied in Part V. But, unlike modules, classes also have support for generating multiple objects, for namespace inheritance, and for operator overloading. Let's begin our class statement tour by exploring each of these three distinctions in turn.
+Classes Generate Multiple Instance Objects
+To understand how the multiple objects idea works, you have to first understand that there are two kinds of objects in Python's OOP model: class objects, and instance objects. Class objects provide default behavior, and serve as factories for instance objects. Instance objects are the real objects your programs process-each is a namespace in its own right, but inherits (i.e., has automatic access to) names in the class from which it was created. Class objects come from statements, and instances from calls; each time you call a class, you get a new instance of that class.
+This object-generation concept is very different from any of the other program constructs we've seen so far in this book. In effect, classes are factories for generating multiple instances. By contrast, only one copy of each module is ever imported into a single program (in fact, one reason that we have to call reload is to update the single module object so that changes are reflected once they've been made).
+The following is a quick summary of the bare essentials of Python OOP. As you'll see, Python classes are in some ways similar to both defs and modules, but they may be quite different from what you're used to in other languages.
+Class Objects Provide Default Behavior
+When we run a class statement, we get a class object. Here's a rundown of the main properties of Python classes:
+	*	The class statement creates a class object and assigns it a name. Just like the function def statement, the Python class statement is an executable statement. When reached and run, it generates a new class object, and assigns it to the name in the class header. Also, like defs, class statements typically run when the files they are coded in are first imported.
+	*	Assignments inside class statements make class attributes. Just like in module files, top-level assignments within a class statement (not nested in a def) generate attributes in a class object. Technically, the class statement scope morphs into the attribute namespace of the class object, just like a module's global scope. After running a class statement, class attributes are accessed by name qualification: object.name.
+	*	Class attributes provide object state and behavior. Attributes of a class object record state information and behavior to be shared by all instances created from the class; function def statements nested inside a class generate methods, which process instances.
+Instance Objects Are Concrete Items
+When we call a class object, we get an instance object. Here's an overview of the key points behind class instances:
+	*	Calling a class object like a function makes a new instance object. Each time a class is called, it creates and returns a new instance object. Instances represent concrete items in your program's domain.
+	*	Each instance object inherits class attributes and gets its own namespace. Instance objects created from classes are new namespaces; they start out empty, but inherit attributes that live in the class objects from which they were generated.
+	*	Assignments to attributes of self in methods make per-instance attributes. Inside class method functions, the first argument (called self by convention) references the instance object being processed; assignments to attributes of self create or change data in the instance, not the class.
+A First Example
+Let's turn to a real example to show how these ideas work in practice. To begin, let's define a class named FirstClass by running a Python class statement interactively:
+>>> class FirstClass:                # Define a class object
+...     def setdata(self, value):    # Define class methods
+...         self.data = value        # self is the instance
+...     def display(self):
+...         print self.data          # self.data: per instance
+...
+We're working interactively here, but typically, such a statement would be run when the module file it is coded in is imported. Like functions created with defs, this class won't even exist until Python reaches and runs this statement.
+Like all compound statements, the class starts with a header line that lists the class name, followed by a body of one or more nested and (usually) indented statements. Here, the nested statements are defs; they define functions that implement the behavior the class means to export. As we've learned, def is really an assignment; here, it assigns function objects to the names setdata and display in the class statement's scope, and so generates attributes attached to the class: FirstClass.setdata, and FirstClass.display. In fact, any name assigned at the top level of the class's nested block becomes an attribute of the class.
+Functions inside a class are usually called methods. They're normal defs, and they support everything we've learned about functions already (they can have defaults, return values, and so on). But, in a method function, the first argument automatically receives an implied instance object when called-the subject of the call. We need to create a couple of instances to see how this works:
+>>> x = FirstClass(  )                 # Make two instances
+>>> y = FirstClass(  )                 # Each is a new namespace
+By calling the class this way (notice the parentheses), we generate instance objects, which are just namespaces that have access to their class' attributes. Properly speaking, at this point, we have three objects-two instances, and a class. Really, we have three linked namespaces, as sketched in Figure 23-1. In OOP terms, we say that x "is a" FirstClass, as is y.
+
+Figure 23-1
+Classes and instances are linked namespace objects in a class tree that is searched by inheritance. Here, the "data" attribute is found in instances, but "setdata" and "display" are in the class above them.
+
+The two instances start empty, but have links back to the class from which they were generated. If we qualify an instance with the name of an attribute that lives in the class object, Python fetches the name from the class by inheritance search (unless it also lives in the instance):
+>>> x.setdata("King Arthur")         # Call methods: self is x
+>>> y.setdata(3.14159)               # Runs: FirstClass.setdata(y, 3.14159)
+Neither x nor y has a setdata attribute of its own, so to find it, Python follows the link from instance to class. And that's about all there is to inheritance in Python: it happens at attribute qualification time, and it just involves looking up names in linked objects (e.g., by following the is-a links in Figure 23-1).
+In the setdata function inside FirstClass, the value passed in is assigned to self.data. Within a method, self-the name given to the leftmost argument by convention-automatically refers to the instance being processed (x or y), so the assignments store values in the instances' namespaces, not the class' (that's how the data names in Figure 23-1 are created).
+Because classes generate multiple instances, methods must go through the self argument to get to the instance to be processed. When we call the class' display method to print self.data, we see that it's different in each instance; on the other hand, the name display itself is the same in x and y, as it comes (is inherited) from the class:
+>>> x.display(  )                      # self.data differs in each instance
+King Arthur
+>>> y.display(  )
+3.14159
+Notice that we stored different object types in the data member in each instance (a string, and a floating point). As with everything else in Python, there are no declarations for instance attributes (sometimes called members); they spring into existence the first time they are assigned values, just like simple variables. In fact, if we were to call display on one of our instances before calling setdata, we would trigger an undefined name error-the attribute named data doesn't even exist in memory until it is assigned within the setdata method.
+As another way to appreciate how dynamic this model is, consider that we can change instance attributes in the class itself, by assigning to self in methods, or outside the class, by assigning to an explicit instance object:
+>>> x.data = "New value"               # Can get/set attributes 
+>>> x.display(  )                      # Outside the class too
+New value
+Although less common, we could even generate a brand new attribute in the instance's namespace by assigning to its name outside the class's method functions:
+>>> x.anothername = "spam"           # Can set new attributes here too
+This would attach a new attribute called anothername, which may or may not be used by any of the class' methods to the instance object x. Classes usually create all of the instance's attributes by assignment to the self argument, but they don't have to; programs can fetch, change, or create attributes on any objects to which they have references.
+Classes Are Customized by Inheritance
+Besides serving as factories for generating multiple instance objects, classes also allow us to make changes by introducing new components (called subclasses), instead of changing existing components in-place. Instance objects generated from a class inherit the class' attributes. Python also allows classes to inherit from other classes, opening the door to coding hierarchies of classes that specialize behavior by overriding existing attributes lower in the hierarchy. Here, too, there is no parallel with modules: their attributes live in a single, flat namespace.
+In Python, instances inherit from classes, and classes inherit from superclasses. Here are the key ideas behind the machinery of attribute inheritance:
+	*	Superclasses are listed in parentheses in a class header. To inherit attributes from another class, just list the class in parentheses in a class statement's header. The class that inherits is called a subclass, and the class that is inherited from is its superclass.
+	*	Classes inherit attributes from their superclasses. Just as instances inherit the attribute names defined in their classes, classes inherit all the attribute names defined in their superclasses; Python finds them automatically when they're accessed, if they don't exist in the subclasses.
+	*	Instances inherit attributes from all accessible classes. Each instance gets names from the class it's generated from, as well as all of that class' superclasses. When looking for a name, Python checks the instance, then its class, then all superclasses.
+	*	Each object.attribute reference invokes a new, independent search. Python performs an independent search of the class tree for each attribute fetch expression. This includes references to instances and classes made outside class statements (e.g., X.attr), as well as references to attributes of the self instance argument in class method functions. Each self.attr expression in a method invokes a new search for attr in self and above.
+	*	Logic changes are made by subclassing, not by changing superclasses. By redefining superclass names in subclasses lower in the hierarchy (tree), subclasses replace and thus customize inherited behavior.
+The net effect, and the main purpose of all this searching, is that classes support factoring and customization of code better than any other language tool we've seen so far. On the one hand, they allow us to minimize code redundancy (and so reduce maintenance costs) by factoring operations into a single, shared implementation; on the other, they allow us to program by customizing what already exists, rather than changing it in-place or starting from scratch.
+A Second Example
+This next example builds on the previous one. First, we'll define a new class, SecondClass, that inherits all of FirstClass' names and provides one of its own:
+>>> class SecondClass(FirstClass):                    # Inherits setdata
+...     def display(self):                            # Changes display 
+...         print 'Current value = "%s"' % self.data
+...
+SecondClass defines the display method to print with a different format. By defining an attribute with the same name as an attribute in FirstClass, SecondClass effectively replaces the display attribute in its superclass.
+Recall that inheritance searches proceed upward from instances, to subclasses, to superclasses, stopping at the first appearance of the attribute name that it finds. In this case, since the display name in SecondClass will be found before the one in FirstClass, we say that SecondClass overrides FirstClass's display. Sometimes we call this act of replacing attributes by redefining them lower in the tree overloading.
+The net effect here is that SecondClass specializes FirstClass, by changing the behavior of the display method. On the other hand, SecondClass (and any instances created from it) still inherits the setdata method in FirstClass verbatim. Let's make an instance to demonstrate:
+>>> z = SecondClass(  )
+>>> z.setdata(42)                # Finds setdata in FirstClass
+>>> z.display(  )                # Finds overridden method in SecondClass
+Current value = "42"
+As before, we make a SecondClass instance object by calling it. The setdata call still runs the version in FirstClass, but this time the display attribute comes from SecondClass and prints a custom message. Figure 23-2 sketches the namespaces involved.
+
+Figure 23-2
+Specialization by overriding inherited names by redefining them in extensions lower in the class tree. Here, SecondClass redefines and so customizes the "display" method for its instances.
+
+Here's a very important thing to notice about OOP: the specialization introduced in SecondClass is completely external to FirstClass. That is, it doesn't affect existing or future FirstClass objects, like the x from the prior example:
+>>> x.display(  )                # x is still a FirstClass instance (old message)
+New value
+Rather than changing FirstClass, we customized it. Naturally, this is an artificial example, but as a rule, because inheritance allows us to make changes like this in external components (i.e., in subclasses), classes often support extension and reuse better than functions or modules can.
+Classes Are Attributes in Modules
+Before we move on, remember that there's nothing magic about a class name. It's just a variable assigned to an object when the class statement runs, and the object can be referenced with any normal expression. For instance, if our FirstClass was coded in a module file instead of being typed interactively, we could import it and use its name normally in a class header line:
+from modulename import FirstClass           # Copy name into my scope
+class SecondClass(FirstClass):              # Use class name directly
+    def display(self): ...
+Or, equivalently:
+import modulename                           # Access the whole module
+class SecondClass(modulename.FirstClass):   # Qualify to reference
+    def display(self): ...
+Like everything else, class names always live within a module, and so must follow all the rules we studied in Part V. For example, more than one class can be coded in a single module file-like other statements in a module, class statements are run during imports to define names, and these names become distinct module attributes. More generally, each module may arbitrarily mix any number of variables, functions, and classes, and all names in a module behave the same way. The file food.py demonstrates:
+# food.py
+
+var = 1                                       # food.var
+def func(  ):                                 # food.func
+    ...
+class spam:                                 # food.spam
+    ...
+class ham:                                  # food.ham
+    ...
+class eggs:                                 # food.eggs
+    ...
+This holds true even if the module and class happen to have the same name. For example, given the following file, person.py:
+class person:
+    ...
+we need to go through the module to fetch the class as usual:
+import person                                 # Import module
+x = person.person(  )                         # Class within module
+Although this path may look redundant, it's required: person.person refers to the person class inside the person module. Saying just person gets the module, not the class, unless the from statement is used:
+from person import person                     # Get class from module
+x = person(  )                                # Use class name
+Like any other variable, we can never see a class in a file without first importing and somehow fetching it from its enclosing file. If this seems confusing, don't use the same name for a module and a class within it.
+Also, keep in mind that although classes and modules are both namespaces for attaching attributes, they correspond to very different source code structures: a module reflects an entire file, but a class is a statement within a file. We'll say more about such distinctions later in this part of the book.
+Classes Can Intercept Python Operators
+Now, let's take a look at the third major difference between classes and modules: operator overloading. In simple terms, operator overloading lets objects coded with classes intercept and respond to operations that work on built-in types: addition, slicing, printing, qualification, and so on. It's mostly just an automatic dispatch mechanism: expressions and other built-in operations route control to implementations in classes. Here, too, there is nothing similar in modules: modules can implement function calls, but not the behavior of expressions.
+Although we could implement all class behavior as method functions, operator overloading lets objects be more tightly integrated with Python's object model. Moreover, because operator overloading makes our own objects act like built-ins, it tends to foster object interfaces that are more consistent and easier to learn, and it allows class-based objects to be processed by code written to expect a built-in type's interface. Here is a quick rundown of the main ideas behind overloading operators:
+	*	Methods named with double underscores (_  _X_  _) are special hooks. Python operator overloading is implemented by providing specially named methods to intercept operations. The Python language defines a fixed and unchangeable mapping from each of these operations to a specially named method.
+	*	Such methods are called automatically when instances appear in built-in operations. For instance, if an instance object inherits an _  _add_  _ method, that method is called whenever the object appears in a + expression. The method's return value becomes the result of the corresponding expression.
+	*	Classes may override most built-in type operations. There are dozens of special operator overloading method names for intercepting and implementing nearly every operation available for built-in types. This includes expressions, but also basic operations like printing and object creation.
+	*	There are no defaults for operator overloading methods, and none are required. If a class does not define or inherit an operator overloading method, it just means that the corresponding operation is not supported for the class' instances. If there is no _  _add_  _, for example, + expressions raise exceptions.
+	*	Operators allow classes to integrate with Python's object model. By overloading type operations, user-defined objects implemented with classes act just like built-ins, and so provide consistency as well as compatibility with expected interfaces.
+Operator overloading is an optional feature; it's used primarily by people developing tools for other Python programmers, not by application developers. And, candidly, you probably shouldn't try to use it just because it seems "cool." Unless a class needs to mimic built-in type interfaces, it should usually stick to simpler named methods. Why would an employee database application support expressions like * and +, for example? Named methods like giveRaise and promote would usually make more sense.
+Because of this, we won't go into details on every operator overloading method available in Python in this book. Still, there is one operator overloading method you are likely to see in almost every realistic Python class: the _  _init_  _ method, which is known as the constructor method, and is used to initialize objects' state. You should pay special attention to this method, because _  _init_  _, along with the self argument, turns out to be one of the keys to understanding OOP code in Python. 
+A Third Example
+On to another example. This time, we'll define a subclass of SecondClass that implements three specially named attributes that Python will call automatically: _  _init_  _ is called when a new instance object is being constructed (self is the new ThirdClass object), and _  _add_  _ and _  _mul_  _ are called when a ThirdClass instance appears in a  + or * expression, respectively. Here's our new subclass:
+>>> class ThirdClass(SecondClass):                     # Is a SecondClass
+...     def _  _init_  _(self, value):                # On "ThirdClass(value)"
+...         self.data = value
+...     def _  _add_  _(self, other):                 # On "self + other"
+...         return ThirdClass(self.data + other)
+...     def _  _mul_  _(self, other):
+...         self.data = self.data * other              # On "self * other" 
+...
+>>> a = ThirdClass("abc")         # New _  _init_  _ called
+>>> a.display(  )                 # Inherited method
+Current value = "abc"
+
+>>> b = a + 'xyz'                 # New _  _add_  _: makes a new instance
+>>> b.display(  )
+Current value = "abcxyz"
+
+>>> a * 3                         # New _  _mul_  _: changes instance in-place
+>>> a.display(  )
+Current value = "abcabcabc"
+ThirdClass "is a" SecondClass, so its instances inherit the display method from SecondClass. But, ThirdClass generation calls pass an argument now (e.g., "abc"); it's passed to the value argument in the _  _init_  _   constructor and assigned to self.data there. Further, ThirdClass objects can show up in + and * expressions; Python passes the instance object on the left to the self argument, and the value on the right to other, as illustrated in Figure 23-3.
+
+Figure 23-3
+In operator overloading, expression operators and other built-on operations performed on class instances are mapped back to specially named methods in the class. These special methods are optional, and may be inherited as usual. Here, a "*" expression triggers 
+the "_mul_" method.
+
+Specially named methods such as _  _init_  _ and _  _add_  _ are inherited by subclasses and instances, just like any other names assigned in a class. If the methods are not coded in a class, Python looks for such names in all its superclasses, as usual. Operator overloading method names are also not built-in or reserved words; they are just attributes that Python looks for when objects appear in various contexts. Python usually calls them automatically, but they may occasionally be called by your code as well (more on this later; the _  _init_  _ method, for example, is often called manually to trigger superclass constructors).
+Notice that the _  _add_  _ method makes and returns a new instance object of its class (by calling ThirdClass with the result value), but _  _mul_  _ changes the current instance object in-place (by reassigning the self attribute). This is different from the behavior of built-in types such as numbers and strings, which always make new objects for the * operator. Because operator overloading is really just an expression-to-method dispatch mechanism, you can interpret operators any way you like in your own class objects.
+Why Use Operator Overloading?
+As a class designer, you can choose to use operator overloading or not. Your choice simply depends on how much you want your object to look and feel like a built-in type. As mentioned earlier, if you omit an operator overloading method, and do not inherit it from a superclass, the corresponding operation will not be supported for your instances; if it's attempted, an exception will be thrown (or a standard default will be used).
+Frankly, many operator overloading methods tend to be used only when implementing objects that are mathematical in nature; a vector or matrix class may overload the addition operator, for example, but an employee class likely would not. For simpler classes, you might not use overloading at all, and would rely instead on explicit method calls to implement your objects' behavior.
+On the other hand, you might decide to use operator overloading if you need to pass a user-defined object to a function that was coded to expect the operators available on a built-in type like a list or a dictionary. Implementing the same operator set in your class will ensure that your objects support the same expected object interface, and so are compatible with the function.
+One overloading method seems to show up in almost every realistic class: the _  _init_  _ constructor method. Because it allows classes to fill out the attributes in their newly created instances immediately, the constructor is useful for almost every kind of class you might code. In fact, even though instance attributes are not declared in Python, you can usually find out which attributes an instance will have by inspecting its class' _  _init_  _ method code. We won't go into too much detail on this advanced feature in this book, but we'll see some additional inheritance and operator overloading techniques in action in Chapter 24.
+The World's Simplest Python Class
+We've begun studying class statement syntax in detail in this chapter, but I'd again like to remind you that the basic inheritance model that classes produce is very simple-all it really involves is searching for attributes in trees of linked objects. In fact, we can create a class with nothing in it at all. The following statement makes a class with no attributes attached (an empty namespace object):
+>>> class rec: pass                # Empty namespace object
+We need the no-operation pass statement (discussed in Chapter 13) here because we don't have any methods to code. After we make the class by running this statement interactively, we can start attaching attributes to the class by assigning names to it completely outside of the original class statement:
+>>> rec.name = 'Bob'               # Just objects with attributes
+>>> rec.age  = 40
+And, after we've created these attributes by assignment, we can fetch them with the usual syntax. When used this way, a class is roughly similar to a "struct" in C, or a "record" in Pascal-an object with field names attached to it (we can do similar work with dictionary keys, but it requires extra characters):
+>>> print rec.name                 # Like a C struct or a record
+Bob
+Notice that this works even though there are no instances of the class yet; classes are objects in their own right, even without instances. In fact, they are just self-contained namespaces, so as long as we have a reference to a class, we can set or change its attributes anytime we wish. Watch what happens when we do create two instances, though:
+>>> x = rec(  )                      # Instances inherit class names
+>>> y = rec(  )
+These instances begin their lives as completely empty namespace objects. Because they remember the class they were made from, though, they will obtain the attributes we attached to the class by inheritance:
+>>> x.name, y.name                 # Name is stored on the class only here
+('Bob', 'Bob')
+Really, these instances have no attributes of their own; they simply fetch the name attribute from the class object where it is stored. If we do assign an attribute to an instance, though, it creates (or changes) the attribute in that object, and no other-attribute references kick off inheritance searches, but attribute assignments affect only the objects in which the attributes are assigned. Here, x gets its own name, but y still inherits the name attached to the class above it:
+>>> x.name = 'Sue'                 # But assignment changes x only
+>>> rec.name, x.name, y.name
+('Bob', 'Sue', 'Bob')
+In fact, as we'll explore in more detail in the next chapter, the attributes of a namespace object are usually implemented as dictionaries, and class inheritance trees are (generally speaking) just dictionaries with links to other dictionaries. If you know where to look, you can see this explicitly. The _  _dict_  _ attribute is the namespace dictionary for most class-based objects: 
+>>> rec._  _dict_  _.keys(  )
+['age', '__module_  _', '_  _doc_  _', 'name']
+
+>>> x._  _dict_  _.keys(  )
+['name']
+
+>>> y._  _dict_  _.keys(  )
+[]
+Here, the class' dictionary shows the name and age attributes we assigned to it, x has its own name, and y is still empty. Each instance has a link to its class for inheritance, though-it's called _  _class_  _, if you want to inspect it:
+>>> x._  _class_  _
+<class _  _main_  _.rec at 0x00BAFF60>
+Classes also have a _  _bases_  _ attribute, which is a tuple of their superclasses; these two attributes are how class trees are literally represented in memory by Python.
+The main point to take away from this look under the hood is that Python's class model is extremely dynamic. Classes and instances are just namespace objects, with attributes created on the fly by assignment. Those assignments usually happen within the class statements you code, but they can occur anywhere you have a reference to one of the objects in the tree. 
+Even methods, normally created by a def nested in a class, can be created completely independent of any class object. The following, for example, defines a simple function outside of any class that takes one argument: 
+>>> def upperName(self):
+...     return self.name.upper(  )   # Still needs a self
+There is nothing about a class here yet-it's a simple function, and it can be called as such at this point, provided we pass in an object with a name attribute (the name self does not make this special in any way). If we assign this simple function to an attribute of our class, though, it becomes a method, callable through any instance (as well as through the class name itself, as long as we pass in an instance manually):
+>>> rec.method = upperName
+
+>>> x.method(  )                     # Run  method to process x 
+'SUE'
+
+>>> y.method(  )                     # Same, but  pass y to self
+'BOB'
+
+>>> rec.method(x)                  # Can call through instance or class
+'SUE'
+Normally, classes are filled out by class statements, and instance attributes are created by assignments to self attributes in method functions. The point again, though, is that they don't have to be; OOP in Python really is mostly about looking up attributes in linked namespace objects.
+Chapter Summary
+This chapter introduced the basics of coding classes in Python. We studied the syntax of the class statement, and saw how to use it to build up a class inheritance tree. We also studied how Python automatically fills in the first argument in method functions, how attributes are attached to objects in a class tree by simple assignment, and how specially named operator overloading methods intercept and implement built-in operations for our instances (e.g., expressions and printing).
+In the next chapter, we'll continue our look at class coding, taking a second pass over the model to fill in some of the details that were omitted here to keep things simple. We'll also start to explore some larger and more realistic classes. First, though, let's work through a quiz to review the basics we've covered so far. 
+Brain Builder
+Chapter Quiz
+	1.	How are classes related to modules?
+	2.	How are instances and classes created?
+	3.	Where and how are class attributes created?
+	4.	Where and how are instance attributes created?
+	5.	What does self mean in a Python class?
+	6.	How is operator overloading coded in a Python class?
+	7.	When might you want to support operator overloading in your classes?
+	8.	Which operator overloading method is most commonly used?
+	9.	What are the two most important concepts in Python OOP code?
+Quiz Answers
+	1.	Classes are always nested inside a module; they are attributes of a module object. Classes and modules are both namespaces, but classes correspond to statements (not entire files), and support the OOP notions of multiple instances, inheritance, and operator overloading. In a sense, a module is like a single-instance class without inheritance that corresponds to an entire file of code. 
+	2.	Classes are made by running class statements; instances are created by calling a class as though it were a function.
+	3.	Class attributes are created by assigning attributes to a class object. They are normally generated by top-level assignments nested in a class statement-each name assigned in the class statement block becomes an attribute of the class object (technically, the class statement scope morphs into the class object's attribute namespace). Class attributes can also be created, though, by assigning attributes to the class anywhere a reference to the class object exists-i.e., even outside the class statement.
+	4.	Instance attributes are created by assigning attributes to an instance object. They are normally created within class method functions inside the class statement by assigning attributes to the self argument (which is always the implied instance). Again, though, they may be created by assignment anywhere a reference to the instance appears, even outside the class statement. Normally, all instance attributes are initialized in the _  _init_  _ constructor method; that way, later method calls can assume the attributes already exist.
+	5.	self is the name commonly given to the first (leftmost) argument in a class method function; Python automatically fills it in with the instance object that is the implied subject of the method call. This argument need not be called self; its position is what is significant. (Ex-C++ or Java programmers might prefer to call it this because in those languages that name reflects the same idea; in Python, though, this argument must always be explicit.)
+	6.	Operator overloading is coded in a Python class with specially named methods; they all begin and end with double underscores to make them unique. These are not built-in or reserved names; Python just runs them automatically when an instance appears in the corresponding operation. Python defines the mappings from operations to special method names.
+	7.	Operator overloading is useful to implement objects that resemble built-in types (e.g., sequences or numeric objects such as matrixes), and to mimic the built-in type interface expected by a piece of code. Mimicking built-in type interfaces enables you to pass in class instances that also have state information-i.e., attributes that remember data between operation calls. You shouldn't use operator overloading when a simple named method will suffice, though.
+	8.	The _  _init_  _ constructor method is the most commonly used; almost every class uses this method to set initial values for instance attributes and perform other startup tasks.
+	9.	The special self argument in method functions and the _  _init_  _ constructor method are the two cornerstones of OOP code in Python.

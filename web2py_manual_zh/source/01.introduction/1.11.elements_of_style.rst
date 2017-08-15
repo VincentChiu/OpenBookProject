@@ -1,0 +1,18 @@
+Elements of Style
+============================================
+
+Ref. [35] contains good style practices when programming with Python. You will find that web2py does not always follow these rules. This is not because of omissions or negligence; it is our belief that the users of web2py should follow these rules and we encourage it. We chose not to follow some of those rules when defining web2py helper objects in order to minimize the probability of name conflict with objects defined by the user.
+
+For example, the class that represents a <div> is called DIV, while according to the Python style reference it should have been called Div. We believe that, for this specific example that using an all-upper-case "DIV" is a more natural choice. Moreover, this approach leaves programmers free to create a class called "Div" if they choose to do so. Our syntax also maps naturally into the DOM notation of most browsers (including, for example, Firefox).
+
+According to the Python style guide, all-upper-case strings should be used for constants and not variables. Continuing with our example, even consid- ering that DIV is a class, it is a special class that should never be redefined by the user because doing so would break other web2py applications. Hence, we believe this qualifies the DIV class as something that should be treated as a constant, further justifying our choice of notation.
+
+In summary, the following conventions are followed: • HTML helpers and validators are all upper case for the reasons dis-cussed above (for example DIV, A, FORM, URL).
+
+• ThetranslatorobjectTisuppercasedespitethefactthatitisaninstance of a class and not a class itself. Logically the translator object performs an action similar to the HTML helpers — it affects rendering part of the presentation. Also, T needs to be easy to locate in the code and has to have a short name.
+
+• DAL classes follow the Python style guide (first letter capitalized), sometimes with the addition of a clarifying DAL prefix (for example Table, Field, DALQuery, etc.).
+
+In all other cases we believe we have followed, as much as possible, the Python Style Guide (PEP8). For example all instance objects are lower-case (request, response, session, cache), and all internal classes are capitalized.
+
+In all the examples of this book, web2py keywords are shown in bold, while strings and comments are shown in italic.

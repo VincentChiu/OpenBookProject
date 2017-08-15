@@ -1,0 +1,795 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Python Standard Library</TITLE>
+
+<!-- Included style.css -->
+<STYLE TYPE="text/css">
+body, td, {
+	font-family: verdana, sans-serif;
+	font-size: 12px;
+}
+
+body {
+	background-color: #FDFBFC;
+	margin:20px 20px 20px 20px;
+}
+
+
+p {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+a {font-weight:normal; text-decoration:underline;}
+a:link {color:#0000FF;}
+a:visited {color:#0000FF;}
+a:active {color:#0000FF;}
+a:hover {color:#700000;}
+
+strong a {
+    font-weight: bold;
+}
+
+.toc {
+	background-color: #EEEEFB;
+	border: 1px solid;
+	/*padding:10px 8px 10px 15px;*/
+	float : right ; width : 37%;
+	margin : 5px; padding: 5px;
+	margin: 5px;
+}
+
+.toc a:link , .toc a:visited  { color : #003399; }
+
+.toc a:hover { 
+	color : #EEEEFB;
+	text-decoration : none;
+	background-color: black;
+}
+
+.trailbold {
+	font-weight:bold;
+}
+
+.light {
+	background-color: #EFEFEF;
+}
+
+.dark {
+	background-color: #D2D2D2;
+}
+
+.smalllogo {
+	float:left;
+}
+
+.headerbar {
+	padding-bottom:60px;
+}
+	
+.header {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.smallheader {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.filelist {
+	font-size:14px;
+	margin: 10px 10px 10px 70px;
+	line-height:25px;
+}
+
+.dirheader {
+	font-size:13px;
+	margin: 10px 50px 10px 20px
+}
+
+.toolbar {
+	text-align:right;
+	margin: 0px 10px 0px 10px
+}
+
+.copyright {
+	padding-top: 30px;
+	text-align:center;
+	font-size:9px;
+	color: #5F5F5F;
+}
+
+.small {
+	font-size:9px;
+}
+
+.sforgelogo {
+	text-align:right;
+	height: 40px;
+}
+
+pre, .source {
+	width:auto;
+	border		: 1px solid #666;
+	background	: #eee;
+	margin		: 2em 4em;
+	padding		: 1em 2em;
+}
+
+/*code {
+	color		: #DB1416;
+	
+}*/
+code { 
+font-size: 1.2em;
+font-family:courier,courier new,monospace;
+background: #666666;
+border-top: 0.03em solid #000;
+border-right: 0.03em solid #000;
+border-bottom: 0.03em solid #ccc;
+border-left: 0.03em solid #ccc;
+color: white;
+}
+
+blockquote{
+  margin: 2em 5em ; 
+ } 
+
+
+</STYLE>
+
+</HEAD>
+<BODY BGCOLOR="green">
+<A NAME="toptop"></A>
+<DIV CLASS="header" ID="header">
+<H1>Python Standard Library</H1>
+<H2>翻译: Python 江湖群</H2>
+<H3>2008-03-28 13:35:36</H3>
+</DIV>
+
+<DIV CLASS="body" ID="body">
+<DIV CLASS="toc" ID="toc">
+  <OL>
+  <LI><A HREF="#toc1">其他模块</A>
+    <UL>
+    <LI><A HREF="#toc2">1.1. 概览</A>
+    <LI><A HREF="#toc3">1.2. fcntl 模块</A>
+    <LI><A HREF="#toc4">1.3. pwd 模块</A>
+    <LI><A HREF="#toc5">1.4. grp 模块</A>
+    <LI><A HREF="#toc6">1.5. nis 模块</A>
+    <LI><A HREF="#toc7">1.6. curses 模块</A>
+    <LI><A HREF="#toc8">1.7. termios 模块</A>
+    <LI><A HREF="#toc9">1.8. tty 模块</A>
+    <LI><A HREF="#toc10">1.9. resource 模块</A>
+    <LI><A HREF="#toc11">1.10. syslog 模块</A>
+    <LI><A HREF="#toc12">1.11. msvcrt 模块</A>
+    <LI><A HREF="#toc13">1.12. nt 模块</A>
+    <LI><A HREF="#toc14">1.13. _winreg 模块</A>
+    <LI><A HREF="#toc15">1.14. posix 模块</A>
+    </UL>
+  </OL>
+
+</DIV>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<P>
+<A HREF="index.html">返回首页</A>
+</P>
+<HR NOSHADE SIZE=5>
+<P></P>
+<A NAME="toc1"></A>
+<H1><A href='#toptop'> 1. 其他模块 </A></H1>
+<HR NOSHADE SIZE=5>
+<P></P>
+<A NAME="toc2"></A>
+<H2><A href='#toptop'> 1.1. 概览 </A></H2>
+<P>
+本章介绍了一些平台相关的模块. 重点放在了适用于整个平台家族的模块上. (比如 Unix , Windows 家族)
+</P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc3"></A>
+<H2><A href='#toptop'> 1.2. fcntl 模块 </A></H2>
+<P>
+(只用于 Unix) <CODE>fcntl</CODE> 模块为 Unix上的 <CODE>ioctl</CODE> 和 <CODE>fcntl</CODE> 函数提供了一个接口. 
+它们用于文件句柄和 I/O 设备句柄的 "out of band" 操作, 包括读取扩展属性, 控制阻塞. 更改终端行为等等. 
+(out of band management: 指使用分离的渠道进行设备管理. 这使系统管理员能在机器关机的时候对服务器, 
+网络进行监视和管理. 出处: <A HREF="http://en.wikipedia.org/wiki/Out-of-band_management">http://en.wikipedia.org/wiki/Out-of-band_management</A> )
+</P>
+<P>
+关于如何在平台上使用这些函数, 请查阅对应的 Unix man 手册.
+</P>
+<P>
+该模块同时提供了 Unix 文件锁定机制的接口. <A HREF="#eg-12-1">Example 12-1</A> 
+展示了如何使用 <CODE>flock</CODE> 函数, 更新文件时为文件设置一个 <I>advisory lock</I> .
+</P>
+<P>
+输出结果是由同时运行 3 个副本得到的. 像这样(都在一句命令行里):
+</P>
+<PRE>
+python fcntl-example-1.py&amp; python fcntl-example-1.py&amp; python fcntl-example-1.py&amp;
+</PRE>
+<P></P>
+<P>
+如果你注释掉对 <CODE>flock</CODE> 的调用, 那么 counter 文件不会正确地更新.
+</P>
+<A NAME="eg-12-1"></A>
+<H4><A href='#toptop'> 1.2.0.1. Example 12-1. Using the fcntl Module </A></H4>
+<PRE>
+File: fcntl-example-1.py
+
+import fcntl, FCNTL
+import os, time
+
+FILE = "counter.txt"
+
+if not os.path.exists(FILE):
+    # create the counter file if it doesn't exist
+	# 创建 counter 文件
+    file = open(FILE, "w")
+    file.write("0")
+    file.close()
+
+for i in range(20):
+    # increment the counter
+    file = open(FILE, "r+")
+    fcntl.flock(file.fileno(), FCNTL.LOCK_EX)
+    counter = int(file.readline()) + 1
+    file.seek(0)
+    file.write(str(counter))
+    file.close() # unlocks the file
+    print os.getpid(), "=&gt;", counter
+    time.sleep(0.1)
+
+*B*30940 =&gt; 1
+30942 =&gt; 2
+30941 =&gt; 3
+30940 =&gt; 4
+30941 =&gt; 5
+30942 =&gt; 6*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc4"></A>
+<H2><A href='#toptop'> 1.3. pwd 模块 </A></H2>
+<P>
+(只用于 Unix) <CODE>pwd</CODE> 提供了一个到 Unix 密码/password "数据库"( /etc/passwd 以及相关文件 )的接口. 
+这个数据库(一般是一个纯文本文件)包含本地机器用户账户的信息. 如 <A HREF="#eg-12-2">Example 12-2</A> 所示.
+</P>
+<A NAME="eg-12-2"></A>
+<H4><A href='#toptop'> 1.3.0.1. Example 12-2. 使用 pwd 模块 </A></H4>
+<PRE>
+File: pwd-example-1.py
+
+import pwd
+import os
+
+print pwd.getpwuid(os.getgid())
+print pwd.getpwnam("root")
+
+('effbot', 'dsWjk8', 4711, 4711, 'eff-bot', '/home/effbot', '/bin/bosh')
+('root', 'hs2giiw', 0, 0, 'root', '/root', '/bin/bash')
+</PRE>
+<P></P>
+<P>
+<CODE>getpwall</CODE> 函数返回一个包含所有可用用户数据库入口的列表. 你可以使用它搜索一个用户.
+</P>
+<P>
+当需要查询很多名称的时候, 你可以使用 <CODE>getpwall</CODE> 来预加载一个字典, 如 <A HREF="#eg-12-3">Example 12-3</A> 所示.
+</P>
+<A NAME="eg-12-3"></A>
+<H4><A href='#toptop'> 1.3.0.2. Example 12-3. 使用 pwd 模块 </A></H4>
+<PRE>
+File: pwd-example-2.py
+
+import pwd
+import os
+
+# preload password dictionary
+_pwd = {}
+for info in pwd.getpwall():
+    _pwd[info[0]] = _pwd[info[2]] = info
+
+def userinfo(uid):
+    # name or uid integer
+    return _pwd[uid]
+
+print userinfo(os.getuid())
+print userinfo("root")
+
+('effbot', 'dsWjk8', 4711, 4711, 'eff-bot', '/home/effbot', '/bin/bosh')
+('root', 'hs2giiw', 0, 0, 'root', '/root', '/bin/bash')
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc5"></A>
+<H2><A href='#toptop'> 1.4. grp 模块 </A></H2>
+<P>
+(只用于 Unix) <CODE>grp</CODE> 模块提供了一个到 Unix 用户组/group ( /etc/group )数据库的接口. 
+<CODE>getgrgid</CODE> 函数返回给定用户组 id 的相关数据(参见 <A HREF="#eg-12-4">Example 12-4</A> ), 
+<CODE>getgrnam</CODE> 返回给定用户组名称的相关数据.
+</P>
+<A NAME="eg-12-4"></A>
+<H4><A href='#toptop'> 1.4.0.1. Example 12-4. 使用 grp 模块 </A></H4>
+<PRE>
+File: grp-example-1.py
+
+import grp
+import os
+
+print grp.getgrgid(os.getgid())
+print grp.getgrnam("wheel")
+
+*B*('effbot', '', 4711, ['effbot'])
+('wheel', '', 10, ['root', 'effbot', 'gorbot', 'timbot'])*b*
+</PRE>
+<P></P>
+<P>
+<CODE>getgrall</CODE> 函数返回包含所有可用用户组数据库入口的列表.
+</P>
+<P>
+如果需要执行很多用户组查询, 你可以使用 <CODE>getgrall</CODE> 来把当前所有的用户组复制到一个字典里, 
+这可以节省一些时间. <A HREF="#eg-12-5">Example 12-5</A> 中的 <CODE>groupinfo</CODE> 函数返回一个用户组 id ( int )或是
+一个用户组名称( str )的信息.
+</P>
+<A NAME="eg-12-5"></A>
+<H4><A href='#toptop'> 1.4.0.2. Example 12-5. 使用 grp 模块缓存用户组信息 </A></H4>
+<PRE>
+File: grp-example-2.py
+
+import grp
+import os
+
+# preload password dictionary
+_grp = {}
+for info in grp.getgrall():
+    _grp[info[0]] = _grp[info[2]] = info
+
+def groupinfo(gid):
+    # name or gid integer
+    return _grp[gid]
+
+print groupinfo(os.getgid())
+print groupinfo("wheel")
+
+*B*('effbot', '', 4711, ['effbot'])
+('wheel', '', 10, ['root', 'effbot', 'gorbot', 'timbot'])*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc6"></A>
+<H2><A href='#toptop'> 1.5. nis 模块 </A></H2>
+<P>
+(只用于 Unix , 可选) nis 模块提供了 NIS ( Network Information Services , 
+网络信息服务 ,黄页) 服务的接口, 如 <A HREF="#eg-12-6">Example 12-6</A> 所示. 它用于从可用的 NIS 数据库中获得数据.
+</P>
+<A NAME="eg-12-6"></A>
+<H4><A href='#toptop'> 1.5.0.1. Example 12-6. 使用 nis 模块 </A></H4>
+<PRE>
+File: nis-example-1.py
+
+import nis
+import string
+
+print nis.cat("ypservers")
+print string.split(nis.match("bacon", "hosts.byname"))
+
+*B*{'bacon.spam.egg': 'bacon.spam.egg'}
+['194.18.155.250', 'bacon.spam.egg', 'bacon', 'spam-010']*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc7"></A>
+<H2><A href='#toptop'> 1.6. curses 模块 </A></H2>
+<P>
+(只用于 Unix 可选) <CODE>curses</CODE> 模块提供了对文本字符终端窗口的控制, 它使用了一种独立于终端的方法. 
+如 <A HREF="#eg-12-7">Example 12-7</A> 所示.
+</P>
+<A NAME="eg-12-7"></A>
+<H4><A href='#toptop'> 1.6.0.1. Example 12-7. 使用 curses 模块 </A></H4>
+<PRE>
+File: curses-example-1.py
+
+import curses
+
+text = [
+    "a very simple curses demo",
+    "",
+    "(press any key to exit)"
+]
+
+# connect to the screen
+# 连接到屏幕
+screen = curses.initscr()
+
+# setup keyboard
+# 设置键盘
+curses.noecho() # no keyboard echo
+curses.cbreak() # don't wait for newline
+
+# screen size
+# 屏幕尺寸
+rows, columns = screen.getmaxyx()
+
+# draw a border around the screen
+# 画一个边框
+screen.border()
+
+# display centered text
+# 显示文字
+y = (rows - len(text)) / 2
+
+for line in text:
+    screen.addstr(y, (columns-len(line))/2, line)
+    y = y + 1
+
+screen.getch()
+
+curses.endwin()
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc8"></A>
+<H2><A href='#toptop'> 1.7. termios 模块 </A></H2>
+<P>
+(只用于 Unix , 可选) <CODE>termios</CODE> 为 Unix 的终端控制设备提供了一个接口. 
+它可用于控制终端通讯端口的大多方面. 
+</P>
+<P>
+<A HREF="#eg-12-8">Example 12-8</A> 中, 该模块临时关闭了键盘回显(由第三个标志域的 ECHO 标志控制).
+</P>
+<A NAME="eg-12-8"></A>
+<H4><A href='#toptop'> 1.7.0.1. Example 12-8. 使用 termios 模块 </A></H4>
+<PRE>
+File: termios-example-1.py
+
+import termios, TERMIOS
+import sys
+
+fileno = sys.stdin.fileno()
+
+attr = termios.tcgetattr(fileno)
+orig = attr[:]
+
+print "attr =&gt;", attr[:4] # flags
+
+# disable echo flag
+attr[3] = attr[3] &amp; ~TERMIOS.ECHO
+
+try:
+    termios.tcsetattr(fileno, TERMIOS.TCSADRAIN, attr)
+    message = raw_input("enter secret message: ")
+    print
+finally:
+    # restore terminal settings
+    termios.tcsetattr(fileno, TERMIOS.TCSADRAIN, orig)
+
+print "secret =&gt;", repr(message)
+
+*B*attr =&gt; [1280, 5, 189, 35387]
+enter secret message:
+secret =&gt; 'and now for something completely different'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc9"></A>
+<H2><A href='#toptop'> 1.8. tty 模块 </A></H2>
+<P>
+(只用于 Unix) <CODE>tty</CODE> 模块包含一些用于处理 tty 设备的工具函数. 
+<A HREF="#eg-12-9">Example 12-9</A> 将终端窗口切换为 "raw" 模式.
+</P>
+<A NAME="eg-12-9"></A>
+<H4><A href='#toptop'> 1.8.0.1. Example 12-9. 使用 tty 模块 </A></H4>
+<PRE>
+File: tty-example-1.py
+
+import tty
+import os, sys
+
+fileno = sys.stdin.fileno()
+
+tty.setraw(fileno)
+print raw_input("raw input: ")
+
+tty.setcbreak(fileno)
+print raw_input("cbreak input: ")
+
+os.system("stty sane") # ...
+
+*B*raw input: this is raw input
+cbreak input: this is cbreak input*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc10"></A>
+<H2><A href='#toptop'> 1.9. resource 模块 </A></H2>
+<P>
+(只用于 Unix , 可选) <CODE>resource</CODE> 模块用于查询或修改当前系统资源限制设置. 
+<A HREF="#eg-12-10">Example 12-10</A> 展示了如何执行查询操作, Example 12-11 展示了如何执行修改操作.
+</P>
+<A NAME="eg-12-10"></A>
+<H4><A href='#toptop'> 1.9.0.1. Example 12-10. 使用 resource 模块查询当前设置 </A></H4>
+<PRE>
+File: resource-example-1.py
+
+import resource
+
+print "usage stats", "=&gt;", resource.getrusage(resource.RUSAGE_SELF)
+print "max cpu", "=&gt;", resource.getrlimit(resource.RLIMIT_CPU)
+print "max data", "=&gt;", resource.getrlimit(resource.RLIMIT_DATA)
+print "max processes", "=&gt;", resource.getrlimit(resource.RLIMIT_NPROC)
+print "page size", "=&gt;", resource.getpagesize()
+
+*B*usage stats =&gt; (0.03, 0.02, 0, 0, 0, 0, 75, 168, 0, 0, 0, 0, 0, 0, 0, 0)
+max cpu =&gt; (2147483647, 2147483647)
+max data =&gt; (2147483647, 2147483647)
+max processes =&gt; (256, 256)
+page size =&gt; 4096*b*
+</PRE>
+<P></P>
+<A NAME="eg-12-11"></A>
+<H4><A href='#toptop'> 1.9.0.2. Example 12-11. 使用 resource 模块限制资源 </A></H4>
+<PRE>
+File: resource-example-2.py
+
+import resource
+
+resource.setrlimit(resource.RLIMIT_CPU, (0, 1))
+
+# pretend we're busy
+for i in range(1000):
+    for j in range(1000):
+        for k in range(1000):
+            pass
+
+*B*CPU time limit exceeded*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc11"></A>
+<H2><A href='#toptop'> 1.10. syslog 模块 </A></H2>
+<P>
+(只用于 Unix 可选) syslog 模块用于向系统日志设备发送信息( syslogd ). 
+这些信息如何处理依不同的系统而定, 通常会被记录在一个 log 文件中, 例如 <I>/var/log/messages</I> , <I>/var/adm/syslog</I> , 
+或者其他类似处理. (如果你找不到这个文件, 请联系你的系统管理员). <A HREF="#eg-12-12">Example 12-12</A> 展示了该模块的使用.
+</P>
+<A NAME="eg-12-12"></A>
+<H4><A href='#toptop'> 1.10.0.1. Example 12-12. 使用 syslog 模块 </A></H4>
+<PRE>
+File: syslog-example-1.py
+
+import syslog
+import sys
+
+syslog.openlog(sys.argv[0])
+
+syslog.syslog(syslog.LOG_NOTICE, "a log notice")
+syslog.syslog(syslog.LOG_NOTICE, "another log notice: %s" % "watch out!")
+
+syslog.closelog()
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc12"></A>
+<H2><A href='#toptop'> 1.11. msvcrt 模块 </A></H2>
+<P>
+(只用于 Windows/DOS ) <CODE>msvcrt</CODE> 模块用于访问 Microsoft Visual C/C++ Runtime Library (MSVCRT) 中函数的方法.
+</P>
+<P>
+<A HREF="#eg-12-13">Example 12-13</A> 展示了 <CODE>getch</CODE> 函数, 它用于从命令行读取一次按键操作. 
+</P>
+<A NAME="eg-12-13"></A>
+<H4><A href='#toptop'> 1.11.0.1. Example 12-13. 使用 msvcrt 模块获得按键值 </A></H4>
+<PRE>
+File: msvcrt-example-1.py
+
+import msvcrt
+
+print "press 'escape' to quit..."
+
+while 1:
+    char = msvcrt.getch()
+    if char == chr(27):
+        break
+    print char,
+    if char == chr(13):
+        print
+
+*B*press 'escape' to quit...
+h e l l o*b*
+</PRE>
+<P></P>
+<P>
+<CODE>kbhit</CODE> 函数在按键时返回(这样的捕获操作不会让 <CODE>getch</CODE> 阻塞), 如 <A HREF="#eg-12-14">Example 12-14</A> 所示.
+</P>
+<A NAME="eg-12-14"></A>
+<H4><A href='#toptop'> 1.11.0.2. Example 12-14. 使用 msvcrt 模块接受键盘输入 </A></H4>
+<PRE>
+File: msvcrt-example-2.py
+
+import msvcrt
+import time
+
+print "press SPACE to enter the serial number"
+
+while not msvcrt.kbhit() or msvcrt.getch() != " ":
+    # do something else
+    print ".",
+    time.sleep(0.1)
+
+print
+
+# clear the keyboard buffer
+# 清除键盘缓冲区
+while msvcrt.kbhit():
+    msvcrt.getch()
+
+serial = raw_input("enter your serial number: ")
+
+print "serial number is", serial
+
+*B*press SPACE to enter the serial number
+. . . . . . . . . . . . . . . . . . . . . . . .
+enter your serial number: 10
+serial number is 10*b*
+</PRE>
+<P></P>
+	<BLOCKQUOTE>
+	译注: 某翻译在这里评注道: 我能在 cmd 下运行. 用别的 IDLE 要不然卡住, 要不然接受不了键盘输入. 原因未知. 
+	这是因为 IDLE 启动两个 python 线程, 使用 socket 发送数据, 获得程序返回的.
+	</BLOCKQUOTE>
+<P></P>
+<P>
+<CODE>locking</CODE> 函数实现了 Windows 下的跨进程文件锁定, 如 <A HREF="#eg-12-15">Example 12-15</A> 所示.
+</P>
+<A NAME="eg-12-15"></A>
+<H4><A href='#toptop'> 1.11.0.3. Example 12-15. 使用 msvcrt 模块锁定文件 </A></H4>
+<PRE>
+File: msvcrt-example-3.py
+
+import msvcrt
+import os
+
+LK_UNLCK = 0 # unlock the file region 解锁区域
+LK_LOCK = 1 # lock the file region 锁定文件区域
+LK_NBLCK = 2 # non-blocking lock 非阻塞文件锁
+LK_RLCK = 3 # lock for writing 为写入文件提供锁定
+LK_NBRLCK = 4 # non-blocking lock for writing 为写入文件提供的非阻塞锁定
+
+FILE = "counter.txt"
+
+if not os.path.exists(FILE):
+    file = open(FILE, "w")
+    file.write("0")
+    file.close()
+
+for i in range(20):
+    file = open(FILE, "r+")
+    # look from current position (0) to end of file
+    msvcrt.locking(file.fileno(), LK_LOCK, os.path.getsize(FILE))
+    counter = int(file.readline()) + 1
+    file.seek(0)
+    file.write(str(counter))
+    file.close() # unlocks the file
+    print os.getpid(), "=&gt;", counter
+    time.sleep(0.1)
+
+*B*208 =&gt; 21
+208 =&gt; 22
+208 =&gt; 23
+208 =&gt; 24
+208 =&gt; 25
+208 =&gt; 26*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc13"></A>
+<H2><A href='#toptop'> 1.12. nt 模块 </A></H2>
+<P>
+(非直接使用模块, 只用于 Windows ) <CODE>nt</CODE> 模块是 <CODE>os</CODE> 模块在 Windows 平台下调用的执行模块. 
+几乎没有任何原因直接使用这个模块, 请使用 <CODE>os</CODE> 模块替代. <A HREF="#eg-12-16">Example 12-16</A> 展示了它的使用.
+</P>
+<A NAME="eg-12-16"></A>
+<H4><A href='#toptop'> 1.12.0.1. Example 12-16. 使用 nt 模块 </A></H4>
+<PRE>
+File: nt-example-1.py
+
+import nt
+
+# in real life, use os.listdir and os.stat instead!
+for file in nt.listdir("."):
+    print file, nt.stat(file)[6]
+
+*B*aifc-example-1.py 314
+anydbm-example-1.py 259
+array-example-1.py 48*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc14"></A>
+<H2><A href='#toptop'> 1.13. _winreg 模块 </A></H2>
+<P>
+(只用于 Windows , 2.0 中新增) <CODE>_winreg</CODE> 模块提供了访问 Windows 注册表数据库的一个基本接口. 
+ <A HREF="#eg-12-17">Example 12-17</A> 展示了它的使用.
+</P>
+<A NAME="eg-12-17"></A>
+<H4><A href='#toptop'> 1.13.0.1. Example 12-17. 使用 _winreg 模块 </A></H4>
+<PRE>
+File: winreg-example-1.py
+
+import _winreg
+
+explorer = _winreg.OpenKey(
+    _winreg.HKEY_CURRENT_USER,
+    "Software\\Microsoft\\Windows\CurrentVersion\\Explorer"
+    )
+
+# list values owned by this registry key 
+# 列出该注册表键下的所有值
+try:
+    i = 0
+    while 1:
+      name, value, type= _winreg.EnumValue(explorer, i)
+      print repr(name),
+      i += 1
+except WindowsError:
+    print
+
+value, type = _winreg.QueryValueEx(explorer, "Logon User Name")
+
+print
+print "user is", repr(value)
+
+
+*B*'Logon User Name' 'CleanShutdown' 'ShellState' 'Shutdown Setting'
+'Reason Setting' 'FaultCount' 'FaultTime' 'IconUnderline'...
+
+user is u'Effbot'*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<A NAME="toc15"></A>
+<H2><A href='#toptop'> 1.14. posix 模块 </A></H2>
+<P>
+(非直接使用模块, 只用于 Unix/POSIX ) <CODE>posix</CODE> 模块是 <CODE>os</CODE> 模块在 Unix 及其他 POSIX 系统下使用的实现模块. 
+一般只需要通过 <CODE>os</CODE> 模块访问它即可. 如 <A HREF="#eg-12-18">Example 12-18</A> 所示.
+</P>
+<A NAME="eg-12-18"></A>
+<H4><A href='#toptop'> 1.14.0.1. Example 12-18. 使用 posix 模块 </A></H4>
+<PRE>
+File: posix-example-1.py
+
+import posix
+
+for file in posix.listdir("."):
+    print file, posix.stat(file)[6]
+
+*B*aifc-example-1.py 314
+anydbm-example-1.py 259
+array-example-1.py 48*b*
+</PRE>
+<P></P>
+<HR NOSHADE SIZE=5>
+<P></P>
+</DIV>
+
+<!-- html code generated by txt2tags 2.4 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags chapter12.t2t -->
+</BODY></HTML>

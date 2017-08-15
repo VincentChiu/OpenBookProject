@@ -1,0 +1,379 @@
+﻿Errata/Corrigendum
+Last updated: $Date: 2007/04/06 10:40:31 $ 
+PDF Versions (short versions do not have minor errata):
+PDF Full (Letter) (16 pp.) 
+PDF Full (A4) (15 pp.) 
+PDF Short (Letter) (11 pp.) 
+PDF Short (A4) (10 pp.) 
+There will inevitably be errors when writing a book no matter how hard we try to keep it clean. In other words, "Don't (necessarily) believe everything you read!" A lot of hands touch the text before the book finally ends up in your hands, so here is where we try to clean it up. Even some of my own corrections found in the draft were not implemented due to lack of time or priority during the highly-compressed editing phase. 
+With regards to the corrections to the source code for the Examples in the book, MINOR problems do not prevent the script from running, but CRITICAL bugs means that the code printed as-is will not execute. We will provide changes or differences ("diffs") whenever possible. The diffs between the files are -u context diffs for those of you who know what they are. Because there is no other source for getting the code, all of the scripts for download have already been corrected. 
+If you find a new problem, send it to us at corepython (at) yahoo.com. Each errata item follows the format below... submit yours using the same format so that we can upload it faster to this page. We are also interested in hearing comments, suggestions, and general feedback, both good and bad. We want to continue improving the book for future readers and editions! MANY THANKS!!
+Page(s) :: Section (may also have Figure, Table, or Example number) :: Subsection (if appl.) : correction
+• Text which is in red indicates a change.
+• Text which is in gray indicates an erratum that is of lower priority that is not normally displayed. Use the Toggle button below to swap between showing and hiding all minor errata.
+• Normal priority errata denoted NEW oro UPDATED were added/changed during the current month along with appropriate credit(s) as necessary. We do not designate minor errata this way. 
+
+Text
+FrontMatter
+xxx :: Preface : Chapter Guide : Chapter 8 : In the first sentence, for, while, and if should be in Courier Bold font, as all keywords are. 
+xxxiv :: Preface : Book Resources : In the second sentence, add a comma between "errata" and "source code". 
+
+Chapter 1
+1-2 :: 1 : The book is misnumbered... page "1" is missing. The final page of the Preface is xxxvii and jumps immediately to page 2 of the main body of text. 
+11 :: 1.4 :: Build It Yourself : The third step, make install will install the Python you just compiled and set it as the default Python interpreter. Should you wish to install multiple versions of the interpreter or do not wish to replace the existing version, use make altinstall. For example, if you have an existing Python 2.4.3 installtion then build and install 2.5 with make altinstall, calling python from the command-line still launches the 2.4.3 interpreter whereas to start 2.5, you would need to use python2.5. 
+17 :: 1.5.2 :: Unix : In the final paragraph of this section, we should also point out that executing $ script.py directly from the command-line only works if the current directory is part of your PATH environment variable. If it is not, you have to use ./ in front of the script name so that it can be found, e.g., $ ./script.py. 
+21 :: 1.5.4 :: Open Source : We inadvertently left out another popular IDE called Stani's Python Editor (SPE). The link to it: http://pythonide.stani.be/ 
+
+Chapter 2
+33 :: 2.1 :: Core Note : In the final part of this sidebar, when dumping the previous expression using the underscore, the output should be in quotes: 'Hello World!' (since the string itself is the expression and not its contents). 
+34 :: 2.5 : Just about the Core Note, we should warn the reader by adding the following as the final sentence of that paragraph: "Readers should be cautioned that users need to enter a valid Python integer when prompted for a number as anything other than such will cause int() to raise an error because it cannot convert the input into a valid Python integer." 
+37 :: 2.5 : In the second sentence of the final paragraph at the bottom of the page, change the -- to the unary negation sign - (single hyphen instead of two). 
+38-39 :: 2.6 : In the section preceding the call to decimal.Decimal(), we mention that "[you] must import the decimal module to use these types of numbers," but we didn't do so at the top of p. 39, so add the following at the top: >>> import decimal. 
+41 :: 2.10 : In the 2nd (and final) paragraph, change "***" to "device". 
+42 :: 2.11 : In the first print statement at the top of the page, there should be a space to separate "at" and "least". 
+43 :: 2.12 : The sequence in the first for loop should not wrap. 
+47 :: 2.15 : How to Open a File : The code near the top of this page does not correctly match the description below it. In fact, there should be two separate blocks of code. Add the following below the code but just above the para that starts with, "Rather than looping...": 
+      This script prompts the user for a filename, opens the file, and loops over the (text) file and displays one line at a time, and finally closes the file. This technique or idiom is simple to understand and works great, especially with large files because you do not need the entire file in memory at the same time. As an alternative for shorter files, take a look at this similar piece of code: 
+filename = raw_input('Enter file name: ')
+fobj = open(filename, 'r')
+data = fobj.readlines()
+fobj.close()
+for eachLine in data:
+      print eachLine, 
+52 :: 2.18 : How to Create Class Instances : In the (first [John Doe]) sample output for calling foo1.showname(), the output should not have "__main__." in it. In other words, it should just be: 
+>>> foo1.showname()
+Your name is John Doe
+My name is FooClass 
+
+Chapter 3
+68 :: 3.3.2 : Table 3.1 : The keywords as and assert should be in Courier Bold, like they are in the equivalent table in Appendix A on p. 1022. 
+80 :: 3.6 :: Example 3.1 : makeTextFile.py
+The code for line 10 is missing. It should be fname = raw_input('Enter file name: ') and indented one level (at the same level as the line below it). 
+Even more importantly, our goal for keeping the text file platform-independent was defeated by the fopen() C library call on Win32 platforms. For each NEWLINE (\n or ASCII value 10) character encountered, it is replaced by the two Win32 line terminators RETURN (\r OR ASCII 13) and NEWLINE. This means that the original program created text files with \r\r\n between lines, a minor text file corruption and not our original intention. 
+The fix is to change the Python line terminator back to a solitary NEWLINE on line 30 and let the C library "do the right thing" for its respective platform. We apologize for any confusion caused for readers new to Python or cross-platform issues. Our original fix looked like this:
+fobj.writelines(['%s\n' % x for x in all])
+However, rather than process lines by adding a NEWLINE to each and sending the resulting list out to disk with the writelines() method, we preferred merging all of the text lines into a single string delimited by NEWLINE characters and performing a single write():
+fobj.write('\n'.join(all)) 
+(major patch [diff])
+81 :: 3.6 : Core Tip : The word "lookup" should be in normal roman font, not Courier. 
+82 :: 3.6 : Lines 28-32 : Due to the change in the code for Example 3.1 above on p. 80, these two paragraphs need to be replaced with: 
+Now that we have the entire contents in memory, we need to dump it to the text file. Line 29 opens the file for write, and line 30 writes each line to the file. Every file requires a line terminator (or termination character[s]). The '\n'.join(all) takes each line of all (list of input strings), and join()s them together into one large string delimited by the NEWLINE character. That single string is then written out to disk with the file object's write() method. 
+85 :: 3.8 : Exercises 3-6(b) : Shorten part (b) to read, "What do each contain after...." 
+85 :: 3.8 : Exercises 3-7 : The spacing gap between the 1st row of potential identifiers is greater than for the remaining rows. It should be reduced to match the rest. 
+
+Chapter 4
+93 :: 4.3.2 : Core Note : Boolean values : The bullet points for the numeric types (4 thru 7) should be indented. 
+100 :: 4.5.2 : Core Note : Interning : In the second to last paragraph, it is stated that the cached integers are in the range(-1, 100). As of Python 2.5, that has been expanded to range(-5, 257). 
+102 :: 4.6 : Table 4.4 : All instances of obj in the "Function" column should be in italics. 
+104 :: 4.6.3 : Core Note : It is likely that the back ticks (` `) will be deprecated in a future version of Python (say 3.0). 
+105 :: 4.6.4 : The comment for the class Foo definition should say that is is a classic class definition (not a new-style class). 
+116 :: 4.9 : char or byte : Python 3.0 will likely have a byte type. 
+118 :: 4.10 : Exercise 4-9 : The answer to part (b) will differ starting with Python 2.5 (vs. all previous releases). What if c and d were given the value 500 instead? 
+
+Chapter 5
+132-133 :: 5.5.3 : Modulus : We neglected to give a proper example of using the modulus operator. Add the following to the end of the subsection: "The modulus operator in Python is like that of C, the percent symbol (%), and here are some examples of using it: 
+>>> 5 % 2
+1
+>>> 8 % 4
+0
+>>> 6j-7 % 3
+(-1+6j)
+
+Chapter 6
+167 :: 6.1.3 : Table 6.3 : Footnote "d" for zip() should be in roman font, not Courier. 
+173 :: 6.3.2 : Membership (in, not in) : The string data attribute names have changed. string.uppercase, string.lowercase, string.letters all have Unicode characters now. To get the pure ASCII versions, use string.ascii_uppercase, string.ascii_lowercase, string.ascii_letters. 
+173 :: 6.3.2 : Example 6.1 : Line 1 is missing the (root directory) first forward slash in the *ix start-up directive; it should be, #!/usr/bin/env python, and line 5 should refer to string.ascii_letters. 
+173-174, 246, 1014 :: 6.3.2, 6.2.2, Appendix A : Example 6.1, Exercise 6-2, Answer to Exercise 6-2 : An extraordinary amount of emphasis is placed requiring possible identifier strings to be longer than one character in length when it is not absolutely necessary (as you are probably aware). The first part of Exercise 6-2 is not a "trick question" nor is changing the length check artificial. More of an emphasis should be placed on the 2nd half of the exercise instead. The solution given in Appendix A can be replaced by a simpler solution (which can be downloaded here). 
+#!/usr/bin/env python
+
+from keyword import kwlist
+import string
+
+ALPHAS = string.ascii_letters + '_'
+NUMS = string.digits
+
+def main():
+    print 'Welcome to the Identifier Checker v2.0'
+    myInput = raw_input('Identifier to test? ').strip()
+
+    if len(myInput) == 0:
+        print "ERROR: no identifier candidate entered"
+        return
+
+    if myInput in kwlist:
+        print "ERROR: %r is a keyword" % myInput
+        return
+
+    alnums = ALPHAS + NUMS
+    for i, c in enumerate(myInput):
+        if i == 0 and c not in ALPHAS:
+            print 'ERROR: first symbol must be alphabetic'
+            break
+        if c not in alnums:
+            print 'ERROR: remaining symbols must be alphanumeric'
+            break
+    else:
+        print "okay as an identifier"
+
+if __name__ == '__main__':
+    main()
+188-190 :: 6.22 : Table 6.6 : The string.{center,[rl]just}() methods now take a fillchar=' ' argument where fillchar is the character to use for padding. It should have a (new) footnote "g": "New or changed in in Python 2.4." 
+189-190 :: 6.22 : Table 6.6 : The string.*strip() methods now take a chars=[ \t\n\v\f\r] argument where chars can be any sequence of leading and/or trailing characters to remove. It should have a (new) footnote "f": "New or changed in in Python 2.2.2." 
+190 :: 6.22 : Table 6.6 : The string.rsplit(str=' ', num=string.count(str) method is missing: "Same as split(), but search backward in string." It should have a (new) footnote "g": "New or changed in in Python 2.4." 
+190 :: 6.22 : Table 6.6 : The signature for string.splitlines() is incorrect. It should be: string.splitlines(keepends=False): "Splits string at all NEWLINEs and returns a list of each line with NEWLINEs removed unless keepends=True. 
+199 :: 6.8.3 : The last few sentences of the first complete paragraph on this page are erroneous now. The string module was updated with Unicode equivalent constants as well as the new string templates as described earlier in section 6.4.2 on p. 182. The paragraph should end with the final sentence, "Both behave very similarly." 
+219 :: 6.13.2 :: sum() : In this section, the code example references the reduce() built-in function. For more details on reduce(), read ahead to section 11.7.2 in Chapter 11. 
+232 :: 6.16 :: How to Create and Assign Tuples : Change "empty tuples" in the first paragraph to "tuples with only one element." Empty tuples are specified with just a pair of parentheses: ( ) 
+240 :: 6.19 : Fix this typo in the final paragraph of this section at the top of the page: "... also contains the same for sequence types." (This refers to the functional equivalents to sequence type operators.) Also, the final three sentences (with the first beginning with, "Finally,...") should be removed as Python now does support subclassing of the standard types. 
+247-248 :: 6.22 :: Exercise 6-7 and "Example 6.4" : buggy.py is really Example 6.5. (Example 6.4 is queue.py back on p. 229.) 
+250 :: 6.22 :: Exercise 6-18 : The subtitle of this problem should read, "zip() Built-in Function." and refers to the reading in Section 6.13.2. 
+
+Chapter 7
+266 :: 7.4 :: Table 7.2 : The second entry should be dict.copy() not dict.clear(). Also, both the "*" in dict.iter*() and the "None" in dict.setdefault() should be in Courier/mono font. None of these errors are present in (the equivalent) Table B.9 on p. 1035. 
+267 :: 7.4 : In the first sentence of the second paragraph (right below the code snippet), "directory" is the wrong word and should be changed: "... add the contents of one dictionary to another." 
+
+Chapter 8
+295 :: 8.4 : Guido's name was messed up in the 1st and 3rd paragraphs during the final editing phase of the manuscript. Read as only "Guido" or "van Rossum", not "van Rossum Guido"[sic]. 
+303 :: 8.6.5 : There is a misspelling of "returning" in the final sentence of this paragraph. Also, so readers don't have to hunt for the reference, the final sentence should end with, "... similar to views as discussed in the previous chapter at the end of Section 7.4." 
+
+Chapter 9
+327 :: 9.2 : Table 9.1 : Footnote "A" : Universal NEWLINE Support (PEP 278) was added in Python 2.3 not 2.5. 
+
+Chapter 10
+376 :: 10.3.7 :: Example 10.1 : cardrun.py
+The original installed script was out-of-date. Please download a new one if your file is older than 2007 Jan 1. We also installed the example carddata.txt file as listed on p. 375 as well as updated the alternate version in the alt directory. (critical patch) 
+377 :: 10.3.7 :: Line-by-Line Explanation :: Lines 36-37 : The cat cardlog.txt command-line has an extra space that should not be there. 
+384 :: 10.4.2 :: Context Expression, Context Manager : Italicize with_suite in the only paragraph on this page. 
+387-389 :: 10.6.1 including Table 10.1 : Italicize all the variables, such as with_suite, args, traceback, instance, exclass, tb. 
+380-381 :: 10.3.10 : In the pair of examples using try-finally, if the open() call fails, ccfile will be undefined, resulting in a NameError exception being thrown, an insult to injury on top of the IOError exception we received for the failure in open(). The usual idiom to avoid this situation is by setting ccfile = None before the try-finally, then add an if ccfile: before calling close(), as in: 
+ccfile = None
+try:
+    try:
+	ccfile = open('carddata.txt', 'r')
+	txns = ccfile.readlines()
+    except IOError:
+        log.write('no txns this month\n')
+finally:
+    if ccfile:
+        ccfile.close()
+and 
+ccfile = None
+try:
+    try:
+	ccfile = open('carddata.txt', 'r')
+	txns = ccfile.readlines()
+    finally:
+	if ccfile:
+	    ccfile.close()
+except IOError:
+    log.write('no txns this month\n')
+386, 394 :: 10.5, 10.8 : In the final paragraph for section 10.5, we describe the obsolescence of string exceptions. The raising exceptions in Python 2.5 resulting in a warning can be further clarified that it will no longer be allowed in 2.6. Similarly, the catching of string exceptions results in a warning beginning in 2.6 but will not be allowed in 2.7. 
+This clarification can also be carried to the second-to-last paragraph of section 10.8. It is erroneously stated that raising of string exceptions is not allowed in 2.5, which it is allowed but generates a warning. Similarly for the catching of string exceptions, it's really only disallowed starting in 2.7; in 2.6, a warning is generated. 
+390 :: 10.7.1 : With regards to the __debug__ system variable, after Python 2.2, rather than having values of 1 and 0, it is a Boolean, thus have values of True and False, respectively. 
+391-393 :: 10.8 : Table 10.2 : Various editing errors exist in the table of standard exceptions: 
+      • (391) The 2nd entry for SystemExit should have a footnote of "b" just like it is in the entry above. The entire row should also be grayed out, indicating the change that occurred back when Python 2.5 was released. 
+      • (392) (The 2nd entry for) KeyboardInterrupt should have a footnote of "c" just like it is in the entry on the previous page. The entire row should also be grayed out, indicating the change that occurred back when Python 2.5 was released. 
+      • (392) TabError should be indented... it is derived from IndentationError. 
+      • (393) UnicodeTranslateError should have a footnote of "i" (not "f"). 
+      • (393) PendingDeprecationWarning should be one word. 
+      • (393) Footnotes "b" and "c": the word "subclassed" should be "derived from". 
+      • (393) Footnote "f" is a duplicate of "h" and should be removed. All remaining footnotes and corresponding tagged text should be adjusted accordingly. 
+395-397 :: 10.9 :: Example 10.2 : myexc.py
+Line 77 is missing the full function call using the module name: tempfile.mktemp(). Also, since file() is now a factory function, we've renamed all such named references to fn. Finally, enter your own hostnames on line 101 rather than using our test lab computers which certainly won't work for you. (critical patch) 
+405 :: 10.14 : Exercise 10-5 : All five subproblems [parts (a)-(e)] should be aligned (flush) towards the left so that part (b) does not wrap. Also, the Python prompt for part (e) should not be in bold. 
+
+Chapter 11
+413 :: 11.2.2 : Near the top of the page, in the calls to foo, both the standard calls as well as the keyword calls should be aligned properly. 
+414 :: 11.2.4 :: Example : In the 2nd paragraph, remove the space in "binary operators/ operations". 
+417 :: 11.2.4 :: Line-by-Line Explanation :: Lines 30-41 : We got a little ahead of ourselves in the example output. Example 11.1, easyMath.py, only supports addition and subtraction. The code output demonstrating multiplication is a result of implementing Exercise 11-16 on p. 474, so you should discard all such output until you have completed a working solution to that problem. 
+443 :: 11.7.2 :: Figure 11-1 : The "0" and "1"s inside the box representing the boolean function bool_func() should instead be represented by the Boolean values False and True, respectively. Those values will be integers only prior to Python 2.3. 
+UPDATED -- Thanks to Marie-C茅cile Baland
+444 :: 11.7.2 :: filter() : The 2nd paragraph (right beneath the code snippet) mistakenly refers to having two functions, one of which is main(). (We removed this function, pushed the body out to the global part of the code, and did not update the text. Rewrite this paragraph as:
+This code snippet contains a function odd() which returns True if the numeric argument that was passed to it was odd and False otherwise. The main portion of the snippet creates a list of nine random numbers in the range 1-99. [Note that random.randint() is inclusive and that we could have used the equivalent random.randrange(1, 100), which we recommend because it has the same calling convention as the built-in function range().] Then filter() does its work: call odd() on each element of the list allNums and return a new list containing just those items of allNums for which odd() returned True, and that new list is then displayed to the user with print. 
+465 :: 11.8.5 : Just before the middle of the page, in the final definition of foo(), the calls to bar() should not have any arguments. We stated immediately above how the previous code snippet required altering those calls to take a parameter which was not desired. 
+469 :: 11.10.1 : In the code snippet in the middle of the page, we should have used random.randrange(), not random.randint() as the latter will give an error if the random index chosen is the length of the list. randrange() has a similar syntax to range() meaning that it goes up to but does not include the (second or only) index. Also, the checking of the sequence length is unnecessary as it will return False if it is empty. Given these changes, we can shorten the code to the following: 
+from random import randrange as rr
+
+def randGen(aList):
+    while aList:
+	yield aList.pop(rr(len(aList)))
+Finally, all three of the code snippets used in this subsection can now be downloaded here (as of Dec 6). 
+470 :: 11.10.1 : In the final sentence of the 2nd paragraph, "you" is the wrong word and should be changed: "Without generators, your application code...". 
+474 :: 11.11 :: Exercise 11-13 : Reword part (c) to: Discard mult() and use lambda instead. 
+
+Chapter 12
+485 :: 12.4.4 : In the section title, "Import" should be in regular roman (italicized) font, not Courier Italic. 
+488 :: 12.5.4 : The final sentence of the second paragraph features a misspelling of impter.py filename. 
+494 :: 12.7.1 : Towards the end of this section, the reference to __init__.py is horribly misspelled. 
+502 :: 12.10 : Exercise 12-6 : Resolving various spacing issues in the example call, we get: newname = importAs('mymodule'). 
+
+Chapter 13
+508 :: 13.1 : Missing a word in the 3rd paragraph which should read, "...because there would be no references...." 
+515 :: 13.2.1 : The 2nd to last sentence in this section should end with "OOD" instead of "OOP", otherwise it reads like infinite recursion, or "Mr. Bunny's Guide To Java". :-) 
+520 :: 13.4.1 : Since this section is optional (as per the previous section), there should be a "*" in front of the subsection title. 
+524 :: 13.4.4 : Under Table 13.1, the first paragraph should start with the following: "In addition to the __dict__ attribute of the class MyClass we just defined above, we have the following:". Also, the print statement for MyClass.__dict__ should be removed since we already displayed the contents of the dictionary for both new-style and classic classes in the immediately preceding subsection (on the previous page). 
+543 :: 13.8.1 : In the TestStaticMethod example, the call foo = staticmethod(foo) should be dedented to the same level as the definition of the foo() function, e.g., 
+class TestStaticMethod:
+    def foo():
+	print 'calling static method foo()'
+    foo = staticmethod(foo)
+553 :: 13.11.3 : In the SortedKeyDict example output, the supposedly sorted list when using keys() is out-of-order due to an error correction: "xin-yi" was misspelled as "hsin-yi", and the edit was made without reordering the list correctly. it should be: 
+By keys(): ['hui-jun', 'xin-yi', 'zheng-cai'] 
+577 :: 13.13.2 :: Example 13.3 : time60.py
+The documentation string for __init__() on line 7 should indented one level (four spaces to the right).
+(minor patch)
+586 :: 13.14 :: Single Underscore ( _ ) : Remove the "we" in the 2nd half of the final sentence on this page. 
+603 :: 13.16.4 :: Descriptor Examples : In the middle of the page, the sentence that starts with, "Our final example...," should refer to Example 13.9 on the next page. Otherwise, you may think that it refers to the previous code snippet. 
+NEW -- Thanks to Marie-C茅cile Baland
+603 :: 13.16.4 :: Descriptor Examples and Example 13.9 :: Lines 28-39 : The final sentence of this paragraph has several problems. Rewrite as: "Note that if you are using Python older than 2.5, you cannot merge the try-except and try-finally statements together (lines 30-38)." 
+604 :: 13.16.4 :: Example 13.9 : descr.py
+For this code to work with Python 2.5 and newer, delete line 31. For this code to work with any version of Python, indent line 34 one level (four spaces to the right). For the __set__() method, the open() statement on line 29 should really be moved to the innermost try block immediately below it (between lines 31-32), and the succeeding except should also be monitoring for IOError — just like in the above __get__() method. Less importantly, name should not not have a default value as it does now on line 9. Below, we post two patches, one for users of Python 2.5 and newer as well as one for those using Python 2.4.3 and older.
+(critical patch [diff]; pre-2.5 patch [diff])
+607 :: 13.16.4 : Properties and property() Built-in Function : The last part of the final sentence in the first complete paragraph at the top of the page before the definition of the ProtectAndHideX class should be changed to the following: "... encrypting it by using the bitwise complement operator:". (The XOR operator is binary and not used in this example.) 
+609 :: 13.16.4 : Properties and property() Built-in Function : I must have done this really late at night as the code for the HideX class will not work with using the property() factory function as a decorator (in any version of Python). You will always have to use the x = property(**x()) syntax. Likewise, the text of Exercise 13-21 on p. 625 has to be changed (see below). The reason why it does not work is because the defition of x() will not automatically return the inner function objects so that the property can be created. That's why you still need to execute x() in order to get it to call locals() so that the fget() and fset() names and objects are returned. How these objects help create the property is still the main point of Exercise 13-21. In the code, remove the @property decorator and add x = property(**x()) right beneath the function declaration. Let's also change the class name to something more appropriate for this example: 
+#!/usr/bin/env python
+'ProtectAndHideX.py -- protect the "x" attribute'
+
+class ProtectAndHideX(object):
+    def __init__(self, x):
+        self.x = x
+
+        def x():
+            def fget(self):
+		return ~self.__x
+
+            def fset(self, x):
+                assert isinstance(x, int), \
+                    '"x" must be an integer!'
+                self.__x = ~x
+
+            return locals()
+
+        x = property(**x())
+
+inst = ProtectAndHideX(10)
+print 'inst.x has a value of:', inst.x
+inst.x = 20
+print 'inst.x has a value of:', inst.x
+inst.x.fset(40)   # sorry!
+print 'inst.x has a value of:', inst.x
+You can download this code here. The output of executing the code above will look like this: 
+inst.x has a value of: 10
+inst.x has a value of: 20
+Traceback (most recent call last):
+  File "", line 1, in ?
+  File "ProtectAndHideX.py", line 22, in ?
+    inst.x.fset(40)   # sorry!
+AttributeError: 'int' object has no attribute 'fset'
+In the final paragraph on this page, keep only the first sentence, beginning with, "Our code works exactly as before...." Drop the final 2 sentences. 
+619 :: 13.18 :: Example 13.11 : moneyfmt.py
+Line 13 should have single backquotes (for repr() instead of regular single quotes or apostrophes. Also, although the printed code is correct, we were missing trailing colons after the header lines for __init__() and update() methods in the downloadable files online -- both files have been fixed. 
+621 :: 13.18 :: Exercise 13-7 : There should be an extra space in the final sentence separating "to" and "Exercise 6-15". 
+625 :: 13.18 :: Exercise 13-20 : The font for the first and last lines of code in part (f) are oversized and should be shrunk to match the remaining lines of code. Also, add a part (g) which reads, "(g) Can we move the math-oriented code out of __add__() and into one of the other methods of this classfile? If so, which one and why would it make sense to do so? 
+625 :: 13.18 :: Exercise 13-21 : Like the errata above for the code on p. 609, the use of property() as a decorator does not work for any version of Python. There is also multiple typos in the "alternate syntax" (which turns out to be the only syntax that can be used). This problem should be completely rephrased as: 
+Toward the end of section 13.16.4, we used the syntax x = property(**x()) to create a property for the x attribute for the HideX class. How does this idiom, including the enclosed call to x(), actually create the property? 
+
+Chapter 14
+630 :: 14.1 :: "lambda Expressions" : In the (sub)section title, "lambda" should be in normal roman font, not Courier. 
+644-645 :: 14.3.6 :: Creating Code at Runtime and Executing It : For those unfamiliar with the C shell and its descendants, you can change the % prompt to that of sh/bash: $. The first one is misindented too far... move it to the left to align it with the rest of the program output. 
+648 :: 14.3.6 :: Conditionally Executing Code :: Example 14.2 : Lines 24 and 29 are not indented properly... indent them further to the right. 
+649 :: 14.3.6 :: Line-by-Line Explanation :: Lines 18-29 : There is an extra blank line in the program output... remove it. 
+650 :: 14.4.1 :: Core Note : def foo... should really be def bar.... 
+651 :: 14.4.1 : The print statement for import2.py needs to be indented to the right one more space. 
+652 :: 14.4.1 : In the final paragraph eval() should not be italacized. 
+657 :: 14.5.2 : In the (sub)section title os.popen() should be in Courier font. 
+663 :: 14.7.1 : SystemExit in the third paragraph is one word. 
+664 :: 14.7.1 :: Example "14.4" : Globally replace "14.4" with "14.3" ... there is no Example 14.4. 
+668-669 :: 14.10 :: Exercise 14-1 : There should be 12 exercises in this chapter. The first two problems are accidentally merged into Exercise 14-1. There is a new exercise beginning labeled, "exec versus eval()". Mark the second half as Exercise 14-2 and renumber the remaining problems accordingly. Also, for the real Exercise 14-2, only exec should be bolded. 
+669 :: 14.10 :: Exercise 14-9 (14-10) :: Extra Credit 1 : The "os" module name should be in Courier font. 
+669 :: 14.10 :: Exercise 14-11 (14-12) : The example referred to is incorrect as per erratum above for p. 664. funcAttrs.py is Example 14.3. 
+
+Chapter 15
+697 :: 15.3.13 :: Example 15.1 : rewho.py
+f.readlines() can be shortened to the file iterator f.
+(minor patch)
+
+Chapter 16
+719-720 :: 16.3.2 :: Table 16.1 : It would be nice if the 2nd column were reduced in size so that the methods in the 1st column don't wrap. 
+729 :: 16.3.7 :: Example 16.4 : tsUclnt.py
+Line 20 should simply be print data
+(critical patch) 
+734 :: 16.4.1 :: Example 16.5 : Line 13 has a font size issue. 
+740 :: 16.5.2 : In the 2nd paragraph, remove the hyphen from the call to clientConnectionFailed(). 
+742 :: 16.6 : Replace the final part of the final sentence with, "... we strongly encourage you to read ahead to Chapters 17 and 20." 
+745 :: 16.7 :: Exercise 16-14 : In the final portion of the exercise, change "i.e." to "e.g.". 
+
+Chapter 17
+749 :: 17.2.2 : Figure 17-1 : The diagram was not drawn correctly to specification. Here are some fixes to repair it: 
+a.Make the FTP client box bigger and make the FTP server box smaller so they are nearly the same size... there is no size differentiation between client and server, so the diagram should reflect that. 
+b.Move "M (> 1023)" left just above the top solid line connecting the FTP client box and the Internet cloud, symmetric to where "M + 1" is below the bottom solid line. 
+c.Move "ctrl/cmd" down so it's just above the top dashed line inside the Internet cloud 
+d.Move "data" to be centered just below the bottom dashed line inside the Internet cloud 
+e.Change "20 or" to "20 [active] or" 
+f.Change "N (> 1023)" to "N (> 1023) [passive]" 
+g.Delete "(Active)(Passive)" 
+754 :: 17.2.6 : Example 17.1 : Line-by-Line Explanation : Lines 11-44 : 
+a.(middle paragraph) Add one more sentence: "After the transfer has completed, we would then call loc.close()." 
+b.(final paragraph) Strike "if it is there": "...we remove the empty file if it is there to avoid clutter...". 
+c.(final paragraph) Add a new second-to-last sentence: "We should probably put some error-checking around that call to os.unlink(FILE) in case the file does not exist." 
+d.(final paragraph) Change the final sentence to: "Finally, to avoid another pair of lines (lines 43-44) that close the FTP connection and return, we use an else clause (lines 35-42)." 
+757 :: 17.3.3 : The first paragraph after the list of steps is missing a word: "...carbon copy of using the FTP protocol." 
+758 :: 17.3.4 : Table 17.2 : In the entry for "xhdr", move the "[" back two characters, to, xhdr(hdr, artrg[, ofile]) 
+759 :: 17.3.5 : In the line of code that starts with, ">> Rounding like this...", remove one ">" so that it is "> Rounding like this..."; also, it appears either this line or the line above it has the wrong paragraph tag as there is a gap between these two lines... it should be single-spaced like all the others. 
+762 :: 17.3.6 : Example 17.2 : Line 60 : Not really a correction but a note that Generator Expressions were added in Python 2.4, so if you are using 2.0-2.3.x, you will need to switch it to a List Comprehension by changing the parentheses to square brackets. 
+765 :: 17.3.6 : Example 17.2 : Line-by-Line Explanation : Lines 57-80 : At the top of this page following the first paragraph of this section which began on the previous page, insert the following new paragraph which explains line 60. 
+Line 60 is a generator expression. It works like a list comprehension only it does lazy evalution and does not build the entire results list when this line is executed. (The entire dataset, data, is already taking enough memory as it is!) Rather, each line is only processed when its turn comes up in the loop below on line 62. Generator expressions were added in Python 2.4, so if you are using an earlier release, the easiest fix while minimizing memory use is to add a new statement in between lines 62 and 63: line = line.rstrip(). If memory is not a concern, then just use a list comprehension instead (change the parentheses to square brackets).
+772 :: 17.4.8 : Figure 17-3 : The not-well-arranged text on the second MUA down on the left should read, "IMAP4/POP3 (receive)", similar to the one for the bottom MUA as well as the one on the far right. 
+773 :: 17.4.9 : Add a mention of secure mail retrieval by splitting up and updating the final sentence: "Before we take a look at a real example, we should mentioned that there is also a poplib.POP3_SSL class which will perform mail transfer over a secure connection provided the appropriate credentials are supplied. Let's take a look...." 
+784 :: 17.6 : Exercise 17-28(a) : Not really a correction, but add a... "Hint: see the mailbox module and email package." 
+
+Chapter 18
+801 :: 18.5 : Core Tip : In the 3rd paragraph, the setDaemon() method name should not have a hyphen/dash. 
+802 :: 18.5 : Table 18.3 : There shouldn't be any spaces around the = for the join() method's arguments. 
+811 :: 18.5.6 : Table 18.5 : The table describing the attributes of the Queue module is missing a few items and needs to be updated... stay tuned for the exact corrections/updates. 
+
+Chapter 19
+834-835 :: 19.3.6 :: Example 19.6 : Lines 15 and 17 should be indented like the rest of the lines in the __init__() method. 
+
+Chapter 20
+860 :: 20.2.1 :: Table 20.2 : In the header for the first column, net_loc should be in Courier Bold Italic. 
+868 :: 20.2.4 :: Example 20.1 : 
+      • Adjust line 20 so it is flush with the other lines of code. 
+      • Change the filename to urlopenAuth.py (see next erratum). 
+868-869 :: 20.2.4 :: Line-by-Line Explanation :: Lines 24-29 : Change the filename to urlopenAuth.py (see next erratum). The current name (urlopen-auth.py) will not allow the module to be imported since '-' is not a valid Python identifier. 
+871 :: 20.3 :: Example 20.2 : The code for the __init__() and filename() methods (lines 15-34) are not indented properly... there should be 4 spaces of indentation for these methods. 
+879 :: 20.5.1 : In the final paragraph of this section (above the URL links), cgi-bin is accidentally titlecased twice. 
+880, 890-892, 897-898 :: 20.5.2, 20.5.5, 20.7.4 : Figures 20-4, 20-9, 20-10, 20-11, 20-14, 20-15 : The captions should be centered so they fit on a single line below each figure. 
+896 :: 20.7.3 : In the first complete paragraph at the top of the page, string.split() should be str.split() to indicate usage of the split() method of strings rather than the split() function of the string module. 
+911 :: 20.9 :: Table 20.7 : In the description for the wsgiref module, "application" should be in plural, e.g., "applications." 
+913 :: 20.10 :: Exercise 20-3 : Remove the extra comma in the reference to Example 11.4. 
+914 :: 20.10 : Exercises 20-10 and 20-11 : Exercises 20-7 through 20-10 are related and grouped together; there should be an extra blank line separating Exercise 20-10 and 20-11. 
+
+Chapter 21
+928 :: 21.2.2 : Methods : Table 21.5 : Each of the arguments of errorhandler() should be in Courier Italic. There should also be some text just able this table which describes the error-handling mechanism further, such as, "An option for database adapter writers to allow for user-defined error handlers is available. Both Connection objects as well as Cursor objects (see next section) allow module authors to define an errorhandler() method for this purpose. 
+929 :: 21.2.3 :: Table 21.6 : For the description attribute description, both name and type_code at the end should be in Courier Italic. 
+935-936 :: 21.2.7 :: MySQL : At the bottom of p. 935 through the end of the entire paragraph on the top of the next page, we claim, "... that no database modules are available in the Python standard library...." As we see in the SQLite section on the very next page, beginning with version 2.5, the pysqlite database adapter does come with Python (as the sqlite3 module). 
+937 :: 21.2.7 :: SQLite : The pysqlite database adapter should not be in Courier. 
+939-945 :: 21.2.7 :: (Example 21.1) : There is no output for Example 21.1; however, we do provide the output of the equivalent ORM versions (twice) later in the chapter. The output of those applications will be the virtually the same, given the natural variations of the random numbers generated. 
+940-953 :: 21.2.7-21.3.3 :: Examples 21.1-21.3 : In various places, the font was shrunk so as to not wrap lines. This may look strange in the text. These include the following: 
+      • Example 21.1: 54, 107-115, 136 
+      • Example 21.2: 56, 64, 75, 99 
+      • Example 21.3: 71 
+941 :: 21.2.7 :: Example 21.1 : Line 55 should be flush with the others in this elif clause. 
+947 :: 21.3.3 :: Line-by-Line Explanation :: Lines 33-44 : try-except should be in bold. 
+953 :: 21.3.3 :: Line-by-Line Explanation : In the section for lines 79-80, there should not be a space between the function name and parameters in the getattr(orm, 'drop') call, and further on, self.users should be in mono (Courier) font. Finally, there are too many blank lines above and below the next section (lines 82-84). 
+
+Chapter 23
+987 :: 23.1.1 : Table 23.1 : Footnote "b" can be worded better: "Some values come back (additionally) quoted although all are returned as part of a single CSV string from the server." 
+988 :: 23.1.1 :: Example 23.1 : stock.py
+Line 20 should be u.close().
+(critical patch)
+998 :: 23.2.5 :: Example 23.5 : olook.pyw
+For running the demo), the outlook() function should be named olook() (to match the name of the module) because that is what the demo expects. Since we are lazy, we just simply create an alias to the original function by inserting a new line 31 which reads: olook = outlook. If you're not going to run it, this change is not necessary.
+(minor patch)
+1001 :: 23.2.6 :: Example 23.6 : estock.pyw
+Line 43 should be u.close(). Also, on line 25, "as" should not be bolded.
+(critical patch)
+
+CREDITS
+

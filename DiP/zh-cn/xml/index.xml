@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"../../common/docbook/dtd/docbookx.dtd"
+[
+<!--
+"http://www.oasis-open.org/docbook/xml/4.0/docbookx.dtd"
+-->
+<!ENTITY % entities SYSTEM "entities.xml">
+%entities;
+]>
+<article lang="zh-cn">
+<articleinfo>&pubinfo;
+</articleinfo>
+<section id="intro">
+<title/>
+<para>&citetitle; 是为有经验的程序员编写的一本 &python; 书。你可以在线<ulink url="toc/index.html">阅读本书</ulink>或者<link linkend="download">下载</link>多种格式的版本。也可以获得<link linkend="languages">多种语言</link>的版本。</para>
+</section>
+<section id="read">
+<title>深入 Python:<ulink url="toc/index.html">&citetitle; 中文版 </ulink></title>
+<para>本书已经<ulink url="toc/index.html">全部完成</ulink>。您可以<ulink url="appendix/history.html">阅读修订历史</ulink>查看有哪些新内容。<token id="updated"/></para>
+</section>
+<section id="download">
+<title>下载 &citetitle; 中文版</title>
+<itemizedlist>
+<listitem><para><ulink url="&url_dip_html;" type="下载 HTML">&html;</ulink></para></listitem>
+<listitem><para><ulink url="&url_dip_htmlflat;" type="下载 HTML 单文件">&html; (单文件)</ulink></para></listitem>
+<listitem><para><ulink url="&url_dip_pdf;" type="下载 PDF">&pdf; (A4)</ulink></para></listitem>
+<listitem><para><ulink url="&url_dip_doc;" type="下载 Microsoft Word 格式">Microsoft Word 2003</ulink></para></listitem>
+<listitem><para><ulink url="&url_dip_help;" type="下载 chm 文件">&winhelp;</ulink></para></listitem>
+<listitem><para><ulink url="&url_dip_text;" type="下载纯文本">纯文本</ulink></para></listitem>
+<listitem><para><ulink url="&url_dip_examples;" type="下载样例脚本">样例程序</ulink></para></listitem>
+<listitem><para><ulink url="&url_dip_xml;" type="下载 XML 源文件">XML (DocBook)</ulink></para></listitem>
+<listitem><para><ulink url="&url_dip_common;" type="下载构建工具和辅助文件">构建脚本</ulink> (仅提供给译者使用)</para></listitem>
+</itemizedlist>
+</section>
+<section id="languages">
+<title>&citetitle; 的多语言版本</title>
+<para>
+只要基于 &gnu; Free Documentation License 发布，<ulink url="appendix/fdl_translation.html">翻译是自由许可的</ulink>。&citetitle; 已经被完全或部分地翻译为几种语言。如果您将其翻译为另外一种语言并且愿意被列在此处，只需<ulink url="mailto:mark@diveintopython.org">通知我</ulink>即可。</para>
+<itemizedlist>
+<listitem><para><ulink url="&url_diveintopython;">英文版</ulink></para></listitem>
+<listitem><para><ulink url="&url_diveintopythoncn;">简体中文版</ulink></para></listitem>
+<listitem><para><ulink url="http://diveintopython.adrahon.org/">法文版</ulink></para></listitem>
+<listitem><para><ulink url="&url_diveintopythonit;">意大利文版</ulink></para></listitem>
+<listitem><para><ulink url="&url_diveintopythones;">西班牙文版</ulink></para></listitem>
+<listitem><para><ulink url="&url_diveintopythonkr;">韩文版</ulink></para></listitem>
+<listitem><para><ulink url="&url_diveintopythonru;">俄文版</ulink></para></listitem>
+</itemizedlist>
+</section>
+<section id="republish">
+<title>重新发布 &citetitle;</title>
+<para>想要镜像本站吗？想要在企业内部网中发布本书吗？想要在 <acronym>CD-ROM</acronym> 上发布本书吗？尽管随你吧。本书基于 &gnu; Free Documentation License 出版发布，这给了你巨大的自由，可以修改并以任何形式重新发布。如果您对基于软件的 &gnu; General Public License 比较熟悉的话，您已经理解了这种自由，<acronym>FDL</acronym> 是基于图书的 &gpl;。您可以<ulink url="appendix/fdl.html">阅读协议</ulink>了解更多细节。</para>
+</section>
+<appendix>
+<title>下载 &python;</title>
+<itemizedlist>
+<listitem><para><ulink url="&url_activepython;">ActivePython</ulink> (免费软件, Windows)</para></listitem>
+<listitem><para><ulink url="&url_pythondownload;">IDLE</ulink> (开源软件, Windows)</para></listitem>
+<listitem><para><ulink url="&url_komodo;">Komodo</ulink> (商业软件, Windows)</para></listitem>
+<listitem><para><ulink url="&url_pythondownloadrpms;">RPMs</ulink> (开源软件, Linux)</para></listitem>
+<listitem><para><ulink url="&url_pythondownload;">源代码</ulink> (所有平台)</para></listitem>
+<listitem><para><ulink url="&url_emacs;">&emacs;</ulink> 的 <ulink url="&url_pythonmode;">&pythonmode;</ulink></para></listitem>
+<listitem><para><ulink url="&url_mac;">Jack Jansen 的 binaries</ulink> (开源软件, &macos;, &macosx;)</para></listitem>
+<listitem><para><ulink url="&url_finkosx;">Fink</ulink> (开源软件, &macosx;)</para></listitem>
+<listitem><para><ulink url="&url_jythondownload;">Jython</ulink> (开源软件, &java;)</para></listitem>
+<listitem><para><ulink url="&url_other;">更多平台</ulink></para></listitem>
+</itemizedlist>
+</appendix>
+<appendix>
+<title>学习 &python;</title>
+<itemizedlist>
+<listitem><para>&learningtoprogram;</para></listitem>
+<listitem><para>&howtothink;</para></listitem>
+<listitem><para>&thinkinginpython;</para></listitem>
+<listitem><para><ulink url="&url_nonprogrammer;" type="Python articles for beginners and experts">Introductions</ulink></para></listitem>
+<listitem><para><ulink url="&url_pythonoreilly;" type="books for sale, plus online articles">O'Reilly &python; Center</ulink></para></listitem>
+<listitem><para><ulink url="&url_nonenglish;" type="tutorials in over a dozen languages">非英文资源</ulink></para></listitem>
+<listitem><para><ulink url="&url_dmozpythondoc;">更多指南</ulink></para></listitem>
+</itemizedlist>
+</appendix>
+<appendix>
+<title>&python; 参考</title>
+<itemizedlist>
+<listitem><para><ulink url="&url_pythondocs;" type="official Python documentation">官方文档</ulink></para></listitem>
+<listitem><para><ulink url="&url_pythonquickreference;" type="all essential Python syntax, on one page">快速参考</ulink></para></listitem>
+</itemizedlist>
+</appendix>
+<appendix>
+<title>&python; 社区</title>
+<itemizedlist>
+<listitem><para>&pythonorg;</para></listitem>
+<listitem><para><ulink url="http://python.cn/">python.cn</ulink></para></listitem>
+<listitem><para><ulink url="http://www.woodpecker.org.cn/">啄木鸟 Pythonic 开源社区</ulink></para></listitem>
+<listitem><para><ulink url="&url_clp;" type="lively discussion of all things Python">comp.lang.python</ulink></para></listitem>
+<listitem><para><ulink url="&url_clpa;" type="announcements of new and updated software, books, and other resources">c.l.p.announce</ulink></para></listitem>
+<listitem><para><ulink url="&url_tutormailinglist;" type="mailing list for beginners">Tutor</ulink></para></listitem>
+<listitem><para><ulink url="&url_pythonmailinglists;" type="email discussions of specific Python topics">&python; 邮件列表</ulink></para></listitem>
+<listitem><para><ulink url="http://python.cn/mailman/listinfo/python-chinese" type="mailing list for Chinese Python users">python-chinese 邮件列表</ulink></para></listitem>
+<listitem><para><ulink url="http://groups.google.com/group/python-cn" type="mailing list for Chinese Python users at googlegroups">python-cn 邮件列表</ulink></para></listitem>
+<listitem><para><ulink url="&url_dmozpython;">更多链接</ulink></para></listitem>
+</itemizedlist>
+</appendix>
+<appendix>
+<title>&python; 代码</title>
+<itemizedlist>
+<listitem><para>&pythoncookbook;</para></listitem>
+<listitem><para><ulink url="&url_vaultsofparnassus;" type="central repository for 3rd party Python software">Vaults of Parnassus</ulink></para></listitem>
+<listitem><para><ulink url="&url_faqts;" type="community-maintained knowledge base">&python;.faqts</ulink></para></listitem>
+</itemizedlist>
+</appendix>
+<appendix>
+<title>原作者的其它作品</title>
+<itemizedlist>
+<listitem><para><ulink url="http://diveintoaccessibility.org/" type="Free book for web designers">Dive Into Accessibility</ulink></para></listitem>
+<listitem><para><ulink url="http://diveintoosx.org/" type="Free repository for Macintosh system administrators">Dive Into OS X</ulink></para></listitem>
+<listitem><para><ulink url="http://diveintogreasemonkey.org/" type="Free book about developing scripts for customizing web pages">Dive Into Greasemonkey</ulink></para></listitem>
+<listitem><para><ulink url="http://diveintomark.org/" type="author's own Python projects, web services and other fun stuff">dive into mark</ulink></para></listitem>
+</itemizedlist>
+</appendix>
+</article>

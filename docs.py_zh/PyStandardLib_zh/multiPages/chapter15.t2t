@@ -1,0 +1,43 @@
+Python Standard Library
+翻译: Python 江湖群
+%%date(%Y-%m-%d %H:%M:%S)
+
+%! Target  : html
+%! Encoding: UTF-8
+%! Style   : style.css
+%! Options : --css-inside --css-sugar
+%! Options : --toc --toc-level=2 --enum-title
+%! Options : -o html/chpt15.html
+
+
+%!postproc(html): '<BODY.*?>' '<BODY BGCOLOR="green">'
+%!postproc(html): '@@' '<BR>'
+
+%
+% txt2tags By Feather.and.ELF(andelf)
+%
+% fixed for title jump back By Zoom.Quiet
+%
+
+%%toc
+
+========================================================================
+
+[返回首页 index.html]
+
+========================================================================
+
+
+
+%% 第 15 章 -By feather
+
+= Py 2.0 后新增模块 =
+
+%% %!include: ../t2t/chpt15/intro.t2t
+
+-------------------------------------------------------------------------
+
+本章将在以后的时间里慢慢完成, 更新.
+
+=========================================================================
+

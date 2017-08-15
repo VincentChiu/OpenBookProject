@@ -1,0 +1,2146 @@
+'''Python Standard Library'''
+
+''翻译: Python 江湖群''
+
+2008-03-28 13:33:35
+
+[[TableOfContents]]
+
+----
+
+[index.html 返回首页]
+
+----
+
+= 1. 网络协议 =
+  "Increasingly, people seem to misinterpret complexity as sophistication, which is baffling - the incomprehensible should cause suspicion rather than admiration. Possibly this trend results from a mistaken belief that using a somewhat mysterious device confers an aura of power on the user."
+
+  - Niklaus Wirth
+
+----
+
+== 1.1. 概览 ==
+本章描述了 Python 的 socket 协议支持以及其他建立在 socket 模块上的网络
+模块. 这些包含了对大多流行 Internet 协议客户端的支持, 以及一些可用来
+实现 Internet 服务器的框架.
+
+对于那些本章中的底层的例子, 我将使用两个协议作为样例: 
+Internet Time Protocol ( Internet 时间协议 )
+以及 Hypertext Transfer Protocol (超文本传输协议, HTTP 协议).
+
+=== 1.1.1. Internet 时间协议 ===
+Internet 时间协议 ( RFC 868, Postel 和 Harrenstien, 1983) 可以让
+一个网络客户端获得一个服务器的当前时间.
+
+因为这个协议是轻量级的, 许多 Unix 系统(但不是所有)都提供了这个服务. 
+它可能是最简单的网络协议了. 服务器等待连接请求并在连接后返回当前时间
+( 4 字节整数, 自从 1900 年 1 月 1 日到当前的秒数).
+
+协议很简单, 这里我们提供规格书给大家:
+
+{{{
+File: rfc868.txt
+
+Network Working Group                                    J. Postel - ISI
+Request for Comments: 868                           K. Harrenstien - SRI
+                                                                May 1983
+
+                             Time Protocol
+
+This RFC specifies a standard for the ARPA Internet community.  Hosts on
+the ARPA Internet that choose to implement a Time Protocol are expected
+to adopt and implement this standard.
+
+本 RFC 规范提供了一个 ARPA Internet community 上的标准. 
+在 ARPA Internet 上的所有主机应当采用并实现这个标准.
+
+This protocol provides a site-independent, machine readable date and
+time.  The Time service sends back to the originating source the time in
+seconds since midnight on January first 1900.
+
+此协议提供了一个独立于站点的, 机器可读的日期和时间信息. 
+时间服务返回的是从 1900 年 1 月 1 日午夜到现在的秒数.
+
+One motivation arises from the fact that not all systems have a
+date/time clock, and all are subject to occasional human or machine
+error.  The use of time-servers makes it possible to quickly confirm or
+correct a system's idea of the time, by making a brief poll of several
+independent sites on the network.
+
+设计这个协议的一个重要目的在于, 网络上的一些主机并没有时钟, 
+这有可能导致人工或者机器错误. 我们可以依靠时间服务器快速确认或者修改
+一个系统的时间.
+
+This protocol may be used either above the Transmission Control Protocol
+(TCP) or above the User Datagram Protocol (UDP).
+
+该协议可以用在 TCP 协议或是 UDP 协议上.
+
+When used via TCP the time service works as follows:
+
+通过 TCP 访问时间服务器的步骤:
+
+ *  S: Listen on port 37 (45 octal).
+ *  U: Connect to port 37.
+ *  S: Send the time as a 32 bit binary number.
+ *  U: Receive the time.
+ *  U: Close the connection.
+ *  S: Close the connection.
+ 
+ *  S: 监听 37 ( 45 的八进制) 端口.
+ *  U: 连接 37 端口.
+ *  S: 将时间作为 32 位二进制数字发送.
+ *  U: 接收时间.
+ *  U: 关闭连接.
+ *  S: 关闭连接.  
+
+   The server listens for a connection on port 37.  When the connection
+   is established, the server returns a 32-bit time value and closes the
+   connection.  If the server is unable to determine the time at its
+   site, it should either refuse the connection or close it without
+   sending anything.
+   
+   服务器在 37 端口监听. 当连接建立的时候, 服务器返回一个 32 位的数字值
+   并关闭连接. 如果服务器自己无法决定当前时间, 那么它应该拒绝这个连接或者
+   不发送任何数据立即关闭连接.
+
+When used via UDP the time service works as follows:
+
+通过 TCP 访问时间服务器的步骤:
+   
+   S: Listen on port 37 (45 octal).
+   U: Send an empty datagram to port 37.
+   S: Receive the empty datagram.
+   S: Send a datagram containing the time as a 32 bit binary number.
+   U: Receive the time datagram.
+
+   S: 监听 37 ( 45 的八进制) 端口.
+   U: 发送空数据报文到 37 端口.
+   S: 接受空报文.
+   S: 发送包含时间( 32 位二进制数字 )的报文.
+   U: 接受时间报文.
+   
+   The server listens for a datagram on port 37.  When a datagram
+   arrives, the server returns a datagram containing the 32-bit time
+   value.  If the server is unable to determine the time at its site, it
+   should discard the arriving datagram and make no reply.
+   
+   服务器在 37 端口监听报文. 当报文到达时, 服务器返回包含 32 位时间值
+   的报文. 如果服务器无法决定当前时间, 那么它应该丢弃到达的报文, 
+   不做任何回复.
+
+The Time
+
+时间
+
+The time is the number of seconds since 00:00 (midnight) 1 January 1900
+GMT, such that the time 1 is 12:00:01 am on 1 January 1900 GMT; this
+base will serve until the year 2036.
+
+时间是自 1900 年 1 月 1 日 0 时到当前的秒数, 
+这个协议标准会一直服务到2036年. 到时候数字不够用再说.
+
+For example:
+
+   the time  2,208,988,800 corresponds to 00:00  1 Jan 1970 GMT,
+             2,398,291,200 corresponds to 00:00  1 Jan 1976 GMT,
+             2,524,521,600 corresponds to 00:00  1 Jan 1980 GMT,
+             2,629,584,000 corresponds to 00:00  1 May 1983 GMT,
+        and -1,297,728,000 corresponds to 00:00 17 Nov 1858 GMT.
+		
+
+例如:
+
+     时间值  2,208,988,800 对应 to 00:00  1 Jan 1970 GMT,
+             2,398,291,200 对应 to 00:00  1 Jan 1976 GMT,
+             2,524,521,600 对应 to 00:00  1 Jan 1980 GMT,
+             2,629,584,000 对应 to 00:00  1 May 1983 GMT,
+       最后 -1,297,728,000 对应 to 00:00 17 Nov 1858 GMT.
+
+	   
+RFC868.txt Translated By Andelf(gt: andelf@gmail.com )
+非商业用途, 转载请保留作者信息. Thx.
+}}}
+
+=== 1.1.2. HTTP 协议 ===
+超文本传输协议 ( HTTP, RFC 2616 ) 是另个完全不同的东西. 
+最近的格式说明书( Version 1.1 )超过了 100 页. 
+
+从它最简单的格式来看, 这个协议是很简单的. 客户端发送如下的请求到服务器, 
+请求一个文件:
+
+{{{
+GET /hello.txt HTTP/1.0
+Host: hostname
+User-Agent: name
+
+[optional request body , 可选的请求正文]
+}}}
+
+服务器返回对应的响应:
+
+{{{
+HTTP/1.0 200 OK
+Content-Type: text/plain
+Content-Length: 7
+
+Hello
+}}}
+
+请求和响应的 headers (报头)一般会包含更多的域, 但是请求 header 中的 Host 
+域/字段是必须提供的.
+
+header 行使用 "{{{\r\n}}}" 分割, 而且 header 后必须有一个空行, 即使没有正文
+(请求和响应都必须符合这条规则).
+
+剩下的 HTTP 协议格式说明书细节, 例如内容协商, 缓存机制, 保持连接, 等等, 
+请参阅 Hypertext TransferProtocol - HTTP/1.1 ( [http://www.w3.org/Protocols] ).
+
+----
+
+== 1.2. socket 模块 ==
+{{{socket}}} 模块实现了到 socket 通讯层的接口. 你可以使用该模块创建
+客户端或是服务器的 socket .
+
+我们首先以一个客户端为例, [#eg-7-1 Example 7-1] 中的客户端连接到一个时间协议服务器, 
+读取 4 字节的返回数据, 并把它转换为一个时间值.
+
+==== 1.2.0.1. Example 7-1. 使用 socket 模块实现一个时间客户端 ====
+{{{
+File: socket-example-1.py
+
+import socket
+import struct, time
+
+# server
+HOST = "www.python.org"
+PORT = 37
+
+# reference time (in seconds since 1900-01-01 00:00:00)
+TIME1970 = 2208988800L # 1970-01-01 00:00:00
+
+# connect to server
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((HOST, PORT))
+
+# read 4 bytes, and convert to time value
+t = s.recv(4)
+t = struct.unpack("!I", t)[0]
+t = int(t - TIME1970)
+
+s.close()
+
+# print results
+print "server time is", time.ctime(t)
+print "local clock is", int(time.time()) - t, "seconds off"
+
+*B*server time is Sat Oct 09 16:42:36 1999
+local clock is 8 seconds off*b*
+}}}
+
+{{{socket}}} 工厂函数( factory function )根据给定类型(该例子中为 
+Internet stream socket , 即就是 TCP socket )创建一个新的 socket . 
+{{{connect}}} 方法尝试将这个 socket 连接到指定服务器上. 成功后, 
+就可以使用 {{{recv}}} 方法读取数据.
+
+创建一个服务器 socket 使用的是相同的方法, 不过这里不是连接到服务器, 
+而是将 socket {{{bind}}} (绑定)到本机的一个端口上, 告诉它去监听连接请求, 
+然后尽快处理每个到达的请求.
+
+[#eg-7-2 Example 7-2] 创建了一个时间服务器, 绑定到本机的 8037 端口( 1024 前的所有端口
+是为系统服务保留的, Unix 系统下访问它们你必须要有 root 权限).
+
+==== 1.2.0.2. Example 7-2. 使用 socket 模块实现一个时间服务器 ====
+{{{
+File: socket-example-2.py
+
+import socket
+import struct, time
+
+# user-accessible port
+PORT = 8037
+
+# reference time
+TIME1970 = 2208988800L
+
+# establish server
+service = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+service.bind(("", PORT))
+service.listen(1)
+
+print "listening on port", PORT
+
+while 1:
+    # serve forever
+    channel, info = service.accept()
+    print "connection from", info
+    t = int(time.time()) + TIME1970
+    t = struct.pack("!I", t)
+    channel.send(t) # send timestamp
+    channel.close() # disconnect
+
+*B*listening on port 8037
+connection from ('127.0.0.1', 1469)
+connection from ('127.0.0.1', 1470)
+...*b*
+}}}
+
+{{{listen}}} 函数的调用告诉 socket 我们期望接受连接. 参数代表连接
+的队列(用于在程序没有处理前保持连接)大小. 最后 {{{accept}}} 循环将当前时间返回
+给每个连接的客户端.
+
+注意这里的 {{{accept}}} 函数返回一个新的 socket 对象, 这个对象是直接连接到客户端
+的. 而原 socket 只是用来保持连接; 所有后来的数据传输操作都使用新的 socket .
+
+我们可以使用 [#eg-7-3 Example 7-3] , ( [#eg-7-1 Example 7-1] 
+的通用化版本)来测试这个服务器, .
+
+==== 1.2.0.3. Example 7-3. 一个时间协议客户端 ====
+{{{
+File: timeclient.py
+
+import socket
+import struct, sys, time
+
+# default server
+host = "localhost"
+port = 8037
+
+# reference time (in seconds since 1900-01-01 00:00:00)
+TIME1970 = 2208988800L # 1970-01-01 00:00:00
+
+def gettime(host, port):
+    # fetch time buffer from stream server
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
+    t = s.recv(4)
+    s.close()
+    t = struct.unpack("!I", t)[0]
+    return int(t - TIME1970)
+
+if _ _name_ _ == "_ _main_ _":
+    # command-line utility
+    if sys.argv[1:]:
+        host = sys.argv[1]
+        if sys.argv[2:]:
+            port = int(sys.argv[2])
+        else:
+            port = 37 # default for public servers
+
+    t = gettime(host, port)
+    print "server time is", time.ctime(t)
+    print "local clock is", int(time.time()) - t, "seconds off"
+
+*B*server time is Sat Oct 09 16:58:50 1999
+local clock is 0 seconds off*b*
+}}}
+
+[#eg-7-3 Example 7-3] 所示的脚本也可以作为模块使用; 你只需要导入 {{{timeclient}}} 模块, 
+然后调用它的 {{{gettime}}} 函数.
+
+目前为止, 我们已经使用了流( TCP ) socket . 时间协议还提到了
+ UDP sockets (报文). 流 socket 的工作模式和电话线类似; 你会知道在远端
+是否有人拿起接听器, 在对方挂断的时候你也会注意到. 相比之下, 发送报文更像
+是在一间黑屋子里大声喊. 可能某人会在那里, 但你只有在他回复的时候才会知道.
+
+如 [#eg-7-4 Example 7-4] 所示, 你不需要在通过报文 socket 发送数据时连接远程机器. 
+只需使用 {{{sendto}}} 方法, 它接受数据和接收者地址作为参数. 
+读取报文的时候使用 {{{recvfrom}}} 方法.
+
+==== 1.2.0.4. Example 7-4. 使用 socket 模块实现一个报文时间客户端 ====
+{{{
+File: socket-example-4.py
+
+import socket
+import struct, time
+
+# server
+HOST = "localhost"
+PORT = 8037
+
+# reference time (in seconds since 1900-01-01 00:00:00)
+TIME1970 = 2208988800L # 1970-01-01 00:00:00
+
+# connect to server
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# send empty packet
+s.sendto("", (HOST, PORT))
+
+# read 4 bytes from server, and convert to time value
+t, server = s.recvfrom(4)
+t = struct.unpack("!I", t)[0]
+t = int(t - TIME1970)
+
+s.close()
+
+print "server time is", time.ctime(t)
+print "local clock is", int(time.time()) - t, "seconds off"
+
+*B*server time is Sat Oct 09 16:42:36 1999
+local clock is 8 seconds off*b*
+}}}
+
+这里的 {{{recvfrom}}} 返回两个值: 数据和发送者的地址. 
+后者用于发送回复数据.
+
+Example 7-5 展示了对应的服务器代码.
+
+Example 7-5. 使用 socket 模块实现一个报文时间服务器
+
+{{{
+File: socket-example-5.py
+
+import socket
+import struct, time
+
+# user-accessible port
+PORT = 8037
+
+# reference time
+TIME1970 = 2208988800L
+
+# establish server
+service = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+service.bind(("", PORT))
+
+print "listening on port", PORT
+
+while 1:
+    # serve forever
+    data, client = service.recvfrom(0)
+    print "connection from", client
+    t = int(time.time()) + TIME1970
+    t = struct.pack("!I", t)
+    service.sendto(t, client) # send timestamp
+
+*B*listening on port 8037
+connection from ('127.0.0.1', 1469)
+connection from ('127.0.0.1', 1470)
+...*b*
+}}}
+
+最主要的不同在于服务器使用 {{{bind}}} 来分配一个已知端口给 socket , 
+根据 {{{recvfrom}}} 函数返回的地址向客户端发送数据.
+
+----
+
+== 1.3. select 模块 ==
+{{{select}}} 模块允许你检查一个或多个 socket , 管道, 
+以及其他流兼容对象所接受的数据, 如 Example 7-6 所示.
+
+你可以将一个或更多 socket 传递给 {{{select}}} 函数, 
+然后等待它们状态改变(可读, 可写, 或是发送错误信号):
+
+  * 如果某人在调用了 {{{listen}}} 函数后连接, 当远端数据到达时, socket 就成为可读的(这意味着 {{{accept}}} 不会阻塞). 或者是 socket 被关闭或重置时(在此情况下, {{{recv}}} 会返回一个空字符串).
+
+  * 当非阻塞调用 {{{connect}}} 方法后建立连接或是数据可以被写入到 socket 时, socket 就成为可写的.
+
+  * 当非阻塞调用 {{{connect}}} 方法后连接失败后, socket 会发出一个错误信号.
+
+==== 1.3.0.1. Example 7-6. 使用 select 模块等待经 socket 发送的数据 ====
+{{{
+File: select-example-1.py
+
+import select
+import socket
+import time
+
+PORT = 8037
+
+TIME1970 = 2208988800L
+
+service = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+service.bind(("", PORT))
+service.listen(1)
+
+print "listening on port", PORT
+
+while 1:
+    is_readable = [service]
+    is_writable = []
+    is_error = []
+    r, w, e = select.select(is_readable, is_writable, is_error, 1.0)
+    if r:
+        channel, info = service.accept()
+        print "connection from", info
+        t = int(time.time()) + TIME1970
+        t = chr(t>>24&255) + chr(t>>16&255) + chr(t>>8&255) + chr(t&255)
+        channel.send(t) # send timestamp
+        channel.close() # disconnect
+    else:
+        print "still waiting"
+
+*B*listening on port 8037
+still waiting
+still waiting
+connection from ('127.0.0.1', 1469)
+still waiting
+connection from ('127.0.0.1', 1470)
+...*b*
+}}}
+
+在 [#eg-7-6 Example 7-6] 中, 我们等待监听 socket 变成可读状态, 这代表有一个连接请求到达. 
+我们用和之前一样的方法处理 channel socket , 因为它不可能因为等待 4 字节而填充网络
+缓冲区. 如果你需要向客户端发送大量的数据, 那么你应该在循环的顶端把数据加入到 
+is_writable 列表中, 并且只在 {{{select}}} 允许的情况下写入. 
+
+如果你设置 socket 为''非阻塞''模式(通过调用 {{{setblocking}}} 方法), 那么你就可以使用
+ {{{select}}} 来等待 socket 连接. 不过 {{{asyncore}}} 模块(参见下一节)提供了一个强大的框架, 
+它自动为你处理好了这一切. 所以我不准备在这里多说什么, 看下一节吧.
+
+----
+
+== 1.4. asyncore 模块 ==
+{{{asyncore}}} 模块提供了一个 "反馈性的( reactive )" socket 实现. 
+该模块允许你定义特定过程完成后所执行的代码, 而不是创建 socket 对象, 
+调用它们的方法. 你只需要继承 ''dispatcher'' 类, 然后重载如下方法
+(可以选择重载某一个或多个)就可以实现异步的 socket 处理器.
+
+  * {{{handle_connect}}} : 一个连接成功建立后被调用.
+
+  * {{{handle_expt}}} : 连接失败后被调用. 
+
+  * {{{handle_accept}}} : 连接请求建立到一个监听 socket 上时被调用. 回调时( callback )应该使用 {{{accept}}} 方法来获得客户端 socket .
+
+  * {{{handle_read}}} : 有来自 socket 的数据等待读取时被调用. 回调时应该使用 {{{recv}}} 方法来获得数据.
+
+  * {{{handle_write}}} : socket 可以写入数据的时候被调用. 使用 {{{send}}} 方法写入数据.
+
+  * {{{handle_close}}} : 当 socket 被关闭或复位时被调用.
+
+  * {{{handle_error(type, value, traceback)}}} 在任何一个回调函数发生 Python 错误时被调用. 默认的实现会打印跟踪返回消息到 {{{sys.stdout}}} .
+
+[#eg-7-7 Example 7-7] 展示了一个时间客户端, 和 {{{socket}}} 模块中的那个类似.
+
+==== 1.4.0.1. Example 7-7. 使用 asyncore 模块从时间服务器获得时间 ====
+{{{
+File: asyncore-example-1.py
+
+import asyncore
+import socket, time
+
+# reference time (in seconds since 1900-01-01 00:00:00)
+TIME1970 = 2208988800L # 1970-01-01 00:00:00
+
+class TimeRequest(asyncore.dispatcher):
+    # time requestor (as defined in RFC 868)
+
+    def _ _init_ _(self, host, port=37):
+        asyncore.dispatcher._ _init_ _(self)
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.connect((host, port))
+
+    def writable(self):
+        return 0 # don't have anything to write
+
+    def handle_connect(self):
+        pass # connection succeeded
+
+    def handle_expt(self):
+        self.close() # connection failed, shutdown
+
+    def handle_read(self):
+        # get local time
+        here = int(time.time()) + TIME1970
+
+        # get and unpack server time
+        s = self.recv(4)
+        there = ord(s[3]) + (ord(s[2])<<8) + (ord(s[1])<<16) + (ord(s[0])<<24L)
+
+        self.adjust_time(int(here - there))
+
+        self.handle_close() # we don't expect more data
+
+    def handle_close(self):
+        self.close()
+
+    def adjust_time(self, delta):
+        # override this method!
+        print "time difference is", delta
+
+#
+# try it out
+
+request = TimeRequest("www.python.org")
+
+asyncore.loop()
+
+*B*log: adding channel <TimeRequest  at 8cbe90>
+time difference is 28
+log: closing channel 192:<TimeRequest connected at 8cbe90>*b*
+}}}
+
+如果你不想记录任何信息, 那么你可以在你的 ''dispatcher'' 类里重载 {{{log}}} 方法.
+
+[#eg-7-8 Example 7-8] 展示了对应的时间服务器. 注意这里它使用了两个 ''dispatcher'' 
+子类, 一个用于监听 socket , 另个用于与客户端通讯.
+
+==== 1.4.0.2. Example 7-8. 使用 asyncore 模块实现时间服务器 ====
+{{{
+File: asyncore-example-2.py
+
+import asyncore
+import socket, time
+
+# reference time
+TIME1970 = 2208988800L
+
+class TimeChannel(asyncore.dispatcher):
+
+    def handle_write(self):
+        t = int(time.time()) + TIME1970
+        t = chr(t>>24&255) + chr(t>>16&255) + chr(t>>8&255) + chr(t&255)
+        self.send(t)
+        self.close()
+
+class TimeServer(asyncore.dispatcher):
+
+    def _ _init_ _(self, port=37):
+        self.port = port
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.bind(("", port))
+        self.listen(5)
+        print "listening on port", self.port
+
+    def handle_accept(self):
+        channel, addr = self.accept()
+        TimeChannel(channel)
+
+server = TimeServer(8037)
+asyncore.loop()
+
+*B*log: adding channel <TimeServer  at 8cb940>
+listening on port 8037
+log: adding channel <TimeChannel  at 8b2fd0>
+log: closing channel 52:<TimeChannel connected at 8b2fd0>*b*
+}}}
+
+除了 ''dispatcher'' 外, 这个模块还包含一个 ''dispatcher_with_send'' 类. 
+你可以使用这个类发送大量的数据而不会阻塞网络通讯缓冲区. 
+
+[#eg-7-9 Example 7-9] 中的模块通过继承 ''dispatcher_with_send'' 类定义了一个 
+''AsyncHTTP'' 类. 当你创建一个它的实例后, 它会发出一个 HTTP GET 请求并把
+接受到的数据发送到一个 "consumer" 目标对象
+
+==== 1.4.0.3. Example 7-9. 使用 asyncore 模块发送 HTTP 请求 ====
+{{{
+File: SimpleAsyncHTTP.py
+
+import asyncore
+import string, socket
+import StringIO
+import mimetools, urlparse
+
+class AsyncHTTP(asyncore.dispatcher_with_send):
+    # HTTP requester
+
+    def _ _init_ _(self, uri, consumer):
+        asyncore.dispatcher_with_send._ _init_ _(self)
+
+        self.uri = uri
+        self.consumer = consumer
+
+        # turn the uri into a valid request
+        scheme, host, path, params, query, fragment = urlparse.urlparse(uri)
+        assert scheme == "http", "only supports HTTP requests"
+        try:
+            host, port = string.split(host, ":", 1)
+            port = int(port)
+        except (TypeError, ValueError):
+            port = 80 # default port
+        if not path:
+            path = "/"
+        if params:
+            path = path + ";" + params
+        if query:
+            path = path + "?" + query
+
+        self.request = "GET %s HTTP/1.0\r\nHost: %s\r\n\r\n" % (path, host)
+
+        self.host = host
+        self.port = port
+
+        self.status = None
+        self.header = None
+
+        self.data = ""
+
+        # get things going!
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.connect((host, port))
+
+    def handle_connect(self):
+        # connection succeeded
+        self.send(self.request)
+
+    def handle_expt(self):
+        # connection failed; notify consumer (status is None)
+        self.close()
+        try:
+            http_header = self.consumer.http_header
+        except AttributeError:
+            pass
+        else:
+            http_header(self)
+
+    def handle_read(self):
+        data = self.recv(2048)
+        if not self.header:
+            self.data = self.data + data
+            try:
+                i = string.index(self.data, "\r\n\r\n")
+            except ValueError:
+                return # continue
+            else:
+                # parse header
+                fp = StringIO.StringIO(self.data[:i+4])
+                # status line is "HTTP/version status message"
+                status = fp.readline()
+                self.status = string.split(status, " ", 2)
+                # followed by a rfc822-style message header
+                self.header = mimetools.Message(fp)
+                # followed by a newline, and the payload (if any)
+                data = self.data[i+4:]
+                self.data = ""
+                # notify consumer (status is non-zero)
+                try:
+                    http_header = self.consumer.http_header
+                except AttributeError:
+                    pass
+                else:
+                    http_header(self)
+                if not self.connected:
+                    return # channel was closed by consumer
+
+        self.consumer.feed(data)
+
+    def handle_close(self):
+        self.consumer.close()
+        self.close()
+}}}
+
+[#eg-7-10 Example 7-10] 中的小脚本展示了如何使用这个类.
+
+==== 1.4.0.4. Example 7-10. 使用 SimpleAsyncHTTP 类 ====
+{{{
+File: asyncore-example-3.py
+
+import SimpleAsyncHTTP
+import asyncore
+
+class DummyConsumer:
+    size = 0
+
+    def http_header(self, request):
+        # handle header
+        if request.status is None:
+            print "connection failed"
+        else:
+            print "status", "=>", request.status
+            for key, value in request.header.items():
+                print key, "=", value
+
+    def feed(self, data):
+        # handle incoming data
+        self.size = self.size + len(data)
+
+    def close(self):
+        # end of data
+        print self.size, "bytes in body"
+
+#
+# try it out
+
+consumer = DummyConsumer()
+
+request = SimpleAsyncHTTP.AsyncHTTP(
+    "http://www.pythonware.com",
+    consumer
+    )
+
+asyncore.loop()
+
+*B*log: adding channel <AsyncHTTP  at 8e2850>
+status => ['HTTP/1.1', '200', 'OK\015\012']
+server = Apache/Unix (Unix)
+content-type = text/html
+content-length = 3730
+...
+3730 bytes in body
+log: closing channel 156:<AsyncHTTP connected at 8e2850>*b*
+}}}
+
+这里的 consumer 接口设计时是为了与 {{{htmllib}}} 和 {{{xmllib}}} 分析器兼容的, 
+这样你就可以直接方便地解析 HTML 或是 XML 数据. {{{http_header}}} 方法是可选的; 
+如果没有定义它, 那么它将被忽略.
+
+[#eg-7-10 Example 7-10] 的一个问题是它不能很好地处理重定向资源. [#eg-7-11 Example 7-11] 
+加入了一个额外的 consumer 层, 它可以很好地处理重定向.
+
+==== 1.4.0.5. Example 7-11. 使用 SimpleAsyncHTTP 类处理重定向 ====
+{{{
+File: asyncore-example-4.py
+
+import SimpleAsyncHTTP
+import asyncore
+
+class DummyConsumer:
+    size = 0
+
+    def http_header(self, request):
+        # handle header
+        if request.status is None:
+            print "connection failed"
+        else:
+            print "status", "=>", request.status
+            for key, value in request.header.items():
+                print key, "=", value
+
+    def feed(self, data):
+        # handle incoming data
+        self.size = self.size + len(data)
+
+    def close(self):
+        # end of data
+        print self.size, "bytes in body"
+
+class RedirectingConsumer:
+
+    def _ _init_ _(self, consumer):
+        self.consumer = consumer
+
+    def http_header(self, request):
+        # handle header
+        if request.status is None or\
+           request.status[1] not in ("301", "302"):
+            try:
+                http_header = self.consumer.http_header
+            except AttributeError:
+                pass
+            else:
+                return http_header(request)
+        else:
+            # redirect!
+            uri = request.header["location"]
+            print "redirecting to", uri, "..."
+            request.close()
+            SimpleAsyncHTTP.AsyncHTTP(uri, self)
+
+    def feed(self, data):
+        self.consumer.feed(data)
+
+    def close(self):
+        self.consumer.close()
+
+#
+# try it out
+
+consumer = RedirectingConsumer(DummyConsumer())
+
+request = SimpleAsyncHTTP.AsyncHTTP(
+    "http://www.pythonware.com/library",
+    consumer
+    )
+
+asyncore.loop()
+
+*B*log: adding channel <AsyncHTTP  at 8e64b0>
+redirecting to http://www.pythonware.com/library/ ...
+log: closing channel 48:<AsyncHTTP connected at 8e64b0>
+log: adding channel <AsyncHTTP  at 8ea790>
+status => ['HTTP/1.1', '200', 'OK\015\012']
+server = Apache/Unix (Unix)
+content-type = text/html
+content-length = 387
+...
+387 bytes in body
+log: closing channel 236:<AsyncHTTP connected at 8ea790>*b*
+}}}
+
+如果服务器返回状态 301 (永久重定向) 或者是 302 (临时重定向), 重定向的 consumer 
+会关闭当前请求并向新地址发出新请求. 所有对 consumer 
+的其他调用传递给原来的 consumer .
+
+----
+
+== 1.5. asynchat 模块 ==
+{{{asynchat}}} 模块是对 {{{asyncore}}} 的一个扩展. 它提供对面向行( 
+line-oriented )的协议的额外支持. 它还提供了增强的缓冲区支持(通过 
+{{{push}}} 方法和 "producer" 机制.
+
+[#eg-7-12 Example 7-12] 实现了一个很小的 HTTP 服务器. 它只是简单地返回包含 HTTP 
+请求信息的 HTML 文档(浏览器窗口出现的输出).
+
+==== 1.5.0.1. Example 7-12. 使用 asynchat 模块实现一个迷你 HTTP 服务器 ====
+{{{
+File: asynchat-example-1.py
+
+import asyncore, asynchat
+import os, socket, string
+
+PORT = 8000
+
+class HTTPChannel(asynchat.async_chat):
+
+    def _ _init_ _(self, server, sock, addr):
+        asynchat.async_chat._ _init_ _(self, sock)
+        self.set_terminator("\r\n")
+        self.request = None
+        self.data = ""
+        self.shutdown = 0
+
+    def collect_incoming_data(self, data):
+        self.data = self.data + data
+
+    def found_terminator(self):
+        if not self.request:
+            # got the request line
+            self.request = string.split(self.data, None, 2)
+            if len(self.request) != 3:
+                self.shutdown = 1
+            else:
+                self.push("HTTP/1.0 200 OK\r\n")
+                self.push("Content-type: text/html\r\n")
+                self.push("\r\n")
+            self.data = self.data + "\r\n"
+            self.set_terminator("\r\n\r\n") # look for end of headers
+        else:
+            # return payload.
+            self.push("<html><body><pre>\r\n")
+            self.push(self.data)
+            self.push("</pre></body></html>\r\n")
+            self.close_when_done()
+
+class HTTPServer(asyncore.dispatcher):
+
+    def _ _init_ _(self, port):
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.bind(("", port))
+        self.listen(5)
+
+    def handle_accept(self):
+        conn, addr = self.accept()
+        HTTPChannel(self, conn, addr)
+
+#
+# try it out
+
+s = HTTPServer(PORT)
+print "serving at port", PORT, "..."
+asyncore.loop()
+
+*B*GET / HTTP/1.1
+Accept: */*
+Accept-Language: en, sv
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/4.0 (compatible; Bruce/1.0)
+Host: localhost:8000
+Connection: Keep-Alive*b*
+}}}
+
+producer 接口允许你传入( "push" )太大以至于无法在内存中储存的对象. 
+{{{asyncore}}} 在需要更多数据的时候自动调用 producer 的 {{{more}}} 方法. 
+另外, 它使用一个空字符串标记文件的末尾.
+
+[#eg-7-13 Example 7-13] 实现了一个很简单的基于文件的 HTTP 服务器, 它使用了一个简单的 
+''FileProducer'' 类来从文件中读取数据, 每次只读取几 kb .
+
+==== 1.5.0.2. Example 7-13. 使用 asynchat 模块实现一个简单的 HTTP 服务器 ====
+{{{
+File: asynchat-example-2.py
+
+import asyncore, asynchat
+import os, socket, string, sys
+import StringIO, mimetools
+
+ROOT = "."
+
+PORT = 8000
+
+class HTTPChannel(asynchat.async_chat):
+
+    def _ _init_ _(self, server, sock, addr):
+        asynchat.async_chat._ _init_ _(self, sock)
+        self.server = server
+        self.set_terminator("\r\n\r\n")
+        self.header = None
+        self.data = ""
+        self.shutdown = 0
+
+    def collect_incoming_data(self, data):
+        self.data = self.data + data
+        if len(self.data) > 16384:
+            # limit the header size to prevent attacks
+            self.shutdown = 1
+
+    def found_terminator(self):
+        if not self.header:
+            # parse http header
+            fp = StringIO.StringIO(self.data)
+            request = string.split(fp.readline(), None, 2)
+            if len(request) != 3:
+                # badly formed request; just shut down
+                self.shutdown = 1
+            else:
+                # parse message header
+                self.header = mimetools.Message(fp)
+                self.set_terminator("\r\n")
+                self.server.handle_request(
+                    self, request[0], request[1], self.header
+                    )
+                self.close_when_done()
+            self.data = ""
+        else:
+            pass # ignore body data, for now
+
+    def pushstatus(self, status, explanation="OK"):
+        self.push("HTTP/1.0 %d %s\r\n" % (status, explanation))
+
+
+class FileProducer:
+    # a producer that reads data from a file object
+
+    def _ _init_ _(self, file):
+        self.file = file
+
+    def more(self):
+        if self.file:
+            data = self.file.read(2048)
+            if data:
+                return data
+            self.file = None
+        return ""
+
+
+class HTTPServer(asyncore.dispatcher):
+
+    def _ _init_ _(self, port=None, request=None):
+        if not port:
+            port = 80
+        self.port = port
+        if request:
+            self.handle_request = request # external request handler
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.bind(("", port))
+        self.listen(5)
+
+    def handle_accept(self):
+        conn, addr = self.accept()
+        HTTPChannel(self, conn, addr)
+
+    def handle_request(self, channel, method, path, header):
+        try:
+            # this is not safe!
+            while path[:1] == "/":
+                path = path[1:]
+            filename = os.path.join(ROOT, path)
+            print path, "=>", filename
+            file = open(filename, "r")
+        except IOError:
+            channel.pushstatus(404, "Not found")
+            channel.push("Content-type: text/html\r\n")
+            channel.push("\r\n")
+            channel.push("<html><body>File not found.</body></html>\r\n")
+        else:
+            channel.pushstatus(200, "OK")
+            channel.push("Content-type: text/html\r\n")
+            channel.push("\r\n")
+            channel.push_with_producer(FileProducer(file))
+
+#
+# try it out
+
+s = HTTPServer(PORT)
+print "serving at port", PORT
+asyncore.loop()
+
+*B*serving at port 8000
+log: adding channel <HTTPServer  at 8e54d0>
+log: adding channel <HTTPChannel  at 8e64a0>
+samples/sample.htm => .\samples/sample.htm
+log: closing channel 96:<HTTPChannel connected at 8e64a0>*b*
+}}}
+
+----
+
+== 1.6. urllib 模块 ==
+{{{urlib}}} 模块为 HTTP , FTP , 以及 gopher 提供了一个统一的客户端接口. 它会自动地根据 URL 
+选择合适的协议处理器.
+
+从 URL 获取数据是非常简单的. 只需要调用 {{{urlopen}}} 方法, 然后从返回的流对象中读取数据即可, 
+如 [#eg-7-14 Example 7-14] 所示.
+
+==== 1.6.0.1. Example 7-14. 使用 urllib 模块获取远程资源 ====
+{{{
+File: urllib-example-1.py
+
+import urllib
+
+fp = urllib.urlopen("http://www.python.org")
+
+op = open("out.html", "wb")
+
+n = 0
+
+while 1:
+    s = fp.read(8192)
+    if not s:
+        break
+    op.write(s)
+    n = n + len(s)
+
+fp.close()
+op.close()
+
+for k, v in fp.headers.items():
+    print k, "=", v
+
+print "copied", n, "bytes from", fp.url
+
+*B*server = Apache/1.3.6 (Unix)
+content-type = text/html
+accept-ranges = bytes
+date = Mon, 11 Oct 1999 20:11:40 GMT
+connection = close
+etag = "741e9-7870-37f356bf"
+content-length = 30832
+last-modified = Thu, 30 Sep 1999 12:25:35 GMT
+copied 30832 bytes from http://www.python.org*b*
+}}}
+
+这个流对象提供了一些非标准的属性. {{{headers}}} 是一个 ''Message'' 对象(在 {{{mimetools}}} 
+模块中定义), {{{url}}} 是实际的 URL . 后者会根据服务器的重定向而更新.
+
+{{{urlopen}}} 函数实际上是一个辅助函数, 它会创建一个 ''FancyURLopener'' 类的实例并调用它的 
+{{{open}}} 方法. 你也可以继承这个类来完成特殊的行为. 例如 [#eg-7-15 Example 7-15] 中的类会自动地
+在必要时登陆服务器.
+
+==== 1.6.0.2. Example 7-15. 用 urllib 模块实现自动身份验证 ====
+{{{
+File: urllib-example-3.py
+
+import urllib
+
+class myURLOpener(urllib.FancyURLopener):
+    # read an URL, with automatic HTTP authentication
+
+    def setpasswd(self, user, passwd):
+        self._ _user = user
+        self._ _passwd = passwd
+
+    def prompt_user_passwd(self, host, realm):
+        return self._ _user, self._ _passwd
+
+urlopener = myURLOpener()
+urlopener.setpasswd("mulder", "trustno1")
+
+fp = urlopener.open("http://www.secretlabs.com")
+print fp.read()
+}}}
+
+----
+
+== 1.7. urlparse 模块 ==
+{{{urlparse}}} 模块包含用于处理 URL 的函数, 可以在 URL 和平台特定的文件名间相互转换. 
+如 [#eg-7-16 Example 7-16] 所示.
+
+==== 1.7.0.1. Example 7-16. 使用 urlparse 模块 ====
+{{{
+File: urlparse-example-1.py
+
+import urlparse
+
+print urlparse.urlparse("http://host/path;params?query#fragment")
+
+('http', 'host', '/path', 'params', 'query', 'fragment')
+}}}
+
+一个常见用途就是把 HTTP URL 分割为主机名和路径组件(一个 HTTP 请求会涉及到
+主机名以及请求路径), 如 [#eg-7-17 Example 7-17] 所示.
+
+==== 1.7.0.2. Example 7-17. 使用 urlparse 模块处理 HTTP 定位器( HTTP Locators ) ====
+{{{
+File: urlparse-example-2.py
+
+import urlparse
+
+scheme, host, path, params, query, fragment =\
+        urlparse.urlparse("http://host/path;params?query#fragment")
+
+if scheme == "http":
+    print "host", "=>", host
+    if params:
+        path = path + ";" + params
+    if query:
+        path = path + "?" + query
+    print "path", "=>", path
+
+*B*host => host
+path => /path;params?query*b*
+}}}
+
+[#eg-7-18 Example 7-18] 展示了如何使用 {{{urlunparse}}} 函数将各组成部分合并回一个 URL .
+
+==== 1.7.0.3. Example 7-18. 使用 urlparse 模块处理 HTTP 定位器( HTTP Locators ) ====
+{{{
+File: urlparse-example-3.py
+
+import urlparse
+
+scheme, host, path, params, query, fragment =\
+        urlparse.urlparse("http://host/path;params?query#fragment")
+
+if scheme == "http":
+    print "host", "=>", host
+    print "path", "=>", urlparse.urlunparse(
+    (None, None, path, params, query, None)
+    )
+
+*B*host => host
+path => /path;params?query*b*
+}}}
+
+[#eg-7-19 Example 7-19] 使用 {{{urljoin}}} 函数将绝对路径和相对路径组合起来. 
+
+==== 1.7.0.4. Example 7-19. 使用 urlparse 模块组合相对定位器 ====
+{{{
+File: urlparse-example-4.py
+
+import urlparse
+
+base = "http://spam.egg/my/little/pony"
+
+for path in "/index", "goldfish", "../black/cat":
+    print path, "=>", urlparse.urljoin(base, path)
+
+*B*/index => http://spam.egg/index
+goldfish => http://spam.egg/my/little/goldfish
+../black/cat => http://spam.egg/my/black/cat*b*
+}}}
+
+----
+
+== 1.8. cookie 模块 ==
+(2.0 中新增) 该模块为 HTTP 客户端和服务器提供了基本的 cookie 支持. [#eg-7-20 Example 7-20] 
+展示了它的使用.
+
+==== 1.8.0.1. Example 7-20. 使用 cookie 模块 ====
+{{{
+File: cookie-example-1.py
+
+import Cookie
+import os, time
+
+cookie = Cookie.SimpleCookie()
+cookie["user"] = "Mimi"
+cookie["timestamp"] = time.time()
+
+print cookie
+
+# simulate CGI roundtrip
+os.environ["HTTP_COOKIE"] = str(cookie)
+
+print
+
+cookie = Cookie.SmartCookie()
+cookie.load(os.environ["HTTP_COOKIE"])
+
+for key, item in cookie.items():
+    # dictionary items are "Morsel" instances
+    # use value attribute to get actual value
+    print key, repr(item.value)
+
+
+*B*Set-Cookie: timestamp=736513200;
+Set-Cookie: user=Mimi;
+
+user 'Mimi'
+timestamp '736513200'*b*
+}}}
+
+----
+
+== 1.9. robotparser 模块 ==
+(2.0 中新增) {{{robotparser}}} 模块用来读取 {{{robots.txt}}} 文件, 
+该文件用于 Robot Exclusion Protocol 
+(搜索机器人排除协议? [http://info.webcrawler.com/mak/projects/robots/robots.html]).
+
+如果你实现的一个 HTTP 机器人会访问网路上的任意站点(并不只是你自己的站点), 
+那么最好还是用该模块检查下你所做的一切是不是受欢迎的. [#eg-7-21 Example 7-21] 展示了该模块的使用.
+
+==== 1.9.0.1. Example 7-21. 使用 robotparser 模块 ====
+{{{
+File: robotparser-example-1.py
+
+import robotparser
+
+r = robotparser.RobotFileParser()
+r.set_url("http://www.python.org/robots.txt")
+r.read()
+
+if r.can_fetch("*", "/index.html"):
+    print "may fetch the home page"
+
+if r.can_fetch("*", "/tim_one/index.html"):
+    print "may fetch the tim peters archive"
+
+*B*may fetch the home page*b*
+}}}
+
+----
+
+== 1.10. ftplib 模块 ==
+{{{ftplib}}} 模块包含了一个 File Transfer Protocol (FTP , 文件传输协议)客户端的实现.
+
+[#eg-7-22 Example 7-22] 展示了如何登陆并获得登陆目录的文件列表. 注意这里的文件列表
+(列目录操作)格式与服务器有关(一般和主机平台的列目录工具输出格式相同, 例如 Unix 下的 
+{{{ls}}} 和 Windows/DOS 下的 {{{dir}}} ).
+
+==== 1.10.0.1. Example 7-22. 使用 ftplib 模块获得目录列表 ====
+{{{
+File: ftplib-example-1.py
+
+import ftplib
+
+ftp = ftplib.FTP("www.python.org")
+ftp.login("anonymous", "ftplib-example-1")
+
+print ftp.dir()
+
+ftp.quit()
+
+*B*total 34
+drwxrwxr-x  11 root     4127         512 Sep 14 14:18 .
+drwxrwxr-x  11 root     4127         512 Sep 14 14:18 ..
+drwxrwxr-x   2 root     4127         512 Sep 13 15:18 RCS
+lrwxrwxrwx   1 root     bin           11 Jun 29 14:34 README -> welcome.msg
+drwxr-xr-x   3 root     wheel        512 May 19  1998 bin
+drwxr-sr-x   3 root     1400         512 Jun  9  1997 dev
+drwxrwxr--   2 root     4127         512 Feb  8  1998 dup
+drwxr-xr-x   3 root     wheel        512 May 19  1998 etc
+...*b*
+}}}
+
+下载文件很简单; 使用合适的 {{{retr}}} 函数即可. 注意当你下载文本文件时, 
+你必须自己加上行结束符. [#eg-7-23 Example 7-23] 中使用了一个 {{{lambda}}} 表达式完成这项工作.
+
+==== 1.10.0.2. Example 7-23. 使用 ftplib 模块下载文件 ====
+{{{
+File: ftplib-example-2.py
+
+import ftplib
+import sys
+
+def gettext(ftp, filename, outfile=None):
+    # fetch a text file
+    if outfile is None:
+        outfile = sys.stdout
+    # use a lambda to add newlines to the lines read from the server
+    ftp.retrlines("RETR " + filename, lambda s, w=outfile.write: w(s+"\n"))
+
+def getbinary(ftp, filename, outfile=None):
+    # fetch a binary file
+    if outfile is None:
+        outfile = sys.stdout
+    ftp.retrbinary("RETR " + filename, outfile.write)
+
+ftp = ftplib.FTP("www.python.org")
+ftp.login("anonymous", "ftplib-example-2")
+
+gettext(ftp, "README")
+getbinary(ftp, "welcome.msg")
+
+*B*WELCOME to python.org, the Python programming language home site.
+
+You are number %N of %M allowed users.  Ni!
+
+Python Web site: http://www.python.org/
+
+CONFUSED FTP CLIENT?  Try begining your login password with '-' dash.
+This turns off continuation messages that may be confusing your client.
+...*b*
+}}}
+
+最后, [#eg-7-24 Example 7-24] 将文件复制到 FTP 服务器上. 这个脚本使用文件扩展名来
+判断文件是文本文件还是二进制文件.
+
+==== 1.10.0.3. Example 7-24. 使用 ftplib 模块上传文件 ====
+{{{
+File: ftplib-example-3.py
+
+import ftplib
+import os
+
+def upload(ftp, file):
+    ext = os.path.splitext(file)[1]
+    if ext in (".txt", ".htm", ".html"):
+        ftp.storlines("STOR " + file, open(file))
+    else:
+        ftp.storbinary("STOR " + file, open(file, "rb"), 1024)
+
+ftp = ftplib.FTP("ftp.fbi.gov")
+ftp.login("mulder", "trustno1")
+
+upload(ftp, "trixie.zip")
+upload(ftp, "file.txt")
+upload(ftp, "sightings.jpg")
+}}}
+
+----
+
+== 1.11. gopherlib 模块 ==
+{{{gopherlib}}} 模块包含了一个 gopher 客户端实现, 如 [#eg-7-25 Example 7-25] 所示.
+
+==== 1.11.0.1. Example 7-25. 使用 gopherlib 模块 ====
+{{{
+File: gopherlib-example-1.py
+
+import gopherlib
+
+host = "gopher.spam.egg"
+
+f = gopherlib.send_selector("1/", host)
+for item in gopherlib.get_directory(f):
+    print item
+
+*B*['0', "About Spam.Egg's Gopher Server", "0/About's Spam.Egg's
+Gopher Server", 'gopher.spam.egg', '70', '+']
+['1', 'About Spam.Egg', '1/Spam.Egg', 'gopher.spam.egg', '70', '+']
+['1', 'Misc', '1/Misc', 'gopher.spam.egg', '70', '+']
+...*b*
+}}}
+
+----
+
+== 1.12. httplib 模块 ==
+{{{httplib}}} 模块提供了一个 HTTP 客户端接口, 如 [#eg-7-26 Example 7-26] 所示.
+
+==== 1.12.0.1. Example 7-26. 使用 httplib 模块 ====
+{{{
+File: httplib-example-1.py
+
+import httplib
+
+USER_AGENT = "httplib-example-1.py"
+
+class Error:
+    # indicates an HTTP error
+    def _ _init_ _(self, url, errcode, errmsg, headers):
+        self.url = url
+        self.errcode = errcode
+        self.errmsg = errmsg
+        self.headers = headers
+    def _ _repr_ _(self):
+        return (
+            "<Error for %s: %s %s>" %
+            (self.url, self.errcode, self.errmsg)
+            )
+
+class Server:
+
+    def _ _init_ _(self, host):
+        self.host = host
+
+    def fetch(self, path):
+        http = httplib.HTTP(self.host)
+
+        # write header
+        http.putrequest("GET", path)
+        http.putheader("User-Agent", USER_AGENT)
+        http.putheader("Host", self.host)
+        http.putheader("Accept", "*/*")
+        http.endheaders()
+
+        # get response
+        errcode, errmsg, headers = http.getreply()
+
+        if errcode != 200:
+            raise Error(errcode, errmsg, headers)
+
+        file = http.getfile()
+        return file.read()
+
+if _ _name_ _ == "_ _main_ _":
+
+    server = Server("www.pythonware.com")
+    print server.fetch("/index.htm")
+}}}
+
+注意 httplib 提供的 HTTP 客户端在等待服务器回复的时候会阻塞程序. 
+异步的解决方法请参阅 {{{asyncore}}} 模块中的例子.
+
+=== 1.12.1. 将数据发送给服务器 ===
+{{{httplib}}} 可以用来发送其他 HTTP 命令, 例如 {{{POST}}} , 如 [#eg-7-27 Example 7-27] 所示.
+
+==== 1.12.1.1. Example 7-27. 使用 httplib 发送数据 ====
+{{{
+File: httplib-example-2.py
+
+import httplib
+
+USER_AGENT = "httplib-example-2.py"
+
+def post(host, path, data, type=None):
+
+    http = httplib.HTTP(host)
+
+    # write header
+    http.putrequest("PUT", path)
+    http.putheader("User-Agent", USER_AGENT)
+    http.putheader("Host", host)
+    if type:
+        http.putheader("Content-Type", type)
+    http.putheader("Content-Length", str(len(size)))
+    http.endheaders()
+
+    # write body
+    http.send(data)
+
+    # get response
+    errcode, errmsg, headers = http.getreply()
+
+    if errcode != 200:
+        raise Error(errcode, errmsg, headers)
+
+    file = http.getfile()
+    return file.read()
+
+if _ _name_ _ == "_ _main_ _":
+
+    post("www.spam.egg", "/bacon.htm", "a piece of data", "text/plain")
+}}}
+
+----
+
+== 1.13. poplib 模块 ==
+{{{poplib}}} 模块(如 [#eg-7-28 Example 7-28] 所示) 提供了一个 Post Office Protocol ( POP3 协议) 
+客户端实现. 这个协议用来从邮件服务器 "pop" (拷贝) 信息到你的个人电脑.
+
+==== 1.13.0.1. Example 7-28. 使用 poplib 模块 ====
+{{{
+File: poplib-example-1.py
+
+import poplib
+import string, random
+import StringIO, rfc822
+
+SERVER = "pop.spam.egg"
+
+USER  = "mulder"
+PASSWORD = "trustno1"
+
+# connect to server
+server = poplib.POP3(SERVER)
+
+# login
+server.user(USER)
+server.pass_(PASSWORD)
+
+# list items on server
+resp, items, octets = server.list()
+
+# download a random message
+id, size = string.split(random.choice(items))
+resp, text, octets = server.retr(id)
+
+text = string.join(text, "\n")
+file = StringIO.StringIO(text)
+
+message = rfc822.Message(file)
+
+for k, v in message.items():
+    print k, "=", v
+
+print message.fp.read()
+
+*B*subject = ANN: (the eff-bot guide to) The Standard Python Library
+message-id = <199910120808.KAA09206@spam.egg>
+received = (from fredrik@spam.egg)
+ by spam.egg (8.8.7/8.8.5) id KAA09206
+ for mulder; Tue, 12 Oct 1999 10:08:47 +0200
+from = Fredrik Lundh <fredrik@spam.egg>
+date = Tue, 12 Oct 1999 10:08:47 +0200
+to = mulder@spam.egg
+
+...*b*
+}}}
+
+----
+
+== 1.14. imaplib 模块 ==
+{{{imaplib}}} 模块提供了一个 Internet Message Access Protocol ( IMAP, Internet 消息访问协议) 
+的客户端实现. 这个协议允许你访问邮件服务器的邮件目录, 就好像是在本机访问一样. 如 
+[#eg-7-29 Example 7-29] 所示.
+
+==== 1.14.0.1. Example 7-29. 使用 imaplib 模块 ====
+{{{
+File: imaplib-example-1.py
+
+import imaplib
+import string, random
+import StringIO, rfc822
+
+SERVER = "imap.spam.egg"
+
+USER  = "mulder"
+PASSWORD = "trustno1"
+
+# connect to server
+server = imaplib.IMAP4(SERVER)
+
+# login
+server.login(USER, PASSWORD)
+server.select()
+
+# list items on server
+resp, items = server.search(None, "ALL")
+items = string.split(items[0])
+
+# fetch a random item
+id = random.choice(items)
+resp, data = server.fetch(id, "(RFC822)")
+text = data[0][1]
+
+file = StringIO.StringIO(text)
+
+message = rfc822.Message(file)
+
+for k, v in message.items():
+    print k, "=", v
+
+print message.fp.read()
+
+server.logout()
+
+*B*subject = ANN: (the eff-bot guide to) The Standard Python Library
+message-id = <199910120816.KAA12177@larch.spam.egg>
+to = mulder@spam.egg
+date = Tue, 12 Oct 1999 10:16:19 +0200 (MET DST)
+from = <effbot@spam.egg>
+received = (effbot@spam.egg) by imap.algonet.se (8.8.8+Sun/8.6.12)
+id KAA12177 for effbot@spam.egg; Tue, 12 Oct 1999 10:16:19 +0200
+(MET DST)
+
+body text for test 5*b*
+}}}
+
+----
+
+== 1.15. smtplib 模块 ==
+{{{smtplib}}} 模块提供了一个 Simple Mail Transfer Protocol ( SMTP 
+, 简单邮件传输协议) 客户端实现. 该协议用于通过 Unix 邮件服务器发送邮件, 
+如 [#eg-7-30 Example 7-30] 所示.
+
+读取邮件请使用 {{{poplib}}} 或 {{{imaplib}}} 模块.
+
+==== 1.15.0.1. Example 7-30. 使用 smtplib 模块 ====
+{{{
+File: smtplib-example-1.py
+
+import smtplib
+import string, sys
+
+HOST = "localhost"
+
+FROM = "effbot@spam.egg"
+TO = "fredrik@spam.egg"
+
+SUBJECT = "for your information!"
+
+BODY = "next week: how to fling an otter"
+
+body = string.join((
+    "From: %s" % FROM,
+    "To: %s" % TO,
+    "Subject: %s" % SUBJECT,
+    "",
+    BODY), "\r\n")
+
+print body
+
+server = smtplib.SMTP(HOST)
+server.sendmail(FROM, [TO], body)
+server.quit()
+
+*B*From: effbot@spam.egg
+To: fredrik@spam.egg
+Subject: for your information!
+
+next week: how to fling an otter*b*
+}}}
+
+----
+
+== 1.16. telnetlib 模块 ==
+{{{telnetlib}}} 模块提供了一个 telnet 客户端实现.
+
+[#eg-7-31 Example 7-31] 连接到一台 Unix 计算机, 登陆, 然后请求一个目录的列表.
+
+==== 1.16.0.1. Example 7-31. 使用 telnetlib 模块登陆到远程服务器 ====
+{{{
+File: telnetlib-example-1.py
+
+import telnetlib
+import sys
+
+HOST = "spam.egg"
+
+USER = "mulder"
+PASSWORD = "trustno1"
+
+telnet = telnetlib.Telnet(HOST)
+
+telnet.read_until("login: ")
+telnet.write(USER + "\n")
+
+telnet.read_until("Password: ")
+telnet.write(PASSWORD + "\n")
+
+telnet.write("ls librarybook\n")
+telnet.write("exit\n")
+
+print telnet.read_all()
+
+*B*[spam.egg mulder]$ ls
+README                                 os-path-isabs-example-1.py
+SimpleAsyncHTTP.py                     os-path-isdir-example-1.py
+aifc-example-1.py                      os-path-isfile-example-1.py
+anydbm-example-1.py                    os-path-islink-example-1.py
+array-example-1.py                     os-path-ismount-example-1.py
+...*b*
+}}}
+
+----
+
+== 1.17. nntplib 模块 ==
+{{{nntplib}}} 模块提供了一个网络新闻传输协议( Network News Transfer Protocol, 
+NNTP )客户端的实现.
+
+=== 1.17.1. 列出消息 ===
+从新闻服务器上读取消息之前, 你必须连接这个服务器并选择一个新闻组. 
+[#eg-7-32 Example 7-32] 中的脚本会从服务器下载一个完成的消息列表, 
+然后根据列表做简单的统计.
+
+==== 1.17.1.1. Example 7-32. 使用 nntplib 模块列出消息 ====
+{{{
+File: nntplib-example-1.py
+
+import nntplib
+import string
+
+SERVER = "news.spam.egg"
+GROUP  = "comp.lang.python" 
+AUTHOR = "fredrik@pythonware.com" # eff-bots human alias
+
+# connect to server
+server = nntplib.NNTP(SERVER)
+
+# choose a newsgroup
+resp, count, first, last, name = server.group(GROUP)
+print "count", "=>", count
+print "range", "=>", first, last
+
+# list all items on the server
+resp, items = server.xover(first, last)
+
+# extract some statistics
+authors = {}
+subjects = {}
+for id, subject, author, date, message_id, references, size, lines in items:
+    authors[author] = None
+    if subject[:4] == "Re: ":
+        subject = subject[4:]
+    subjects[subject] = None
+    if string.find(author, AUTHOR) >= 0:
+        print id, subject
+    
+print "authors", "=>", len(authors)
+print "subjects", "=>", len(subjects)
+
+*B*count => 607
+range => 57179 57971
+57474 Three decades of Python!
+...
+57477 More Python books coming...
+authors => 257
+subjects => 200*b*
+}}}
+
+=== 1.17.2. 下载消息 ===
+下载消息是很简单的, 只需要调用 {{{article}}}方法, 如 [#eg-7-33 Example 7-33] 所示.
+
+==== 1.17.2.1. Example 7-33. 使用 nntplib 模块下载消息 ====
+{{{
+File: nntplib-example-2.py
+
+import nntplib
+import string
+
+SERVER = "news.spam.egg"
+GROUP  = "comp.lang.python" 
+KEYWORD = "tkinter"
+
+# connect to server
+server = nntplib.NNTP(SERVER)
+
+resp, count, first, last, name = server.group(GROUP)
+resp, items = server.xover(first, last)
+for id, subject, author, date, message_id, references, size, lines in items:
+    if string.find(string.lower(subject), KEYWORD) >= 0:
+        resp, id, message_id, text = server.article(id)
+        print author
+        print subject
+        print len(text), "lines in article"
+
+*B*"Fredrik Lundh" <fredrik@pythonware.com>
+Re: Programming Tkinter (In Python)
+110 lines in article
+...*b*
+}}}
+
+[#eg-7-34 Example 7-34] 展示了如何进一步处理这些消息, 你可以把它封装到一个 
+''Message'' 对象中(使用 {{{rfc822}}} 模块).
+
+==== 1.17.2.2. Example 7-34. 使用 nntplib 和 rfc822 模块处理消息 ====
+{{{
+File: nntplib-example-3.py
+
+import nntplib
+import string, random
+import StringIO, rfc822
+
+SERVER = "news.spam.egg"
+GROUP  = "comp.lang.python"
+
+# connect to server
+server = nntplib.NNTP(SERVER)
+
+resp, count, first, last, name = server.group(GROUP)
+for i in range(10):
+    try:
+        id = random.randint(int(first), int(last))
+        resp, id, message_id, text = server.article(str(id))
+    except (nntplib.error_temp, nntplib.error_perm):
+        pass # no such message (maybe it was deleted?)
+    else:
+        break # found a message!
+else:
+    raise SystemExit
+
+text = string.join(text, "\n")
+file = StringIO.StringIO(text)
+
+message = rfc822.Message(file)
+
+for k, v in message.items():
+    print k, "=", v
+
+print message.fp.read()
+
+*B*mime-version = 1.0
+content-type = text/plain; charset="iso-8859-1"
+message-id = <008501bf1417$1cf90b70$f29b12c2@sausage.spam.egg>
+lines = 22
+...
+from = "Fredrik Lundh" <fredrik@pythonware.com>
+nntp-posting-host = parrot.python.org
+subject = ANN: (the eff-bot guide to) The Standard Python Library
+...
+</F>*b*
+}}}
+
+到这一步后, 你可以使用 {{{htmllib}}} , {{{uu}}} , 以及 {{{base64}}} 
+继续处理这些消息.
+
+----
+
+== 1.18. SocketServer 模块 ==
+{{{SocketServer}}} 为各种基于 socket 的服务器提供了一个框架. 
+该模块提供了大量的类, 你可以用它们来创建不同的服务器.
+
+[#eg-7-35 Example 7-35] 使用该模块实现了一个 Internet 时间协议服务器. 
+你可以用前边的 timeclient 脚本连接它.
+
+==== 1.18.0.1. Example 7-35. 使用 SocketServer 模块 ====
+{{{
+File: socketserver-example-1.py
+
+import SocketServer
+import time
+
+# user-accessible port
+PORT = 8037
+
+# reference time
+TIME1970 = 2208988800L
+
+class TimeRequestHandler(SocketServer.StreamRequestHandler):
+    def handle(self):
+        print "connection from", self.client_address
+        t = int(time.time()) + TIME1970
+        b = chr(t>>24&255) + chr(t>>16&255) + chr(t>>8&255) + chr(t&255)
+        self.wfile.write(b)
+
+server = SocketServer.TCPServer(("", PORT), TimeRequestHandler)
+print "listening on port", PORT
+server.serve_forever()
+
+*B*connection from ('127.0.0.1', 1488)
+connection from ('127.0.0.1', 1489)
+...*b*
+}}}
+
+----
+
+== 1.19. BaseHTTPServer 模块 ==
+这是一个建立在 {{{SocketServer}}} 框架上的基本框架, 用于 HTTP 服务器.
+
+[#eg-7-36 Example 7-36] 在每次重新载入页面时会生成一条随机信息. 
+{{{path}}} 变量包含当前 URL , 你可以使用它为不同的 URL 生成不同的内容
+(访问除根目录的其他任何 path 该脚本都会返回一个错误页面).
+
+==== 1.19.0.1. Example 7-36. 使用 BaseHTTPServer 模块 ====
+{{{
+File: basehttpserver-example-1.py
+
+import BaseHTTPServer
+import cgi, random, sys
+
+MESSAGES = [
+    "That's as maybe, it's still a frog.",
+    "Albatross! Albatross! Albatross!",
+    "It's Wolfgang Amadeus Mozart.",
+    "A pink form from Reading.",
+    "Hello people, and welcome to 'It's a Tree.'"
+    "I simply stare at the brick and it goes to sleep.",
+]
+
+class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        if self.path != "/":
+            self.send_error(404, "File not found")
+            return
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        try:
+            # redirect stdout to client
+            stdout = sys.stdout
+            sys.stdout = self.wfile
+            self.makepage()
+        finally:
+            sys.stdout = stdout # restore
+        
+    def makepage(self):
+        # generate a random message
+        tagline = random.choice(MESSAGES)
+        print "<html>"
+        print "<body>"
+        print "<p>Today's quote: "
+        print "<i>%s</i>" % cgi.escape(tagline)
+        print "</body>"
+        print "</html>"
+
+PORT = 8000
+
+httpd = BaseHTTPServer.HTTPServer(("", PORT), Handler)
+print "serving at port", PORT
+httpd.serve_forever()
+}}}
+
+更有扩展性的 HTTP 框架请参阅 {{{SimpleHTTPServer}}} 和 {{{CGIHTTPServer}}} 模块.
+
+----
+
+== 1.20. SimpleHTTPServer 模块 ==
+{{{SimpleHTTPServer}}} 模块是一个简单的 HTTP 服务器, 它提供了标准的 
+GET 和 HEAD 请求处理器. 客户端请求的路径名称会被翻译为一个相对文件名
+(相对于服务器启动时的当前路径). [#eg-7-37 Example 7-37] 展示了该模块的使用.
+
+==== 1.20.0.1. Example 7-37. 使用 SimpleHTTPServer 模块 ====
+{{{
+File: simplehttpserver-example-1.py
+
+import SimpleHTTPServer
+import SocketServer
+
+# minimal web server.  serves files relative to the
+# current directory.
+
+PORT = 8000
+
+Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+
+httpd = SocketServer.TCPServer(("", PORT), Handler)
+
+print "serving at port", PORT
+httpd.serve_forever()
+
+*B*serving at port 8000
+localhost - - [11/Oct/1999 15:07:44] code 403, message Directory listing not sup
+ported
+localhost - - [11/Oct/1999 15:07:44] "GET / HTTP/1.1" 403 -
+localhost - - [11/Oct/1999 15:07:56] "GET /samples/sample.htm HTTP/1.1" 200 -
+*b*
+}}}
+
+这个服务器会忽略驱动器符号和相对路径名(例如 `..`). 
+但它并没有任何访问验证处理, 所以请小心使用.
+
+[#eg-7-38 Example 7-38] 实现了个迷你的 web 代理. 发送给代理的 HTTP 
+请求必须包含目标服务器的完整 URI . 代理服务器使用 {{{urllib}}} 
+来获取目标服务器的数据.
+
+==== 1.20.0.2. Example 7-38. 使用 SimpleHTTPServer 模块实现代理 ====
+{{{
+File: simplehttpserver-example-2.py
+
+# a truly minimal HTTP proxy
+
+import SocketServer
+import SimpleHTTPServer
+import urllib
+
+PORT = 1234
+
+class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        self.copyfile(urllib.urlopen(self.path), self.wfile)
+
+httpd = SocketServer.ForkingTCPServer(('', PORT), Proxy)
+print "serving at port", PORT
+httpd.serve_forever()
+}}}
+
+----
+
+== 1.21. CGIHTTPServer 模块 ==
+{{{CGIHTTPServer}}} 模块是一个可以通过公共网关接口( common gateway interface 
+ , CGI )调用外部脚本的 HTTP 服务器. 如 [#eg-7-39 Example 7-39] 所示.
+
+==== 1.21.0.1. Example 7-39. 使用 CGIHTTPServer 模块 ====
+{{{
+File: cgihttpserver-example-1.py
+
+import CGIHTTPServer
+import BaseHTTPServer
+
+class Handler(CGIHTTPServer.CGIHTTPRequestHandler):
+    cgi_directories = ["/cgi"]
+
+PORT = 8000
+
+httpd = BaseHTTPServer.HTTPServer(("", PORT), Handler)
+print "serving at port", PORT
+httpd.serve_forever()
+}}}
+
+----
+
+== 1.22. cgi 模块 ==
+{{{cgi}}} 模块为 CGI 脚本提供了函数和类支持. 它还可以处理 CGI 表单数据.
+
+[#eg-7-40 Example 7-40] 展示了一个简单的 CGI 脚本, 它返回给定目录下的文件列表
+(相对于脚本中指定的根目录)
+
+==== 1.22.0.1. Example 7-40. 使用 cgi 模块 ====
+{{{
+File: cgi-example-1.py
+
+import cgi
+import os, urllib
+
+ROOT = "samples"
+
+# header
+print "text/html"
+print
+
+query = os.environ.get("QUERY_STRING")
+if not query:
+    query = "."
+
+script = os.environ.get("SCRIPT_NAME", "")
+if not script:
+    script = "cgi-example-1.py"
+
+print "<html>"
+print "<head>"
+print "<title>file listing</title>"
+print "</head>"
+print "</html>"
+
+print "<body>"
+
+try:
+    files = os.listdir(os.path.join(ROOT, query))
+except os.error:
+    files = []
+
+for file in files:
+    link = cgi.escape(file)
+    if os.path.isdir(os.path.join(ROOT, query, file)):
+        href = script + "?" + os.path.join(query, file)
+        print "<p><a href= '%s'>%s</a>" % (href, cgi.escape(link))
+    else:
+        print "<p>%s" % link
+
+print "</body>"
+print "</html>"
+
+*B*text/html
+
+<html>
+<head>
+<title>file listing</title>
+</head>
+</html>
+<body>
+<p>sample.gif
+<p>sample.gz
+<p>sample.netrc
+...
+<p>sample.txt
+<p>sample.xml
+<p>sample~
+<p><a href='cgi-example-1.py?web'>web</a>
+</body>
+</html>*b*
+}}}
+
+----
+
+== 1.23. webbrowser 模块 ==
+(2.0 中新增) {{{webbrowser}}} 模块提供了一个到系统标准 web 浏览器的接口. 
+它提供了一个 {{{open}}} 函数, 接受文件名或 URL 作为参数, 然后在浏览器中打开它. 
+如果你又一次调用 {{{open}}} 函数, 那么它会尝试在相同的窗口打开新页面. 
+如 [#eg-7-41 Example 7-41] 所示.
+
+==== 1.23.0.1. Example 7-41. 使用 webbrowser 模块 ====
+{{{
+File: webbrowser-example-1.py
+
+import webbrowser
+import time
+
+webbrowser.open("http://www.pythonware.com")
+
+# wait a while, and then go to another page
+time.sleep(5)
+webbrowser.open(
+    "http://www.pythonware.com/people/fredrik/librarybook.htm"
+    )
+}}}
+
+在 Unix 下, 该模块支持 lynx , Netscape , Mosaic , Konquerer , 和 Grail . 
+在 Windows 和 Macintosh 下, 它会调用标准浏览器
+(在注册表或是 Internet 选项面板中定义).
+
+----
+
+
+## moin code generated by txt2tags 2.4 (http://txt2tags.sf.net)
+## cmdline: txt2tags -t moin -o moin/chapter7.moin chapter7.t2t
+

@@ -1,0 +1,1742 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chapter id="fileinfo">
+<?dbhtml filename="object_oriented_framework/index.html"?>
+<title>对象和面向对象</title>
+<titleabbrev id="fileinfo.numberonly">第 5 章</titleabbrev>
+<abstract>
+<title/>
+<para>这一章，和此后的许多章，均讨论了面向对象的 &python; 程序设计。</para>
+</abstract>
+<section id="fileinfo.divein">
+<title>概览</title>
+<abstract>
+<title/>
+<para>下面是一个完整的，可运行的 &python; 程序。请阅读模块、类和函数的 <link linkend="odbchelper.docstring">&docstring;s</link>，可以大概了解这个程序所做的事情和工作情况。像平时一样，不用担心你不理解的东西，这就是本章其它部分将告诉你的内容。</para>
+</abstract>
+<example>
+<title>&fileinfo_filename;</title>
+&para_download;
+<programlisting>
+&fileinfo_doc;
+&fileinfo_import;
+
+&fileinfo_stripnullsdef;
+&fileinfo_stripnullsdoc;
+&fileinfo_stripnullscode;
+
+&fileinfo_filedef;
+&fileinfo_filedoc;
+&fileinfo_fileinit;
+&fileinfo_filecallsuper;
+&fileinfo_fileinitcode;
+
+&fileinfo_mp3def;
+&fileinfo_mp3doc;
+&fileinfo_mp3classvar;
+
+&fileinfo_mp3parsedef;
+&fileinfo_mp3parsedoc;
+&fileinfo_mp3parseclear;
+&fileinfo_mp3parsetryexcepttry;
+&fileinfo_mp3parseopen;
+&fileinfo_mp3parsetryfinallytry;
+&fileinfo_mp3parseseek;
+&fileinfo_mp3parseread;
+&fileinfo_mp3parsetryfinallyfinally;
+&fileinfo_mp3parseclose;
+&fileinfo_mp3parseiftag;
+&fileinfo_mp3parsefor;
+&fileinfo_mp3parsecode;
+&fileinfo_mp3parsetryexceptexcept;
+&fileinfo_mp3parsepass;
+
+&fileinfo_mp3setitemdef;
+&fileinfo_mp3setitemif;
+&fileinfo_mp3setitemparse;
+&fileinfo_mp3setitemcallsuper;
+
+&fileinfo_listdef;
+&fileinfo_listdoc;
+&fileinfo_listupper;
+&fileinfo_listcode;
+&fileinfo_getdef;
+&fileinfo_getdoc;
+&fileinfo_getcode;
+&fileinfo_getreturn;
+&fileinfo_listreturn;
+
+&fileinfo_ifname;
+&fileinfo_for; <co id="fileinfo_divein.1.1"/>
+&fileinfo_print;
+&fileinfo_printblank;</programlisting>
+<calloutlist>
+<callout arearefs="fileinfo_divein.1.1">
+<para>这个程序的输入要取决于你硬盘上的文件。为了得到有意义的输出，你应该修改目录路径指向你自已机器上的一个 MP3 文件目录。</para>
+</callout>
+</calloutlist>
+</example>
+<informalexample>
+<!--<title>Output of &fileinfo_filename;</title>-->
+<para>下面就是从我的机器上得到的输出。你的输出将不一样，除非，由于某些令人吃惊的巧合，你与我有着共同的音乐品味。</para>
+<screen><computeroutput>album=
+artist=Ghost in the Machine
+title=A Time Long Forgotten (Concept
+genre=31
+name=/music/_singles/a_time_long_forgotten_con.mp3
+year=1999
+comment=http://mp3.com/ghostmachine
+
+album=Rave Mix
+artist=***DJ MARY-JANE***
+title=HELLRAISER****Trance from Hell
+genre=31
+name=/music/_singles/hellraiser.mp3
+year=2000
+comment=http://mp3.com/DJMARYJANE
+
+album=Rave Mix
+artist=***DJ MARY-JANE***
+title=KAIRO****THE BEST GOA
+genre=31
+name=/music/_singles/kairo.mp3
+year=2000
+comment=http://mp3.com/DJMARYJANE
+
+album=Journeys
+artist=Masters of Balance
+title=Long Way Home
+genre=31
+name=/music/_singles/long_way_home1.mp3
+year=2000
+comment=http://mp3.com/MastersofBalan
+
+album=
+artist=The Cynic Project
+title=Sidewinder
+genre=18
+name=/music/_singles/sidewinder.mp3
+year=2000
+comment=http://mp3.com/cynicproject
+
+album=Digitosis@128k
+artist=VXpanded
+title=Spinning
+genre=255
+name=/music/_singles/spinning.mp3
+year=2000
+comment=http://mp3.com/artists/95/vxp</computeroutput></screen>
+</informalexample>
+</section>
+<section id="fileinfo.fromimport">
+<?dbhtml filename="object_oriented_framework/importing_modules.html"?>
+<title>使用 &frommoduleimport; 导入模块</title>
+<abstract>
+<title/>
+<para>&python; 有两种导入模块的方法。两种都有用，你应该知道什么时候使用哪一种方法。一种方法，&importmodule;，你已经在<xref linkend="odbchelper.objects"/>看过了。另一种方法完成同样的事情，但是它与第一种有着细微但重要的区别。</para>
+</abstract>
+<informalexample>
+<!--<title>Basic &frommoduleimport; Syntax</title>-->
+<para>下面是 &frommoduleimport; 的基本语法：</para>
+<programlisting>
+&fileinfo_importuserdict;
+</programlisting>
+</informalexample>
+<para>它与你所熟知的 <link linkend="odbchelper.import">&importmodule;</link> 语法很相似，但是有一个重要的区别：&userdict; 被直接导入到局部名字空间去了，所以它可以直接使用，而不需要加上模块名的限定。你可以导入独立的项或使用 &frommoduleimportstar; 来导入所有东西。</para>
+<note id="compare.fromimport.perl" role="compare" vendor="perl">
+<title>&python; &vs; &perl;: &frommoduleimport;</title>
+<para>&python; 中的 &frommoduleimportstar; 像 &perl; 中的 <literal>use <replaceable>module</replaceable></literal> ；&python; 中的 &importmodule; 像 &perl; 中的 <literal>require <replaceable>module</replaceable></literal> 。</para>
+</note>
+<note id="compare.fromimport.java" role="compare" vendor="java">
+<title>&python; &vs; &java;: &frommoduleimport;</title>
+<para>&python; 中的 &frommoduleimportstar; 像 &java; 中的 <literal>import <replaceable>module</replaceable>.*</literal> ；&python; 中的 &importmodule; 像 &java; 中的 <literal>import <replaceable>module</replaceable></literal> 。</para>
+</note>
+<example>
+<title>&importmodule; &vs; &frommoduleimport;</title>
+<screen>&prompt;<userinput>import types</userinput>
+&prompt;<userinput>types.FunctionType</userinput>             <co id="fileinfo.import.1.1"/>
+<computeroutput>&lt;type 'function'&gt;</computeroutput>
+&prompt;<userinput>FunctionType</userinput>                   <co id="fileinfo.import.1.2"/>
+<computeroutput role="traceback">&traceback;
+NameError: There is no variable named 'FunctionType'</computeroutput>
+&prompt;<userinput>from types import FunctionType</userinput> <co id="fileinfo.import.1.3"/>
+&prompt;<userinput>FunctionType</userinput>                   <co id="fileinfo.import.1.4"/>
+<computeroutput>&lt;type 'function'&gt;</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.import.1.1">
+<para><filename class="headerfile">types</filename> 模块不包含方法，只是表示每种 &python; 对象类型的属性。注意这个属性必需用模块名 <filename class="headerfile">types</filename> 进行限定。</para>
+</callout>
+<callout arearefs="fileinfo.import.1.2">
+<para>&functiontype; 本身没有被定义在当前名字空间中；它只存在于 <filename class="headerfile">types</filename> 的上下文环境中。</para>
+</callout>
+<callout arearefs="fileinfo.import.1.3">
+<para>这个语法从 <filename class="headerfile">types</filename> 模块中直接将 &functiontype; 属性导入到局部名字空间中。</para>
+</callout>
+<callout arearefs="fileinfo.import.1.4">
+<para>现在 &functiontype; 可以直接使用，与 <filename class="headerfile">types</filename> 无关了。</para>
+</callout>
+</calloutlist>
+</example>
+<para>什么时候你应该使用 &frommoduleimport;？</para>
+<itemizedlist>
+<listitem><para>如果你要经常访问模块的属性和方法，且不想一遍又一遍地敲入模块名，使用 &frommoduleimport;。</para></listitem>
+<listitem><para>如果你想要有选择地导入某些属性和方法，而不想要其它的，使用 &frommoduleimport;。</para></listitem>
+<listitem><para>如果模块包含的属性和方法与你的某个模块同名，你必须使用 &importmodule; 来避免名字冲突。</para></listitem>
+</itemizedlist>
+<para>除了这些情况，剩下的只是风格问题了，你会看到用两种方式编写的 &python; 代码。</para>
+<caution>
+<title/>
+<para>尽量少用 <literal>from module import *</literal> ，因为判定一个特殊的函数或属性是从哪来的有些困难，并且会造成调试和重构都更困难。</para>
+</caution>
+
+<itemizedlist role="furtherreading">
+<title>进一步阅读关于模块导入技术</title>
+<listitem><para>&effbot; 有更多关于 <ulink url="&url_effbot;import-confusion.htm">&importmodule; &vs; &frommoduleimport;</ulink> 的论述。</para></listitem>
+<listitem><para>&pythontutorial; 讨论了高级的导入技术，包括 <ulink url="&url_pythontutorial;node8.html#SECTION008410000000000000000">&frommoduleimportstar;</ulink>。</para></listitem>
+</itemizedlist>
+</section>
+<section id="fileinfo.class">
+<?dbhtml filename="object_oriented_framework/defining_classes.html"?>
+<title>类的定义</title>
+<abstract>
+<title/>
+<para>&python; 是完全面向对象的：你可以定义自已的类，从自已的或内置的类继承，然后从你定义的类创建实例。</para>
+</abstract>
+<para>在 &python; 中定义类很简单。就像定义函数，没有单独的接口定义。只要定义类，然后就可以开始编码。&python; 类以保留字 &class; 开始，后面跟着类名。从技术上讲，有这些就够了，因为一个类并非必须从其它类继承。</para>
+<example id="fileinfo.class.simplest">
+<title>最简单的 &python; 类</title>
+<programlisting>
+class Loaf: <co id="fileinfo.class.1.1"/>
+    pass    <co id="fileinfo.class.1.2"/> <co id="fileinfo.class.1.3"/></programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.class.1.1">
+<para>这个类的名字是 <classname>Loaf</classname>，它没有从其它类继承。类名通常是第一个字母大写，如：<classname>EachWordLikeThis</classname>，但这只是一个习惯，不是一个必要条件。</para>
+</callout>
+<callout arearefs="fileinfo.class.1.2">
+<para>这个类没有定义任何方法或属性，但是从语法上，需要在定义中有些东西，所以你使用 &pass;。这是一个 &python; 保留字，仅仅表示 <quote>向前走，不要往这看</quote>。它是一条什么都不做的语句，当你删空函数或类时，它是一个很好的占位符。</para>
+</callout>
+<callout arearefs="fileinfo.class.1.3">
+<para>你可能猜到了，在类中的所有东西都要缩近，就像位于函数、&if; 语句，&for; 循环，诸如此类的代码。第一条不缩近的东西不属于这个类。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="compare.pass.java" role="compare" vendor="java">
+<title>&python; &vs; &java;: &pass;</title>
+<para>在 &python; 中的 &pass; 语句就像 &java; 或 &c; 中的大括号空集 (<literal>{}</literal>)。</para>
+</note>
+<para>当然，实际上大多数的类都是从其它的类继承来的，并且它们会定义自已的类方法和属性。但是就像你刚才看到的，除了名字以外，类没有什么必须要具有的。特别是，&cpp; 程序员可能会感到奇怪，&python; 的类没有显示的构造函数和析构函数。&python; 类的确存在与构造函数相似的东西：&init; 方法。</para>
+<example id="fileinfo.class.example">
+<title>定义 &fileinfo_classname; 类</title>
+<programlisting>
+&fileinfo_importuserdict;
+
+&fileinfo_filedef; <co id="fileinfo.class.2.1"/></programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.class.2.1">
+<para>在 &python; 中，类的基类只是简单地列在类名后面的小括号里。所以 <classname>FileInfo</classname> 类是从 <classname>UserDict</classname> 类 (它是从 <link linkend="fileinfo.fromimport"><filename class="headerfile">UserDict</filename> 模块导进来的</link>) 继承来的。<classname>UserDict</classname> 是一个像字典一样工作的类，它允许你完全子类化字典数据类型，同时增加你自已的行为。{也存在相似的类 <classname>UserList</classname> 和 <classname>UserString</classname> ，它们允许你子类化列表和字符串。)<footnote><para>在 2.2 之后已经可以从 dict、list 来派生子类了，关于这一点作者在后文也会提到。――译注</para></footnote> 在这个类的背后有一些“巫术”，我们将在本章的后面，随着更进一步地研究 <classname>UserDict</classname> 类，揭开这些秘密。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="compare.extends.java" role="compare" vendor="java">
+<title>&python; &vs; &java;: Ancestors</title>
+<para>在 &python; 中，类的基类只是简单地列在类名后面的小括号里。不像在 &java; 中有一个特殊的 <literal>extends</literal> 关键字。</para>
+</note>
+<para>&python; 支持多重继承。在类名后面的小括号中，你可以列出许多你想要的类名，以逗号分隔。</para>
+<section>
+<title>初始化并开始类编码</title>
+<para>本例演示了使用 &init; 方法来进行 &fileinfo_classname; 类的初始化。</para>
+<example id="fileinfo.init.example">
+<title>初始化 &fileinfo_classname; 类</title>
+<programlisting>
+&fileinfo_filedef;
+&fileinfo_filedoc;              <co id="fileinfo.class.2.2"/>
+&fileinfo_fileinit; <co id="fileinfo.class.2.3"/> <co id="fileinfo.class.2.4"/> <co id="fileinfo.class.2.5"/></programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.class.2.2">
+<para>类也可以 (并且<link linkend="tip.docstring">应该</link>) 有 &docstring;s ，就像方法和函数一样。</para>
+</callout>
+<callout arearefs="fileinfo.class.2.3">
+<para>&init; 在类的实例创建后被立即调用。它可能会引诱你称之为类的构造函数，但这种说法并不正确。说它引诱，是因为它看上去像 (按照习惯，&init; 是类中第一个定义的方法)，行为也像 (在一个新创建的类实例中，它是首先被执行的代码)，并且叫起来也像 (<quote>init</quote>当然意味着构造的本性)。说它不正确，是因为对象在调用 &init; 时已经被构造出来了，你已经有了一个对类的新实例的有效引用。但 &init; 是在 &python; 中你可以得到的最接近构造函数的东西，并且它也扮演着非常相似的角色。</para>
+</callout>
+<callout arearefs="fileinfo.class.2.4">
+<para>每个类方法的第一个参数，包括 &init;，都是指向类的当前实例的引用。按照习惯这个参数总是被称为 &self;。在 &init; 方法中，&self; 指向新创建的对象；在其它的类方法中，它指向方法被调用的类实例。尽管当定义方法时你需要明确指定 &self;，但在调用方法时，你<emphasis>不</emphasis> 用指定它，&python; 会替你自动加上的。</para>
+</callout>
+<callout arearefs="fileinfo.class.2.5">
+<para>&init; 方法可以接受任意数目的参数，就像函数一样，参数可以用缺省值定义，即可以设置成对于调用者可选。在本例中，<varname>filename</varname> 有一个缺省值 &none;，即 &python; 的空值。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="compare.self.java" role="compare" vendor="java">
+<title>&python; &vs; &java;: &self;</title>
+<para>习惯上，任何 &python; 类方法的第一个参数 (对当前实例的引用) 都叫做 &self;。这个参数扮演着 &cpp; 或 &java; 中的保留字 &this; 的角色，但 &self; 在 &python; 中并不是一个保留字，它只是一个命名习惯。虽然如此，也请除了 &self; 之外不要使用其它的名字，这是一个非常坚固的习惯。</para>
+</note>
+<example id="fileinfo.init.code.example">
+<title>编写 &fileinfo_classname; 类</title>
+<programlisting>
+&fileinfo_filedef;
+&fileinfo_filedoc;
+&fileinfo_fileinit;
+&fileinfo_filecallsuper;        <co id="fileinfo.class.2.6"/>
+&fileinfo_fileinitcode;        <co id="fileinfo.class.2.7"/>
+                                       <co id="fileinfo.class.2.8"/></programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.class.2.6">
+<para>一些伪面向对象语言，像 &powerbuilder; 有一种<quote>扩展</quote>构造函数和其它事件的概念，即父类的方法在子类的方法执行前被自动调用。&python; 不是这样，你必须显示地调用在父类中的合适方法。</para>
+</callout>
+<callout arearefs="fileinfo.class.2.7">
+<para>我告诉过你，这个类像字典一样工作，那么这里就是第一个印象。我们将参数 <varname>filename</varname> 赋值给对象 <literal>name</literal> 关键字，作为它的值。</para>
+</callout>
+<callout arearefs="fileinfo.class.2.8">
+<para>注意 &init; 方法从不返回一个值。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section>
+<title>了解何时去使用 &self; 和 &init;</title>
+<para>当定义你自已的类方法时，你<emphasis>必须</emphasis> 明确将 &self; 作为每个方法的第一个参数列出，包括 &init;。当从你的类中调用一个父类的一个方法时，你必须包括 &self; 参数。但当你从类的外部调用你的类方法时，你不必对 &self; 参数指定任何值；你完全将其忽略，而 &python; 会自动地替你增加实例的引用。我知道刚开始这有些混乱，它并不是自相矛盾的，因为它依靠于一个你还不了解的区别 (在绑定与非绑定方法之间)，故看上去是矛盾的。</para>
+<para>噢。我知道有很多知识需要吸收，但是你要掌握它。所有的 &python; 类以相同的方式工作，所以一旦你学会了一个，就是学会了全部。如果你忘了别的任何事，也要记住这件事，因为我认定它会让你出错：</para>
+<note id="tip.initoptional">
+<title>&init; 方法</title>
+<para>&init; 方法是可选的，但是一旦你定义了，就必须记得显示调用父类的 &init; 方法 (如果它定义了的话)。这样更是正确的：无论何时子类想扩展父类的行为，后代方法必须在适当的时机，使用适当的参数，显式调用父类方法。</para>
+</note>
+<itemizedlist role="furtherreading">
+<title>进一步阅读关于 &python; 类</title>
+<listitem><para>&learningtoprogram; 有优雅的<ulink url="&url_learningtoprogram;tutclass.htm">类的介绍</ulink>。</para></listitem>
+<listitem><para>&howtothink; 展示了如何<ulink url="&url_howtothink;chap12.htm">使用类来实现复合数据类型模型</ulink>。</para></listitem>
+<listitem><para>&pythontutorial; 深入考虑了<ulink url="&url_pythontutorial;node11.html">类、名字空间和继承</ulink>。</para></listitem>
+<listitem><para>&pythonknowledgebase; 回答了<ulink url="&url_pythonknowledgebase;index.phtml/fid/242">关于类的常见问题</ulink>。</para></listitem>
+</itemizedlist>
+</section>
+</section>
+<section id="fileinfo.create">
+<?dbhtml filename="object_oriented_framework/instantiating_classes.html"?>
+<title>类的实例化</title>
+<abstract>
+<title/>
+<para>在 &python; 中对类进行实例化很直接。要对类进行实例化，只要调用类 (就好像它是一个函数)，传入定义在 &init; 方法中的参数。返回值将是新创建的对象。</para>
+</abstract>
+<example>
+<title>创建 <classname>FileInfo</classname> 实例</title>
+<screen>&prompt;<userinput>import &fileinfo_name;</userinput>
+&prompt;<userinput>f = fileinfo.FileInfo("/music/_singles/kairo.mp3")</userinput> <co id="fileinfo.create.1.1"/>
+&prompt;<userinput>f.__class__</userinput>                                        <co id="fileinfo.create.1.2"/>
+<computeroutput>&lt;class fileinfo.FileInfo at 010EC204></computeroutput>
+&prompt;<userinput>f.__doc__</userinput>                                          <co id="fileinfo.create.1.3"/>
+<computeroutput>'store file metadata'</computeroutput>
+&prompt;<userinput>f</userinput>                                                  <co id="fileinfo.create.1.4"/>
+<computeroutput>{'name': '/music/_singles/kairo.mp3'}</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.create.1.1">
+<para>你正在创建 <classname>FileInfo</classname> 类 (定义在 &fileinfo_modulename; 模块中) 的实例，并且将新创建的实例赋值给变量 <varname>f</varname>。你传入了一个参数，<literal>/music/_singles/kairo.mp3</literal>，它将最后作为在 <classname>FileInfo</classname> 中 &init; 方法中的 <varname>filename</varname> 参数。</para>
+</callout>
+<callout arearefs="fileinfo.create.1.2">
+<para>每一个类的实例有一个内置属性，&classattr;，它是对象的类。(注意这个表示包括了在我机器上的实例的物理地址，你的表示不会一样。)&java; 程序员可能对 <classname>Class</classname> 类熟悉，这个类包含了像 <function>getName</function> 和 <function>getSuperclass</function> 之类用来得到一个对象元数据信息的方法。在 &python; 中，这类元数据可以直接通过对象本身的属性，像 &classattr;、<literal>__name__</literal> 和 <literal>__bases__</literal> 来得到。</para>
+</callout>
+<callout arearefs="fileinfo.create.1.3">
+<para>你可以像对函数或模块一样来访问实例的 &docstring;。一个类的所有实例共享相同的 &docstring;。</para>
+</callout>
+<callout arearefs="fileinfo.create.1.4">
+<para>还记得什么时候 &init; 方法<link linkend="fileinfo.class.example">将它的 <varname>filename</varname> 参数赋给 <literal>self["name"]</literal></link> 吗？哦，答案在这。在创建类实例时，你传入的参数被发送给 &init; 方法 (随同一起传递的还有对象的引用，&self;，它是由 &python; 自动添加的)。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="compare.new.java" role="compare" vendor="java">
+<title>&python; &vs; &java;: 类的实例化</title>
+<para>在 &python; 中，创建类的实例只要调用一个类，仿佛它是一个函数就行了。不像 &cpp; 或 &java; 有一个明确的 &new; 操作符。</para>
+</note>
+<section>
+<title>垃圾回收</title>
+<para>如果说创建一个新的实例是容易的，那么销毁它们甚至更容易。通常，不需要明确地释放实例，因为当指派给它们的变量超出作用域时，它们会被自动地释放。内存泄漏在 &python; 中很少见。</para>
+<example id="fileinfo.scope">
+<title>尝试实现内存泄漏</title>
+<screen>&prompt;<userinput>def leakmem():</userinput>
+&continuationprompt;<userinput>f = fileinfo.FileInfo('/music/_singles/kairo.mp3')</userinput> <co id="fileinfo.create.2.1"/>
+&continuationprompt;
+&prompt;<userinput>for i in range(100):</userinput>
+&continuationprompt;<userinput>leakmem()</userinput>                                          <co id="fileinfo.create.2.3"/></screen>
+<calloutlist>
+<callout arearefs="fileinfo.create.2.1">
+<para>每次 <function>leakmem</function> 函数被调用，你创建了 &fileinfo_classname; 的一个实例，将其赋给变量 <varname>f</varname>，这个变量是函数内的一个局部变量。然后函数结束时没有释放 <varname>f</varname>，所以你可能认为有内存泄漏，但是你错了。当函数结束时，局部变量 <varname>f</varname> 超出了作用域。在这个地方，不再有任何对 &fileinfo_classname; 新创建实例的引用 (因为除了 <varname>f</varname> 我们从未将其赋值给其它变量)，所以 &python; 替我们销毁掉实例。</para>
+</callout>
+<callout arearefs="fileinfo.create.2.3">
+<para>不管我们调用 <function>leakmem</function> 函数多少次，决不会泄漏内存，因为每一次，&python; 将在从 <function>leakmem</function> 返回前销毁掉新创建的 &fileinfo_classname; 类实例。</para>
+</callout>
+</calloutlist>
+</example>
+<para>对于这种垃圾收集的方式，技术上的术语叫做<quote>引用计数</quote>。&python; 维护着对每个实例的引用列表。在上面的例子中，只有一个 &fileinfo_classname; 的实例引用：局部变量 <varname>f</varname>。当函数结束时，变量 <varname>f</varname> 超出作用域，所以引用计数降为 &zero;，则 &python; 自动销毁掉实例。</para>
+<para>在 &python; 的以前版本中，存在引用计数失败的情况，这样 &python; 不能在后面进行清除。如果你创建两个实例，它们相互引用 (例如，双重链表，每一个结点有都一个指向列表中前一个和后一个结点的指针)，任一个实例都不会被自动销毁，因为 &python; (正确) 认为对于每个实例都存在一个引用。&python; 2.0 有一种额外的垃圾回收方式，叫做<quote>标记后清除</quote>，它足够聪明，可以正确地清除循环引用。</para>
+<para>作为曾经读过哲学专业的一员，让我感到困惑的是，当没有人对事物进行观察时，它们就消失了，但是这确实是在 &python; 中所发生的。通常，你可以完全忘记内存管理，让 &python; 在后面进行清理。</para>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythonlibraryreference; 总结了<ulink url="&url_pythonlibraryreference;specialattrs.html">像 &classattr; 之类的内置属性</ulink>。</para></listitem>
+<listitem><para>&pythonlibraryreference; 提供了 <ulink url="&url_pythonlibraryreference;module-gc.html"><filename class="headerfile">gc</filename> 模块的文档</ulink>，此模块给予你对 &python; 的垃圾回收的底层控制权。</para></listitem>
+</itemizedlist>
+</section>
+</section>
+<section id="fileinfo.userdict">
+<?dbhtml filename="object_oriented_framework/userdict.html"?>
+<title>探索 &userdict_classname;：一个封装类</title>
+<abstract>
+<title/>
+<para>如你所见，&fileinfo_classname; 是一个有着像字典一样的行为方式的类。为了进一步揭示这一点，让我们看一看在 &userdict; 模块中的 &userdict_classname; 类，它是我们的 &fileinfo_classname; 类的父类。它没有什么特别的，也是用 &python; 写的，并且保存在一个 <literal>.py</literal> 文件里，就像我们其他的代码。特别之处在于，它保存在你的 &python; 安装目录的 <filename class="directory">lib</filename> 目录下。</para>
+</abstract>
+<tip id="tip.locate">
+<!--<title>Open Modules Quickly</title>-->
+<title/>
+<para>在 &windows; 下的 &activepython; &ide; 中，你可以快速打开在你的库路径中的任何模块，使用
+<menuchoice>
+<shortcut>
+<keycombo>
+<keycap>Ctrl</keycap>
+<keysym>L</keysym>
+</keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem><accel>L</accel>ocate...</guimenuitem>
+</menuchoice>。</para>
+</tip>
+<example id="fileinfo.userdict.init.example">
+<title>定义 &userdict_classname; 类</title>
+<programlisting>
+&userdict_class; <co id="fileinfo.userdict.1.1"/>
+&userdict_init; <co id="fileinfo.userdict.1.2"/>
+&userdict_initassign; <co id="fileinfo.userdict.1.3"/>
+&userdict_initupdate; <co id="fileinfo.userdict.1.4"/> <co id="fileinfo.userdict.1.5"/>
+</programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.userdict.1.1">
+<para>注意 &userdict_classname; 是一个基类，不是从任何其他类继承而来。</para>
+</callout>
+<callout arearefs="fileinfo.userdict.1.2">
+<para>这就是我们<link linkend="fileinfo.class.example">在 &fileinfo_classname; 类中进行了覆盖</link>的 &init; 方法。注意这个父类的参数列表与子类不同。很好，每个子类可以拥有自已的参数集，只要使用正确的参数调用父类就可以了。这里父类有一个定义初始值的方法 (通过在 <varname>dict</varname> 参数中传入一个字典)，这一方法我们的 &fileinfo_classname; 没有用上。</para>
+</callout>
+<callout arearefs="fileinfo.userdict.1.3">
+<para>&python; 支持数据属性 (在 &java; 和 &powerbuilder; 中叫做 <quote>实例变量</quote>，在 &cpp; 中叫 <quote>数据成员</quote>)，它是由某个特定的类实例所拥有的数据。在本例中，每个 &userdict_classname; 实例将拥有一个 <varname>data</varname> 数据属性。要从类外的代码引用这个属性，需要用实例的名字限定它，<literal><replaceable>instance</replaceable>.data</literal>，限定的方法与你用模块的名字来限定函数一样。要在类的内部引用一个数据属性，我们使用 &self; 作为限定符。习惯上，所有的数据属性都在 &init; 方法中初始化为有意义的值。然而，这并不是必须的，因为数据属性，像局部变量一样，当你首次赋给它值的时候<link linkend="odbchelper.vardef">突然产生</link>。</para>
+</callout>
+<callout arearefs="fileinfo.userdict.1.4">
+<para>&update; 方法是一个字典复制器：它把一个字典中的键和值全部拷贝到另一个字典。这个操作<emphasis>并不</emphasis> 事先清空目标字典，如果一些键在目标字典中已经存在，则它们将被覆盖，那些键名在目标字典中不存在的则不改变。应该把 &update; 看作是合并函数，而不是复制函数。</para>
+</callout>
+<callout arearefs="fileinfo.userdict.1.5">
+<para>这个语法你可能以前没看过 (我还没有在这本书中的例子中用过它)。这是一条 &if; 语句，但是没有在下一行有一个缩近块，而只是在冒号后面，在同一行上有单条语句。这完全是合法的，它只是当你在一个块中仅有一条语句时的一个简写。(它就像在 &cpp; 中没有用大括号包括的单行语句。) 你可以用这种语法，或者可以在后面的行写下缩近代码，但是不能对同一个块同时用两种方式。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="compare.overloading" role="compare" vendor="java">
+<title>&python; &vs; &java;: Function Overloading</title>
+<para>&java; 和 &powerbuilder; 支持通过参数列表的重载，&ie; 一个类可以有同名的多个方法，但这些方法或者是参数个数不同，或者是参数的类型不同。其它语言 (最明显如 &plsql;) 甚至支持通过参数名的重载，&ie; 一个类可以有同名的多个方法，这些方法有相同类型，相同个数的参数，但参数名不同。&python; 两种都不支持，总之是没有任何形式的函数重载。一个 &init; 方法就是一个 &init; 方法，不管它有什么样的参数。每个类只能有一个 &init; 方法，并且如果一个子类拥有一个 &init; 方法，它<emphasis>总是</emphasis> 覆盖父类的 &init; 方法，甚至子类可以用不同的参数列表来定义它。</para>
+</note>
+<note id="fileinfo.derivedclasses">
+<!--<title>Guido on Derived Classes</title>-->
+<title/>
+<para>&python; 的原作者 Guido 是这样解释方法覆盖的：“子类可以覆盖父类中的方法。因为方法没有特殊的优先级设置，父类中的一个方法在调用同类中的另一方法时，可能其实调用到的却是一个子类中覆盖父类同名方法的方法。 (&cpp; 程序员可能会这样想：所有的 &python; 方法都是虚函数。)”如果你不明白 (它令我颇感困惑)，不必在意。我想我要跳过它。<footnote><para>实际上，这一点并不是那么难以理解。考虑两个类，<classname>base</classname> 和 <classname>child</classname>，<classname>base</classname> 中的方法 <literal>a</literal> 需要调用 <literal>self.b</literal>；而我们又在 <classname>child</classname> 中覆盖了方法 <literal>b</literal>。然后我们创建一个 <classname>child</classname> 的实例，<literal>ch</literal>。调用 <literal>ch.a</literal>，那么此时的方法 <literal>a</literal> 调用的 <literal>b</literal> 函数将不是 <literal>base.b</literal>，而是 <literal>child.b</literal>。――译注</para></footnote></para>
+</note>
+<caution id="note.dataattributes">
+<!--<title>Always Initialize Data Attributes</title>-->
+<title/>
+<para>应该总是在 &init; 方法中给一个实例的所有数据属性赋予一个初始值。这样做将会节省你在后面调试的时间，不必为捕捉因使用未初始化 (也就是不存在) 的属性而导致的 <classname>AttributeError</classname> 异常费时费力。</para>
+</caution>
+<example id="fileinfo.userdict.normalmethods">
+<title>&userdict_classname; 常规方法</title>
+<programlisting>
+&userdict_clear; <co id="fileinfo.userdict.2.1"/>
+&userdict_copy; <co id="fileinfo.userdict.2.2"/>
+&userdict_copyif; <co id="fileinfo.userdict.2.3"/>
+&userdict_copyreturn1;
+&userdict_copyimport; <co id="fileinfo.userdict.2.4"/>
+&userdict_copyreturn2;
+&userdict_keys; <co id="fileinfo.userdict.2.5"/>
+&userdict_items;
+&userdict_values;
+</programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.userdict.2.1">
+<para>&clear; 是一个普通的类方法，可以在任何时候被任何人公开调用。注意，&clear; 像所有的类方法一样 (常规的或专用的)，使用 &self; 作为它的第一个参数。(记住，当你调用方法时，不用包括 &self;；这件事是 &python; 替你做的。) 还应注意这个封装类的基本技术：将一个真正的字典 (<varname>data</varname>) 作为数据属性保存起来，定义所有真正字典所拥有的方法，并且将每个类方法重定向到真正字典上的相应方法。(你可能已经忘了，字典的 &clear; 方法<link linkend="odbchelper.dict.del">删除它的所有关键字</link>和关键字相应的值。)</para>
+</callout>
+<callout arearefs="fileinfo.userdict.2.2">
+<para>真正字典的 &copy; 方法会返回一个新的字典，它是原始字典的原样的复制 (所有的键-值对都相同)。但是 &userdict_classname; 不能简单地重定向到 <function>self.data.copy</function>，因为那个方法返回一个真正的字典，而我们想要的是返回同一个类的一个新的实例，就像是 &self;。</para>
+</callout>
+<callout arearefs="fileinfo.userdict.2.3">
+<para>我们使用 &classattr; 属性来查看 &self; 是否是一个 &userdict_classname;，如果是，太好了，因为我们知道如何拷贝一个 &userdict_classname;：只要创建一个新的 &userdict_classname; ，并传给它真正的字典，这个字典已经存放在 <varname>self.data</varname> 中了。然后你立即返回这个新的 &userdict_classname;，你甚至于不需要在下面一行中使用 <literal>import copy</literal>。</para>
+</callout>
+<callout arearefs="fileinfo.userdict.2.4">
+<para>如果 <literal>&self;.&classattr;</literal> 不是 &userdict_classname;，那么 &self; 一定是 &userdict_classname; 的某个子类 (如可能为 &fileinfo_classname;)，生活总是存在意外。&userdict_classname; 不知道如何生成它的子类的一个原样的拷贝，例如，有可能在子类中定义了其它的数据属性，所以我们只能完全复制它们，确定拷贝了它们的全部内容。幸运的是，&python; 带了一个模块可以正确地完成这件事，它叫做 &copy;。在这里我不想深入细节 (然而它是一个绝对酷的模块，你是否已经想到要自已研究它了呢？)。说 &copy; 能够拷贝任何 &python; 对象就够了，这就是我们在这里用它的原因。</para>
+</callout>
+<callout arearefs="fileinfo.userdict.2.5">
+<para>其余的方法是直截了当的重定向到 <varname>self.data</varname> 的内置函数上。</para>
+</callout>
+</calloutlist>
+</example>
+<note>
+<title>史料记载</title>
+<para>在 &python; 2.2 之前的版本中，你不可以直接子类化字符串、列表以及字典之类的内建数据类型。作为补偿，&python; 提供封装类来模拟内建数据类型的行为，比如：<classname>UserString</classname>、<classname>UserList</classname> 和 &userdict_classname;。通过混合使用普通和特殊方法，&userdict_classname; 类能十分出色地模仿字典。在 &python; 2.2 和其后的版本中，你可以直接从 &dict; 内建数据类型继承。本书 <filename>fileinfo_fromdict.py</filename> 中有这方面的一个例子。</para>
+</note>
+<para>如例子中所示，在 &python; 中，你可以直接继承自内建数据类型 &dict;，这样做有三点与 &userdict; 不同。</para>
+<example id="fileinfo.userdict.fromdict">
+<title>直接继承自内建数据类型 &dict;</title>
+<programlisting>
+class FileInfo(dict):                  <co id="fileinfo.userdict.3.1"/>
+    "store file metadata"
+    def __init__(self, filename=None): <co id="fileinfo.userdict.3.2"/>
+        self["name"] = filename
+</programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.userdict.3.1">
+<para>第一个区别是你不需要导入 &userdict; 模块，因为 &dict; 是已经可以使用的内建数据类型。第二个区别是你不是继承自 <function>UserDict.UserDict</function> ，而是直接继承自 &dict;。</para>
+</callout>
+<callout arearefs="fileinfo.userdict.3.2">
+<para>第三个区别有些晦涩，但却很重要。&userdict; 内部的工作方式要求你手工地调用它的 &init; 方法去正确初始化它的内部数据结构。&dict; 并不这样工作，它不是一个封装所以不需要明确的初始化。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythonlibraryreference; 提供了 <ulink url="&url_pythonlibraryreference;module-UserDict.html">&userdict; 模块</ulink> 和 <ulink url="&url_pythonlibraryreference;module-copy.html">&copy; 模块</ulink> 的文档。</para></listitem>
+</itemizedlist>
+</section>
+<section id="fileinfo.specialmethods">
+<?dbhtml filename="object_oriented_framework/special_class_methods.html"?>
+<title>专用类方法</title>
+<abstract>
+<title/>
+<para>除了普通的类方法，&python; 类还可以定义专用方法。专用方法是在特殊情况下或当使用特别语法时由 &python; 替你调用的，而不是在代码中直接调用 (像普通的方法那样)。</para>
+</abstract>
+<para>就像你在<link linkend="fileinfo.userdict">上一节</link>所看到的，普通的方法对在类中封装字典很有帮助。但是只有普通方法是不够的，因为除了对字典调用方法之外，还有很多事情可以做的。例如，你可以通过一种没有包括明确方法调用的语法来<link linkend="odbchelper.dict.define">获得</link>和<link linkend="odbchelper.dict.modify">设置</link>数据项。这就是专用方法产生的原因：它们提供了一种方法，可以将非方法调用语法映射到方法调用上。</para>
+<section>
+<title>获得和设置数据项</title>
+<example>
+<title>&getitem; 专用方法</title>
+<programlisting>
+&userdict_getitem;</programlisting>
+<screen>&prompt;<userinput>f = fileinfo.FileInfo("/music/_singles/kairo.mp3")</userinput>
+&prompt;<userinput>f</userinput>
+<computeroutput>{'name':'/music/_singles/kairo.mp3'}</computeroutput>
+&prompt;<userinput>f.__getitem__("name")</userinput> <co id="fileinfo.specialmethods.1.1"/>
+<computeroutput>'/music/_singles/kairo.mp3'</computeroutput>
+&prompt;<userinput>f["name"]</userinput>             <co id="fileinfo.specialmethods.1.2"/>
+<computeroutput>'/music/_singles/kairo.mp3'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.specialmethods.1.1">
+<para>&getitem; 专用方法很简单。像普通的方法 &clear;，&keys; 和 &values; 一样，它只是重定向到字典，返回字典的值。但是怎么调用它呢？哦，你可以直接调用 &getitem;，但是在实际中你其实不会那样做：我在这里执行它只是要告诉你它是如何工作的。正确地使用 &getitem; 的方法是让 &python; 来替你调用。</para>
+</callout>
+<callout arearefs="fileinfo.specialmethods.1.2">
+<para>这个看上去就像你用来<link linkend="odbchelper.dict.define">得到一个字典值</link>的语法，事实上它返回你期望的值。下面是隐藏起来的一个环节：暗地里，&python; 已经将这个语法转化为 <literal>f.__getitem__("name")</literal> 的方法调用。这就是为什么 &getitem; 是一个专用类方法的原因，不仅仅是你可以自已调用它，还可以通过使用正确的语法让 &python; 来替你调用。</para>
+</callout>
+</calloutlist>
+</example>
+<para>当然，&python; 有一个与 &getitem; 类似的 &setitem; 专用方法，参见下面的例子。</para>
+<example id="fileinfo.specialmethods.setitem.example">
+<title>&setitem; 专用方法</title>
+<programlisting>
+&userdict_setitem;</programlisting>
+<screen>&prompt;<userinput>f</userinput>
+<computeroutput>{'name':'/music/_singles/kairo.mp3'}</computeroutput>
+&prompt;<userinput>f.__setitem__("genre", 31)</userinput> <co id="fileinfo.specialmethods.2.1"/>
+&prompt;<userinput>f</userinput>
+<computeroutput>{'name':'/music/_singles/kairo.mp3', 'genre':31}</computeroutput>
+&prompt;<userinput>f["genre"] = 32</userinput>            <co id="fileinfo.specialmethods.2.2"/>
+&prompt;<userinput>f</userinput>
+<computeroutput>{'name':'/music/_singles/kairo.mp3', 'genre':32}</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.specialmethods.2.1">
+<para>与 &getitem; 方法一样，&setitem; 简单地重定向到真正的字典 <varname>self.data</varname> ，让它来进行工作。并且像 &getitem; 一样，通常你不会直接调用它，当你使用了正确的语法，&python; 会替你调用 &setitem; 。</para>
+</callout>
+<callout arearefs="fileinfo.specialmethods.2.2">
+<para>这个看上去像正常的字典语法，当然除了 <varname>f</varname> 实际上是一个类，它尽可能地打扮成一个字典，并且 &setitem; 是打扮的一个重点。这行代码实际上暗地里调用了 <literal>f.__setitem__("genre", 32)</literal>。</para>
+</callout>
+</calloutlist>
+</example>
+<para>&setitem; 是一个专用类方法，因为它可以让 &python; 来替你调用，但是它仍然是一个类方法。就像在 &userdict_classname; 中定义 &setitem; 方法一样容易，我们可以在子类中重新定义它，对父类的方法进行覆盖。这就允许我们定义出在某些方面像字典一样动作的类，但是可以定义它自已的行为，超过和超出内置的字典。</para>
+<para>这个概念是本章中我们正在学习的整个框架的基础。每个文件类型可以拥有一个处理器类，这些类知道如何从一个特殊的文类型得到元数据。只要知道了某些属性 (像文件名和位置)，处理器类就知道如何自动地得到其它的属性。它的实现是通过覆盖 &setitem; 方法，检查特别的关键字，然后当找到后加入额外的处理。</para>
+<para>例如，&mp3fileinfo_classname; 是 &fileinfo_classname; 的子类。在设置了一个 &mp3fileinfo_classname; 类的 <literal>name</literal> 时，并不只是设置 <literal>name</literal> 关键字 (像父类 &fileinfo_classname; 所做的)，它还要在文件自身内进行搜索 &mp3; 的标记然后填充一整套关键字。下面的例子将展示其工作方式。</para>
+<example>
+<title>在 &mp3fileinfo_classname; 中覆盖 &setitem;</title>
+<programlisting>
+&fileinfo_mp3setitemdef;         <co id="fileinfo.specialmethods.3.1"/>
+&fileinfo_mp3setitemif;            <co id="fileinfo.specialmethods.3.2"/>
+&fileinfo_mp3setitemparse;                <co id="fileinfo.specialmethods.3.3"/>
+&fileinfo_mp3setitemcallsuper; <co id="fileinfo.specialmethods.3.4"/></programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.specialmethods.3.1">
+<para>注意我们的 &setitem; 方法严格按照与父类方法相同的形式进行定义。这一点很重要，因为 &python; 将替你执行方法，而它希望这个函数用确定个数的参数进行定义。(从技术上说，参数的名字没有关系，只是个数。)</para>
+</callout>
+<callout arearefs="fileinfo.specialmethods.3.2">
+<para>这里就是整个 &mp3fileinfo_classname; 类的难点：如果给 <literal>name</literal> 关键字赋一个值，我们还想做些额外的事情。</para>
+</callout>
+<callout arearefs="fileinfo.specialmethods.3.3">
+<para>我们对 <literal>name</literal> 所做的额外处理封装在了 &fileinfo_parse; 方法中。这是定义在 &mp3fileinfo_classname; 中的另一个类方法，则当我们调用它时，我们用 <varname>self</varname> 对其限定。仅是调用 <function>__parse</function> 将只会看成定义在类外的普通方法，调用 <function>self.__parse</function> 将会看成定义在类中的一个类方法。这不是什么新东西，你用同样的方法来引用<link linkend="fileinfo.userdict.normalmethods">数据属性</link>。</para>
+</callout>
+<callout arearefs="fileinfo.specialmethods.3.4">
+<para>在做完我们额外的处理之后，我们需要调用父类的方法。记住，在 &python; 中不会自动为你完成，需手工执行。注意，我们在调用直接父类，&fileinfo_classname;，尽管它没有 &setitem; 方法。没问题，因为 &python; 将会沿着父类树走，直到它找到一个拥有我们正在调用方法的类，所以这行代码最终会找到并且调用定义在 &userdict_classname; 中的 &setitem;。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="tip.self.call">
+<!--<title>Calling Other Class Methods</title>-->
+<title/>
+<para>当在一个类中存取数据属性时，你需要限定属性名：<literal>self.<replaceable>attribute</replaceable></literal>。当调用类中的其它方法时，你属要限定方法名：<literal>self.<replaceable>method</replaceable></literal>。</para>
+</note>
+<example id="fileinfo.specialmethods.setname">
+<title>设置 &mp3fileinfo_classname; 的 <literal>name</literal></title>
+<screen>&prompt;<userinput>import fileinfo</userinput>
+&prompt;<userinput>mp3file = fileinfo.MP3FileInfo()</userinput>                   <co id="fileinfo.specialmethods.4.1"/>
+&prompt;<userinput>mp3file</userinput>
+<computeroutput>{'name':None}</computeroutput>
+&prompt;<userinput>mp3file["name"] = "/music/_singles/kairo.mp3"</userinput>      <co id="fileinfo.specialmethods.4.2"/>
+&prompt;<userinput>mp3file</userinput>
+<computeroutput>{'album': 'Rave Mix', 'artist': '***DJ MARY-JANE***', 'genre': 31,
+'title': 'KAIRO****THE BEST GOA', 'name': '/music/_singles/kairo.mp3',
+'year': '2000', 'comment': 'http://mp3.com/DJMARYJANE'}</computeroutput>
+&prompt;<userinput>mp3file["name"] = "/music/_singles/sidewinder.mp3"</userinput> <co id="fileinfo.specialmethods.4.3"/>
+&prompt;<userinput>mp3file</userinput>
+<computeroutput>{'album': '', 'artist': 'The Cynic Project', 'genre': 18, 'title': 'Sidewinder', 
+'name': '/music/_singles/sidewinder.mp3', 'year': '2000', 
+'comment': 'http://mp3.com/cynicproject'}</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.specialmethods.4.1">
+<para>首先，我们创建了一个 &mp3fileinfo_classname; 的实例，没有传递给它文件名。(我们可以不用它，因为 &init; 方法的 <varname>filename</varname> 参数是<link linkend="apihelper.optional">可选的</link>。) 因为 &mp3fileinfo_classname; 没有它自已的 &init; 方法，&python; 沿着父类树走，发现了 &fileinfo_classname; 的 &init; 方法。这个 &init; 方法手工调用了 &userdict_classname; 的 &init; 方法，然后设置 <literal>name</literal> 关键字为 <varname>filename</varname>，它为 &none;，因为我们还没有传入一个文件名。所以，<varname>mp3file</varname> 最初看上去像是有一个关键字的字典，<literal>name</literal> 的值为 &none;。</para>
+</callout>
+<callout arearefs="fileinfo.specialmethods.4.2">
+<para>现在真正有趣的开始了。设置 <varname>mp3file</varname> 的 <literal>name</literal> 关键字触发了 &mp3fileinfo_classname; 上的 &setitem; 方法 (而不是 &userdict_classname; 的)，这个方法注意到我们正在用一个真实的值来设置 <literal>name</literal> 关键字，接着调用 <function>self.__parse</function>。尽管我们完全还没有研究过 <function>__parse</function> 方法，从它的输出你可以看出，它设置了其它几个关键字：<literal>album</literal>、<literal>artist</literal>、<literal>genre</literal>、<literal>title</literal>、<literal>year</literal> 和 <literal>comment</literal>。</para>
+</callout>
+<callout arearefs="fileinfo.specialmethods.4.3">
+<para>修改 <literal>name</literal> 关键字将再次经受同样的处理过程：&python; 调用 &setitem;，&setitem;调用 <function>self.__parse</function>，<function>self.__parse</function> 设置其它所有的关键字。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+</section>
+<section id="fileinfo.morespecial">
+<?dbhtml filename="object_oriented_framework/special_class_methods2.html"?>
+<title>高级专用类方法</title>
+<abstract>
+<title/>
+<para>除了 &getitem; 和 &setitem; 之外 &python; 还有更多的专用函数。某些可以让你模拟出你甚至可能不知道的功能。</para>
+</abstract>
+<para>下面的例子将展示 &userdict; 一些其他专用方法。</para>
+<example id="fileinfo.morespecial.example">
+<title>&userdict_classname; 中更多的专用方法</title>
+<programlisting>
+&userdict_repr; <co id="fileinfo.morespecial.1.1"/>
+&userdict_cmp; <co id="fileinfo.morespecial.1.2"/>
+&userdict_cmpif;
+&userdict_cmpreturn1;
+&userdict_cmpelse;
+&userdict_cmpreturn2;
+&userdict_len; <co id="fileinfo.morespecial.1.3"/>
+&userdict_delitem; <co id="fileinfo.morespecial.1.4"/></programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.morespecial.1.1">
+<para>&reprspecial; 是一个专用的方法，在当调用 <literal>repr(<replaceable>instance</replaceable>)</literal> 时被调用。&repr; 函数是一个内置函数，它返回一个对象的字符串表示。它可以用在任何对象上，不仅仅是类的实例。你已经对 &repr; 相当熟悉了，尽管你不知道它。在交互式窗口中，当你只敲入一个变量名，接着按<keycap>ENTER</keycap>，&python; 使用 &repr; 来显示变量的值。自已用一些数据来创建一个字典 <varname>d</varname> ，然后用 <literal>print repr(d)</literal> 来看一看吧。</para>
+</callout>
+<callout arearefs="fileinfo.morespecial.1.2">
+<para>&cmpspecial; 在比较类实例时被调用。通常，你可以通过使用 &comparisonequals; 比较任意两个 &python; 对象，不只是类实例。有一些规则，定义了何时内置数据类型被认为是相等的，例如，字典在有着全部相同的关键字和值时是相等的。对于类实例，你可以定义 &cmpspecial; 方法，自已编写比较逻辑，然后你可以使用 &comparisonequals; 来比较你的类，&python; 将会替你调用你的 &cmpspecial; 专用方法。</para>
+</callout>
+<callout arearefs="fileinfo.morespecial.1.3">
+<para>&lenspecial; 在调用 <literal>len(<replaceable>instance</replaceable>)</literal> 时被调用。&len; 是一个内置函数，可以返回一个对象的长度。它可以用于任何被认为理应有长度的对象。字符串的 &len; 是它的字符个数；字典的 &len; 是它的关键字的个数；列表或序列的 &len; 是元素的个数。对于类实例，定义 &lenspecial; 方法，接着自已编写长度的计算，然后调用 <literal>len(<replaceable>instance</replaceable>)</literal>，&python; 将替你调用你的 &lenspecial; 专用方法。</para>
+</callout>
+<callout arearefs="fileinfo.morespecial.1.4">
+<para>&delitem; 在调用 <literal>del <replaceable>instance</replaceable>[<replaceable>key</replaceable>]</literal> 时调用 ，你可能记得它作为<link linkend="odbchelper.dict.del">从字典中删除单个元素</link>的方法。当你在类实例中使用 &del; 时，&python; 替你调用 &delitem; 专用方法。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="compare.strequals.java" role="compare" vendor="java">
+<title>&python; &vs; &java; equality and identity</title>
+<para>在 &java; 中，通过使用 <literal>str1 == str2</literal> 可以确定两个字符串变量是否指向同一块物理内存位置。这叫做<emphasis>对象同一性</emphasis>，在 &python; 中写为 <literal>str1 is str2</literal>。在 &java; 中要比较两个字符串值，你要使用 <literal>str1.equals(str2)</literal>；在 &python; 中，你要使用 <literal>str1 == str2</literal>。某些 &java; 程序员，他们已经被教授得认为，正是因为在 &java; 中 &comparisonequals; 是通过同一性而不是值进行比较，所以世界才会更美好。这些人要接受 &python; 的这个“严重缺失”可能要花些时间。</para>
+</note>
+<para>在这个地方，你可能会想，<quote>所有这些工作只是为了在类中做一些我可以对一个内置数据类型所做的操作</quote>。不错，如果你能够从像字典一样的内置数据类型进行继承的话，事情就容易多了 (那样整个 &userdict_classname; 类将完全不需要了)。尽管你可以这样做，专用方法仍然是有用的，因为它们可以用于任何的类，而不只是像 &userdict_classname; 这样的封装类。</para>
+<para>专用方法意味着<emphasis>任何类</emphasis> 可以像字典一样保存键-值对，只要定义 &setitem; 方法。任何类可以表现得像一个序列，只要定义 &getitem; 方法。任何定义了 &cmpspecial; 方法的类可以用 &comparisonequals; 进行比较。并且如果你的类表现为拥有类似长度的东西，不要定义 <function>GetLength</function> 方法，而定义 &lenspecial; 方法，并使用 <literal>len(<replaceable>instance</replaceable>)</literal>。</para>
+<note id="note.physical.v.logical">
+<!--<title>Physical &vs; Logical Models</title>-->
+<title/>
+<para>其它的面向对象语言仅让你定义一个对象的物理模型 (<quote>这个对象有 <function>GetLength</function> 方法</quote>)，而 &python; 的专用类方法像 &lenspecial; 允许你定义一个对象的逻辑模型 (<quote>这个对象有一个长度</quote>)。
+</para>
+</note>
+<para>&python; 存在许多其它的专用方法。有一整套的专用方法，可以让类表现得象数值一样，允许你在类实例上进行加、减，以及执行其它算数操作。(关于这一点典型的例子就是表示复数的类，数值带有实数和虚数部分。) &callspecial; 方法让一个类表现得像一个函数，允许你直接调用一个类实例。并且存在其它的专用函数，允许类拥有只读或只写数据属性，在后面的章节中我们会更多地谈到这些。</para>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythonlanguagereference; 提供了<ulink url="&url_pythonlanguagereference;specialnames.html">所有专用类方法</ulink>的文档。</para></listitem>
+</itemizedlist>
+</section>
+<section id="fileinfo.classattributes">
+<?dbhtml filename="object_oriented_framework/class_attributes.html"?>
+<title>类属性介绍</title>
+<abstract>
+<title/>
+<para>你已经知道了<link linkend="fileinfo.userdict.init.example">数据属性</link>，它们是被一个特定的类实例所拥有的变量。&python; 也支持类属性，它们是由类本身所拥有的。</para>
+</abstract>
+<example id="fileinfo.classattributes.intro">
+<title>类属性介绍</title>
+<programlisting>
+&fileinfo_mp3def;
+&fileinfo_mp3doc;
+&fileinfo_mp3classvar;</programlisting>
+<screen>&prompt;<userinput>import fileinfo</userinput>
+&prompt;<userinput>fileinfo.MP3FileInfo</userinput>            <co id="fileinfo.classattributes.1.1"/>
+<computeroutput>&lt;class fileinfo.MP3FileInfo at 01257FDC></computeroutput>
+&prompt;<userinput>fileinfo.MP3FileInfo.tagDataMap</userinput> <co id="fileinfo.classattributes.1.2"/>
+<computeroutput>{'title': (3, 33, &lt;function stripnulls at 0260C8D4>), 
+'genre': (127, 128, &lt;built-in function ord>), 
+'artist': (33, 63, &lt;function stripnulls at 0260C8D4>), 
+'year': (93, 97, &lt;function stripnulls at 0260C8D4>), 
+'comment': (97, 126, &lt;function stripnulls at 0260C8D4>), 
+'album': (63, 93, &lt;function stripnulls at 0260C8D4>)}</computeroutput>
+&prompt;<userinput>m = fileinfo.MP3FileInfo()</userinput>      <co id="fileinfo.classattributes.1.3"/>
+&prompt;<userinput>m.tagDataMap</userinput>
+<computeroutput>{'title': (3, 33, &lt;function stripnulls at 0260C8D4>), 
+'genre': (127, 128, &lt;built-in function ord>), 
+'artist': (33, 63, &lt;function stripnulls at 0260C8D4>), 
+'year': (93, 97, &lt;function stripnulls at 0260C8D4>), 
+'comment': (97, 126, &lt;function stripnulls at 0260C8D4>), 
+'album': (63, 93, &lt;function stripnulls at 0260C8D4>)}</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.classattributes.1.1">
+<para>&mp3fileinfo_classname; 是类本身，不是任何类的特别实例。</para>
+</callout>
+<callout arearefs="fileinfo.classattributes.1.2">
+<para>&tagdatamap; 是一个类属性：字面的意思，一个类的属性。它在创建任何类实例之前就有效了。</para>
+</callout>
+<callout arearefs="fileinfo.classattributes.1.3">
+<para>类属性既可以通过直接对类的引用，也可以通过对类的任意实例的引用来使用。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="compare.classattr.java" role="compare" vendor="java">
+<title>&python; vs. &java; attribute definitions</title>
+<para>在 &java; 中，静态变量 (在 &python; 中叫类属性) 和实例变量 (在 &python; 中叫数据属性) 两者都是紧跟在类定义之后定义的 (一个有 <literal>static</literal> 关键字，一个没有)。在 &python; 中，只有类属性可以定义在这里，数据属性定义在 &init; 方法中。</para>
+</note>
+<para>类属性可以作为类级别的常量来使用 (这就是为什么我们在 &mp3fileinfo_classname; 中使用它们)，但是它们不是真正的常量。你也可以修改它们。</para>
+<note>
+<title/>
+<para>在 &python; 中没有常量。如果你试图努力的话什么都可以改变。这一点满足 &python; 的核心原则之一：坏的行为应该被克服而不是被取缔。如果你真正想改变 &none; 的值，也可以做到，但当无法调试的时候别来找我。</para>
+</note>
+<example id="fileinfo.classattributes.writeable.example">
+<title>修改类属性</title>
+<screen>&prompt;<userinput>class counter:</userinput>
+&continuationprompt;<userinput>count = 0</userinput>                     <co id="fileinfo.classattributes.2.1"/>
+&continuationprompt;<userinput>def __init__(self):</userinput>
+&continuationprompt;<userinput>    self.__class__.count += 1</userinput> <co id="fileinfo.classattributes.2.2"/>
+&continuationprompt;
+&prompt;<userinput>counter</userinput>
+<computeroutput>&lt;class __main__.counter at 010EAECC></computeroutput>
+&prompt;<userinput>counter.count</userinput>                     <co id="fileinfo.classattributes.2.3"/>
+<computeroutput>0</computeroutput>
+&prompt;<userinput>c = counter()</userinput>
+&prompt;<userinput>c.count</userinput>                           <co id="fileinfo.classattributes.2.4"/>
+<computeroutput>1</computeroutput>
+&prompt;<userinput>counter.count</userinput>
+<computeroutput>1</computeroutput>
+&prompt;<userinput>d = counter()</userinput>                     <co id="fileinfo.classattributes.2.5"/>
+&prompt;<userinput>d.count</userinput>
+<computeroutput>2</computeroutput>
+&prompt;<userinput>c.count</userinput>
+<computeroutput>2</computeroutput>
+&prompt;<userinput>counter.count</userinput>
+<computeroutput>2</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.classattributes.2.1">
+<para><varname>count</varname> 是 <classname>counter</classname> 类的一个类属性。</para>
+</callout>
+<callout arearefs="fileinfo.classattributes.2.2">
+<para><literal>__class__</literal> 是每个类实例的一个内置属性 (也是每个类的)。它是一个类的引用，而 <varname>self</varname> 是一个类 (在本例中，是 <classname>counter</classname> 类) 的实例。</para>
+</callout>
+<callout arearefs="fileinfo.classattributes.2.3">
+<para>因为 <varname>count</varname> 是一个类属性，它可以在我们创建任何类实例之前，通过直接对类引用而得到。</para>
+</callout>
+<callout arearefs="fileinfo.classattributes.2.4">
+<para>创建一个类实例会调用 &init; 方法，它会给类属性 <varname>count</varname> 加 &one;。这样会影响到类自身，不只是新创建的实例。</para>
+</callout>
+<callout arearefs="fileinfo.classattributes.2.5">
+<para>创建第二个实例将再次增加类属性 <varname>count</varname>。注意类属性是如何被类和所有类实例所共享的。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section id="fileinfo.private">
+<?dbhtml filename="object_oriented_framework/private_functions.html"?>
+<title>私有函数</title>
+<para>与大多数语言一样，&python; 也有私有的概念：</para>
+<itemizedlist>
+<listitem><para>私有函数不可以从它们的模块外面被调用</para></listitem>
+<listitem><para>私有类方法不能够从它们的类外面被调用</para></listitem>
+<listitem><para>私有属性不能够从它们的类外面被访问</para></listitem>
+</itemizedlist>
+<abstract>
+<title/>
+<para>与大多数的语言不同，一个 &python; 函数，方法，或属性是私有还是公有，完全取决于它的名字。</para>
+</abstract>
+<para>如果一个 &python; 函数，类方法，或属性的名字以两个下划线开始 (但不是结束)，它是私有的；其它所有的都是公有的。
+&python; 没有类方法<emphasis>保护</emphasis> 的概念 (只能用于它们自已的类和子类中)。类方法或者是私有 (只能在它们自已的类中使用) 或者是公有 (任何地方都可使用)。</para>
+<para>在 &mp3fileinfo_classname; 中，有两个方法：<function>__parse</function> 和 &setitem;。正如我们已经讨论过的，&setitem; 是一个<link linkend="fileinfo.specialmethods.setitem.example">专有方法</link>；通常，你不直接调用它，而是通过在一个类上使用字典语法来调用，但它是公有的，并且如果有一个真正好的理由，你可以直接调用它 (甚至从 &fileinfo_modulename; 模块的外面)。然而，<function>__parse</function> 是私有的，因为在它的名字前面有两个下划线。</para>
+<note id="tip.specialmethodnames">
+<title>Method Naming Conventions</title>
+<para>在 &python; 中，所有的专用方法 (像 <link linkend="fileinfo.specialmethods.setitem.example">&setitem;</link>) 和内置属性 (像 <link linkend="odbchelper.import">&doc;</link>) 遵守一个标准的命名习惯：开始和结束都有两个下划线。不要对你自已的方法和属性用这种方法命名；到最后，它只会把你 (或其它人) 搞乱。</para>
+</note>
+<example>
+<title>尝试调用一个私有方法</title>
+<screen>&prompt;<userinput>import &fileinfo_name;</userinput>
+&prompt;<userinput>m = fileinfo.MP3FileInfo()</userinput>
+&prompt;<userinput>m.__parse("/music/_singles/kairo.mp3")</userinput> <co id="fileinfo.private.1.1"/>
+<computeroutput role='traceback'>&traceback;
+AttributeError: 'MP3FileInfo' instance has no attribute '__parse'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.private.1.1">
+<para>如果你试图调用一个私有方法，&python; 将引发一个有些误导的异常，宣称那个方法不存在。当然它确实存在，但是它是私有的，所以在类外是不可使用的。</para>
+<para>严格地说，私有方法在它们的类外是可以访问的，只是不<emphasis>容易</emphasis> 处理。在 &python; 中没有什么是真正私有的；在内部，私有方法和属性的名字被忽然改变和恢复，以致于使得它们看上去用它们给定的名字是无法使用的。你可以通过 <function>_MP3FileInfo__parse</function> 名字来使用 &mp3fileinfo_classname; 类的 <function>__parse</function> 方法。知道了这个方法很有趣，然后要保证决不在真正的代码中使用它。私有方法由于某种原因而私有，但是像其它很多在 &python; 中的东西一样，它们的私有化基本上是习惯问题，而不是强迫的。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythontutorial; 讨论了<ulink url="&url_pythontutorial;node11.html#SECTION0011600000000000000000">私有变量</ulink>的内部工作方式。</para></listitem>
+</itemizedlist>
+</section>
+<section id="fileinfo.summary">
+<?dbhtml filename="object_oriented_framework/summary.html"?>
+<title>小结</title>
+<abstract>
+<title/>
+<para>实打实的对象把戏到此为止。你将在 <xref linkend="soap" endterm="soap.numberonly"/> 中看到一个真实世界应用程序的专有类方法，它使用 &getattr; 创建一个到远程 Web 服务的代理。</para>
+</abstract>
+<para>下一章将继续使用本章的例程探索其他 &python; 的概念，例如：异常、文件对象 和 &for; 循环。</para>
+<para>在研究下一章之前，确保你可以无困难地完成下面的事情：</para>
+<itemizedlist>
+<listitem><para>使用 <link linkend="odbchelper.import">&importmodule;</link> 或 <link linkend="fileinfo.fromimport">&frommoduleimport;</link>导入模块</para></listitem>
+<listitem><para><link linkend="fileinfo.class">定义</link>和<link linkend="fileinfo.create">实例化</link>类</para></listitem>
+<listitem><para>定义 <link linkend="fileinfo.class.example">&init; 方法</link>和其他<link linkend="fileinfo.specialmethods">专用类方法</link>，并理解它们何时会调用</para></listitem>
+<listitem><para>子类化 <link linkend="fileinfo.userdict">&userdict_classname;</link> 来定义行为像字典的类</para></listitem>
+<listitem><para>定义<link linkend="fileinfo.userdict.init.example">数据属性</link>和<link linkend="fileinfo.classattributes">类属性</link>，并理解它们之间的不同</para></listitem>
+<listitem><para>定义<link linkend="fileinfo.private">私有属性和方法</link></para></listitem>
+</itemizedlist>
+</section>
+</chapter>
+<!-- =============================================================================== -->
+<chapter id="filehandling">
+<?dbhtml filename="file_handling/index.html"?>
+<title>异常和文件处理</title>
+<titleabbrev id="filehandling.numberonly">第 6 章</titleabbrev>
+<abstract>
+<title/>
+<para>在本章中，将研究异常、文件对象、&for; 循环、&os; 和 &sys; 模块等内容。如果你已经在其它编程语言中使用过异常，你可以简单看看第一部分来了解 &python; 的语法。但是本章其它的内容仍需仔细研读。</para>
+</abstract>
+<section id="fileinfo.exception">
+<?dbhtml filename="file_handling/handling_exceptions.html"?>
+<title>异常处理</title>
+<abstract>
+<title/>
+<para>与许多面向对象语言一样，&python; 具有异常处理，通过使用 &tryexcept; 块来实现。</para>
+</abstract>
+<note id="compare.exceptions.java" role="compare" vendor="java">
+<title>&python; &vs; &java; 的异常处理</title>
+<para>&python; 使用 &tryexcept; 来处理异常，使用 <literal>raise</literal> 来引发异常。&java; 和 &cpp; 使用 <literal>try...catch</literal> 来处理异常，使用 <literal>throw</literal> 来引发异常。</para>
+</note>
+<para>异常在 &python; 中无处不在；实际上在标准 &python; 库中的每个模块都使用了它们，并且 &python; 自已会在许多不同的情况下引发它们。在整本书中你已经再三看到它们了。</para>
+<itemizedlist>
+<listitem><para><link linkend="odbchelper.dict.define">使用不存在的字典关键字</link>将引发 <errorcode>KeyError</errorcode> 异常。</para></listitem>
+<listitem><para><link linkend="odbchelper.list.search">搜索列表中不存在的值</link>将引发 <errorcode>ValueError</errorcode> 异常。</para></listitem>
+<listitem><para><link linkend="odbchelper.tuplemethods">调用不存在的方法</link>将引发 <errorcode>AttributeError</errorcode> 异常。</para></listitem>
+<listitem><para><link linkend="odbchelper.unboundvariable">引用不存在的变量</link>将引发 <errorcode>NameError</errorcode> 异常。</para></listitem>
+<listitem><para><link linkend="odbchelper.stringformatting.coerce">未强制转换就混用数据类型</link>将引发 <errorcode>TypeError</errorcode> 异常。</para></listitem>
+</itemizedlist>
+<para>在这些情况下，我们都在简单地使用 &python; &ide;：一个错误发生了，异常被打印出来 (取决于你的 &ide;，可能会有意地以一种刺眼的红色形式表示)，这便是。这叫做<emphasis>未处理</emphasis> 异常；当异常被引发时，没有代码来明确地关注和处理它，所以异常被传给置在 &python; 中的缺省的处理，它会输出一些调试信息并且终止运行。在 &ide; 中，这不是什么大事，但是如果发生在你真正的 &python; 程序运行的时候，整个程序将会终止。</para>
+<para>然而，一个异常不一定会引起程序的完全崩溃。当异常引发时，可以被<emphasis>处理</emphasis> 掉。有时候一个异常实际是因为代码中的 bug (比如使用一个不存在的变量)，但是许多时候，一个异常是可以预见的。如果你打开一个文件，它可能不存在。如果你连接一个数据库，它可能不可连接或没有访问所需的正确的安全证书。如果知道一行代码可能会引发异常，你应该使用一个 &tryexcept; 块来处理异常。</para>
+<example>
+<title>打开一个不存在的文件</title>
+<screen>&prompt;<userinput>fsock = open("/notthere", "r")</userinput>      <co id="fileinfo.exceptions.1.1"/>
+<computeroutput role='traceback'>&traceback;
+IOError: [Errno 2] No such file or directory: '/notthere'</computeroutput>
+&prompt;<userinput>try:</userinput>
+&continuationprompt;<userinput>fsock = open("/notthere")</userinput>       <co id="fileinfo.exceptions.1.2"/>
+<prompt>... </prompt><userinput>except IOError:</userinput>                     <co id="fileinfo.exceptions.1.3"/>
+&continuationprompt;<userinput>print "The file does not exist, exiting gracefully"</userinput>
+<prompt>... </prompt><userinput>print "This line will always print"</userinput> <co id="fileinfo.exceptions.1.4"/>
+<computeroutput>The file does not exist, exiting gracefully
+This line will always print</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.exceptions.1.1">
+<para>使用内置 &open; 函数，我们可以试着打开一个文件来读取 (在下一节有关于 &open; 的更多内容)。但是那个文件不存在，所以这样就引发 &ioerror; 异常。因为我们没有提供任何显式的对 &ioerror; 异常的检查，&python; 仅仅打印出某个关于发生了什么的调试信息，然后终止。</para>
+</callout>
+<callout arearefs="fileinfo.exceptions.1.2">
+<para>我们试图打开同样不存在的文件，但是这次我们在一个 &tryexcept; 内来执行它。</para>
+</callout>
+<callout arearefs="fileinfo.exceptions.1.3">
+<para>当 &open; 方法引发 &ioerror; 异常时，我们已经准备好处理它了。<literal>except IOError:</literal> 行捕捉异常，接着执行我们自已的代码块，这个代码块在本例中只是打印出更令人愉快的错误信息。</para>
+</callout>
+<callout arearefs="fileinfo.exceptions.1.4">
+<para>一旦异常被处理了，处理通常在 &tryexcept; 块之后的第一行继续进行。注意这一行将总是打印出来，无论异常是否发生。如果在你的根目录下确实有一个叫 <filename>notthere</filename> 的文件，对 &open; 的调用将成功，<literal>except</literal> 子句将忽略，并且最后一行仍将执行。</para>
+</callout>
+</calloutlist>
+</example>
+<para>异常可能看上去不友好 (毕竟，如果你不捕捉异常，整个程序将崩溃)，但是考虑一下别的方法。你该不会希望获得一个指向不存在的文件的对象吧？不管怎么样你都得检查它的有效性，而且如果你忘记了，你的程序将会在下面某个地方给出奇怪的错误，这样你将不得不追溯到源程序。我确信你做过这种事；这可并不有趣。使用异常，一发生错误，你就可以在问题的源头通过标准的方法来处理它们。</para>
+<section>
+<title>为其他用途使用异常</title>
+<para>除了处理实际的错误条件之外，对于异常还有许多其它的用处。在标准 &python; 库中一个普通的用法就是试着导入一个模块，然后检查是否它能使用。导入一个并不存在的模块将引发一个 &importerror; 异常。你可以使用这种方法来定义多级别的功能――依靠在运行时哪个模块是有效的，或支持多种平台 (即平台特定代码被分离到不同的模块中)。</para>
+<para>你也能通过创建一个从内置的 <classname>Exception</classname> 类继承的类定义你自己的异常，然后使用 <function>raise</function> 命令引发你的异常。如果你对此感兴趣，请看进一步阅读的部分。</para>
+
+<para>下面的例子演示了如何使用异常支持特定平台功能。代码来自 <filename class="headerfile">getpass</filename> 模块，一个从用户获得口令的封装模块。获得口令在 &unix;、&windows; 和 &macos; 平台上的实现是不同的，但是这个代码封装了所有的不同之处。</para>
+
+<example id="crossplatform.example">
+<title>支持特定平台功能</title>
+<programlisting>
+  # Bind the name getpass to the appropriate function
+  try:
+      import termios, TERMIOS                     <co id="fileinfo.exceptions.2.1"/>
+  except ImportError:
+      try:
+          import msvcrt                           <co id="fileinfo.exceptions.2.2"/>
+      except ImportError:
+          try:
+              from EasyDialogs import AskPassword <co id="fileinfo.exceptions.2.3"/>
+          except ImportError:
+              getpass = default_getpass           <co id="fileinfo.exceptions.2.4"/>
+          else:                                   <co id="fileinfo.exceptions.2.5"/>
+              getpass = AskPassword
+      else:
+          getpass = win_getpass
+  else:
+      getpass = unix_getpass</programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.exceptions.2.1">
+<para>&termios; 是 &unix; 独有的一个模块，它提供了对于输入终端的底层控制。如果这个模块无效 (因为它不在你的系统上，或你的系统不支持它)，则导入失败，&python; 引发我们捕捉的 &importerror; 异常。</para>
+</callout>
+<callout arearefs="fileinfo.exceptions.2.2">
+<para>OK，我们没有 &termios;，所以让我们试试 &msvcrt;，它是 &windows; 独有的一个模块，可以提供在 Microsoft <application>Visual C++</application> 运行服务中的许多有用的函数的一个&api;。如果导入失败，&python; 会引发我们捕捉的 &importerror; 异常。</para>
+</callout>
+<callout arearefs="fileinfo.exceptions.2.3">
+<para>如果前两个不能工作，我们试着从 &easydialogs; 导入一个函数，它是 &macos; 独有的一个模块，提供了各种各样类型的弹出对话框。再一次，如果导入失败，&python; 会引发一个我们捕捉的 &importerror; 异常。</para>
+</callout>
+<callout arearefs="fileinfo.exceptions.2.4">
+<para>这些平台特定的模块没有一个有效 (有可能，因为 &python; 已经移植到了许多不同的平台上了)，所以我们需要回头使用一个缺省口令输入函数 (这个函数定义在 &getpass; 模块中的别的地方)。注意我们在这里所做的：我们将函数 <function>default_getpass</function> 赋给变量 <varname>getpass</varname>。如果你读了官方 &getpass; 文档，它会告诉你 &getpass; 模块定义了一个 <function>getpass</function> 函数。它是这样做的：通过绑定 <varname>getpass</varname> 到正确的函数来适应你的平台。然后当你调用 <function>getpass</function> 函数时，你实际上调用了平台特定的函数，是这段代码已经为你设置好的。你不需要知道或关心你的代码正运行在何种平台上；只要调用 <function>getpass</function>，则它总能正确处理。</para>
+</callout>
+<callout arearefs="fileinfo.exceptions.2.5">
+<para>一个 &tryexcept; 块可以有一条 &else; 子句，就像 &if; 语句。如果在 <literal>try</literal> 块中没有异常引发，然后 &else; 子句被执行。在本例中，那就意味着如果 <literal>from EasyDialogs import AskPassword</literal> 导入可工作，所以我们应该绑定 <varname>getpass</varname> 到 <function>AskPassword</function> 函数。其它每个 &tryexcept; 块有着相似的 &else; 子句，当我们发现一个 &import; 可用时，就绑定 <varname>getpass</varname> 到适合的函数。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythontutorial; 讨论了异常，包括<ulink url="&url_pythontutorial;node10.html#SECTION0010400000000000000000">定义和引发你自已的异常，以及一次处理多个异常</ulink>。</para></listitem>
+<listitem><para>&pythonlibraryreference; 总结了<ulink url="&url_pythonlibraryreference;module-exceptions.html">所有内置异常</ulink>。</para></listitem>
+<listitem><para>&pythonlibraryreference; 提供了 <ulink url="&url_pythonlibs;module-getpass.html">getpass</ulink> 模块的文档。</para></listitem>
+<listitem><para>&pythonlibraryreference; 提供了 <ulink url="&url_pythonlibraryreference;module-traceback.html"><filename class="headerfile">traceback</filename> 模块</ulink> 的文档，这个模块在异常引发之后，提供了底层的对异常属性的处理。</para></listitem>
+<listitem><para>&pythonlanguagereference; 讨论了 <ulink url="&url_pythonlanguagereference;try.html">&tryexcept; 块</ulink> 的内部工作方式。</para></listitem>
+</itemizedlist>
+</section>
+</section>
+<section id="fileinfo.files">
+<?dbhtml filename="file_handling/file_objects.html"?>
+<title>与文件对象共事</title>
+<abstract>
+<title/>
+<para>&python; 有一个内置函数，&open;，用来打开在磁盘上的文件。&open; 返回一个文件对象，它拥有一些方法和属性，可以得到被打开文件的信息，以及对被打开文件进行操作。</para>
+</abstract>
+<example>
+<title>打开文件</title>
+<screen>&prompt;<userinput>f = open("/music/_singles/kairo.mp3", "rb")</userinput> <co id="fileinfo.files.1.1"/>
+&prompt;<userinput>f</userinput>                                           <co id="fileinfo.files.1.2"/>
+<computeroutput>&lt;open file '/music/_singles/kairo.mp3', mode 'rb' at 010E3988></computeroutput>
+&prompt;<userinput>f.mode</userinput>                                      <co id="fileinfo.files.1.3"/>
+<computeroutput>'rb'</computeroutput>
+&prompt;<userinput>f.name</userinput>                                      <co id="fileinfo.files.1.4"/>
+<computeroutput>'/music/_singles/kairo.mp3'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.files.1.1">
+<para>&open; 方法可以接收三个参数：文件名、模式和缓冲区参数。只有第一个参数 (文件名) 是必须的；其它两个是<link linkend="apihelper.optional">可选的</link>。如果没有指定，文件以文本方式打开。这里我们以二进制方式打开文件进行读取。(<literal>print open.__doc__</literal> 会给出所有可能模式的很好的解释。)</para>
+</callout>
+<callout arearefs="fileinfo.files.1.2">
+<para>&open; 函数返回一个对象 (到现在为止，<link linkend="odbchelper.objects">这一点应该不会使你感到吃惊</link>)。一个文件对象有几个有用的属性。</para>
+</callout>
+<callout arearefs="fileinfo.files.1.3">
+<para>文件对象的 <varname>mode</varname> 属性告诉你文件以何种模式被打开。</para>
+</callout>
+<callout arearefs="fileinfo.files.1.4">
+<para>文件对象的 <varname>name</varname> 属性告诉你文件对象所打开的文件名。</para>
+</callout>
+</calloutlist>
+</example>
+<section>
+<title>读取文件</title>
+<para>你打开文件之后，你要做的第一件事是从中读取，正如下一个例子所展示的。</para>
+<example>
+<title>读取文件</title>
+<screen>
+&prompt;<userinput>f</userinput>
+<computeroutput>&lt;open file '/music/_singles/kairo.mp3', mode 'rb' at 010E3988></computeroutput>
+&prompt;<userinput>f.tell()</userinput>              <co id="fileinfo.files.2.1"/>
+<computeroutput>0</computeroutput>
+&prompt;<userinput>f.seek(-128, 2)</userinput>       <co id="fileinfo.files.2.2"/>
+&prompt;<userinput>f.tell()</userinput>              <co id="fileinfo.files.2.3"/>
+<computeroutput>7542909</computeroutput>
+&prompt;<userinput>tagData = f.read(128)</userinput> <co id="fileinfo.files.2.4"/>
+&prompt;<userinput>tagData</userinput>
+<computeroutput>'TAGKAIRO****THE BEST GOA         ***DJ MARY-JANE***            
+Rave Mix                      2000http://mp3.com/DJMARYJANE     \037'</computeroutput>
+&prompt;<userinput>f.tell()</userinput>              <co id="fileinfo.files.2.5"/>
+<computeroutput>7543037</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.files.2.1">
+<para>一个文件对象维护它所打开文件的状态。文件对象的 &tell; 方法告诉你在被打开文件中的当前位置。因为我们还没有对这个文件做任何事，当前位置为 &zero;，它是文件的起始处。</para>
+</callout>
+<callout arearefs="fileinfo.files.2.2">
+<para>文件对象的 &seek; 方法在被打开文件中移动到另一个位置。第二个参数指出第一个参数是什么意思：&zero; 表示移动到一个绝对位置 (从文件起始处算起)，&one; 表示移到一个相对位置 (从当前位置算起)，还有 <literal>2</literal> 表示相对于文件尾的位置。因为我们搜索的 &mp3; 标记保存在文件的末尾，我们使用 <literal>2</literal> 并且告诉文件对象从文件尾移动到 <literal>128</literal> 字节的位置。</para>
+</callout>
+<callout arearefs="fileinfo.files.2.3">
+<para>&tell; 方法确认了当前位置已经移动了。</para>
+</callout>
+<callout arearefs="fileinfo.files.2.4">
+<para>&read; 方法从被打开文件中读取指定个数的字节，并且返回含有读取数据的字符串。可选参数指定了读取的最大字节数。如果没有指定参数，&read; 将读到文件末尾。(我们本可以在这里简单地说 <literal>read()</literal> ，因为我们确切地知道在文件的何处，事实上，我们读的是最后 128 个字节。) 读出的数据赋给变量 <varname>tagData</varname>，并且当前的位置根据所读的字节数作了修改。</para>
+</callout>
+<callout arearefs="fileinfo.files.2.5">
+<para>&tell; 方法确认了当前位置已经移动了。如果做一下算术，你会看到在读了 128 个字节之后，位置数已经增加了 128。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section>
+<title>关闭文件</title>
+<para>打开文件消耗系统资源，并且其间其它程序可能无法访问它们 (取决于文件模式)。这就是一旦操作完毕就该关闭文件的重要所在。</para>
+<example>
+<title>关闭文件</title>
+<screen>
+&prompt;<userinput>f</userinput>
+<computeroutput>&lt;open file '/music/_singles/kairo.mp3', mode 'rb' at 010E3988></computeroutput>
+&prompt;<userinput>f.closed</userinput>       <co id="fileinfo.files.3.1"/>
+<computeroutput>False</computeroutput>
+&prompt;<userinput>f.close()</userinput>      <co id="fileinfo.files.3.2"/>
+&prompt;<userinput>f</userinput>
+<computeroutput>&lt;closed file '/music/_singles/kairo.mp3', mode 'rb' at 010E3988></computeroutput>
+&prompt;<userinput>f.closed</userinput>       <co id="fileinfo.files.3.3"/>
+<computeroutput>True</computeroutput>
+&prompt;<userinput>f.seek(0)</userinput>      <co id="fileinfo.files.3.4"/>
+<computeroutput role='traceback'>&traceback;
+ValueError: I/O operation on closed file</computeroutput>
+&prompt;<userinput>f.tell()</userinput>
+<computeroutput role='traceback'>&traceback;
+ValueError: I/O operation on closed file</computeroutput>
+&prompt;<userinput>f.read()</userinput>
+<computeroutput role='traceback'>&traceback;
+ValueError: I/O operation on closed file</computeroutput>
+&prompt;<userinput>f.close()</userinput>      <co id="fileinfo.files.3.5"/></screen>
+<calloutlist>
+<callout arearefs="fileinfo.files.3.1">
+<para>文件对象的 <varname>closed</varname> 属性表示对象是打开还是关闭了文件。在本例中，文件仍然打开着 (<varname>closed</varname> 是 &false;)。</para>
+</callout>
+<callout arearefs="fileinfo.files.3.2">
+<para>为了关闭文件，调用文件对象的 &close; 方法。这样就释放掉你加在文件上的锁 (如果有的话)，刷新被缓冲的系统还未写入的输出 (如果有的话)，并且释放系统资源。</para>
+</callout>
+<callout arearefs="fileinfo.files.3.3">
+<para><varname>closed</varname> 属性证实了文件被关闭了。</para>
+</callout>
+<callout arearefs="fileinfo.files.3.4">
+<para>文件被关闭了，但这并不意味着文件对象不再存在。变量 <varname>f</varname> 将继续存在，直到它<link linkend="fileinfo.scope">超出作用域</link>或被手工删除。然而，一旦文件被关闭，操作它的方法就没有一个能使用；它们都会引发异常。</para>
+</callout>
+<callout arearefs="fileinfo.files.3.5">
+<para>对一个文件已经关闭的文件对象调用 &close; <emphasis>不会</emphasis> 引发异常，它静静地失败。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section>
+<title>处理 <acronym>I/O</acronym> 错误</title>
+<para>现在你已经足能理解前一章的例子程序 &fileinfo_filename; 的文件处理代码了。下面这个例子展示了如何安全地打开文件和读取文件，以及优美地处理错误。</para>
+<example id="fileinfo.files.incode">
+<title>&mp3fileinfo_classname; 中的文件对象</title>
+<programlisting>
+&fileinfo_mp3parsetryexcepttry; <co id="fileinfo.files.4.1"/>
+&fileinfo_mp3parseopen; <co id="fileinfo.files.4.2"/>
+&fileinfo_mp3parsetryfinallytry;
+&fileinfo_mp3parseseek; <co id="fileinfo.files.4.3"/>
+&fileinfo_mp3parseread; <co id="fileinfo.files.4.4"/>
+&fileinfo_mp3parsetryfinallyfinally; <co id="fileinfo.files.4.5"/>
+&fileinfo_mp3parseclose;
+            .
+            .
+            .
+&fileinfo_mp3parsetryexceptexcept; <co id="fileinfo.files.4.6"/>
+&fileinfo_mp3parsepass;</programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.files.4.1">
+<para>因为打开和读取文件有风险，并且可能引发异常，所有这些代码都用一个 &tryexcept; 块封装。(嘿，<link linkend="odbchelper.indenting">标准化的缩近</link>不好吗？这就是你开始欣赏它的地方。)</para>
+</callout>
+<callout arearefs="fileinfo.files.4.2">
+<para>&open; 函数可能引发 &ioerror; 异常。(可能是文件不存在。)</para>
+</callout>
+<callout arearefs="fileinfo.files.4.3">
+<para>&seek; 方法可能引发 &ioerror; 异常。(可能是文件长度小于 128 字节。)</para>
+</callout>
+<callout arearefs="fileinfo.files.4.4">
+<para>&read; 方法可能引发 &ioerror; 异常。(可能磁盘有坏扇区，或它在一个网络驱动器上，而网络刚好断了。)</para>
+</callout>
+<callout arearefs="fileinfo.files.4.5">
+<para>这是新的：一个 &tryfinally; 块。一旦文件通过 &open; 函数被成功地打开，我们应该绝对保证把它关闭，即使是在 &seek; 或 &read; 方法引发了一个异常时。&tryfinally; 块可以用来：在 <literal>finally</literal> 块中的代码将<emphasis>总是</emphasis> 被执行，甚至某些东西在 <literal>try</literal> 块中引发一个异常也会执行。可以这样考虑，不管在路上发生什么，代码都会被 “即将灭亡” 地执行。</para>
+</callout>
+<callout arearefs="fileinfo.files.4.6">
+<para>最后，处理我们的 &ioerror; 异常。它可能是由调用 &open;、&seek; 或 &read; 引发的 &ioerror; 异常。这里，我们其实不用关心，因为将要做的事就是静静地忽略它然后继续。(记住，&pass; 是一条不做任何事的 &python; 语句。) 这样完全合法，<quote>处理</quote> 一个异常可以明确表示不做任何事。它仍然被认为处理过了，并且处理将正常继续，从 &tryexcept; 块的下一行代码开始。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section>
+<title>写入文件</title>
+<para>正如你所期待的，你也能用与读取文件同样的方式写入文件。有两种基本的文件模式：</para>
+<itemizedlist>
+<listitem><para>追加 (Append) 模式将数据追加到文件尾。</para></listitem>
+<listitem><para>写入 (write) 模式将覆盖文件的原有内容。</para></listitem>
+</itemizedlist>
+<para>如果文件还不存在，任意一种模式都将自动创建文件，因此从来不需要任何复杂的逻辑：“如果 log 文件还不存在，将创建一个新的空文件，正因为如此，你可以第一次就打开它”。打开文件并开始写就可以了。</para>
+<example id="fileinfo.files.writeandappend">
+<title>写入文件</title>
+<screen>
+&prompt;<userinput>logfile = open('test.log', 'w')</userinput> <co id="fileinfo.files.5.1"/>
+&prompt;<userinput>logfile.write('test succeeded')</userinput> <co id="fileinfo.files.5.2"/>
+&prompt;<userinput>logfile.close()</userinput>
+&prompt;<userinput>print file('test.log').read()</userinput>   <co id="fileinfo.files.5.3"/>
+<computeroutput>test succeeded</computeroutput>
+&prompt;<userinput>logfile = open('test.log', 'a')</userinput> <co id="fileinfo.files.5.4"/>
+&prompt;<userinput>logfile.write('line 2')</userinput>
+&prompt;<userinput>logfile.close()</userinput>
+&prompt;<userinput>print file('test.log').read()</userinput>   <co id="fileinfo.files.5.5"/>
+<computeroutput>test succeededline 2</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="fileinfo.files.5.1">
+<para>你可以大胆地开始创建新文件 <filename>test.log</filename> 或覆盖现有文件，并为写入目的而打开它。(第二个参数 <literal>"w"</literal> 的意思是为文件写入而打开。) 是的，它和想象中的一样危险。我希望你不要关心文件以前的内容，因为它现在已经不存在了。</para>
+</callout>
+<callout arearefs="fileinfo.files.5.2">
+<para>你可以使用 &open; 返回的文件对象的 &write; 方法向一个新打开的文件添加数据。</para>
+</callout>
+<callout arearefs="fileinfo.files.5.3">
+<para>&file; 是 &open; 的同义语。这一行语句打开文件，读取内容，并打印它们。</para>
+</callout>
+<callout arearefs="fileinfo.files.5.4">
+<para>碰巧你知道 <filename>test.log</filename> 存在 (因为你刚向它写完了数据)，所以你可以打开它并向其追加数据。(<literal>"a"</literal> 参数的意思是为追加目的打开文件。) 实际上即使文件不存在你也可以这样做，因为以追加方式打开一文件时，如果需要的话会创建文件。但是追加操作<emphasis>从不</emphasis> 损坏文件的现有内容。</para>
+</callout>
+<callout arearefs="fileinfo.files.5.5">
+<para>正如你所看到的，原来的行和你以追加方式写入的第二行现在都在 <filename>test.log</filename> 中了。同时注意两行之间并没包含回车符。因为两次写入文件时都没有明确地写入回车符，所以文件中没有包含回车符。你可以用 <literal>"\n"</literal> 写入回车符。因为你没做这项工作，所以你写到文件的所有内容都将显示在同一行上。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythontutorial; 讨论了文件的读取和写入，包括如何<ulink url="&url_pythontutorial;node9.html#SECTION009210000000000000000">将一个文件一次一行地读到 list 中</ulink>。</para></listitem>
+<listitem><para>&effbot; 讨论了<ulink url="&url_effbot;readline-performance.htm">各种各样读取文件方法</ulink> 的效率和性能。</para></listitem>
+<listitem><para>&pythonknowledgebase; 回答了<ulink url="&url_pythonknowledgebase;index.phtml/fid/552">关于文件的常见问题</ulink>。</para></listitem>
+<listitem><para>&pythonlibraryreference; 总结了<ulink url="&url_pythonlibraryreference;bltin-file-objects.html">所有文件对象模块</ulink>。</para></listitem>
+</itemizedlist>
+</section>
+</section>
+<section id="fileinfo.for">
+<?dbhtml filename="file_handling/for_loops.html"?>
+<title>&for; 循环</title>
+<abstract>
+<title/>
+<para>与其它大多数语言一样，&python; 也拥有 &for; 循环。你到现在还未曾看到它们的唯一原因就是，&python; 在其它太多的方面表现出色，通常你不需要它们。</para>
+</abstract>
+<para>其它大多数语言没有像 &python; 一样的强大的 list 数据类型，所以你需要亲自做很多事情，指定开始，结束和步长，来定义一定范围的整数或字符或其它可重复的实体。但是在 &python; 中，&for; 循环简单地在一个列表上循环，与 <link linkend="odbchelper.map">list 解析</link>的工作方式相同。</para>
+<example>
+<title>&for; 循环介绍</title>
+<screen>&prompt;<userinput>li = ['a', 'b', 'e']</userinput>
+&prompt;<userinput>for s in li:</userinput>         <co id="fileinfo.for.1.1"/>
+&continuationprompt;<userinput>print s</userinput>          <co id="fileinfo.for.1.2"/>
+<computeroutput>a
+b
+e</computeroutput>
+&prompt;<userinput>print "\n".join(li)</userinput>  <co id="fileinfo.for.1.3"/>
+<computeroutput>a
+b
+e</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.for.1.1">
+<para>&for; 循环的语法同 <link linkend="odbchelper.map">list 解析</link>相似。<varname>li</varname> 是一个 list，而 <varname>s</varname> 将从第一个元素开始依次接收每个元素的值。</para>
+</callout>
+<callout arearefs="fileinfo.for.1.2">
+<para>像 &if; 语句或其它任意<link linkend="odbchelper.indenting">缩进块</link>，&for; 循环可以包含任意数目的代码行。</para>
+</callout>
+<callout arearefs="fileinfo.for.1.3">
+<para>这就是你以前没看到过 &for; 循环的原因：至今我们都不需要它。太令人吃惊了，当你想要的只是一个 &join; 或是 list 解析时，在其它语言中常常需要使用 &for; 循环。</para>
+</callout>
+</calloutlist>
+</example>
+<para>要做一个 <quote>通常的</quote> (&vb; 标准的) 计数 &for; 循环也非常简单。</para>
+<example id="fileinfo.for.counter">
+<title>简单计数</title>
+<screen>
+&prompt;<userinput>for i in range(5):</userinput>             <co id="fileinfo.for.3.1"/>
+&continuationprompt;<userinput>print i</userinput>
+<computeroutput>0
+1
+2
+3
+4</computeroutput>
+&prompt;<userinput>li = ['a', 'b', 'c', 'd', 'e']</userinput>
+&prompt;<userinput>for i in range(len(li)):</userinput>       <co id="fileinfo.for.3.2"/>
+&continuationprompt;<userinput>print li[i]</userinput>
+<computeroutput>a
+b
+c
+d
+e</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="fileinfo.for.3.1">
+<para>正如你在 <xref linkend="odbchelper.multiassign.range"/> 所看到的，&range; 生成一个整数的 list，通过它来控制循环。我知道它看上去有些奇怪，但是它对计数循环偶尔 (我只是说<emphasis>偶尔</emphasis>) 会有用 。</para>
+</callout>
+<callout arearefs="fileinfo.for.3.2">
+<para>我们从来没这么用过。这是 &vb; 的思维风格。摆脱它吧。正确遍历 list 的方法是前面的例子所展示的。</para>
+</callout>
+</calloutlist>
+</example>
+<para>&for; 循环不仅仅用于简单计数。它们可以遍历任何类型的东西。下面的例子是一个用 &for; 循环遍历 dictionary 的例子。</para>
+<example id="dictionaryiter.example">
+<title>遍历 dictionary</title>
+<screen>
+&prompt;<userinput>import os</userinput>
+&prompt;<userinput>for k, v in os.environ.items():</userinput>      <co id="fileinfo.for.2.1"/> <co id="fileinfo.for.2.2"/>
+&continuationprompt;<userinput>print "%s=%s" % (k, v)</userinput>
+<computeroutput>USERPROFILE=C:\Documents and Settings\mpilgrim
+OS=Windows_NT
+COMPUTERNAME=MPILGRIM
+USERNAME=mpilgrim
+
+[...略...]</computeroutput>
+&prompt;<userinput>print "\n".join(["%s=%s" % (k, v)</userinput>
+&continuationprompt;<userinput>for k, v in os.environ.items()])</userinput> <co id="fileinfo.for.2.3"/>
+<computeroutput>USERPROFILE=C:\Documents and Settings\mpilgrim
+OS=Windows_NT
+COMPUTERNAME=MPILGRIM
+USERNAME=mpilgrim
+
+[...略...]</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.for.2.1">
+<para><varname>os.environ</varname> 是在你的系统上所定义的环境变量的 dictionary。在 &windows; 下，这些变量是可以从 &dos; 访问的用户和系统变量。在 &unix; 下，它们是在你的 shell 启动脚本中所 export (输出) 的变量。在 &macos; 中，没有环境变量的概念，所以这个 dictionary 为空。</para>
+</callout>
+<callout arearefs="fileinfo.for.2.2">
+<para><literal>os.environ.items()</literal> 返回一个 tuple 的 list：<literal>[(<replaceable>key1</replaceable>, <replaceable>value1</replaceable>), (<replaceable>key2</replaceable>, <replaceable>value2</replaceable>), ...]</literal>。&for; 循环对这个 list 进行遍历。第一轮，它将 <literal><replaceable>key1</replaceable></literal> 赋给 <varname>k</varname> ，<literal><replaceable>value1</replaceable></literal> 赋给 <varname>v</varname>，所以 <varname>k</varname> = <literal>USERPROFILE</literal>，<varname>v</varname> = <literal>C:\Documents and Settings\mpilgrim</literal>。第二轮，<varname>k</varname> 得到第二个键字 <literal>OS</literal>，<varname>v</varname> 得到相应的值 <literal>Windows_NT</literal>。</para>
+</callout>
+<callout arearefs="fileinfo.for.2.3">
+<para>使用<link linkend="odbchelper.multiassign">多变量赋值</link>和 <link linkend="odbchelper.map">list 解析</link>，你可以使用单行语句来替换整个 &for; 循环。在实际的编码中是否这样做只是个人风格问题；我喜欢它是因为，将一个 dictionary 映射到一个 list，然后将 list 合并成一个字符串，这一过程显得很清晰。其它的程序员宁愿将其写成一个 &for; 循环。请注意在两种情况下输出是一样的，然而这一版本稍微快一些，因为它只有一条 &print; 语句而不是许多。</para>
+</callout>
+</calloutlist>
+</example>
+<para>现在我们来看看在 <xref linkend="fileinfo" endterm="fileinfo.numberonly"/> 介绍的样例程序 &fileinfo_filename; 中 <classname>MP3FileInfo</classname> 的 &for; 循环 。</para>
+<example id="fileinfo.multiassign.for.example">
+<title>&mp3fileinfo_classname; 中的 &for; 循环</title>
+<programlisting>
+&fileinfo_mp3classvar;                               <co id="fileinfo.multiassign.5.1"/>
+    .
+    .
+    .
+&fileinfo_mp3parseiftag;
+&fileinfo_mp3parsefor; <co id="fileinfo.multiassign.5.2"/>
+&fileinfo_mp3parsecode; <co id="fileinfo.multiassign.5.3"/></programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.multiassign.5.1">
+<para>&tagdatamap; 是一个<link linkend="fileinfo.classattributes">类属性</link>，它定义了我们正在一个 &mp3; 文件中搜索的标记。标记存储为定长字段，只要我们读出文件最后 128 个字节，那么第 3 到 32 字节总是歌曲的名字，33-62 总是歌手的名字，63-92 为专辑的名字，等等。请注意 &tagdatamap; 是一个 tuple 的 dictionary，每个 tuple 包含两个整数和一个函数引用。</para>
+</callout>
+<callout arearefs="fileinfo.multiassign.5.2">
+<para>这个看上去复杂一些，但其实并非如此。这里的 &for; 变量结构与 &items; 所返回的 list 的元素的结构相匹配。记住，&items; 返回一个形如 <literal>(<replaceable>key</replaceable>, <replaceable>value</replaceable>)</literal> 的 tuple 的 list。list 第一个元素是 <literal>("title", (3, 33, &lt;function stripnulls>))</literal>，所以循环的第一轮，<varname>tag</varname> 为 <literal>"title"</literal>，<varname>start</varname> 为 <literal>3</literal>，<varname>end</varname> 为 <literal>33</literal>，<varname>parseFunc</varname> 为函数 <function>stripnulls</function>。</para>
+</callout>
+<callout arearefs="fileinfo.multiassign.5.3">
+<para>现在我们已经从一个单个的 &mp3; 标记中提取出了所有的参数，将标记数据保存起来挺容易。我们从 <varname>start</varname> 到 <varname>end</varname> 对 <varname>tagdata</varname> 进行<link linkend="odbchelper.list.slice">分片</link>，从而得到这个标记的实际数据，调用 <varname>parseFunc</varname> 对数据进行后续的处理，接着将 <varname>parseFunc</varname> 的返回值作为值赋值给伪字典 <varname>self</varname> 中的键字 <varname>tag</varname>。在遍历完 &tagdatamap; 中所有元素之后，<varname>self</varname> 拥有了所有标记的值，<link linkend="fileinfo.specialmethods.setname">你知道看上去是什么样</link>。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+<section id="fileinfo.modules">
+<?dbhtml filename="file_handling/more_on_modules.html"?>
+<title>使用 &sysmodules;</title>
+<abstract>
+<title/>
+<para>与其它任何 &python; 的东西一样，模块也是对象。只要导入了，总可以用全局 dictionary &sysmodules; 来得到一个模块的引用。</para>
+</abstract>
+<example>
+<title>&sysmodules; 介绍</title>
+<screen>&prompt;<userinput>import sys</userinput>                          <co id="fileinfo.modules.1.1"/>
+&prompt;<userinput>print '\n'.join(sys.modules.keys())</userinput> <co id="fileinfo.modules.1.2"/>
+<computeroutput>win32api
+os.path
+os
+exceptions
+__main__
+ntpath
+nt
+sys
+__builtin__
+site
+signal
+UserDict
+stat</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.modules.1.1">
+<para>&sys; 模块包含了系统级的信息，像正在运行的 &python; 的版本 (<literal>&sys;.version</literal> 或 <literal>&sys;.version_info</literal>)，和系统级选项，像最大允许递归的深度 (<literal>&sys;.getrecursionlimit()</literal> 和 <literal>&sys;.setrecursionlimit()</literal>)。</para>
+</callout>
+<callout arearefs="fileinfo.modules.1.2">
+<para>&sysmodules; 是一个字典，它包含了从 &python; 开始运行起，被导入的所有模块。键字就是模块名，键值就是模块对象。请注意除了你的程序导入的模块外还有其它模块。&python; 在启动时预先装入了一些模块，如果你在一个 &python; &ide; 环境下，&sysmodules; 包含了你在 &ide; 中运行的所有程序所导入的所有模块。</para>
+</callout>
+</calloutlist>
+</example>
+<para>下面的例子展示了如何使用 &sysmodules;。</para>
+<example>
+<title>使用 &sysmodules;</title>
+<screen>&prompt;<userinput>import fileinfo</userinput>         <co id="fileinfo.modules.1.3"/>
+&prompt;<userinput>print '\n'.join(sys.modules.keys())</userinput>
+<computeroutput>win32api
+os.path
+os
+fileinfo
+exceptions
+__main__
+ntpath
+nt
+sys
+__builtin__
+site
+signal
+UserDict
+stat</computeroutput>
+&prompt;<userinput>fileinfo</userinput>
+<computeroutput>&lt;module 'fileinfo' from 'fileinfo.pyc'></computeroutput>
+&prompt;<userinput>sys.modules["fileinfo"]</userinput> <co id="fileinfo.modules.1.4"/>
+<computeroutput>&lt;module 'fileinfo' from 'fileinfo.pyc'></computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.modules.1.3">
+<para>当导入新的模块，它们加入到 &sysmodules; 中。这就解释了为什么第二次导入相同的模块时非常的快：&python; 已经在 &sysmodules; 中装入和缓冲了，所以第二次导入仅仅对字典做了一个查询。</para>
+</callout>
+<callout arearefs="fileinfo.modules.1.4">
+<para>一旦给出任何以前导入过的模块名 (以字符串方式)，通过 &sysmodules; 字典，你可以得到对模块本身的一个引用。</para>
+</callout>
+</calloutlist>
+</example>
+<para>下面的例子将展示通过结合使用 <literal>__module__</literal> 类属性和 &sysmodules; dictionary 来获取已知类所在的模块。</para>
+<example>
+<title>&moduleattr; 类属性</title>
+<screen>&prompt;<userinput>from fileinfo import MP3FileInfo</userinput>
+&prompt;<userinput>MP3FileInfo.__module__</userinput>              <co id="fileinfo.modules.2.1"/>
+<computeroutput>'fileinfo'</computeroutput>
+&prompt;<userinput>sys.modules[MP3FileInfo.__module__]</userinput> <co id="fileinfo.modules.2.2"/>
+<computeroutput>&lt;module 'fileinfo' from 'fileinfo.pyc'></computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.modules.2.1">
+<para>每个 &python; 类都拥有一个内置的<link linkend="fileinfo.classattributes">类属性</link> &moduleattr;，它定义了这个类的模块的名字。</para>
+</callout>
+<callout arearefs="fileinfo.modules.2.2">
+<para>将它与 &sysmodules; 字典复合使用，你可以得到定义了某个类的模块的引用。</para>
+</callout>
+</calloutlist>
+</example>
+<para>现在准备好了，看看在样例程序 <xref linkend="fileinfo" endterm="fileinfo.numberonly"/> &sysmodules; 介绍的 &fileinfo_filename; 中是如何使用的。这个例子显示它的一部分代码。</para>
+<example>
+<title>&fileinfo_filename; 中的 &sysmodules;</title>
+<programlisting>
+&fileinfo_getdef; <co id="fileinfo.modules.3.1"/>
+&fileinfo_getdoc;
+&fileinfo_getcode; <co id="fileinfo.modules.3.2"/>
+&fileinfo_getreturn; <co id="fileinfo.modules.3.3"/></programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.modules.3.1">
+<para>这是一个有两个参数的函数；<varname>filename</varname> 是必须的，但 <varname>module</varname> 是<link linkend="apihelper.optional">可选的</link>并且 module 的缺省值包含了 <classname>FileInfo</classname> 类。这样看上去效率低，因为你可能认为 &python; 会在每次函数调用时计算这个 &sysmodules; 表达式。实际上，&python; 仅会对缺省表达式计算一次，是在模块导入的第一次。正如后面我们会看到的，我们永远不会用一个 <varname>module</varname> 参数来调用这个函数，所以 <varname>module</varname> 的功能是作为一个函数级别的常量。</para>
+</callout>
+<callout arearefs="fileinfo.modules.3.2">
+<para>我们会在后面再仔细研究这一行，在我们了解了 &os; 模块之后。那么现在，只要相信 <varname>subclass</varname> 最终为一个类的名字就行了，像 <classname>MP3FileInfo</classname>。</para>
+</callout>
+<callout arearefs="fileinfo.modules.3.3">
+<para>你已经了解了 <link linkend="apihelper.getattr">&getattr;</link>，它可以通过名字得到一个对象的引用。&hasattr; 是一个补充性的函数，用来检查一个对象是否具有一个特定的属性；在本例中，用来检查一个模块是否有一个特别的类 (然而它可以用于任何类和任何属性，就像 &getattr;)。用英语来说，这行代码是说，<quote>If this module has the class named by <varname>subclass</varname> then return it, otherwise return the base class <classname>FileInfo</classname> (如果这个模块有一个名为 <varname>subclass</varname> 的类，那么返回它，否则返回基类 <classname>FileInfo</classname>)</quote>。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythontutorial; 讨论了<ulink url="&url_pythontutorial;node6.html#SECTION006710000000000000000">缺省参数到底在什么时候和是如何计算的</ulink>。</para></listitem>
+<listitem><para>&pythonlibraryreference; 提供了 <ulink url="&url_pythonlibraryreference;module-sys.html">&sys;</ulink> 模块的文档。</para></listitem>
+</itemizedlist>
+</section>
+<section id="fileinfo.os">
+<?dbhtml filename="file_handling/os_module.html"?>
+<title>与目录共事</title>
+<abstract>
+<title/>
+<para>&ospath; 模块有几个操作文件和目录的函数。这里，我们看看如何操作路径名和列出一个目录的内容。</para>
+</abstract>
+<example id="fileinfo.os.path.join.example">
+<title>构造路径名</title>
+<screen>
+&prompt;<userinput>import os</userinput>
+&prompt;<userinput>os.path.join("c:\\music\\ap\\", "mahadeva.mp3")</userinput> <co id="fileinfo.os.1.1"/> <co id="fileinfo.os.1.2"/>
+<computeroutput>'c:\\music\\ap\\mahadeva.mp3'</computeroutput>
+&prompt;<userinput>os.path.join("c:\\music\\ap", "mahadeva.mp3")</userinput>   <co id="fileinfo.os.1.3"/>
+<computeroutput>'c:\\music\\ap\\mahadeva.mp3'</computeroutput>
+&prompt;<userinput>os.path.expanduser("~")</userinput>                         <co id="fileinfo.os.1.4"/>
+<computeroutput>'c:\\Documents and Settings\\mpilgrim\\My Documents'</computeroutput>
+&prompt;<userinput>os.path.join(os.path.expanduser("~"), "Python")</userinput> <co id="fileinfo.os.1.5"/>
+<computeroutput>'c:\\Documents and Settings\\mpilgrim\\My Documents\\Python'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.os.1.1">
+<para>&ospath; 是一个模块的引用；使用哪一个模块要看你正运行在哪种平台上。就像 <link linkend="crossplatform.example">&getpass;</link> 通过将 <varname>getpass</varname> 设置为一个与平台相关的函数从而封装了平台之间的不同。&os; 通过设置 <varname>path</varname> 封装不同的相关平台模块。</para>
+</callout>
+<callout arearefs="fileinfo.os.1.2">
+<para>&ospath; 的 &join; 函数把一个或多个部分路径名连接成一个路径名。在这个简单的例子中，它只是将字符串进行连接。(请注意在 &windows; 下处理路径名是一个麻烦的事，因为反斜线字符必须被转义。)</para>
+</callout>
+<callout arearefs="fileinfo.os.1.3">
+<para>在这个几乎没有价值的例子中，在将路径名加到文件名上之前，&join; 将在路径名后添加额外的反斜线。当发现这一点时我高兴极了，因为当用一种新的语言创建我自已的工具包时，<function>addSlashIfNecessary</function> 总是我必须要写的那些愚蠢的小函数之一。在 &python; 中<emphasis>不要</emphasis> 写这样的愚蠢的小函数，聪明的人已经为你考虑到了。</para>
+</callout>
+<callout arearefs="fileinfo.os.1.4">
+<para><function>expanduser</function> 将对使用 <literal>~</literal> 来表示当前用户根目录的路径名进行扩展。在任何平台上，只要用户拥有一个根目录，它就会有效，像 &windows;、&unix; 和 &macosx;，但在 &macos; 上无效。</para>
+</callout>
+<callout arearefs="fileinfo.os.1.5">
+<para>将这些技术组合在一起，你可以容易地为在用户根目录下的目录和文件构造出路径名。</para>
+</callout>
+</calloutlist>
+</example>
+<example id="splittingpathnames.example">
+<title>分割路径名</title>
+<screen>&prompt;<userinput>os.path.split("c:\\music\\ap\\mahadeva.mp3")</userinput>                        <co id="fileinfo.os.2.1"/>
+<computeroutput>('c:\\music\\ap', 'mahadeva.mp3')</computeroutput>
+&prompt;<userinput>(filepath, filename) = os.path.split("c:\\music\\ap\\mahadeva.mp3")</userinput> <co id="fileinfo.os.2.2"/>
+&prompt;<userinput>filepath</userinput>                                                            <co id="fileinfo.os.2.3"/>
+<computeroutput>'c:\\music\\ap'</computeroutput>
+&prompt;<userinput>filename</userinput>                                                            <co id="fileinfo.os.2.4"/>
+<computeroutput>'mahadeva.mp3'</computeroutput>
+&prompt;<userinput>(shortname, extension) = os.path.splitext(filename)</userinput>                 <co id="fileinfo.os.2.5"/>
+&prompt;<userinput>shortname</userinput>
+<computeroutput>'mahadeva'</computeroutput>
+&prompt;<userinput>extension</userinput>
+<computeroutput>'.mp3'</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.os.2.1">
+<para>&split; 函数对一个全路径名进行分割，返回一个包含路径和文件名的 tuple。还记得我说过你可以使用<link linkend="odbchelper.multiassign">多变量赋值</link>从一个函数返回多个值吗？对，&split; 就是这样一个函数。</para>
+</callout>
+<callout arearefs="fileinfo.os.2.2">
+<para>我们将 &split; 函数的返回值赋值给一个两个变量的 tuple。每个变量接收到返回 tuple 相对应的元素值。</para>
+</callout>
+<callout arearefs="fileinfo.os.2.3">
+<para>第一个变量，<varname>filepath</varname>，接收到从 &split; 返回 tuple 的第一个元素的值，文件路径。</para>
+</callout>
+<callout arearefs="fileinfo.os.2.4">
+<para>第二个变量，<varname>filename</varname>，接收到从 &split; 返回 tuple 的第二个元素的值，文件名。</para>
+</callout>
+<callout arearefs="fileinfo.os.2.5">
+<para>&ospath; 也包含了一个 &splitext; 函数，可以用来对文件名进行分割，并且返回一个包含了文件名和文件扩展名的 tuple。我们使用相同的技术来将它们赋值给独立的变量。</para>
+</callout>
+</calloutlist>
+</example>
+<example id="fileinfo.listdir.example">
+<title>列出目录</title>
+<screen>&prompt;<userinput>os.listdir("c:\\music\\_singles\\")</userinput>              <co id="fileinfo.os.3.1"/>
+<computeroutput>['a_time_long_forgotten_con.mp3', 'hellraiser.mp3',
+'kairo.mp3', 'long_way_home1.mp3', 'sidewinder.mp3', 
+'spinning.mp3']</computeroutput>
+&prompt;<userinput>dirname = "c:\\"</userinput>
+&prompt;<userinput>os.listdir(dirname)</userinput>                              <co id="fileinfo.os.3.2"/>
+<computeroutput>['AUTOEXEC.BAT', 'boot.ini', 'CONFIG.SYS', 'cygwin',
+'docbook', 'Documents and Settings', 'Incoming', 'Inetpub', 'IO.SYS',
+'MSDOS.SYS', 'Music', 'NTDETECT.COM', 'ntldr', 'pagefile.sys',
+'Program Files', 'Python20', 'RECYCLER',
+'System Volume Information', 'TEMP', 'WINNT']</computeroutput>
+&prompt;<userinput>[f for f in os.listdir(dirname)</userinput>
+&continuationprompt;<userinput>if os.path.isfile(os.path.join(dirname, f))]</userinput> <co id="fileinfo.os.3.3"/>
+<computeroutput>['AUTOEXEC.BAT', 'boot.ini', 'CONFIG.SYS', 'IO.SYS', 'MSDOS.SYS',
+'NTDETECT.COM', 'ntldr', 'pagefile.sys']</computeroutput>
+&prompt;<userinput>[f for f in os.listdir(dirname)</userinput>
+&continuationprompt;<userinput>if os.path.isdir(os.path.join(dirname, f))]</userinput>  <co id="fileinfo.os.3.4"/>
+<computeroutput>['cygwin', 'docbook', 'Documents and Settings', 'Incoming',
+'Inetpub', 'Music', 'Program Files', 'Python20', 'RECYCLER',
+'System Volume Information', 'TEMP', 'WINNT']</computeroutput></screen>
+<calloutlist>
+<callout arearefs="fileinfo.os.3.1">
+<para>&listdir; 函数接收一个路径名，并返回那个目录的内容的 list。</para>
+</callout>
+<callout arearefs="fileinfo.os.3.2">
+<para>&listdir; 同时返回文件和文件夹，并不指出哪个是文件，哪个是文件夹。</para>
+</callout>
+<callout arearefs="fileinfo.os.3.3">
+<para>你可以使用<link linkend="apihelper.filter">过滤列表</link>和 &ospath; 模块的 <function>isfile</function> 函数，从文件夹中将文件分离出来。&isfile; 接收一个路径名，如果路径表示一个文件，则返回 1，否则为 0。在这里，我们使用 <literal>&ospath;.&join;</literal> 来确保得到一个全路径名，但 &isfile; 对部分路径 (相对于当前目录) 也是有效的。你可以使用 <literal>os.getcwd()</literal> 来得到当前目录。</para>
+</callout>
+<callout arearefs="fileinfo.os.3.4">
+<para>&ospath; 还有一个 <function>isdir</function> 函数，当路径表示一个目录，则返回 1，否则为 0。你可以使用它来得到一个目录下的子目录列表。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>在 &fileinfo_filename; 中列出目录</title>
+<programlisting>
+&fileinfo_listdef;
+&fileinfo_listdoc; 
+&fileinfo_listupper; <co id="fileinfo.os.3a.1"/> <co id="fileinfo.os.3a.2"/>
+&fileinfo_listcode; <co id="fileinfo.os.3a.3"/> <co id="fileinfo.os.3a.4"/> <co id="fileinfo.os.3a.5"/></programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.os.3a.1">
+<para><literal>os.listdir(directory)</literal> 返回在 <varname>directory</varname> 中所有文件和文件夹的一个 list。</para>
+</callout>
+<callout arearefs="fileinfo.os.3a.2">
+<para>使用 <varname>f</varname> 对 list 进行遍历，我们使用 <literal>os.path.normcase(f)</literal> 根据操作系统的缺省值对大小写进行标准化处理。<function>normcase</function> 是一个有用的函数，用于对大小写不敏感操作系统的一个补充。这种操作系统认为 <filename>mahadeva.mp3</filename> 和 <filename>mahadeva.MP3</filename> 是同一个文件名。例如，在 &windows; 和 &macos; 下，<function>normcase</function> 将把整个文件名转换为小写字母；而在 &unix; 兼容的系统下，它将返回未作修改的文件名。</para>
+</callout>
+<callout arearefs="fileinfo.os.3a.3">
+<para>再次用 <varname>f</varname> 对标准化后的 list 进行遍历，我们使用 <literal>os.path.splitext(f)</literal> 将每个文件名分割为名字和扩展名。</para>
+</callout>
+<callout arearefs="fileinfo.os.3a.4">
+<para>对每个文件，我们查看扩展名是否在我们关心的文件扩展名 list 中 (<varname>fileExtList</varname>，被传递给 <function>listDirectory</function> 函数)。</para>
+</callout>
+<callout arearefs="fileinfo.os.3a.5">
+<para>对每个我们所关心的文件，我们使用 <literal>os.path.join(directory, f)</literal> 来构造这个文件的全路径名，接着返回这个全路径名的 list。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="tip.os">
+<!--<title>When To Use the &os; Module</title>-->
+<title/>
+<para>只要有可能，你就应该使用在 &os; 和 &ospath; 中的函数进行文件、目录和路径的操作。这些模块是对平台相关模块的封装模块，所以像 <function>os.path.split</function> 这样的函数可以工作在 &unix;、&windows;、&macos; 和 &python; 所支持的任一种平台上。</para>
+</note>
+<para>还有一种获得目录内容的方法。它非常强大，并使用了一些你在命令行上工作时可能已经熟悉的通配符。</para>
+<example id="fileinfo.os.glob.example">
+<title>使用 &glob; 列出目录</title>
+<screen>
+&prompt;<userinput>os.listdir("c:\\music\\_singles\\")</userinput>               <co id="fileinfo.os.4.1"/>
+<computeroutput>['a_time_long_forgotten_con.mp3', 'hellraiser.mp3',
+'kairo.mp3', 'long_way_home1.mp3', 'sidewinder.mp3',
+'spinning.mp3']</computeroutput>
+&prompt;<userinput>import glob</userinput>
+&prompt;<userinput>glob.glob('c:\\music\\_singles\\*.mp3')</userinput>           <co id="fileinfo.os.4.2"/>
+<computeroutput>['c:\\music\\_singles\\a_time_long_forgotten_con.mp3',
+'c:\\music\\_singles\\hellraiser.mp3',
+'c:\\music\\_singles\\kairo.mp3',
+'c:\\music\\_singles\\long_way_home1.mp3',
+'c:\\music\\_singles\\sidewinder.mp3',
+'c:\\music\\_singles\\spinning.mp3']</computeroutput>
+&prompt;<userinput>glob.glob('c:\\music\\_singles\\s*.mp3')</userinput>          <co id="fileinfo.os.4.3"/>
+<computeroutput>['c:\\music\\_singles\\sidewinder.mp3',
+'c:\\music\\_singles\\spinning.mp3']</computeroutput>
+&prompt;<userinput>glob.glob('c:\\music\\*\\*.mp3')</userinput>                  <co id="fileinfo.os.4.4"/>
+</screen>
+<calloutlist>
+<callout arearefs="fileinfo.os.4.1">
+<para>正如你前面看到的，<function>os.listdir</function> 简单地取一个目录路径，返回目录中的所有文件和子目录。</para>
+</callout>
+<callout arearefs="fileinfo.os.4.2">
+<para>&glob; 模块，另一方面，接受一个通配符并且返回文件的或目录的完整路径与之匹配。这个通配符是一个目录路径加上“*.mp3”，它将匹配所有的 <filename>.mp3</filename> 文件。注意返回列表的每一个元素已经包含了文件的完整路径。</para>
+</callout>
+<callout arearefs="fileinfo.os.4.3">
+<para>如果你要查找指定目录中所有以“s”开头并以“.mp3”结尾的文件，也可以这么做。</para>
+</callout>
+<callout arearefs="fileinfo.os.4.4">
+<para>现在考查这种情况：你有一个 <filename>music</filename> 目录，它包含几个子目录，子目录中包含一些 <filename>.mp3</filename> 文件。使用两个通配符，仅仅调用 &glob; 一次就可以立刻获得所有这些文件的一个 list。一个通配符是 <literal>"*.mp3"</literal> (用于匹配 <filename>.mp3</filename> 文件)，另一个通配符是<emphasis>子目录名本身</emphasis>，用于匹配 <filename>c:\music</filename> 中的所有子目录。这看上去很简单，但它蕴含了强大的功能。</para>
+</callout>
+</calloutlist>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>&pythonknowledgebase; 回答了<ulink url="&url_pythonknowledgebase;index.phtml/fid/240">关于 &os; 模块的问题</ulink>。</para></listitem>
+<listitem><para>&pythonlibraryreference; 提供了 <ulink url="&url_pythonlibraryreference;module-os.html">&os;</ulink> 模块和 <ulink url="&url_pythonlibraryreference;module-os.path.html">&ospath;</ulink> 模块的文档。</para></listitem>
+</itemizedlist>
+</section>
+<section id="fileinfo.alltogether">
+<?dbhtml filename="file_handling/all_together.html"?>
+<title>全部放在一起</title>
+<abstract>
+<title/>
+<para>再一次，所有的多米诺骨牌都放好了。我们已经看过每行代码是如何工作的了。现在往回走一步，看一下放在一起是怎么样的。</para>
+</abstract>
+<example id="fileinfo.nested">
+<title>&listdirectory;</title>
+<programlisting>
+&fileinfo_listdef; <co id="fileinfo.alltogether.1.1"/>
+&fileinfo_listdoc;
+&fileinfo_listupper;
+&fileinfo_listcode;                         <co id="fileinfo.alltogether.1.2"/>
+&fileinfo_getdef; <co id="fileinfo.alltogether.1.3"/>
+&fileinfo_getdoc;
+&fileinfo_getcode; <co id="fileinfo.alltogether.1.4"/>
+&fileinfo_getreturn; <co id="fileinfo.alltogether.1.5"/>
+&fileinfo_listreturn; <co id="fileinfo.alltogether.1.6"/></programlisting>
+<calloutlist>
+<callout arearefs="fileinfo.alltogether.1.1">
+<para>&listdirectory; 是整个模块主要的有趣之处。它接收一个 dictionary (在我的例子中如 <filename class="directory">c:\music\_singles\</filename>) 和一个感兴趣的文件扩展名列表 (如 <literal>['.mp3']</literal>)，接着它返回一个类实例的 list ，这些类实例的行为像 dictionary，包含了在目录中每个感兴趣文件的元数据。并且实现起来只用了几行直观的代码。</para>
+</callout>
+<callout arearefs="fileinfo.alltogether.1.2">
+<para>正如在<link linkend="fileinfo.os">前一节</link>我们所看到的，这行代码得到一个全路径名的列表，它的元素是在 <varname>directory</varname> 中有着我们感兴趣的文件后缀 (由 <varname>fileExtList</varname> 所指定的) 的所有文件的路径名。</para>
+</callout>
+<callout arearefs="fileinfo.alltogether.1.3">
+<para>老学校出身的 &pascal; 程序员可能对嵌套函数感到熟悉，但大部分人，当我告诉他们 &python; 支持嵌套函数时，都茫然地看着我。<emphasis>嵌套函数</emphasis>，从字面理解，是定义在函数内的函数。嵌套函数 <function>getFileInfoClass</function> 只能在定义它的函数 &listdirectory; 内进行调用。正如任何其它的函数一样，不需要一个接口声明或奇怪的什么东西，只要定义函数，开始编码就行了。</para>
+</callout>
+<callout arearefs="fileinfo.alltogether.1.4">
+<para>既然你已经看过 <link linkend="fileinfo.os">&os;</link> 模块了，这一行应该能理解了。它得到文件的扩展名 (<literal>os.path.splitext(filename)[1]</literal>)，将其转换为大写字母 (<literal>.upper()</literal>)，从圆点处进行分片 (<literal>[1:]</literal>)，使用字符串格式化从其中生成一个类名。所以 <filename>c:\music\ap\mahadeva.mp3</filename> 变成 <literal>.mp3</literal> 再变成 <literal>MP3</literal> 再变成 <literal>MP3FileInfo</literal>。</para>
+</callout>
+<callout arearefs="fileinfo.alltogether.1.5">
+<para>在生成完处理这个文件的处理类的名字之后，我们查阅在这个模块中是否存在这个处理类。如果存在，我们返回这个类，否则我们返回基类 &fileinfo_classname;。这一点很重要：<emphasis>这个函数返回一个类</emphasis>。不是类的实例，而是类本身。</para>
+</callout>
+<callout arearefs="fileinfo.alltogether.1.6">
+<para>对每个属于我们 <quote>感兴趣文件</quote> 列表 (<varname>fileList</varname>)中的文件，我们用文件名 (<varname>f</varname>) 来调用 <function>getFileInfoClass</function>。调用 <literal>getFileInfoClass(f)</literal> 返回一个类；我们并不知道确切是哪一个类，但是我们并不关心。接着我们创建这个类 (不管它是什么) 的一个实例，传入文件名 (又是 <varname>f</varname>) 给 &init; 方法。正如我们在<link linkend="fileinfo.specialmethods.setname">本章的前面</link>所看到的，&fileinfo_classname; 的 &init; 方法设置了 <literal>self["name"]</literal>，它将引发 &setitem; 的调用，而 &setitem; 在子类 (&mp3fileinfo_classname;) 中被覆盖掉了，用来适当地对文件进行分析，取出文件的元数据。我们对所有感兴趣的文件进行处理，返回结果实例的一个 list。</para>
+</callout>
+</calloutlist>
+</example>
+<para>请注意 &listdirectory; 完全是通用的。它事先不知道将得到哪种类型的文件，也不知道哪些定义好的类能够处理这些文件。它检查目录中要进行处理的文件，然后反观本身模块，了解定义了什么特别的处理类 (像 &mp3fileinfo_classname;)。你可以对这个程序进行扩充，对其它类型的文件进行处理，只要用适合的名字定义类：<classname>HTMLFileInfo</classname> 用于 <acronym>HTML</acronym> 文件，<classname>DOCFileInfo</classname> 用于 <application>Word</application> <literal>.doc</literal> 文件，等等。不需要改动函数本身， &listdirectory; 将会对它们都进行处理，将工作交给适当的类，接着收集结果。</para>
+</section>
+<section id="fileinfo.summary2">
+<?dbhtml filename="file_handling/summary.html"?>
+<title>小结</title>
+<abstract>
+<title/>
+<para>在 <xref linkend="fileinfo" endterm="fileinfo.numberonly"/> 介绍的 &fileinfo_filename; 程序现在应该完全理解了。</para>
+</abstract>
+<informalexample>
+<!--<title>&fileinfo_filename;</title>-->
+<programlisting>
+&fileinfo_doc;
+&fileinfo_import;
+
+&fileinfo_stripnullsdef;
+&fileinfo_stripnullsdoc;
+&fileinfo_stripnullscode;
+
+&fileinfo_filedef;
+&fileinfo_filedoc;
+&fileinfo_fileinit;
+&fileinfo_filecallsuper;
+&fileinfo_fileinitcode;
+
+&fileinfo_mp3def;
+&fileinfo_mp3doc;
+&fileinfo_mp3classvar;
+
+&fileinfo_mp3parsedef;
+&fileinfo_mp3parsedoc;
+&fileinfo_mp3parseclear;
+&fileinfo_mp3parsetryexcepttry;
+&fileinfo_mp3parseopen;
+&fileinfo_mp3parsetryfinallytry;
+&fileinfo_mp3parseseek;
+&fileinfo_mp3parseread;
+&fileinfo_mp3parsetryfinallyfinally;
+&fileinfo_mp3parseclose;
+&fileinfo_mp3parseiftag;
+&fileinfo_mp3parsefor;
+&fileinfo_mp3parsecode;
+&fileinfo_mp3parsetryexceptexcept;
+&fileinfo_mp3parsepass;
+
+&fileinfo_mp3setitemdef;
+&fileinfo_mp3setitemif;
+&fileinfo_mp3setitemparse;
+&fileinfo_mp3setitemcallsuper;
+
+&fileinfo_listdef;
+&fileinfo_listdoc;
+&fileinfo_listupper;
+&fileinfo_listcode;
+&fileinfo_getdef;
+&fileinfo_getdoc;
+&fileinfo_getcode;
+&fileinfo_getreturn;
+&fileinfo_listreturn;
+
+&fileinfo_ifname;
+&fileinfo_for;
+&fileinfo_print;
+&fileinfo_printblank;</programlisting>
+</informalexample>
+<highlights>
+<para>在研究下一章之前，确保你可以无困难地完成下面的事情：</para>
+<itemizedlist>
+<listitem><para>使用 <link linkend="fileinfo.exception">&tryexcept;</link> 来捕捉异常</para></listitem>
+<listitem><para>使用 <link linkend="fileinfo.files.incode">&tryfinally;</link> 来保护额外的资源</para></listitem>
+<listitem><para>读取<link linkend="fileinfo.files">文件</link></para></listitem>
+<listitem><para>在一个 <link linkend="fileinfo.multiassign.for.example">&for; 循环</link>中一次赋多个值</para></listitem>
+<listitem><para>使用 <link linkend="fileinfo.os">&os;</link> 模块来满足你的跨平台文件操作的需要</para></listitem>
+<listitem><para>通过将类看成对象并传入参数，动态地<link linkend="fileinfo.alltogether">实例化未知类型的类</link></para></listitem>
+</itemizedlist>
+</highlights>
+</section>
+</chapter>
+<!--
+Chapter 3 notes:
+* briefly mention things that should look familiar:
+  * doc strings, including for module itself
+  X both types of import
+  X if-name trick
+* intro to classes
+  * defining a class
+  * class doc string
+  * __init__ (not really a constructor, because it's optional, but called as soon as the instance is created)
+  * the importance of self (always first argument)
+  * calling ancestor explicitly
+* digress to screen example
+  * create a FileInfo object
+  * talk about create syntax
+  * show result (acts like dictionary)
+  * talk about scope, automagical memory management
+  X talk about del to manually delete variable (and destroy instance)
+  X there is a __del__ destructor, but usually only need it to free up external resources (file sockets, etc.)
+  X mention "close" method - convention for freeing up resources (used in file objects, later in this chapter)
+* explore UserDict
+  * here's the __init__ method that you called manually
+  * descendant __init__ method has different arguments, but it still overrides, because
+    there is no overloading
+  * instance variables - like other variables, they're never declared, but
+    by convention all are initialized in __init__ method
+  * if statement in __init__ method: one line block on same line (works for any block:
+    if statement, for loop, function, class method, even entire class)
+  * class methods: clear, copy, keys, items, values, has_key, update, get, and setdefault
+    mirror the methods of a dictionary and redirect to self.data's methods
+  * special class methods: __repr__, __cmp__, __len__, __getitem__, __setitem__, and __delitem__
+    are called when the object is passed to specific functions or involved in specific
+    operations:
+    * object.__repr__() ... repr(object) (this is the string returned in the interactive window)
+    * object.__cmp__(other_object) ... object == other_object
+    * object.__len__() ... len(object)
+    * object.__getitem__(key) ... object[key]
+    * object.__setitem__(key, value) ... object[key] = value
+    * object.__delitem__(key) ... del d[key]
+  * __setitem__
+    * special attribute name, called with assigning value to a dictionary
+    * in this case, you're overriding the ancestor (UserDict) to add additional preprocessing, then calling ancestor
+    * calling class methods from other class methods - use self.<method name>
+  * Special methods mean that...
+    * ANY OBJECT can act like a dictionary with __setitem__,
+    * ANY OBJECT can act like a sequence (list, tuple, dictionary) with __getitem__ and __len__,
+    * ANY OBJECT can be compared with __cmp__,
+    - ANY OBJECT can have a custom string representation with __repr__
+  * there are a lot of other special class methods
+    * objects that act like numbers (add, subtract)
+    * objects that act like functions (called directly)
+    * objects with read-only or write-only attributes (__getattr__, __setattr__)
+* class attributes
+  * attribute of class, not instance
+  * all instances share same data, any changes will affect all instances
+  * generally used for class-specific constants, but not limited to that (technically, there are no constants in Python)
+  * available before any instances are created
+* private functions
+  * __*__ = special method (__setitem__) or built-in attribute (__doc__)
+  * __*   = private function/method/attribute (__parse)
+* handling exceptions
+  * try...except
+    * single exception
+    X multiple exceptions
+    X exceptions with arguments
+    * else clause
+* file objects
+  * open (can trigger IOError if file does not exist)
+  X open mode (r/w/a [+b])
+  * seek (can trigger IOError if file is less than 128 bytes)
+  * read (can trigger IOError if disk is bad or network goes down)
+  * close (should always be called if file was successfully opened)
+  * try..finally
+* for loop
+* multi-variable assignment
+* __module__ built-in attribute
+* sys.modules
+* os module
+  * listdir
+  * os.path
+    * split
+    * splitext
+    * join
+  * show in context of listDirectory function
+* getFileInfoClass
+  * nested functions
+  X variable scope (module)
+  * classes are objects (everything is an object)
+  * step through heinous string formatting to get subclass
+  * returning the class that listDirectory will use to create an object
+* FileInfo triggers descendant __setitem__ by setting "name" key (all Python class methods are virtual - ancestor can call method overridden in descendant class without ever knowing it)
+* putting it all together
+* summary
+-->

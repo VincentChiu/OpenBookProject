@@ -1,0 +1,41 @@
+用模板生成电子邮件
+============================================
+
+有时候会需要利用模板生成电子邮件。比如说，如果有类似下面的数据库表：
+
+::
+
+    db.define_table('person',Field('name'))
+
+当你相对这个表里面的每一个用户都发一个邮件，邮件内容记录在一个名叫“message.html”的文件中：
+
+::
+
+    Dear{{=person.name}}, 
+    Youhavewonthesecondprize,asetofsteakknives.
+
+你可以利用下面这段代码达到以上的目的：
+
+::
+
+    >>>fromgluon.toolimportMail
+    >>>mail=Mail(globals())
+    >>>mail.settings.server='smtp.gmail.com:587'
+    >>>mail.settings.sender='...@somewhere.com'
+    >>>mail.settings.login=Noneor'username:password'
+    >>>for person in db(db.person.id>0).select():
+    >>>     context = dict(person=person)
+    >>>     message = response.renaer('message.html', context)
+    >>>     mail.send(to=['who@example.com'], 
+    >>>         subject='None',
+    >>>	        message=message)
+    
+以上这段代码中，大部分的工作是在下面这个语句中完成的：
+
+::
+
+    response.render('message.html',context)
+
+这个函数会根据在context中设定的条件将“file.html”进行渲染，然后将渲染完成的字符串返回。至于context，它是一个字典，里面存的是可以供模板访问的变量。
+
+同样的原理也可以用来发送短信或者其他给予模板的信息。

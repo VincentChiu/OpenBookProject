@@ -1,0 +1,5 @@
+商业授权例外
+============================================
+The web2py license also includes a commercial exception: 
+
+You may distribute an application you developed with web2py together with an unmodified official binary distribution of web2py, as downloaded from the official website[1], as long as you make it clear in the license of your application which files belong to the application and which files belong to web2py.

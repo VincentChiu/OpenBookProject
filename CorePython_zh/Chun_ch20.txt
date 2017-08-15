@@ -1,0 +1,2275 @@
+Web
+Programming
+Web编程
+Chapter Topics
+本章主题
+
+	Introduction
+	Web Surfing with Python: Simple Web Clients
+	urlparse and urllib Modules
+	Advanced Web Clients
+	Crawler/Spider/Robot
+	CGI: Helping Web Servers Process Client Data
+	Building CGI Applications
+	Using Unicode with CGI
+	Advanced CGI
+	Creating Web Servers
+	Related Modules
+引言
+Python的Web应用：简单的Web客户端
+urlparse 和urllib模块
+高级的Web客户端
+网络爬虫/蜘蛛/机器人
+CGI:帮助Web服务器处理客户端数据
+创建CGI应用程序
+在CGI中使用Unicode
+高级CGI
+创建Web服务器
+相关模块
+
+
+
+20.1 Introduction
+介绍
+
+This introductory chapter on Web programming will give you a quick and high- level overview of the kinds of things you can do with Python on the Internet, from Web surfing to creating user feedback forms, from recognizing Uniform Resource Locators to generating dynamic Web page output.
+  本章是有关Web编程的介绍,可以帮助你对出Python在因特网上的各种基础应用有个概要了解，例如通过Web页面建立用户反馈表单，通过CGI动态生成输出页面
+
+20.1.1  Web Surfing: Client/Server Computing (Again?!?)
+Web 应用：客户端/服务器计算
+
+Web surfing falls under the same client/server architecture umbrella that we have seen repeatedly. This time, Web clients are browsers, applications that allow users to seek documents on the World Wide Web. On the other side are Web servers, processes that run on an information provider’s host com- puters. These servers wait for clients and their document requests, process them, and return the requested data. As with most servers in a client/server system, Web servers are designed to run “forever.” The Web surfing experi- ence is best illustrated by Figure 20–1. Here, a user runs a Web client pro- gram such as a browser and makes a connection to a Web server elsewhere on the Internet to obtain information.
+Web应用遵循我们反复提到的客户端/服务器架构。这里，Web的客户端是浏览器，应用程序允许用户在万维网上查询文档。另外Web服务器端，进程运行在信息提供商的主机上。这些服务器等待客户和文档请求，进行相应的处理，返回相关的数据。正如大多数客户端/服务器的服务器端一样，Web服务器端被设置为“永远”运行。图20-1列举了Web应用的体验。这里，一个用户执行一个像浏览器的这类客户端程序与Web服务器取得连接，就可以在因特网上任何地方获得数据。
+
+--------------------------------------------
+The Internet Client	Server
+--------------------------------------------
+
+Figure 20–1	Web client and Web server on the Internet. A client sends a request out over the Internet to the server, which then responds with the requested data back to the client.
+图20-1 因特网上的Web客户端和Web服务器。在因特网上客户端向服务器端发送一个请求，然后服务器端响应这个请求并将相应的数据返回给客户端。
+
+Clients may issue a variety of requests to Web servers. Such requests may include obtaining a Web page for viewing or submitting a form with data for processing.  The  request  is  then  serviced  by  the  Web  server,  and  the  reply comes back to the client in a special format for display purposes.
+客户端可能向服务器端发出各种请求。这些请求可能包括获得一个网页视图或者提交一个包含数据的表单。这个请求经过服务器端的处理，然后会以特定的格式(HTML等等)返回给客户端浏览。
+
+The  “language”  that  is  spoken  by  Web  clients  and  servers,  the  standard protocol  used  for  Web  communication,  is  called  HTTP,  which  stands  for HyperText Transfer Protocol. HTTP is written “on top of” the TCP and IP protocol suite, meaning that it relies on TCP and IP to carry out its lower- level communication functionality. Its responsibility is not to route or deliver messages—TCP and IP handle that—but to respond to client requests (by sending and receiving HTTP messages).
+Web客户端和服务器端交互使用的“语言”，Web交互的标准协议是HTTP（超文本传输协议）。HTTP协议是TCP/IP协议的上层协议，这意味着HTTP协议依靠TCP/IP协议来进行低层的交流工作。它的职责不是路由或者传递消息（TCP/IP协议处理这些），而是通过发送、接受HTTP消息来处理客户端的请求。
+
+HTTP is known as a “stateless” protocol because it does not keep track of information from one client request to the next, similar to the client/server architecture we have seen so far. The server stays running, but client interac- tions are singular events structured in such a way that once a client request is serviced, it quits. New requests can always be sent, but they are considered separate  service  requests.  Because  of  the  lack  of  context  per  request,  you may notice that some URLs have a long set of variables and values chained as part of the request to provide some sort of state information. Another alter- native is the use of “cookie”—static data stored on the client side which gen- erally contain state information as well. In later parts of this chapter, we will look at how to use both long URLs and cookie to maintain state information.
+HTTP协议属于无状态协议，它不跟踪从一个客户端到另一个客户端的的请求信息，这点和我们现今使用的客户端/服务器端架构很像。服务器端持续运行，但是客户端的活动是按照这种结构独立进行的：一旦一个客户的请求完成后，活动将被终止。可以随时发送新的请求，但是他们会被处理成独立的服务请求。由于每个请求缺乏上下文背景，你可以注意到有些URL会有很长的变量和值作为请求的一部分，以便提供一些状态信息。另外一个选项是“cookie”--保存在客户端的客户状态信息。在本章的后面部分，我们将会看到如何使用URL和cookie来保存状态信息。
+
+20.1.2 The Internet
+因特网
+
+The Internet is a moving and fluctuating “cloud” or “pond” of interconnected clients  and  servers  scattered  around  the  globe.  Communication  between client and server consists of a series of connections from one lily pad on the pond to another, with the last step connecting to the server. As a client user, all this detail is kept hidden from your view. The abstraction is to have a direct connection between you the client and the server you are “visiting,” but the underlying HTTP, TCP, and IP protocols are hidden underneath, doing all of the dirty work. Information regarding the intermediate “nodes”is  of  no  concern  or  consequence  to  the  general  user  anyway,  so  it’s  good that the implementation is hidden. Figure 20–2 shows an expanded view of the Internet.
+因特网是一个连接全球客户端和服务器端的变幻莫测的“迷雾”。客户端最终连接到服务器的通路，实际包含了不定节点的连通。作为一个客户端用户，所有这些实现细节都会被隐藏起来。抽象成为了从客户端到所访问的服务器端的直接连接。被隐藏起来的HTTP， TCP/IP协议将会处理所有的繁重工作。中间的环节信息用户并不关心，所以将这些执行过程隐藏起来是有好处的。图20-2展示了因特网的扩展视图。
+
+
+--------------------------------------------
+Home UserColocated .com Servers
+Home
+Modem
+ISP Network	Server
+ISP
+Client	Modem
+InterneServer
+t Core
+ISP Network
+The Internet
+Internal Server
+Client
+Corporate
+LAN
+An Intranet
+ISP Network
+Web Server
+                             Farm LAN
+External ServerCorporate Local Area NetworkCorporate Web Site (Network)
+--------------------------------------------
+
+Figure 20–2	A grand view of the Internet. The left side illustrates where you would find  Web  clients  while  the  right  side  hints  as  to  where  Web  servers are  typically located.
+图 20-2 因特网的统览。左侧指明了在哪里你可以找到Web客户端，而右侧则暗示了Web服务器的具体位置。
+
+As  you  can  see  from  the  figure,  the  Internet  is  made  up  of  multiply- interconnected networks, all working with some sense of (perhaps disjointed) harmony. The left half of the diagram is focused on the Web clients, users who are either at home dialed-in to their ISP (Internet Service Provider) or at work on their company’s LAN (Local Area Network).
+如图所示：因特网是由多种工作在一定规则下的（也许非连贯的）相互连接的网络组成的。图表左侧的焦点是Web客户端，在家上网的用户通过拨号连接到ISP（因特网供应商）上，上班族使用的则是公司的局域网。
+
+The right-hand side of the diagram concentrates more on Web servers and where they can be found. Corporations with larger Web sites will typically have an entire “Web server farm” located at their ISPs. Such physical place- ment is called colocation, meaning that a company’s servers are “co-located” at an ISP along with machines from other corporate customers. These serv- ers are either all providing different data to clients or are part of a redundant system with duplicated information designed for heavy demand (high num- ber of clients). Smaller corporate Web sites may not require as much hard- ware and networking gear, and hence, may only have one or several colocated servers at their ISP.
+图表的右半部分关注的是Web服务器端及位置所在。具有大型Web站点的公司会将他们全部的“Web服务器” 放在ISP那里。这种物理安放被称为“整合”，这意味着你的服务器和其它客户的服务器一同放在ISP处被“集中管理”。这些服务器或许为客户提供了不同的数据或者有一部分为应付重负荷（高数量用户群）而设计成了可以存储重复数据的系统。小公司的Web站点或许不需要这么大的硬盘或者网络设备，也许仅有一个或者几个“整合”服务器安放在他们的ISP处就可以了。
+
+In either case, most colocated servers are stored with a larger ISP sitting on a network backbone, meaning that they have a “fatter” (meaning wider) and presumably faster connection to the Internet—closer to the “core” of the Internet, if you will. This permits clients to access the servers quickly— being on a backbone means clients do not have to hop across as many net- works to access a server, thus allowing more clients to be serviced within a given time period.
+在任何一种情况下，大多数“整合”服务器被部署在大型ISP提供的骨干网上，这意味着他们具有更高的“带宽”，如果你愿意，可以更接近因特网的核心点，从而可以更快的与因特网取得连接。这就允许客户端可以绕过许多网络直接快速的访问服务器，从而在指定的时间内可以使得更多的客户获得服务。
+
+One should also keep in mind that although Web surfing is the most common Internet application, it is not the only one and is certainly not the oldest. The Internet predates the Web by almost three decades. Before the Web, the Inter- net was mainly used for educational and research purposes. Most of the systems on the Internet run Unix, a multi-user operating system, and many of the origi- nal Internet protocols are still around today.
+有一点需要记清楚，Web应用是网络应用的一种最普遍的形式，但不是唯一的也不是最古老的一种形式。因特网的出现早于Web近三十年。在Web出现之前，因特网主要用于教学和科研目的。因特网上的大多数系统都是运行在Unix平台上的—一个多用户操作系统，许多最初的因特网协议至今仍被沿用。
+
+Such protocols include telnet (allows users to log in to a remote host on the  Internet  and  still  in  use  today),  FTP  (the  File  Transfer  Protocol  that enables users to share files and data via uploading or downloading and also still  in  use  today),  Gopher  (the  precursor  to  the  Web  search  engine—a “gopher”-like piece of software that “tunneled the Internet” looking for the data that you were interested in),  SMTP  or Simple Mail Transfer Protocol (the protocol used for one of the oldest and most widely used Internet appli- cations: electronic mail), and NNTP (News-to-News Transfer Protocol).
+这些协议包括telnet（允许用户在因特网上登录到远程的主机上，至今仍用），FTP协议（文本传输协议，用户通过上传和下载文件可以共享文件和数据，至今仍用），Gopher（Web搜索引擎的雏形—一个在互联网上爬动的小软件“gopher”可以自动寻找你感兴趣的数据），SMTP或者叫做简单邮件传输协议（这个协议用于最古老的也是应用最广泛的电子邮件），NNTP（新闻对新闻传输协议）。
+
+Since one of Python’s initial strengths was Internet programming, you will find support for all of the protocols discussed above in addition to many others. We differentiate between “Internet programming” and “Web programming” by stating that the latter pertains only to applications developed specifically for Web applications, i.e., Web clients and servers, our focus for this chapter.
+由于Python的最初偏重就是因特网编程，除了其他一些东西外你还可以找到上边提及的所有协议。可以这样区分“因特网编程”和“Web编程”，后者仅包括针对Web的应用程序开发，也就是说Web客户端和服务器是本章的焦点。
+
+Internet programming covers a wider range of applications, including some of the Internet protocols we previously mentioned, such as FTP, SMTP, etc., as well as network and socket programming in general, as we discussed in a previous chapter.
+因特网编程涵盖更多范围的应用程序：包括我们之前提及的一些因特网协议，例如：FTP， SMTP等，同时也包括我们前一章提到的网络编程和套接字编程。
+
+20.2  Web Surfing with Python: CreatingSimple Web Clients
+使用Python进行Web应用：创建一个简单的Web客户端
+
+One thing to keep in mind is that a browser is only one type of Web client. Any application that makes a request for data from a Web server is consid- ered a “client.” Yes, it is possible to create other clients that retrieve docu- ments  or  data  off  the  Internet.  One  important  reason  to  do  this  is  that  a browser provides only limited capacity, i.e., it is used primarily for viewing and interacting with Web sites. A client program, on the other hand, has the ability to do more—it can not only download data, but it can also store it, manipulate it, or perhaps even transmit it to another location or application.
+有一点需要记清楚，浏览器只是Web客户端的一种。任何一个通过向服务器端发送请求来获得数据的应用程序都被认为是“客户端”。当然，也可以建立其他的客户端从而在因特网上检索出文档和数据。这样做的一个重要原因就是浏览器的能力有限，也就是说，它主要用于查看并同其他Web站点交互。另一方面，一个客户端程序，有能力做得更多—它不仅可以下载数据，同时也可以存储、操作数据，甚或可以将其传送到另外一个地方或者传给另外一个应用。
+
+Applications that use the urllib module to download or access informa- tion  on  the  Web  [using  either  urllib.urlopen() or  urllib.urlre- trieve()]  can  be  considered  a  simple  Web  client.  All  you  need  to  do  is provide a valid Web address.
+一个使用urllib模块下载或者访问Web上的信息的应用程序[使用urllib.urlopen() 或者urllib.urlre- trieve()]可以被认为是简单的Web客户端。你所要做的就是提供一个有效的Web地址。
+
+20.2.1 Uniform Resource Locators
+统一资源定位符
+
+Simple  Web  surfing  involves  using  Web  addresses  called  URLs  (Uniform Resource Locators). Such addresses are used to locate a document on the Web or to call a CGI program to generate a document for your client. URLs are  part  of  a  larger  set  of  identifiers  known  as  URIs  (Uniform  Resource Identifiers). This superset was created in anticipation of other naming con- ventions that have yet to be developed. A URL is simply a URI which uses an existing protocol or scheme (i.e., http, ftp, etc.) as part of its addressing. To  complete  this  picture,  we’ll  add  that  non-URL  URIs  are  sometimes known as URNs (Uniform Resource Names), but because URLs are the only URIs in use today, you really don’t hear much about URIs or URNs, save perhaps as XML identifiers.
+简单的Web应用包扩使用被称为URL（统一资源定位器）的Web地址。这个地址用来在Web上定位一个文档，或者调用一个CGI程序来为你的客户端产生一个文档。URL是大型标识符URI（统一资源标识）的一部分。这个超集是建立在已有的命名惯例基础上的。一个URL是一个简单的URI，使用已存在的协议或规划（也就是 http，ftp等）作为地址的一部分。为了进一步描绘这些，我们将会引入non-URL的URI，有时这些被成为URN（统一资源名称），但是在今天我们唯一使用的一种URI是URL，至于URI和URN你也许没有听到太多，这或许已被保存成XML标识符了。
+
+
+
+Like street addresses, Web addresses have some structure. An American street  address  usually  is  of  the  form  “number  street  designation,”  i.e.,  123 Main Street. It differs from other countries, which have their own rules.  A URL uses the format:
+如街道地址一样，Web地址也有一些结构。美国的街道地址通常是这种格式“号码 街道名称”，例如123 主大街。这个和其他国家不同，他们有自己的规则。URL使用这种格式：
+
+prot_sch://net_loc/path;params?query#frag
+--------------------------------------------
+Table 20.1  Web Address Components
+
+URL Component	Description
+
+prot_sch	Network protocol or download scheme
+
+net_loc	Location of server (and perhaps user information) path	Slash ( / ) delimited path to file or CGI application params	Optional parameters
+query	Ampersand ( & ) delimited set of “key=value” pairs
+
+frag	Fragment to a specific anchor within document
+URL部件		描述
+prot_sch 	网络协议或者下载规划
+net_loc		服务器位置(或许也有用户信息)
+path 		斜杠( / )限定文件或者CGI应用程序的路径。
+Params		可选参数
+query 		连接符( & )连接键值对
+frag 		拆分文档中的特殊锚
+--------------------------------------------
+Table 20.1 describes each of the components.
+表20.1描述了各个部件
+
+net_loc can  be  broken  down  into  several  more  components,  some required, others optional. The net_loc string looks like this:
+net_loc 可以进一步拆分成多个部件，有些是必备的，其他的是可选部件，net_loc字符串如下：
+
+user:passwd@host:port
+
+These individual components are described in Table 20.2.
+表20.2中分别描述了这些部件。
+
+Of the four, the host name is the most important. The port number is necessary only if the Web server is running on a different port number from the default. (If you aren’t sure what a port number is, go back to Chapter 16.)
+在这四个当中，host主机名是最重要的。端口号只有在Web服务器运行其他非默认端口上时才会被使用。（如果你不确定所使用的端口号，可以参到第十六章）。
+
+User names and perhaps passwords are used only when making FTP con- nections, and even then they usually aren’t necessary because the majority of such connections are “anonymous.”
+用户名和密码部分只有在使用FTP连接时候才有可能用到，因为即使是使用FTP，大多数的连接都是使用匿名这时是不需要用户名和密码的。
+
+--------------------------------------------
+Table 20.2  Network Location Components
+
+net_loc
+Component	Description
+
+user	User name or login
+
+passwd	User password
+
+host	Name or address of machine running Web server
+[required]
+
+port	Port number (if not 80, the default)
+表20.2网络定位部件
+
+net_loc
+部件			描述
+user			登录名
+password		用户的密码
+host			Web服务器运行的机器名或地址（必须字段）
+port			端口号（默认80）
+--------------------------------------------
+
+Python supplies two different modules, each dealing with URLs in com- pletely  different  functionality  and  capacities.  One  is  urlparse,  and  the other is urllib. We will briefly introduce some of their functions here.
+Python支持两种不同的模块，分别以不同的功能和兼容性来处理URL。一种是urlparse，一种是urllib。这里我们将会简单的介绍下它们的功能。
+
+
+
+20.2.2 urlparse Module
+urlparse模块
+
+The urlparse module provides basic functionality with which to manipu- late  URL  strings.  These  functions  include  urlparse(),  urlunparse(), and urljoin().
+urlpasrse模块提供了操作URL字符串的基本功能。这些功能包括urlparse(), urlunparse()和urljoin().
+
+urlparse.urlparse()
+urlparse() breaks  up  a  URL  string  into  some  of  the  major  components described above. It has the following syntax:
+urlparse()将URL字符串拆分成如上所描述的一些主要部件。语法结构如下：
+
+urlparse(urlstr, defProtSch=None, allowFrag=None)
+
+urlparse() parses   urlstr into  a  6-tuple  (prot_sch,  net_loc, path,  params,  query,  frag).  Each  of  these  components  has  been described  above.  defProtSch indicates  a  default  network  protocol  or download  scheme in case one is not provided in  urlstr. allowFrag is a flag that signals whether or not a fragment part of a URL is allowed. Here is what urlparse() outputs when given a URL:
+urlparse()将urlstr解析成一个6-元组(prot_sch,  net_loc,path,  params,  query,  frag).这里的每个部件在上边已经描述过了。如果urlstr中没有提供默认的网络协议或下载规划时可以使用defProtSch。allowFrag标识一个URL是否允许使用零部件。下边是一个给定URL经urlparse() 后的输出：
+
+>>>urlparse.urlparse('http://www.python.org/doc/FAQ.html')
+('http', 'www.python.org', '/doc/FAQ.html', '', '', '')
+
+urlparse.urlunparse()
+urlunparse() does  the  exact  opposite  of  urlparse()—it  merges  a  6- tuple   (prot_sch,   net_loc,   path,   params,   query,   frag)—urltup, which  could  be  the  output  of  urlparse(),  into  a  single  URL  string  and returns it. Accordingly, we state the following equivalence:
+urlunparse()的功能与urlpase()完全相反—它拼合一个6-元组(prot_sch,  net_loc,  path,  params,  query,  frag)- urltup,它可能是一个URL经urlparse()后的输出返回值。于是，我们可以用如下方式表示：
+
+urlunparse(urlparse(urlstr)) ?  urlstr
+You may have already surmised that the syntax of urlunparse() is as follows:
+你或许已经猜到了urlunpase()的语法：
+
+urlunparse(urltup)
+
+urlparse.urljoin()
+The  urljoin() function  is  useful  in  cases  where  many  related  URLs  are needed, for example, the URLs for a set of pages to be generated for a Web site. The syntax for urljoin() is:
+在需要多个相关的URL时我们就需要使用urljoin()的功能了，如，在一个Web页中生成的一系列页面的URL。Urljoin()的语法是：
+
+urljoin(baseurl, newurl, allowFrag=None)
+
+--------------------------------------------
+Table 20.3  Core urlparse Module Functions
+
+urlparse Functions					Description
+
+urlparse(urlstr, defProtSch=None, allowFrag=None)	Parses urlstr into separate components, using defProtSch if the protocol or scheme is not given in urlstr; allowFrag determines whether a URL fragment is allowed
+urlunparse(urltup)					Unparses a tuple of URL data (urltup) into a single URL string
+urljoin(baseurl, newurl, allowFrag=None)		Merges the base part of the baseurl URL with newurl to form a complete URL; allowFrag is the same as for urlparse()
+urlparse 功能						描述
+urlparse(urlstr, defProtSch=None, allowFrag=None)	将urlstr解析成各个部件，如果在rulstr中没有给定协议或者规划将使用defProtSch；allowFrag决定是否允许有URL零部件。
+urlunparse(urltup)					将URL数据(urltup)的一个元组反解析成一个URL字符串。
+urljoin(baseurl, newurl, allowFrag =None)		将URL的基部件baseurl和newurl拼合成一个完整的URL；allowFrag的作用和urlpase()中相同。
+--------------------------------------------
+
+
+urljoin() takes baseurl and joins its base path (net_loc plus the full path up to, but not including, a file at the end) with newurl. For example:
+urljoin()取得baseurl，并将其基路径(net_loc 附加一个完整的路径，但是不包括终端的文件)与newurl连接起来。例如：
+
+>>> urlparse.urljoin('http://www.python.org/doc/FAQ.html', \
+... 'current/lib/lib.htm')
+'http://www.python.org/doc/current/lib/lib.html'
+A summary of the functions in urlparse can be found in Table 20.3.
+在表20.3中可以找到urlparse的功能概述。
+
+20.2.3 urllib Module
+urllib模块
+
+CORE MODULE: urllib
+核心模块：urllib
+
+Unless you are planning on writing a more lower-level network client, the urllib module provides all the functionality you need. urllib provides a high-level Web communication library, supporting the basic Web protocols, HTTP, FTP, and Gopher, as well as providing access to local files. Specifically, the functions of the urllib module are designed to download data (from the Internet, local network, or local host) using the aforementioned protocols.  Use of this module generally obviates the need for using the httplib, ftplib, and gopherlib modules unless you desire their lower-level functionality. In those cases, such modules can be considered as alternatives.  (Note: Most modules named *lib are generally for developing clients of the corresponding protocols.This is not always the case, however, as perhaps urllib should then be renamed “internetlib” or something similar!)
+urllib模块提供了所有你需要的功能，除非你计划写一个更加低层的网络客户端。urllib提供了了一个高级的Web交流库，支持Web协议，HTTP， FTP和Gopher协议，同时也支持对本地文件的访问。urllib模块的特殊功能是利用上述协议下载数据(从因特网、局域网、主机上下载)。使用这个模块可以避免使用httplib， ftplib和gopherlib这些模块，除非你想用更低层的功能。在那些情况下这些模块都是可选择的(注意：大多数以*lib命名的模块用于客户端相关协议开发。并不是所有情况都是这样的，或许urllib应该被命名为“internetlib”或者其他什么相似的名字)。
+
+The  urllib module  provides  functions  to  download  data  from  given URLs as well as encoding and decoding strings to make them suitable for including as part of valid URL strings. The functions we will be looking at in this  upcoming  section  include:  urlopen(),  urlretrieve(),  quote(), unquote(),   quote_plus(),   unquote_plus(),   and   urlencode(). We will  also  look  at  some  of  the  methods  available  to  the  file-like  object returned  by  urlopen().  They  will  be  familiar  to  you  because  you  have already learned to work with files back in Chapter 9.
+Urllib模块提供了在给定的URL地址下载数据的功能，同时也可以通过字符串的编码、解码来确保它们是有效URL字符串的一部分。我们接下来要谈的功能包括urlopen(),  urlretrieve(),  quote(),unquote(),  quote_plus(),  unquote_plus(), 和  urlencode()。我们可以使用urlopen()方法返回文件类型对象。你会觉得这些方法不陌生，因为在第九章我们已经涉及到了文件方面的内容。
+
+urllib.urlopen()
+urlopen() opens a Web connection to the given URL string and returns a file-like object. It has the following syntax:
+urlopen() 打开一个给定URL字符串与Web连接，并返回了文件类的对象。语法结构如下：
+
+
+
+urlopen(urlstr, postQueryData=None)
+urlopen() opens  the  URL  pointed  to  by  urlstr.  If  no  protocol  or download scheme is given, or if a “file” scheme is passed in, urlopen() will open a local file.
+urlopen()打开urlstr所指向的URL。如果没有给定协议或者下载规划，或者文件规划早已传入，urlopen()则会打开一个本地的文件。
+
+For all HTTP requests, the normal request type is “GET.” In these cases, the  query  string  provided  to  the  Web  server  (key-value  pairs  encoded  or “quoted,”  such  as  the  string  output  of  the  urlencode() function  [see below]), should be given as part of urlstr.
+对于所有的HTTP请求，常见的请求类型是“GET”。在这些情况中，向Web服务器发送的请求字符串(编码键值或引用，如urlencode()函数的字符串输出[如下])应该是urlstr的一部分。
+
+If  the  “POST”  request  method  is  desired,  then  the  query  string  (again encoded)  should  be  placed  in  the  postQueryData variable.  (For  more information regarding the GET and POST request methods, refer to any general  documentation  or  texts  on  programming  CGI  applications—which we  will  also  discuss  below.  GET  and  POST  requests  are  the  two  ways  to “upload” data to a Web server.
+如果要求使用“POST”方法，请求的字符串（编码的）应该被放到postQueryData变量中。（要了解更多关于“GET”和“POST”方法的信息，请查看CGI应用编程部分的普通文档或者文本，这些我们在下边也会讨论）。GET和POST请求是向Web服务器上传数据的两种方法。
+
+When  a  successful  connection  is  made,  urlopen() returns  a  file-like object as if the destination was a file opened in read mode. If our file object is f, for example, then our “handle” would support the expected read meth- ods  such  as  f.read(),  f.readline(),  f.readlines(),  f.close(), and f.fileno().
+一旦连接成功，urlopen() 将会返回一个文件类型对象，就像在目标路径下打开了一个可读文件。例如，如果我们的文件对象是f，那么我们的“句柄”将会支持可读方法如：f.read(),  f.readline(),  f.readlines(),  f.close(),和f.fileno().
+
+In  addition,  a  f.info() method  is  available  which  returns  the  MIME (Multipurpose  Internet  Mail  Extension)  headers.  Such  headers  give  the browser  information  regarding  which  application  can  view  returned  file types. For example, the browser itself can view HTML (HyperText Markup Language),  plain  text  files,  and  render  PNG  (Portable  Network  Graphics) and  JPEG  (Joint  Photographic  Experts  Group)  or  the  old  GIF  (Graphics Interchange Format) graphics files. Other files such as multimedia or specific document types require external applications in order to view.
+此外，f.info()方法可以返回MIME（Multipurpose  Internet  Mail  Extension，多目标因特网邮件扩展）头文件。这个头文件通知浏览器返回的文件类型可以用哪类应用程序打开。例如，浏览器本身可以查看HTML（HyperText Markup Language，超文本标记语言），纯文本文件，生成（指由数据显示图像——译者注）PNG（Portable Network Graohics）文件，JPEG（Joint Photographic Experts Group）或者GIF（Graphics Interchange Format）文件。其他的如多媒体文件，特殊类型文件需要通过扩展的应用程序才能打开。
+
+
+--------------------------------------------
+Table 20.4  urllib.urlopen() File-like Object Methods
+
+urlopen() Object Methods	Description f.read([bytes])	Reads all or bytes bytes from f f.readline()	Reads a single line from f
+f.readlines()	Reads a all lines from f into a list
+
+f.close()	Closes URL connection for f f.fileno()	Returns file number of f f.info()	Gets MIME headers of f f.geturl()	Returns true URL opened for f
+urlopen() 对象方法		描述
+f.read([bytes]) 		从f中读出所有或bytes个字节
+f.readline() 			从f中读出一行
+f.readlines() 			从f中读出所有行并返回一个列表
+f.close() 			关闭f的URL的连接
+f.fileno() 			返回f的文件句柄
+f.info() 			获得f的MIME头文件
+f.geturl() 			返回f所打开的真正的URL
+--------------------------------------------
+
+Finally,  a  geturl() method  exists  to  obtain  the  true  URL  of  the  final opened destination, taking into consideration any redirection that may have occurred. A summary of these file-like object methods is given in Table 20.4.
+最后，geturl()方法在考虑了所有可能发生的间接导向后，从最终打开的文件中获得真实的URL，这些文件类型对象的方法在表20.4中有描述。
+
+
+If you expect to be accessing more complex URLs or want to be able to han- dle more complex situations such as basic and digest authentication, redirec- tions,  cookie,  etc.,  then  we  suggest  using  the  urllib2 module,  introduced back  in  the  1.6  days  (mostly  as  an  experimental  module).  It  too,  has  a urlopen() function, but also provides other functions and classes for opening a variety of URLs. For more on urllib2, see the next section of this chapter.
+如果你打算访问更加复杂的URL或者想要处理更复杂的情况如基于数字的权限验证，重定位，coockie等问题，我们建议你使用urllib2模块，这个在1.6版本中有介绍（多数是试验模块）。它同时还有一个urlopen()函数，但也提供了其他的可以打开各种URL的函数和类。关于urllib2的更多信息，将会在本章的下一部分介绍。
+
+urllib.urlretrieve()
+urlretrieve() will do some quick and dirty work for you if you are inter- ested in working with a URL document as a whole. Here is the syntax for urlretrieve():
+如果你对整个URL文档的工作感兴趣，urlretrieve()可以帮你快速的处理一些繁重的工作。下边是urlretrieve()的语法：
+
+urlretrieve(urlstr, localfile=None, downloadSta- tusHook=None)
+Rather  than  reading  from  the  URL  like   urlopen() does,  urlre- trieve() will simply download the entire HTML file located at urlstr to your local disk. It will store the downloaded data into localfile if given or a temporary file if not. If the file has already been copied from the Inter-
+net or if the file is local, no subsequent downloading will occur.
+除了像urlopen()这样从URL中读取内容，urlretrieve()可以方便地将urlstr定位到的整个HTML文件下载到你本地的硬盘上。你可以将下载后的数据存成一个本地文件或者一个临时文件。如果该文件已经被复制到本地或者已经是一个本地文件，后续的下载动作将不会发生。
+
+The downloadStatusHook, if provided, is a function that is called after each block of data has been downloaded and delivered. It is called with the fol- lowing three arguments: number of blocks read so far, the block size in bytes, and the total (byte) size of the file. This is very useful if you are implementing “download status” information to the user in a text-based or graphical display.
+如果可能，downloadStatusHook这个函数将会在每块数据下载或传输完成后被调用。调用时使用下边三个参数：目前读入的块数，块的字节数和文件的总字节数。如果你正在用文本的或图表的视图向用户演示“下载状态”信息，这个函数将会是非常有用的。
+
+urlretrieve() returns  a  2-tuple,  (filename,  mime_hdrs).  file- name is  the  name  of  the  local  file  containing  the  downloaded  data. mime_hdrs is  the set of MIME headers returned by the responding Web server.  For  more  information,  see  the  Message class  of  the  mimetools module. mime_hdrs is None for local files.
+urlretrieve()返回一个2-元组，(filename, mime_hdrs).filename是包含下载数据的本地文件名，mime_hdrs是对Web服务器响应后返回的一系列MIME文件头。要获得更多的信息，可以看mimetools的Message类。对本地文件来说mime_hdrs是空的。
+
+
+For  a  simple  example  using  urlretrieve(),  take  a  look  at  Example 11.4 (grabweb.py). A larger piece of code using urlretrieve() can be found later in this chapter in Example 20.2.
+关于urlretrieve()的简单应用，可以看11.4(grabweb.py)中的例子。在本章的20.2中将会介绍urlretrieve()更深层的应用。
+
+
+urllib.quote() and urllib.quote_plus() The quote*() functions take URL data and “encodes” them so that they are “fit” for inclusion as part of a URL string. In particular, certain special characters that are unprintable or cannot be part of valid URLs acceptable to a Web server must be converted. This is what the quote*() functions do for you. Both quote*() functions have the following syntax:
+quote*()函数获取URL数据，并将其编码，从而适用于URL字符串中。尤其是一些不能被打印的或者不被Web服务器作为有效URL接收的特殊字符串必须被转换。这就是quote*()函数的功能。quote*()函数的语法如下：
+
+quote(urldata, safe='/')
+Characters that are never converted include commas, underscores, periods, and dashes, as well as alphanumerics. All others are subject to conversion. In particular, the disallowed characters are changed to their hexadecimal ordinal equivalents prepended with a percent sign ( % ), i.e., “%xx” where “xx” is the hexadecimal  representation  of  a  character’s  ASCII  value.  When  calling quote*(), the urldata string is converted to an equivalent string that can be part of a URL string. The safe string should contain a set of characters which should also not be converted. The default is the slash ( / ).
+逗号，下划线，句号，斜线和字母数字这类符号是不需要转化。其他的则均需要转换。另外，那些不被允许的字符前边会被加上百分号(%)同时转换成16进制,例如：“%xx”，“xx”代表这个字母的ASCII码的十六进制值。当调用quote*()时，urldata字符串被转换成了一个可在URL字符串中使用的等价值。safe字符串可以包含一系列的不能被转换的字符。默认的是斜线（/）.
+
+quote_plus() is similar to quote() except that it also encodes spaces to plus signs ( + ). Here is an example using quote() vs. quote_plus():
+quote_plus() 与quote()很像，另外它还可以将空格编码成+号。下边是一个使用quote()和quote_plus()的例子:
+
+--------------------------------------------
+>>> name = 'joe mama'
+>>> number = 6
+>>> base = 'http://www/~foo/cgi-bin/s.py'
+>>> final = '%s?name=%s&num=%d' % (base, name, number)
+>>> final
+'http://www/~foo/cgi-bin/s.py?name=joe mama&num=6'
+>>>
+>>> urllib.quote(final)
+'http:%3a//www/%7efoo/cgi-bin/s.py%3fname%3djoe%20mama%26num%3d6'
+>>>
+>>> urllib.quote_plus(final)
+'http%3a//www/%7efoo/cgi-bin/
+s.py%3fname%3djoe+mama%26num%3d6'
+--------------------------------------------
+
+urllib.unquote() and urllib.unquote_plus()
+urllib.unquote() 和 urllib.unquote_plus()
+
+As  you  have  probably  guessed,  the  unquote*() functions  do  the  exact opposite of the quote*() functions—they convert all characters encoded in the “%xx” fashion to their ASCII equivalents. The syntax of unquote*() is as follows:
+也许和你猜到的一样，unquote*()函数与quote*()函数的功能安全相反—它将所有编码为“%xx”式的字母都转换成它们的ASCII码值。Unquote*()的语法如下：
+
+unquote*(urldata)
+
+Calling  unquote() will  decode  all  URL-encoded  characters  in  url- data and return the resulting string.  unquote_plus() will also convert plus signs back to space characters.
+调用unquote()函数将会把urldata中所有的URL-编码字母都解码，并返回字符串。Unquote_plus()函数会将加号转换成空格符。
+
+
+urllib.urlencode()
+urlencode(), added to Python back in 1.5.2, takes a dictionary of key-value pairs and encodes them to be included as part of a query in a CGI request URL string. The pairs are in “key=value” format and are delimited by ampersands ( & ). Furthermore, the keys and their values are sent to quote_plus() for proper encoding. Here is an example output from urlencode():
+在1.5.2版的Python中，urlopen()函数接收字典的键-值对，并将其编译成CGI请求的URL字符串的一部分。键值对的格式是“键=值”,以连接符(&)划分。更进一步，键和它们的值被传到quote_plus()函数中进行适当的编码。下边是urlencode()输出的一个例子：
+
+>>> aDict = { 'name': 'Georgina Garcia', 'hmdir': '~ggarcia' }
+>>> urllib.urlencode(aDict)
+'name=Georgina+Garcia&hmdir=%7eggarcia'
+There are other functions in urllib and urlparse which we did not have the opportunity to cover here. Refer to the documentation for more information.
+
+urllib和urlparse还有一些其他的功能，在这里我们就不一一概述了。阅读相关文档可以获得更多信息。
+
+Secure Socket Layer support
+安全套接字层支持
+
+The urllib module was given support for opening HTTP connections using the  Secure  Socket  Layer  (SSL)  in  1.6.  The  core  change  to  add  SSL  is implemented  in  the  socket module.  Consequently,  the  urllib and httplib modules were updated to support URLs using the “https” connec- tion scheme. In addition to those two modules, other protocol client modules with SSL support include: imaplib, poplib, and smtplib.
+在1.6版中urllib模块通过安全套接字层(SSL)支持开放的HTTP连接.socket 模块的核心变化是增加并实现了SSL。 随后，urllib和httplib模块被上传用于支持URL在“https”连接规划中的应用。除了那两个模块以外，其他的含有SSL的模块还有： imaplib, poplib 和 smtplib。
+
+A  summary  of  the  urllib functions  discussed  in  this  section  can  be found in Table 20.5.
+在表20.5中可以看到关于本节讨论的urllib函数的概要总结。
+
+--------------------------------------------
+Table 20.5  Core urllib Module Functions
+
+urllib Functions	Description
+urlopen(urlstr, postQuery- Data=None)
+urlretrieve(urlstr, local- file=None, downloadSta- tusHook=None)
+Opens the URL urlstr, sending the
+query data in postQueryData if
+a POST request
+
+Downloads the file located at the
+urlstr URL to localfile or
+a temporary file if localfile not
+given; if present, downloaSta-
+tusHook is a function that can receive
+download statistics
+
+quote(urldata, safe='/')	Encodes invalid URL characters of urldata; characters in safe string are not encoded
+
+quote_plus(urldata, safe='/') Same as quote() except encodes spaces as plus (+) signs (rather than as
+%20)
+
+unquote(urldata)	Decodes encoded characters of
+urldata
+
+unquote_plus(urldata)	Same as unquote() but converts plus signs to spaces
+
+urlencode(dict)	Encodes the key-value pairs of dict into a valid string for CGI queries and encodes the key and value strings with quote_plus()
+urllib 函数					描述
+urlopen(urlstr, postQuery- Data=None)  		打开URL urlstr,如果必要则通过postQueryData发送请求。
+urlretrieve(urlstr, local- tusHook=None)	将URL urlstr定位的文件下载到localfile或临时文件中（当localfile没有给定时）；如果文件已经存在downloaStatusHook将会获得下载的统计信息。
+quote(urldata, safe='/') 			将urldata的无效的URL字符编码；在safe列的则不必编码。
+quote_plus(urldata, safe='/') 			将空格编译成加(+)号(并非%20)外，其他功能与quote()相似。
+unquote(urldata)				将urldata中编码后的字母解码
+unquote_plus(urldata)				除了将加好转换成空格后其他功能与unquote()相似。
+urlencode(dict) 				将字典键-值对编译成有效的CGI请求字符串，用quote_plus()对键和值字符串分别编码。
+--------------------------------------------
+
+20.2.4 urllib2 Module
+urllib2模块
+
+As mentioned in the previous section,  urllib2 can handle more complex URL opening. One example is for Web sites with basic authentication (login and password) requirements. The most straightforward solution to “getting past security” is to use the extended net_loc URL component as described earlier  in  this  chapter,  i.e.,  http://user:passwd@www.python.org.  The  problem  with  this  solution  is  that  it  is  not  programmatic.  Using urllib2, however, we can tackle this problem in two different ways.
+正如前面所提到的，urllib2可以处理更复杂URL的打开问题。一个例子就是有基本认证（登录名和密码）需求的Web站点。最简单的“获得已验证参数”的方法是使用前边章节中描述的URL部件net_loc，也就是说：http://user:passwd@www.python.org.这种解决方案的问题是不具有可编程性。然而使用urllib2，我们可以通过两种不同的方式来解决这个问题。
+
+We  can  create  a  basic  authentication  handler  (urllib2.HTTPBasic- AuthHandler)  and  “register”  a  login  password  given  the  base  URL  and perhaps a realm, meaning a string defining the secure area of the Web site.  (For  more  on  realms,  see  RFC  2617  [HTTP  Authentication:  Basic  and Digest Access Authentication]). Once this is done, you can “install” a URL- opener with this handler so that all URLs opened will use our handler.
+我们可以建立一个基础认证处理器(urllib2.HTTPBasicAuthHandler),同时在基本URL或域上注册一个登录密码，这就意味着我们在Web站点上定义了个安全区域。（关于域的更多信息可以查看RFC2617[HTTP认证：基本数字认证]）。一旦完成这些，你可以安装URL打开器，通过这个处理器打开所有的URL。
+
+The  other  alternative  is  to  simulate  typing  the  username  and  password when prompted by a browser and that is to send an HTTP client request with the appropriate authorization headers. In Example 20.1 we can easily iden- tify each of these two methods.
+另一个可选的办法就是当浏览器提示的时候，输入用户名和密码 ，这样就发送了一个带有适当用户请求的认证头。在20.1的例子中，我们可以很容易的区分出这两种方法。
+
+Line-by-Line Explanation
+逐行解释
+
+Lines 1–7
+1–7行
+
+The usual setup plus some constants for the rest of the script to use.
+普通的初始化过程，外加几个为后续脚本使用的常量。
+
+Lines 9–15
+9–15行
+
+The “handler” version of the code allocates a basic handler class as described earlier, then adds the authentication information. The handler is then used to create a URL-opener that is then installed so that all URLs opened will use the  given  authentication.  This  code  was  adapted  from  the  official  Python documentation for the urllib2 module.
+
+代码的“handler”版本分配了一个前面提到的基本处理器类，并添加了认证信息。之后该处理器被用于建立一个URL-opener，并安装它以便所有已打开的URL能用到这些认证信息。这段代码和urllib2模块的Python官方文档是兼容的。
+--------------------------------------------
+Example 20.1  HTTP Auth Client (urlopenAuth.py)
+
+This script uses both techniques described above for basic authentication.
+
+1	#!/usr/bin/env python
+2
+3	import urllib2
+4
+5	LOGIN = 'wesc'
+6	PASSWD = "you'llNeverGuess"
+7	URL = 'http://localhost'
+8
+9	def handler_version(url):
+10	from urlparse import urlparse as up
+11	hdlr = urllib2.HTTPBasicAuthHandler()
+12	hdlr.add_password('Archives', up(url)[1], LOGIN, PASSWD)
+13	opener = urllib2.build_opener(hdlr)
+14	urllib2.install_opener(opener)
+15	return url
+16
+
+
+
+20	b64str = encodestring('%s:%s' % (LOGIN, PASSWD))[:-1]
+21	req.add_header("Authorization", "Basic %s" % b64str)
+22	return req
+23
+24   for funcType in ('handler', 'request'):
+25	print '*** Using %s:' % funcType.upper()
+26	url = eval('%s_version')(URL)
+27	f = urllib2.urlopen(url)
+28	print f.readline()
+29	f.close()
+--------------------------------------------
+
+Lines 17–22
+17–22行
+
+The “request” version of our code just builds a Request object and adds the simple base64-encoded authentication header into our HTTP request. This request is then used to substitute the URL string when calling urlopen() upon returning back to “main.” Note that the original URL was built into the Request object, hence the reason why it was not a problem to replace it in the  subsequent  call  to  urllib2.urlopen().  This  code  was  inspired  by Mike Foord’s and Lee Harr’s recipes in the Python Cookbook located at:
+这段代码的“request”版本创建了一个Request对象，并在HTTP请求中添加了基本的base64编码认证头信息。返回“main”后（译者注：指for循环）调用urlopen()时，该请求被用来替换其中的URL字符串。注意原始URL内建在Requst对象中，正因为如此在随后的urllib2.urlopen()中调用中替换URL字符串才不会产生问题。这段代码的灵感来自于Mike Foord和Lee Harr在Python Cookbook上的回复，具体位置在：
+
+http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/305288
+http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/267197
+
+It  would  have  been  great  to  have  been  able  to  use  Harr’s  HTTPRealm- Finder class so that we do not need to hardcode it in our example.
+如果能直接用Harr的HTTPRealmFinder类就更好了，那样我们就没必要在例子里使用硬编码了。
+
+Lines 24–29
+24–29行
+
+The rest of this script just opens the given URL using both techniques and displays  the  first  line  (dumping  the  others)  of  the  resulting  HTML  page returned by the server once authentication has been validated. Note that an HTTP error (and no HTML) would be returned if the authentication infor- mation is invalid.
+这个脚本的剩余部分只是用两种技术分别打开了给定的URL，并显示服务器返回的HTML页面第一行（舍弃了其他行），当然前提是要通过认证。注意如果认证信息无效的话会返回一个HTTP错误（并且不会有HTML）。
+
+The output should look something like this:
+程序的输出应当如下所示：
+
+$ python urlopen-auth.py
+Using handler:
+<html>
+
+Using request:
+<html>
+In addition to the official Python documentation for  urllib2, you may find  this  companion  piece  useful:  http://www.voidspace.org.uk/python/ articles/urllib2.shtml.
+还有一个很有用的文档可以在http://www.voidspace.org.uk/python/articles/urllib2.shtml找到，你可以把它作为Python官方文档的补充。
+
+20.3 Advanced Web Clients
+高级Web客户端
+
+Web browsers are basic Web clients. They are used primarily for searching and downloading documents from the Web. Advanced clients of the Web are those applications that do more than download single documents from the Internet.
+Web浏览器是基本的Web客户端。主要用来在Web上查询或者下载文件。而Web的高级客户端并不只是从因特网上下载文档。
+
+One example of an advanced Web client is a crawler (aka spider, robot). These are programs that explore and download pages from the Internet for different reasons, some of which include:
+高级Web客户端的一个例子就是网络爬虫（aka 蜘蛛和机器人）。这些程序可以基于不同目的在因特网上探索和下载页面，其中包括：
+
+?	Indexing into a large search engine such as Google or Yahoo!
+?	Offline browsing—downloading documents onto a local hard
+disk and rearranging hyperlinks to create almost a mirror image for local browsing
+?	Downloading and storing for historical or archival purposes, or
+?	Web page caching to save superfluous downloading time on
+Web site revisits.
+为Google和Yahoo这类大型的搜索引擎建索引
+脱机浏览—将文档下载到本地，重新设定超链接，为本地浏览器创建镜像。
+下载并保存历史记录或框架
+Web页的缓存，节省再次访问Web站点的下载时间。
+
+The crawler we present below,  crawl.py, takes a starting Web address (URL), downloads that page and all other pages whose links appear in suc- ceeding  pages,  but  only  those  that  are  in  the  same  domain  as  the  starting page. Without such limitations, you will run out of disk space! The source for crawl.py appears in Example 20.2.
+我们下边介绍网络爬虫:crawl.py,抓取Web的开始页面地址（URL），下载该页面和其它后续链接页面，但是仅限于那些与开始页面有着相同域名的页面。如果没有这个限制的话，你的硬盘将会被耗尽！crwal.py 的代码在例子20.2中展示。
+
+
+Line-by-Line (Class-by-Class) Explanation
+逐行解释（一个类一个类的）
+
+Lines 1–11
+1–11行
+
+The top part of the script consists of the standard Python Unix start-up line and the importation of various module attributes that are employed in this application.
+该脚本的开始部分包括Python在Unix上标准的初始化行以及一些模块属性的导入，它们都会在本应用程序中用到。
+
+Lines 13–49
+13–49行
+
+The Retriever class has the responsibility of downloading pages from the Web and parsing the links located within each document, adding them to the “to-do” queue if necessary. A Retriever instance object is created for each page that is downloaded from the net. Retriever consists of several meth- ods  to  aid  in  its  functionality:  a  constructor  (__init__()),  filename(), download(), and parseAndGetLinks().
+Retriever类的责任是从Web下载页面，解析每个文档中的链接并在必要的时候把它们加入“to-do”队列。我们为每个从网上下载的页面都创建一个Retriever类的实例。Retriever中的方法展现了它的功能：构造器（__init__()）、filename()、download()、和parseAndGetLinks()。
+
+The filename() method takes the given URL and comes up with a safe and  sane  corresponding  filename  to  store  locally.  Basically,  it  removes  the “http://” prefix from the URL and uses the remaining part as the filename, creating any directory paths necessary. URLs without trailing file-names will be given a default filename of “index.htm”. (This name can be overridden in the call to filename()).
+filename()方法使用给定的URL找出安全、有效的相关文件名并存储在本地。大体上说，它会去掉URL的“http://”前缀，使用剩余的部分作为文件名，并创建必要的文件夹路径。那些没有文件名前缀的URL则会被赋予一个默认的文件名“index.htm”。（可以在调用filename()时重新指定这个名字。）
+
+The  constructor  instantiates  a  Retriever object  and  stores  both  the URL  string  and  the  corresponding  file  name  returned  by  filename() as local attributes.
+构造器实例化了一个Retriever对象，并把URL和通过filename()获得的相应文件名都作为本地属性保存起来。
+
+--------------------------------------------
+Example 20.2  Advanced Web Client: a Web Crawler (crawl.py)
+
+The crawler consists of two classes, one to manage the entire crawling process (Crawler), and one to retrieve and parse each downloaded Web page (Retriever).
+这个爬虫程序包括两个类，一个管理真个crawling进程（Crawler）,一个检索并解析每一个下载的Web页面（Retriever）。
+
+1	#!/usr/bin/env python
+2
+3	from sys import argv
+4	from os import makedirs, unlink, sep
+5	from os.path import dirname, exists, isdir, splitext
+6	from string import replace, find, lower
+7	from htmllib import HTMLParser
+8	from urllib import urlretrieve
+9	from urlparse import urlparse, urljoin
+10    from formatter import DumbWriter, AbstractFormatter
+11    from cStringIO import StringIO
+12
+13    class Retriever(object):# download Web pages
+14
+15	def __init__(self, url):
+16	self.url = url
+17	self.file = self.filename(url)
+18
+19	def filename(self, url, deffile='index.htm'):
+20	parsedurl = urlparse(url, 'http:', 0) ## parse path
+21	path = parsedurl[1] + parsedurl[2]
+22	ext = splitext(path)
+23	if ext[1] == '':	# no file, use default
+24	if path[-1] == '/':
+25	path += deffile
+26	else:
+27	path += '/' + deffile
+28	ldir = dirname(path)	# local directory
+29	if sep != '/':	# os-indep. path separator
+30	ldir = replace(ldir, '/', sep)
+31	if not isdir(ldir):	# create archive dir if nec.
+32	if exists(ldir): unlink(ldir)
+33	makedirs(ldir)
+34	return path
+35
+36	def download(self):	# download Web page
+37	try:
+38	retval = urlretrieve(self.url, self.file)
+39	except IOError:
+40	retval = ('*** ERROR: invalid URL "%s"' %\
+41	self.url,)
+42	return retval
+43
+44	def parseAndGetLinks(self):# parse HTML, save links
+45	self.parser = HTMLParser(AbstractFormatter(\
+46	DumbWriter(StringIO())))
+47	self.parser.feed(open(self.file).read())
+48	self.parser.close()
+49	return self.parser.anchorlist
+50
+51    class Crawler(object):# manage entire crawling process
+52
+53	count = 0	# static downloaded page counter
+54
+55	def __init__(self, url):
+56	self.q = [url]
+57	self.seen = []
+58	self.dom = urlparse(url)[1]
+59
+60	def getPage(self, url):
+61	r = Retriever(url)
+62	retval = r.download()
+63	if retval[0] == '*': # error situation, do not parse
+64	print retval, '... skipping parse'
+65	return
+66	Crawler.count += 1
+67	print '\n(', Crawler.count, ')'
+68	print 'URL:', url
+69	print 'FILE:', retval[0]
+70	self.seen.append(url)
+71
+72	links = r.parseAndGetLinks() # get and process links
+73	for eachLink in links:
+74	if eachLink[:4] != 'http' and \
+75	find(eachLink, '://') == -1:
+76	eachLink = urljoin(url, eachLink)
+77	print '* ', eachLink,
+78
+79	if find(lower(eachLink), 'mailto:') != -1:
+80	print '... discarded, mailto link'
+81	continue
+82
+83	if eachLink not in self.seen:
+84	if find(eachLink, self.dom) == -1:
+85	print '... discarded, not in domain'
+86	else:
+87	if eachLink not in self.q:
+88	self.q.append(eachLink)
+89	print '... new, added to Q'
+90	else:
+91	print '... discarded, already in Q'
+92	else:
+93	print '... discarded, already processed'
+94
+95	def go(self):# process links in queue
+96	while self.q:
+97	url = self.q.pop()
+98	self.getPage(url)
+99
+100	def main():
+101	if len(argv) > 1:
+102	url = argv[1]
+
+103	else:
+104	try:
+105	url = raw_input('Enter starting URL: ')
+106	except (KeyboardInterrupt, EOFError):
+107	url = ''
+108
+109	if not url: return
+110	robot = Crawler(url)
+111	robot.go()
+112
+113	if __name__ == '__main__':
+114	main()
+--------------------------------------------
+
+The download() method, as you may imagine, actually goes out to the net to  download  the  page  with  the  given  link.  It  calls  urllib.urlretrieve() with the URL and saves it to the filename (the one returned by filename()).  If the download was successful, the parse() method is called to parse the page just copied from the network; otherwise an error string is returned.
+正如你想象的，download()方法实际会连上网络去下载给定链接的页面。它使用URL调用urllib.urlretrieve()函数并把结果保存在filename中（该值由filename()返回）。如果下载成功，parse()方法会被调用来解析刚从网络拷贝下来的页面；否则会返回一个错误字符串。
+
+If the Crawler determines that no error has occurred, it will invoke the parseAndGetLinks() method  to  parse  the  newly  downloaded  page  and determine the course of action for each link located on that page.
+如果Crawler判定没有错误发生，它会调用parseAndGetLinks()方法来解析新下载的页面并决定该页面中每个链接的后续动作。
+
+Lines 51–98
+51-98行
+
+The Crawler class is the “star” of the show, managing the entire crawling process for one Web site. If we added threading to our application, we would create  separate  instances  for  each  site  crawled.  The  Crawler consists  of three items stored by the constructor during the instantiation phase, the first of which is q, a queue of links to download. Such a list will fluctuate during execution, shrinking as each page is processed and grown as new links are discovered within each downloaded page.
+Crawler类是这次演示中的“明星”，掌管在一个Web站点上的整个抓爬过程。如果我们为应用程序添加线程，就可以为每个待抓爬的站点分别创建实例。Crawler的构造器在初始化过程中存储了3样东西，第一个是q，一个待下载链接的队列。这个队列在运行过程中会有涨落，有页面处理完毕它就变短，在下载的页面中发现新的链接则会让它变长。
+
+The other two data values for the Crawler include seen, a list of all the links  that  “we  have  seen”  (downloaded)  already.  And  finally,  we  store  the domain name for the main link, dom, and use that value to determine whether any succeeding links are part of the same domain.
+Crawler包含的另两个数值是seen，一个所有“我们已看过”（已下载）的链接的列表，和dom，我们把主链接的域名存储在这里，并用这个值来判定后续链接是否是该域的一部分。
+
+Crawler also  has  a  static  data  item  named  count.  The  purpose  of  this counter is just to keep track of the number of objects we have downloaded from the net. It is incremented for every page successfully download.
+Crawler还有一个静态数据成员count。这个计数器只是用来保存我们已经从网上下载的对象数目。每有一个页面成功下载它就会增加。
+
+Crawler has  a  pair  of  other  methods  in  addition  to  its  constructor, getPage() and go(). go() is simply the method that is used to start the Crawler and is called from the main body of code. go() consists of a loop that will continue to execute as long as there are new links in the queue that need   to   be   downloaded.   The   workhorse   of   this   class,   though,   is   the getPage() method.
+除了构造器Crawler还有其他两个方法，getPage()和go()。go()只是简单的启动Crawler，它在代码的主体部分被调用。go()中有一个循环，只有队列中还有待下载的新链接它就会不停的执行。然而这个的真正工作者，却是getPage()方法。
+
+getPage() instantiates a Retriever object with the first link and lets it go off to the races. If the page was downloaded successfully, the counter is incremented  and  the  link  added  to  the  “already  seen”  list.  It  looks  recur- sively at all the links featured inside each downloaded page and determines whether  any  more  links  should  be  added  to  the  queue.  The  main  loop  in go() will continue to process links until the queue is empty, at which time victory is declared.
+getPage()初始化了一个Retriever对象，并把第一个链接赋给它然后让它执行。如果页面下载成功，计数器会增加并且链接会被加到“已看”列表。它会反复地检查每个已下载页面中的所有链接并判决是否有链接要被加入待下载队列。go()中的主循环会不停的推进处理过程直到队列为空，这时便大功告成。
+
+Links that are part of another domain, have already been downloaded, are already  in  the  queue  waiting  to  be  processed,  or  are  “mailto:”  links  are ignored and not added to the queue.
+属于其他域的链接、已经下载过的链接、已在队列中待处理的链接、以及“mailto:”类型的链接在扩充队列时都会被忽略掉。
+
+Lines 100–114
+100-114行
+
+main() is executed if this script is invoked directly and is the starting point of  execution.  Other  modules  that  import  crawl.py will  need  to  invoke main() to begin processing. main() needs a URL to begin processing. If one is given on the command line (for example, when this script is invoked directly), it will just go with the one given. Otherwise, the script enters inter- active mode, prompting the user for a starting URL. With a starting link in hand, the Crawler is instantiated and away we go.
+main()是程序运行的起点，它在该脚本被直接调用时执行。其他导入crawl.py的模块则需要调用main()来启动处理过程。main()需要一个URL来启动处理，如果在命令行指定了一个（例如这个脚本被直接调用时），它就会使用这个指定的。否则，脚本进入交互模式，提示用户输入起始URL。一旦有了起始链接，Crawler就会被实例化并启动开来。
+
+One sample invocation of crawl.py may look like this:
+一个调用crawl.py的例子如下所示：
+
+
+
+--------------------------------------------
+% crawl.py
+Enter starting URL: http://www.null.com/home/index.html
+
+( 1 )
+URL: http://www.null.com/home/index.html
+FILE: www.null.com/home/index.html
+* http://www.null.com/home/overview.html ... new, added to Q
+* http://www.null.com/home/synopsis.html ... new, added to Q
+* http://www.null.com/home/order.html ... new, added to Q
+* mailto:postmaster@null.com ... discarded, mailto link
+* http://www.null.com/home/overview.html ... discarded, already in Q
+* http://www.null.com/home/synopsis.html ... discarded, already in Q
+* http://www.null.com/home/order.html ... discarded, already in Q
+* mailto:postmaster@null.com ... discarded, mailto link
+* http://bogus.com/index.html ... discarded, not in domain
+
+( 2 )
+URL: http://www.null.com/home/order.html
+FILE: www.null.com/home/order.html
+* mailto:postmaster@null.com ... discarded, mailto link
+* http://www.null.com/home/index.html ... discarded, already processed
+
+* http://www.null.com/home/synopsis.html ... discarded, already in Q
+* http://www.null.com/home/overview.html ... discarded, already in Q
+
+( 3 )
+URL: http://www.null.com/home/synopsis.html
+FILE: www.null.com/home/synopsis.html
+* http://www.null.com/home/index.html ... discarded, already processed
+* http://www.null.com/home/order.html ... discarded, already processed
+* http://www.null.com/home/overview.html ... discarded, already in Q
+
+( 4 )
+URL: http://www.null.com/home/overview.html
+FILE: www.null.com/home/overview.html
+* http://www.null.com/home/synopsis.html ... discarded, already processed
+* http://www.null.com/home/index.html ... discarded, already processed
+* http://www.null.com/home/synopsis.html ... discarded, already processed
+* http://www.null.com/home/order.html ... discarded, already processed
+--------------------------------------------
+
+After  execution,  a  www.null.com directory  would  be  created  in  the local file system, with a home subdirectory. Within home, all the HTML files processed will be found.
+执行后，在本地的系统文件中将会在创建一个名为www.null.com的目录，及分目录。左右的HTML文件都会显示在主目录下。
+
+20.4  CGI: Helping Web Servers Process
+Client Data
+CGI:帮助Web服务器处理客户端数据
+
+20.4.1 Introduction to CGI
+CGI介绍
+
+The Web was initially developed to be a global online repository or archive of (mostly educational and research-oriented) documents. Such pieces of infor- mation generally come in the form of static text and usually in HTML.
+Web开发的最初目的是在全球范围内对文档进行存储和归档（大多是教学和科研目的的）。这些零碎的信息通常产生于静态的文本或者HTML.
+
+HTML  is  not  as  much  a  language  as  it  is  a  text  formatter,  indicating changes in font types, sizes, and styles. The main feature of HTML is in its hypertext capability, text that is in one way or another highlighted to point to another document in a related context to the original. Such a document can be accessed by a mouse click or other user selection mechanism. These (static) HTML documents live on the Web server and are sent to clients when and if requested.
+HTML是一个文本格式而算不上是一种语言，它包括改变字体的类型、大小、风格。HTML的主要特性在于它对超文本的兼容性，文本以一种或者是高亮的形式指向另外一个相关文档。可以通过鼠标点击或者其他用户的选择机制来访问这类文档。这些静态的HTML文档在Web服务器上，当有请求时，将被送到客户端。
+
+As the Internet and Web services evolved, there grew a need to process user input. Online retailers needed to be able to take individual orders, and online banks and search engine portals needed to create accounts for individ- ual users. Thus fill-out forms were invented, and became the only way a Web site can get specific information from users (until Java applets came along). This, in turn, required the HTML now be generated on the fly, for each cli- ent submitting user-specific data.
+随着因特网和Web服务器的形成，产生了处理用户输入的需求。在线零售商需要能够单独订货，网上银行和搜索引擎需要为用户分别建立帐号。因此发明了这种执行模式，并成为了Web站点可以从用户那里获得特苏信息的唯一形式（在Java applets出现之前）。反过来，在客户提交了特定数据后，就要求立即生成HTML页面。
+
+
+Now, Web servers are only really good at one thing, getting a user request for a file and returning that file (i.e., an HTML file) to the client. They do not have  the  “brains”  to  be  able  to  deal  with  user-specific  data  such  as  those which come from fields. Not being their responsibility, Web servers farm out such  requests  to  external  applications  which  create  the  dynamically  gener- ated HTML that is returned to the client.
+现在Web服务器仅有一点做的很不错，获取用户对文件的请求，并将这个文件（也就是说HTML文件）返回给客户端。它们现在还不具有处理字段类特殊数据的机制。将这些请求送到可以生成动态HTML页面的扩展应用程序中并返回给客户端，这些还没有成为Web 服务器的职责。
+
+
+The entire process begins when the Web server receives a client request (i.e., GET or POST) and calls the appropriate application. It then waits for the resulting HTML—meanwhile, the client also waits. Once the application has  completed,  it  passes  the  dynamically  generated  HTML  back  to  the server,  who  then  (finally)  forwards  it  back  to  the  user.  This  process  of  the server receiving a form, contacting an external application, and receiving and returning the newly-generated HTML takes place through what is called the Web server’s CGI (Common Gateway Interface). An overview of how CGI works is illustrated in Figure 20–3, which shows you the execution and data flow, step-by-step, from when a user submits a form until the resulting Web page is returned.
+这整个过程开始于Web服务器从客户端接到了请求（GET或者POST），并调用合适的程序。然后开始等待HTML页面—与此同时，客户端也在等待。一旦程序完成，会将生成的动态HTML页面返回到服务器端，然后服务器端再将这个最终结果返回给用户。服务器接到表单反馈，与外部应用程序交互，收到并返回新生成的HTML页面都发生在一个叫做Web服务器CGI（Common Gateway Interface）的接口上.图20-3描述了CGI的工作原理，逐步展示了一个用户从提交表单到返回最终结果Web页面的整个执行过程和数据流。
+
+Forms input from the client sent to a Web server may include processing and perhaps some form of storage in a backend database. Just keep in mind that any time there are any user-filled fields and/or a Submit button or image, it most likely involves some sort of CGI activity.
+客户端输入给Web服务器端的表单可能包括处理过程和一些存储在后台数据库中的表单。需要记住的是，在任何时候都可能有任何一个用户去填写这个字段，或者点击提交按钮或者图片，这更像激活了某种CGI活动。
+
+CGI applications that create the HTML are usually written in one of many higher-level programming languages that have the ability to accept user data, process it, and return HTML back to the server. Currently used program- ming  languages  include  Perl,  PHP,  C/C++,  or  Python,  to  name  a  few.
+创建HTML的CGI应用程序通常是用高级编程语言来实现的，可以接受、处理数据，向服务器端返回HTML页面。目前使用的编程语言有Perl， PHP， C/C++,或者Python。
+
+--------------------------------------------
+Web Browser (Client)	Web Server	CGI Application
+Submit	1
+completed form
+Call CGI	2
+User
+4		CGI Program's
+response
+3		CGI Program's
+response
+--------------------------------------------
+
+Figure 20–3	Overview of how CGI works. CGI represents the interaction between a Web server and the application that is required to process a user’s form and generate the dynamic HTML that is eventually returned.
+图20-3 CGI工作概要图。CGI代表了在一个Web服务器和能够处理用户表单、生成并返回动态HTML页的应用程序间的交互。
+
+Before we take a look at CGI, we have to provide the caveat that the typica production Web application is no longer being done in CGI anymore.
+在我们研究CGI之前，我们必须告诉你典型的Web应用产品已经不再使用CGI了。
+
+Because  of  its  significant  limitations  and  limited  ability  to  allow  Web servers to process an abundant number of simultaneous clients, CGI is a dinosaur.  Mission-critical  Web  services  rely  on  compiled  languages  like C/C++  to  scale.  A  modern-day  Web  server  is  typically  composed  of Apache and integrated components for database access (MySQL or Post- greSQL), Java (Tomcat), PHP, and various modules for Perl, Python, and SSL/security. However, if you are working on small personal Web sites or ones  for  small  organizations  and  do  not  need  the  power  and  complexity required by mission critical Web services, CGI is the perfect tool for your simple Web sites.
+由于它词义的局限性和允许Web服务器处理大量模拟客户端数据能力的局限性，CGI几乎绝迹。Web服务的关键使命依赖于遵循像C/C++这样语言的规范。如今的Web服务器典型的部件有Aphache和集成的数据库部件（MySQL或者PostgreSQL），Java（Tomcat），PHP和各种Perl模块，Python模块，以及SSL/security。然而，如果你工作在私人小型的或者小组织的Web网站上的话就没有必要使用这种强大而复杂的Web服务器， CGI是一个适用于小型Web网站开发的工具。
+
+Furthermore,  there  are  a  good  number  of  Web  application  develop- ment frameworks out there as well as content management systems, all of which make building CGI a relic of past. However, beneath all the fluff and  abstraction,  they  must  still,  in  the  end,  follow  the  same  model  that CGI originally provided, and that is being able to take user input, execute code based on that input, and provide valid HTML as its final output for the  client.  Therefore,  the  exercise  in  learning  CGI  is  well  worth  it  in terms  of  understanding  the  fundamentals  in  order  to  develop  effective Web services.
+更进一步来说，有很多Web应用程序开发框架和内容管理系统，这些都弥补了过去CGI的不足。然而，在这些浓缩和升华下，它们仍旧遵循这CGI最初提供的模式，可以允许用户输入，根据输入执行拷贝，并提供了一个有效的HTML做为最终的客户端输出。因此，为了开发更加高效的Web服务有必要理解CGI实现的基本原理。
+
+In  this  next  section,  we  will  look  at  how  to  create  CGI  applications  in Python, with the help of the cgi module.
+在下一部分中，我们将会关注在cgi模块的协助下如何在Python中建立一个CGI应用程序。
+
+20.4.2  CGI Applications
+20.4.2 CGI应用程序
+
+A CGI application is slightly different from a typical program. The primary dif- ferences are in the input, output, and user interaction aspects of a computer program. When a CGI script starts, it needs to retrieve the user-supplied form data, but it has to obtain this data from the Web client, not a user on the server machine nor a disk file.
+CGI应用程序和典型的应用程序有些不同。主要的区别在于输入、输出以及用户和计算机交互方面。当一个CGI脚本开始执行时，它需要检索用户-支持表单，但这些数据必须要从Web的客户端才可以获得，而不是从服务器或者硬盘上获得。
+
+The  output  differs  in  that  any  data  sent  to  standard  output  will  be  sent back to the connected Web client rather than to the screen, GUI window, or disk  file.  The  data  sent  back  must  be  a  set  of  valid  headers  followed  by HTML. If it is not and the Web client is a browser, an error (specifically, an Internal  Server  Error)  will  occur  because  Web  clients  such  as  browsers understand only valid HTTP data (i.e., MIME headers and HTML).
+这些不同于标准输出的输出将会返回到连接的Web客户端，而不是返回到屏幕、CUI窗口或者硬盘上。这些返回来的数据必须是具有一系列有效头文件的HTML。否则，如果浏览器是Web的客户端，由于浏览器只能识别有效的HTTP数据（也就是MIME都问价和HTML），那么返回的也只能是个错误消息（具体的就是因特网服务器错误）。
+
+Finally, as you can probably guess, there is no user interaction with the script. All communication occurs among the Web client (on behalf of a user), the Web server, and the CGI application.
+最后，可能和你想象的一样，用户不能与脚本进行交互。所有的交互都将发生在Web客户端（用户的行为），Web服务器端和CGI应用程序间。
+
+20.4.2 cgi Module
+cgi模块
+
+There  is  one  primary  class  in  the  cgi module  that  does  all  the  work:  the FieldStorage class. This class should be instantiated when a Python CGI script begins, as it will read in all the pertinent user information from the Web client (via the Web server). Once this object has been instantiated, it will consist of a dictionary-like object that has a set of key-value pairs. The keys are the names of the form items that were passed in through the form while the values contain the corresponding data.
+在cgi模块中有个主要类：FieldStorage类，它完成了所有的工作。在Python CGI脚本开始时这个类将会被实例化，它会从Web客户端（具有Web服务器）读出有关的用户信息。一旦这个对象被实例化，它将会包含一个类似字典的对象，具有一系列的键-值对，键就是通过表单传入的表单条目的名字，而值则包含相应的数据。
+
+These  values  themselves  can  be  one  of  three  objects.  They  can  be FieldStorage objects  (instances)  as  well  as  instances  of  a  similar  class called MiniFieldStorage, which is used in cases where no file uploads or  multiple-part form data is involved.  MiniFieldStorage instances con- tain only the key-value pair of the name and the data. Lastly, they can be a list of such objects. This occurs when a form contains more than one input item with the same field name.
+这些值本身可以是以下三种对象之一。它们既可以是FieldStorage对象（实例）也可以是另一个类似的名为MiniFieldStorage类的实例，后者用在没有文件上传或mulitple-part格式数据的情况。MiniFieldStorage实例只包含名字和数据的键-值对。最后，它们还可以是这些对象的列表。这发生在表单中的某个域有多个输入值的情况下。
+
+For  simple  Web  forms,  you  will  usually  find  all  MiniFieldStorage instances. All of our examples below pertain only to this general case.
+对于简单的Web表单，你将会经常发现所有的MiniFieldStorage实例。下边包含的所有的例子都仅针对这种情况。
+
+20.5  Building CGI Applications
+建立CGI应用程序
+
+20.5.1 Setting Up a Web Server
+建立Web服务器
+
+In order to play around with CGI development in Python, you need to first install a Web server, configure it for handling Python CGI requests, and then give  the  Web  server  access  to  your  CGI  scripts.  Some  of  these  tasks  may require assistance from your system administrator.
+为了可以用Python进行CGI开发，你首先需要安装一个Web服务器，将其配置成可以处理Python CGI请求的模式，然后让你的Web服务器访问CGI脚本。其中有些操作你也许需要获得系统管理员的帮助。
+
+If you want a real Web server, you will likely download and install Apache. There are Apache plug-ins or modules for handling Python CGI, but they are not required for our examples. You may wish to install those if you are plan- ning on “going live” to the world with your service. Even this may be overkill.
+如果你需要一个真正的Web服务器，可以下载并安装Aphache。Aphache的插件或模块可以处理Python CGI，但这在我们的例子里并不是必要的。如果你准备把自己的服务"带入真实世界",也许会想安装这些软件。尽管它们似乎过于强大。
+
+For learning purposes or for simple Web sites, it may suffice to just use the Web servers that come with Python. In Section 20.8, you will actually learn how to build and configure simple Python-based Web servers. You may read ahead now if you wish to find out more about it at this stage. However, that is not what this section is about.
+为了学习的目的或者是建立小型的Web站点，使用Python自身带的Web服务器就已经足够了。在第20.8节，你将会实际的学习如何建立和配置简单的基于Python的Web服务器。如果你想在本阶段获得更多知识，你也可以现在提前阅读那部分。然而，这并不是本章的焦点。
+
+If  you  want  to  just  start  up  the  most  basic  Web  server,  just  execute  it directly with Python:
+如果你只是想建立一个基于Web的服务器，你可以直接执行下边的Python语句。
+
+$ python -m CGIHTTPServer
+
+
+
+The -m option is new in 2.4, so if you are using an older version of Python or want to see alternative ways of running it, see section 14.4.3. Anyway, if you eventually get it working. . . .
+-m选项是在2.4中新引进的，如果你使用的是比这旧的Python版本，或者想看下它执行的不同方式，请看14.4.3. 无论如何，最终它需要工作起来...
+
+This will start a Web server on port 8000 on your current machine from the current directory. Then you can just create a Cgi-bin right underneath the directory from which you started the server and put your Python CGI scripts in there. Put some HTML files in that directory and perhaps some .py CGI scripts in Cgi-bin, and you are ready to “surf” directly to this Web site with addresses looking something like these:
+这将会在当前机器的当前目录下建立一个端口号为8000的Web服务器。然后可以在启动这个服务器的目录下建立一个Cgi–bin，将Python CGI脚本放到那里。将一些HTML文件放到那个目录下，或许有些.py CGI脚本在Cgi-bin中，然后就可以在地址栏中输入这些地址来访问Web站点啦。
+
+http://localhost:8000/friends.htm http://localhost:8000/cgi-bin/friends2.py
+
+20.5.2 Creating the Form Page
+20.5.2 建立表单页
+
+
+In Example 20.3, we present the code for a simple Web form, friends.htm.
+在例20.3中，我们写了一个简单的Web表单，friends.html.
+
+As you can see in the code, the form contains two input variables: person and  howmany.  The  values  of  these  two  fields  will  be  passed  to  our  CGI script, friends1.py.
+正如你可以在代码中看到的一样，这个表单包括两个输入变量：person 和 howmany,这两个值将会被传到我们的CGI脚本friends1.py 中。
+
+You  will  notice  in  our  example  that  we  install  our  CGI  script  into  the default cgi-bin directory (see the “Action” link) on the local host. (If this information  does  not  correspond  with  your  development  environment, update  the  form  action  before  attempting  to  test  the  Web  page  and  CGI script.) Also, because a METHOD subtag is missing from the form action, all requests  will  be  of  the  default  type,  GET.  We  choose  the  GET  method because we do not have very many form fields, and also, we want our query string to show up in the “Location” (aka “Address”, “Go To”) bar so that you can see what URL is sent to the server.
+你会注意到在例子中我们将CGI脚本初始化到主机默认的cgi-bin目录下（“Action”连接）。（如果这个信息与你开发环境不一样的话，在测试Web页面和CGI之前请更新你的表单事件）。同时由于表单事件中缺少METHOD子标签，所有的请求将会采用默认的GET方法。选择GET方法是因为我们的表单没有太多的字段，同时我们希望我们的请求字段可以在“位置”（aka“Address”， “Go To”）条中显示，以便你可以看到被送到服务器端的URL。
+
+--------------------------------------------
+Example 20.3  Static Form Web Page (friends.htm)
+
+This HTML file presents a form to the user with an empty field for the user’s name and a set of radio buttons for the user to choose from.
+这个HTML文件展示给用户一个空文档，含有用户名，和一系列可供用户选择的单选按钮。
+
+1	<HTML><HEAD><TITLE>
+2	Friends CGI Demo (static screen)
+3	</TITLE></HEAD>
+4	<BODY><H3>Friends list for: <I>NEW USER</I></H3>
+5	<FORM ACTION="/cgi-bin/friends1.py">
+6	<B>Enter your Name:</B>
+7	<INPUT TYPE=text NAME=person VALUE="NEW USER" SIZE=15>
+8	<P><B>How many friends do you have?</B>
+9	<INPUT TYPE=radio NAME=howmany VALUE="0" CHECKED> 0
+10    <INPUT TYPE=radio NAME=howmany VALUE="10"> 10
+11    <INPUT TYPE=radio NAME=howmany VALUE="25"> 25
+12    <INPUT TYPE=radio NAME=howmany VALUE="50"> 50
+13    <INPUT TYPE=radio NAME=howmany VALUE="100"> 100
+14    <P><INPUT TYPE=submit></FORM></BODY></HTML>
+--------------------------------------------
+
+--------------------------------------------
+Figure  20–4
+--------------------------------------------
+
+Figure  20–4	Friends  form  page  in  Safari  on  MacOS  X (friends.htm)
+图20-4，Friends表单页面在MacOS X操作系统Safari浏览器上的显示（friends.htm）
+
+Let us take a look at the screen that is rendered by friends.htm in a client  (see  Figure  20–4  for  Safari  on  MacOS  and  Figure  20–5  for  IE6).
+让我们看看friends.htm提交后在客户端屏幕上的显示（图20-4 Safari， MacOS和 图20-5 IE6）
+
+--------------------------------------------
+Figure  20–5
+--------------------------------------------
+
+Figure 20–5	Friends form page in IE6 on Win32 (friends.htm)
+图20-5 friends表单页面在Win32操作系统IE6浏览器上的显示（friends.htm）
+
+Throughout  this  chapter,  we  will  feature  screenshots  from  various  Web browsers and operating systems over the past few years.
+通过本章，我们将会展示来自与不同Web浏览器和操作系统的屏幕截图。
+
+
+
+20.5.3 Generating the Results Page
+生成结果页
+
+The input is entered by the user and the “Submit” button is pressed. (Alter- natively, the user can also press the RETURN or Enter key within the text field to cause a similar effect.) When this occurs, the script in Example 20.4, friends1.py, is executed via CGI.
+这些输入是由用户完成的，然后按下了“Submit”按钮（可选的，用户也可以在该文本字段中按下回车键获得相同的效果。）当这些发生后，在例20.4中的脚本， friends1.py 将会随CGI一起被执行。
+
+This  script  contains  all  the  programming  power  to  read  the  form  input and process it, as well as return the resulting HTML page back to the user. All the “real” work in this script takes place in only four lines of Python code (lines 14–17).
+这个脚本包含了所有的编程功能，读出并处理表单的输入，同时向用户返回结果HTML页面。所有的这些“实际”的工作仅是通过四行Python代码来实现的（14-17行）。
+
+The form variable is our FieldStorage instance, containing the values of the person and howmany fields. We read these into the Python who and howmany variables, respectively. The reshtml variable contains the general body of HTML text to return, with a few fields filled in dynamically, the data just read in from the form.
+表单的变量是FieldStorage的实例，包含person和howmanyh字段的值。我们把这些值本分别存入Python的who和howmany变量中。变量reshtml包含需要返回的HTML文本的正文，还有一些动态填好的字段，这些数据都是从表单中读入的。
+
+--------------------------------------------
+Example 20.4  Results Screen CGI code (friends1.py)
+
+This CGI script grabs the person and howmany fields from the form and uses that data to create the dynamically generated results screen.
+CGI脚本在表单上抓取person和howmany字段，并用这些数据生成动态的结果示图。
+
+1	#!/usr/bin/env python
+2
+3	import cgi
+4
+5	reshtml = '''Content-Type: text/html\n
+6	<HTML><HEAD><TITLE>
+7	Friends CGI Demo (dynamic screen)
+8	</TITLE></HEAD>
+9	<BODY><H3>Friends list for: <I>%s</I></H3>
+10   Your name is: <B>%s</B><P>
+11   You have <B>%s</B> friends.
+12   </BODY></HTML>'''
+13
+14   form = cgi.FieldStorage()
+15   who = form['person'].value
+16   howmany = form['howmany'].value
+17   print reshtml % (who, who, howmany)
+--------------------------------------------
+
+CORE TIP: HTTP headers separate from HTML
+核心提示:HTML头文件是从HTML中分离出来的。
+
+One thing that always nails CGI beginners is that when sending results back to a CGI script, it must return the appropriate HTTP headers first before any HTML. Furthermore, to distinguish between these headers and the resulting HTML, several NEWLINE characters must be inserted between both sets of data, as in line 5 of our friends1.py example, as well as for the code in the remaining part of the chapter.
+有一点需要向CGI初学者指明的是，在向CGI脚本返回结果时，须先返回一个适当的HTTP头文件后才会返回结果HTML页面。进一步说，为了区分这些头文件和结果HTML页面，需要在friends1.py的第五行中插入几个换行符。在本章的后边的代码中也是这样的处理。
+
+
+One possible resulting screen appears in Figure 20–6, assuming the user typed in “erick allen” as the name and clicked on the “10 friends” radio button. The screen snapshot this time is represented by the older IE3 browser in a Windows environment.
+图20-6是可能出现的屏幕，假设用户输入的名字为“erick allen”,单击“10 friends”单选按钮。这次的屏幕镜像图展示的是在Windows环境下IE3浏览器的效果。
+
+
+If you are a Web site producer, you may be thinking, “Gee, wouldn’t it be nice if I could automatically capitalize this person’s name, especially if they forgot?” This can easily be accomplished using Python CGI. (And we shall do so soon!)
+如果你是一个Web站点的生产商，你也许会想,“如果这个人忘记了的话，我能自动的将这个人的名字大写，会不会更好些？”这个通过Python的CGI可以很容易就实现（我们很快就会进行试验！）。
+
+Notice how on a GET request that our form variables and their values are added to the form action URL in the “Address” bar. Also, did you observe that the title for the friends.htm page has the word “static” in it while the output screen from  friends.py has the work “dynamic” in  its title? We did that for a reason: to indicate that the friends.htm file is a static text file  while  the  results  page  is  dynamically  generated.  In  other  words,  the HTML for the results page did not exist on disk as a text file; rather, it was generated by our CGI script, which returned it as if it was a local file.
+注意GET请求是如何将表单中的变量和值加载在URL地址条中的。你是否观察到了friends.htm页面的标题有个“static”，
+而friends.py 脚本输出到屏幕上的则是“dynamic”？我们这样做的一个原因就是：指明friends.htm文件是一个静态的文本，而结果页面却是动态生成的。换句话说，结果页面的HTML不是以文本文件的形式存在硬盘上的，而是由我们的CGI脚本生成的，并且将其以本地文件的形式返回。
+
+--------------------------------------------
+Figure  20–6
+--------------------------------------------
+
+Figure 20–6	Friends results page in IE3 on Win32
+图20-6 Friends的结果页面在Win32操作系统IE3浏览器上的显示
+
+In our next example, we will bypass static files altogether by updating our CGI script to be somewhat more multifaceted.
+在下边的例子中，我们将会更新我们的CGI脚本，使其变得更灵活些，从而完全绕过静态文件。
+
+20.5.4  Generating Form and Results Pages
+20.5.4 生成表单和结果页面
+
+We obsolete friends.html and merge it into friends2.py. The script will now generate both the form page as well as the results page. But how can we tell which page to generate? Well, if there is form data being sent to us, that means that we should be creating a results page. If we do not get any information at all, that tells us that we should generate a form page for the user to enter his or her data.
+我们删除fiends.html文件并将其合并到friends2.py中。这个脚本现在将会同时生成表单页和结果页面。但是我们如何控制生成哪个页面呢？好吧，如果有表单数据被发送，那就意味着我们需要建立一个结果页面。如果我们没有获得任何的信息，这就说明我们需要生成一个用户可以输入数据的表单页面。
+
+Our new friends2.py script is shown in Example 20.5.
+例子20.5展示的就是我们的新脚本friends2.py
+
+So what did we change in our script? Let’s take a look at some of the blocks of code in this script.
+那么我们改变了哪些脚本呢？让我们一起看下这个脚本的代码块。
+
+Line-by-Line Explanation
+逐行解释
+
+Lines 1–5
+1-5行
+
+In  addition  to  the  usual  startup  and  module  import  lines,  we  separate  the HTTP MIME header from the rest of the HTML body because we will use it for both types of pages (form page and results page) returned and we don’t want to duplicate the text. We will add this header string to the correspond- ing HTML body when it comes time for output to occur.
+除了通常的起始、和模块导入行，我们还把HTTP MIMI头从后面的HTML正文部分分离出来，放在了这里。因为我们将在返回的两种页面（表单页面和结果页面）中都使用它，而又不想重复写文本。当需要输出时，我们将把这个头字串加在相应的HTML正文中。
+
+
+Lines 7–29
+7-29行
+
+All of this code is related to the now-integrated friends.htm form page in our CGI script. We have a variable for the form page text, formhtml, and we  also have a string to build the list of radio buttons,  fradio. We could have duplicated this radio button HTML text as it is in friends.htm, but we wanted to show how we could use Python to generate more dynamic out- put—see the for-loop on lines 22–27.
+所有这些代码都是为了整合CGI脚本里的friends.htm表单页面。我们对表单页面的文本使用一个变量formhtml，还有一个用来创建单选按钮的字符串变量fradio。我们从friends.htm复制了这个单选按钮HTML文本，但我们意在展示如何使用Python来生成更多的动态输出—见22-27行的for循环。
+
+
+The showForm() function has the responsibility of generating a form for user input. It builds a set of text for the radio buttons, merges those lines of HTML into the main body of formhtml, prepends the header to the form, and  then  returns  the  entire  wad  of  data  back  to  the  client  by  sending  the entire string to standard output.
+showForm()函数负责对用户输入生成表单页。它为单选按钮创建了一个文字集，并把这些HTML文本行合并到了formhtml主体中，然后给表单加上头信息，最后通过把整个字符串输出到标准输出的方式给客户端返回了整块数据。
+
+Example 20.5  Generating Form and Results Pages (friends2.py)
+例20.5 生成表单和结果页面（friends2.py)
+Both friends.html and friends1.py are merged together as friends2.py.The resulting script can now output both form and results pages as dynamically generated HTML and has the smarts to know which page to output.
+将friends.html和friends1.py合并成friends2.py。 得到的脚本可以同时显示表单和动态生成的HTML结果页面，同时可以巧妙的知道应该输出哪个页面。
+
+
+--------------------------------------------
+1	#!/usr/bin/env python
+2
+3	import cgi
+4
+5	header = 'Content-Type: text/html\n\n'
+6
+7	formhtml = '''<HTML><HEAD><TITLE>
+8	Friends CGI Demo</TITLE></HEAD>
+9	<BODY><H3>Friends list for: <I>NEW USER</I></H3>
+10    <FORM ACTION="/cgi-bin/friends2.py">
+11    <B>Enter your Name:</B>
+12    <INPUT TYPE=hidden NAME=action VALUE=edit>
+13    <INPUT TYPE=text NAME=person VALUE="NEW USER" SIZE=15>
+14    <P><B>How many friends do you have?</B>
+15    %s
+16    <P><INPUT TYPE=submit></FORM></BODY></HTML>'''
+17
+18    fradio = '<INPUT TYPE=radio NAME=howmany VALUE="%s" %s> %s\n'
+19
+20    def showForm():
+21	friends = ''
+22	for i in [0, 10, 25, 50, 100]:
+23	checked = ''
+24	if i == 0:
+25	checked = 'CHECKED'
+26	friends = friends + fradio % \
+27	(str(i), checked, str(i))
+28
+29	print header + formhtml % (friends)
+30
+31    reshtml = '''<HTML><HEAD><TITLE>
+32    Friends CGI Demo</TITLE></HEAD>
+33    <BODY><H3>Friends list for: <I>%s</I></H3>
+34    Your name is: <B>%s</B><P>
+35    You have <B>%s</B> friends.
+36    </BODY></HTML>'''
+37
+38    def doResults(who, howmany):
+39	print header + reshtml % (who, who, howmany)
+40
+
+
+
+44	who = form['person'].value
+45	else:
+46	who = 'NEW USER'
+47
+
+
+
+
+
+
+Example 20.5  Generating Form and Results Pages (friends2.py)
+(continued)
+
+48	if form.has_key('howmany'):
+49   howmany = form['howmany'].value
+50	else:
+51	howmany = 0
+52
+53	if form.has_key('action'):
+54	doResults(who, howmany)
+55	else:
+56	showForm()
+57
+58    if __name__ == '__main__':
+59	process()
+--------------------------------------------
+
+
+There are a couple of interesting things to note about this code. The first is the “hidden” variable in the form called action, containing the value “edit” on line 12. This field is the only way we can tell which screen to display (i.e., the form page or the results page). We will see this field come into play in lines 53–56.
+这段代码中有两件有趣的事值得注意。第一点是表单中12行action处的“hidden”变量，这里的值为“edit”。我们决定显示哪个页面（表单页面或是结果页面）的唯一途径是通过这个字段。我们将在第53-56行看到这个字段如何起作用。
+
+Also, observe that we set the 0 radio button as the default by “checking” it within  the  loop  that  generates  all  the  buttons.  This  will  also  allow  us  to update the layout of the radio buttons and/or their values on a single line of code (line 18) rather than over multiple lines of text. It will also offer some more   flexibility   in   letting   the   logic   determine   which   radio   button   is checked—see the next update to our script, friends3.py coming up.
+还有，请注意我们在生成所有按钮的循环里把单选按钮0设置为默认按钮。这表明我们可以在一行代码里（第18行）更新单选按钮的布局和/或它们的值，而不用再写多行文字。这也同时提供了更多的灵活性，可以用逻辑来判断哪个单选按钮被选中—见我们脚本的下一个升级版，后面的friends3.py。
+
+Now you may be thinking, “Why do we need an action variable when I could  just  as  well  be  checking  for  the  presence  of  person or  howmany?” That  is  a  valid  question  because  yes,  you  could  have  just  used  person or howmany in this situation.
+现在你或许会想“既然我也可以选择person或howmany是否出现，那为什么我们要用一个action变量呢？”这是一个很好的问题，因为在这种情况下你当然可以只用person或hwomany。
+
+However, the action variable is a more conspicuous presence, insofar as its name as well as what it does—the code is easier to understand. The per- son and howmany variables are used for their values while the action vari- able is used as a flag.
+然而，action变量代表了一种更明显的出现，不光是它的名字还有它的作用—其代码很容易理解。person和howmany变量都是对其值起作用，而action变量则被用作一个标志。
+
+The other reason for creating action is that we will be using it again to help us determine which page to generate. In particular, we will need to display a form with the presence of a person variable (rather than a results page)—this will break your code if you are solely relying on there being a person variable.
+创立action的另一个原因是我们将会再一次使用它来帮助我们决定生成哪一页。具体来说，我们需要在person变量出现时会显示一个表单（而不是生成结果页面）--如果在这里仅依赖person变量,你的代码运行将失败。
+
+Lines 31–39
+31-39行
+
+The  code  to  display  the  results  page  is  practically  identical  to  that  of friends1.py.
+显示结果页的代码实际上和friends1.py中的一样。
+
+--------------------------------------------
+Figure  20–7
+--------------------------------------------
+
+Figure 20–7	Friends form page in Firefox I.x on Win32 (friends2.py)
+图20-7 Friends表单页面在Win32操作系统Firefox 1.x浏览器上的显示（friends2.py）
+
+Lines 41–56
+41-56行
+
+Since there are different pages that can result from this one script, we created an overall process() function to get the form data and decide which action to take. The main portion of process() will also look familiar to the main body of code in friends1.py. There are two major differences, however.
+因为这个脚本可以产生出不同的页面，所以我们创建了一个包括一切的process()函数来获得表单数据并决定采用何种动作。看起来process()的主体部分也和friends1.py中主体部分的代码相似。然而它们有两个主要的不同。
+
+Since the script may or may not be getting the expected fields (invoking the script the first time to generate a form page, for example, will not pass any fields to the server), we need to “bracket” our retrieval of the form fields with if statements to check if they are even there. Also, we mentioned the action field above, which helps us decide which page to bring up. The code that performs this determination is in lines 53–56.
+因为这个脚本也许可以、也许不能取得所期待的字段（例如，第一次运行脚本时生成一个表单页，这样的话就不会给服务器传递任何字段），我们需要用if语句把从表单项取得的值“括起来”，并检查它们此时是否有效。还有我们上面提到的action字段，它可以帮助我们判定应生成哪一个页面。第53-56行作了这种判定。
+
+In Figures 20–7 and 20–8, you will see first the form screen generated by our script (with a name entered and radio button chosen), followed by the results page, also generated by our script.
+在图20-7和图20-8中，你会先看到脚本生成的表单页面（已经输入了一个名字并选择了一个单选按钮），然后是结果页面，也是这个脚本生成的。
+
+If you look at the location or “Go to” bar, you will not see a URL referring to a static friends.htm file as you did in Figure 20–4 or Figure 20–5.
+如果看一下位置或“转到”栏，你将不会看到一个对friends.htm静态文件的URL，而在图20-4或图20-5中都有。
+
+20.5.5  Fully Interactive Web sites
+20.5.5 全面交互的Web站点
+
+Our final example will complete the circle. As in the past, a user enters his or her information from the form page. We then process the data and output a results page. Now we will add a link to the results page that will allow the user to go back to the form page, but rather than presenting a blank form, we will fill in the data that the user has already provided. We will also add some error processing to give you an example of how it can be accomplished.
+我们最后一个例子将会完成这个循环。如在前面中，用户在表单页中输入他/她的信息，然后我们处理这些数据，并输出一个结果页面。现在我们将会在结果页面上加个链接允许返回到表单页面 ，但是我们返回的是含有用户输入信息的页面而不是一个空白页面。我们页加上了一些错误处理程序，来展示它是如何实现的。
+
+--------------------------------------------
+Figure  20–8
+--------------------------------------------
+
+Figure 20–8	Friends results page in Firefox on Win32 (friends2.py)
+图20-8 Friends结果页面在Win32操作系统Firefox浏览器上的显示(friends2.py)
+We now present our final update, friends3.py in Example 20.6.
+现在在例子20.6中我们展示我们最后的更新，friends3.py。
+
+friends3.py is  not  too  unlike  friends2.py.  We  invite  the  reader  to compare the differences; we present a brief summary of the major changes for you here.
+friends3.py和friends2.py没有太大的不同。我们请读者比较不同处；这里我们简要的介绍了主要的不同点。
+
+
+Abridged Line-by-Line Explanation
+简略的逐行解释
+
+Line 8
+第8行
+
+We take the URL out of the form because we now need it in two places, the results page being the new customer.
+我们把URL从表单中抽出来是因为现在有2个地方需要它，结果页面是它的新顾客。
+
+Lines 10–19, 69–71, 75–82
+10-19， 69-71， 75-82行
+
+All of these lines deal with the new feature of having an error screen. If the user does not select a radio button indicating the number of friends, the how- many field  is  not  passed  to  the  server.  In  such  a  case,  the  show-Error() function returns the error page to the user.
+所有这些行都用来处理新特性—错误页面。如果用户没有选择单选按钮，指明朋友数量，那么howmany字段就不会传送给服务器，在这种情况下，showError()函数会返回一个错误页面给客户。
+
+
+The error page also features a JavaScript “Back” button. Because buttons are input types, we need a form, but no action is needed because we are sim- ply just going back one page in the browsing history. Although our script cur- rently supports (aka detects, tests for) only one type of error, we still use a generic error variable in case we wanted to continue development of this script to add more error detection in the future.
+错误页面的显示使用了JavaScript的“后退”按钮。因为按钮都是输入类型的，所以需要一个表单，但不需要有动作因为我们只是简单的后退到浏览器历史中的上一个页面。尽管我们的脚本目前只支持（或者说探测、测试）一种类型的错误，但我们仍然使用了一个通用的error变量，这是为了以后还可以继续开发这个脚本，给它增加更多的错误检测。
+
+Example 20.6   Full User Interaction and Error Processing
+(friends3.py)
+例20.6 全用于交互和错误处理(friends3.py)
+By adding a link to return to the form page with information already provided, we have come “full circle,” giving the user a fully interactive Web surfing experience. Our application also now performs simple error checking, which notifies the user if no radio button was selected.
+通过加上返回输入信息的表单页面的连接，我们实现了整个循环，给了用户一次完整的Web应用体验。我们的应用程序现在也进行了一些简单的错误验证，在用户没有选择任何单选按钮时，可以通知用户。
+
+--------------------------------------------
+1	#!/usr/bin/env python
+2
+3	import cgi
+
+
+
+7	header = 'Content-Type: text/html\n\n'
+8	url = '/cgi-bin/friends3.py'
+9
+10    errhtml = '''<HTML><HEAD><TITLE>
+11    Friends CGI Demo</TITLE></HEAD>
+<BODY><H3>ERROR</H3>
+
+
+15    ONCLICK="window.history.back()"></FORM>
+16    </BODY></HTML>'''
+17
+18    def showError(error_str):
+19	print header + errhtml % (error_str)
+20
+21    formhtml = '''<HTML><HEAD><TITLE>
+22    Friends CGI Demo</TITLE></HEAD>
+23    <BODY><H3>Friends list for: <I>%s</I></H3>
+24    <FORM ACTION="%s">
+25    <B>Your Name:</B>
+26    <INPUT TYPE=hidden NAME=action VALUE=edit>
+27    <INPUT TYPE=text NAME=person VALUE="%s" SIZE=15>
+28    <P><B>How many friends do you have?</B>
+29    %s
+30    <P><INPUT TYPE=submit></FORM></BODY></HTML>'''
+31
+32    fradio = '<INPUT TYPE=radio NAME=howmany VALUE="%s" %s>
+%s\n'
+33
+34    def showForm(who, howmany):
+35	friends = ''
+36	for i in [0, 10, 25, 50, 100]:
+37	checked = ''
+38	if str(i) == howmany:
+39	checked = 'CHECKED'
+40	friends = friends + fradio % \
+41	(str(i), checked, str(i))
+42	print header + formhtml % (who, url, who, friends)
+43
+44   reshtml = '''<HTML><HEAD><TITLE>
+
+
+Example 20.6  Full User Interaction and Error Processing
+(friends3.py) (continued)
+例20.6 全用于交互和错误处理(friends3.py)续
+45    Friends CGI Demo</TITLE></HEAD>
+46    <BODY><H3>Friends list for: <I>%s</I></H3>
+47    Your name is: <B>%s</B><P>
+48    You have <B>%s</B> friends.
+49    <P>Click <A HREF="%s">here</A> to edit your data again.
+50    </BODY></HTML>'''
+51
+52    def doResults(who, howmany):
+53	newurl = url + '?action=reedit&person=%s&howmany=%s'%\
+54	(quote_plus(who), howmany)
+55	print header + reshtml % (who, who, howmany, newurl)
+56
+57    def process():
+58	error = ''
+59	form = cgi.FieldStorage()
+60
+61	if form.has_key('person'):
+62	who = capwords(form['person'].value)
+63	else:
+64	who = 'NEW USER'
+65
+66	if form.has_key('howmany'):
+67	howmany = form['howmany'].value
+68	else:
+69	if form.has_key('action') and \
+70	form['action'].value == 'edit':
+71	error = 'Please select number of friends.'
+72	else:
+73	howmany = 0
+74
+75	if not error:
+76	if form.has_key('action') and \
+77	form['action'].value != 'reedit':
+78	doResults(who, howmany)
+79	else:
+80	showForm(who, howmany)
+81	else:
+82	showError(error)
+83
+84    if __name__ == '__main__':
+85	process()
+--------------------------------------------
+
+Lines 27, 38–41, 49, and 52–55
+27，38-41，49，52-55行
+
+One goal for this script is to create a meaningful link back to the form page from the results page. This is implemented as a link to give the user the ability to return to a form page to update the data he or she entered, in case it was erroneous.  The  new  form  page  makes  sense  only  if  it  contains  information pertaining to the data that have already been entered by the user. (It is frus- trating for users to reenter their information from scratch!)
+这个脚本的一个目的是创建一个有意义的链接，以便从结果页面返回表单页面。当有错误发生时，用户可以使用这个链接返回表单页面去更新他/她填写的数据。新的表单页面只有当它包含了用户先前输入的信息时才有意义。（如果让用户重复输入这些信息会很令人沮丧！）
+
+To accomplish this, we need to embed the current values into the updated form. In line 27, we add a value for the name. This value will be inserted into the name field, if given. Obviously, it will be blank on the initial form page. In Lines 38–41, we set the radio box corresponding to the number of friends cur- rently chosen. Finally, on lines 49 and the updated doResults() function on  lines  52–55,  we  create  the  link  with  all  the  existing  information,  which “returns” the user to our modified form page.
+为了实现这一点，我们需要把当前值嵌入到更新过的表单中。在第27行，我们给name新增了一个值。这个值如果给出的话，会被插入到name字段。显然地，在初始表单页面上它将是空值。第38-41行，我们根据当前选定的朋友数目设置了单选按钮。最后，通过第49行和52-55行更新了的doResults()函数，我们创建了这个包含已有信息的链接，它会让用户“返回”到我们更改后的表单页面。
+
+Line 62
+62行
+
+Finally, we added a simple feature that we thought would be a nice aesthetic touch. In the screens for friends1.py and friends2.py, the text entered by  the  user  as  his  or  her  name  is  taken  verbatim.  You  will  notice  in  the screens above that if the user does not capitalize his or her names, that is reflected in the results page. We added a call to the string.capwords() function to automatically capitalize a user’s name. The capwords() func- tion will capitalize the first letter of each word in the string that is passed in. This  may  or  may  not  be  a  desired  feature,  but  we  thought  that  we  would share it with you so that you know that such functionality exists.
+最后我们从美学角度上加了一个简单的特性。在friends1.py 和friends2.py的截屏中，可以看到返回结果和用户的输入一字不差。在上述的截屏中，如果用户的名字没有大写这将影响返回的页面。我们加了一个对string.capwords()函数的调用从而自动的将用户名置成大写。capwords()函数可以将传进来的每个单词的第一个字母置成大写的。这也许是或许不是必要的特性，但是我们还是愿意一起分享它，以便你知道这个功能的存在。
+
+We will now present four screens that show the progression of user inter- action with this CGI form and script.
+下边我们将会展示四个截屏，表明用户和CGI表单及脚本的交互过程。
+
+
+In the first screen, shown in Figure 20–9, we invoke friends3.py to bring up the now-familiar form page. We enter a name “foo bar,” but deliberately avoid checking any of the radio buttons. The resulting error after submitting the form can be seen in the second screen (Figure 20–10).
+在第一个截屏图20－9中，我们调用friends3.py生成了一个熟悉的新表单页面。输入“fool bar，”同时故意忘记检查单选按钮。单击Submit按钮后将会返回错误页面，请看第二个截屏图20-10.
+
+--------------------------------------------
+Figure  20–9
+--------------------------------------------
+
+Figure   20–9	Friends  initial  form  page  in  Camino  on
+MacOS X (friends3.py)
+图20-9friends的初始表单页面在MacOS X操作系统Camino浏览器上的显示（friends3.py）
+
+--------------------------------------------
+Figure  20–10
+--------------------------------------------
+
+Figure 20–10	Friends error page (invalid user input), also in Camino (friends3.py)
+图20-10 Friends的错误页面（无效的用户输入）在Camino浏览器上的显示（Friends3.py）
+
+We click on the “Back” button, check the “50” radio button, and resubmit our form. The results page, shown in Figure 20–11, is also familiar, but now has an extra link at the bottom. This link will take us back to the form page. The only difference between the new form page and our original is that all the data filled in by the user are now set as the “default” settings, meaning that the values are already available in the form. We can see this in Figure 20–12.
+我们单击“后退”按钮，选择“50”单选按钮，重新提交表单。结果页面如图20-11，也非常像，但是现在在页面底部有个额外的连接。这个连接将会把我们带到表单页面。新表单页面和最初的页面的唯一区别是所有用户输入的数据都被设置成了“默认值”，这意味着这些值在表单中已经存在了。我们可以看图20-12.
+
+Now the user is able to make changes to either of the fields and resubmit his or her form.
+这时用户可以更改任何一个字段或者重新提交表单。
+
+You will no doubt begin to notice that as our forms and data get more com- plicated, so does the generated HTML, especially for complex results pages. If you ever get to a point where generating the HTML text is interfering with your application, you may consider connecting with a Python module such as HTMLgen, an external Python module which specializes in HTML generation.
+毫无疑问你会开始注意到我们的表单和数据已经变得复杂多了，生成的HTML页面是这样，结果页面更是复杂。如果你有HTML文本和应用程序的接入点的话，你可能会考虑与Python的HTMLgen模块的连接，HTMLgen是Python的一个扩展模块，专用于生成HTML页面。
+
+--------------------------------------------
+Figure  20–11
+--------------------------------------------
+
+Figure  20–11	Friends  updated  form  page  with  current information
+图20-11 带有当前信息的更新后的friends表单页面
+
+--------------------------------------------
+Figure  20–12
+--------------------------------------------
+
+Figure	20–12	Friends    results    page    (valid    input) (friends3.py)
+图20-12 friends结果页面（无效输入）（friends3.py）
+
+20.6 Using Unicode with CGI
+20.6 在CGI中使用Unicode编码
+
+In  Chapter  6,  “Sequences,”  we  introduced  the  use  of  Unicode  strings.  In Section  6.8.5,  we  gave  a  simple  example  of  a  script  that  takes  a  Unicode string, writing it out to a file and reading it back in. In this section, we will demonstrate a simple CGI script that has Unicode output and how to give your browser enough clues to be able to render the characters properly. The one  requirement  is  that  you  must  have  East  Asian  fonts  installed  on  your computer so that the browser can display them.
+在第六章“序列”中，我们介绍了Unicode字符串的使用。在6.8.5部分，我们给了个简单的例子脚本：取得Unicode字符串，写入一个文件，并重新读出来。在这里，我们将演示一个具有Unicode输出的简单CGI脚本，并给浏览器足够的提示，从而可以正确的生成这些字符。。
+唯一的要求是你的计算机必须装有对应的东亚字体以便浏览器可以显示它们。
+
+To see Unicode in action we will build a CGI script to generate a multilin- gual Web page. First of all we define the message in a Unicode string. We assume  your  text  editor  can  only  enter  ASCII.  Therefore  the  non-ASCII characters are input using the \u escape. In practice the message can also be read from a file or from database.
+为了看到Unicode的作用，我们将会用CGI脚本生成一个多语言功能的Web页面。首先我们用Unicode字符串定义一些消息。我们假设你的编辑器只能输入ASCII编码。因此，非ASCII编码的字符使用\u转义符输入。实际上从文件或数据库中也能读取这些消息。
+
+# Greeting in English, Spanish,
+# Chinese and Japanese. UNICODE_HELLO = u""" Hello!
+\u00A1Hola!
+\u4F60\u597D!
+\u3053\u3093\u306B\u3061\u306F!
+"""
+
+The first output the CGI generates is the content-type HTTP header. It is very important to declare here that the content is transmitted in the UTF-8 encoding so that the browser can correctly interpret it.
+CGI产生的第一个头信息指出内容类型（content-type）是HTTP。此处还声明了消息是以UTF-8编码进行传输的，这点很重要，这样浏览器才可以正确的翻译它。
+
+print 'Content-type: text/html; charset=UTF-8\r'
+print '\r'
+--------------------------------------------
+Example 20.7  Simple Unicode CGI Example (uniCGI.py)
+例20.7 简单Unicode CGI示例（uniCGI.py）
+This script outputs Unicode strings to your Web browser.
+这个脚本输出到你Web浏览器端的是Unicode字符串。
+
+1 #!/usr/bin/env python
+2
+3 CODEC = 'UTF-8'
+4 UNICODE_HELLO = u'''
+5 Hello!
+6 \u00A1Hola!
+7 \u4F60\u597D!
+8 \u3053\u3093\u306B\u3061\u306F!
+9 '''
+10
+11 print 'Content-Type: text/html; charset=%s\r' % CODEC
+12 print '\r'
+13 print '<HTML><HEAD><TITLE>Unicode CGI Demo</TITLE></HEAD>'
+14 print '<BODY>'
+15 print UNICODE_HELLO.encode(CODEC)
+16 print '</BODY></HTML>'
+--------------------------------------------
+
+Then  output  the  actual  message.  Use  the  string’s  encode() method  to translate the string into UTF-8 sequences first.
+然后输出真正的消息。事先用string类的encode()方法先将这个字符串转换成UTF-8序列。
+
+print UNICODE_HELLO.encode('UTF-8') Example 20.7 shows the complete program.
+例20.7中显示了完整的程序。
+
+If you run the CGI code from your browser, you will get output like that shown in Figure 20–13.
+如果你在你的浏览器中运行这个CGI，你将会获得如图20-13所示的输出。
+
+
+--------------------------------------------
+Figure  20–13
+--------------------------------------------
+
+Figure 20–13	Simple Unicode CGI demo output in Firefox (uniCGI.py)
+图20-13简单的CGI Unicode编码在Firefox上的输出（uniCGI.py）
+
+20.7 Advanced CGI
+高级CGI
+
+We  will  now  take  a  look  at  some  of  the  more  advanced  aspects  of  CGI programming.  These  include  the  use  of  cookie—cached  data  saved  on the  client  side—multiple  values  for  the  same  CGI  field  and  file  upload using  multipart  form  submissions.  To  save  space,  we  will  show  you  all three of these features with a single application. Let’s take a look at multi- part submissions first.
+ 现在我们来看看CGI编程的高级方面。这包括cookie的使用（保存在客户端的缓存数据），同一个CGI字段的多重值，和用multipart表单实现的文件上传。为了节省空间，我们将会在同一个程序中向你展示这三个特性。首先让我们看下多次提交问题。
+
+20.7.1  Multipart Form Submission and File Uploading
+20.7.1 Mulitipart表单提交和文件的上传
+
+Currently,  the  CGI  specifications  only  allow  two  types  of  form  encodings, “application/x-www-form-urlencoded”  and  “multipart/form-data.”  Because the former is the default, there is never a need to state the encoding in the FORM tag like this:
+目前，CGI特别指出只允许两种表单编码，“application/x-www-form-urlencoded”和“multipart/form-dat”。由于前者是默认的，就没有必要像下边那样在FORM标签里声明编码方式。
+
+<FORM enctype="application/x-www-form-urlencoded" ...>
+But for multipart forms, you must explicitly give the encoding as:
+但是对于multipart表单，你需要像这样明确给出编码：
+
+<FORM enctype="multipart/form-data" ...>
+
+You can use either type of encoding for form submissions, but at this time, file uploads can only be performed with the multipart encoding. Multipart encoding  was  invented  by  Netscape  in  the  early  days  but  has  since  been adopted by Microsoft (starting with version 4 of Internet Explorer) as well as other browsers.
+在表单提交时你可以使用任一种编码，但在目前上传的文件仅能表现为multipart编码。Multipart编码是由网景在早期开发的，但是已经被微软（开始于IE4版）和其他的浏览器采用。
+
+File uploads are accomplished using the file input type:
+通过使用输入文件类型完成文件上传：
+
+<INPUT type=file name=...>
+
+This directive presents an empty text field with a button on the side which allows you to browse your file directory structure for a file to upload. When using  multipart,  your  Web  client’s  form  submission  to  the  server  will  look amazingly  like  (multipart)  e-mail  messages  with  attachments.  A  separate encoding was needed because it just would not be necessarily wise to “urlen- code” a file, especially a binary file. The information still gets to the server, but it is just “packaged” in a different way.
+  这个指令表现为一个空的文本字段，同时旁边有个按钮，可以让你浏览文件目录系统，找到要上传的文件。在使用multipart编码时，你客户端提交到服务器端的表单看起来会很像带有附件的email。同时还需要有一个单独的编码，因为它还没有聪明到“通过URL编码”的程度，尤其是对一个二进制文件。这些信息仍然会到达服务器，只是以一种不同的“封装”形式而已。
+  
+Regardless of whether you use the default encoding or the multipart, the cgi module will process them in the same manner, providing keys and cor- responding  values  in  the  form  submission.  You  will  simply  access  the  data through your FieldStorage instance as before.
+不论你使用的是默认编码还是multipart编码，cgi模块都会以同样的方式来处理它们，在表单提交时提供键和相应的值。你还可以像以前那样通过FieldStorage实例来访问数据。
+
+20.7.2  Multivalued Fields
+20.7.2多值字段
+
+In addition to file uploads, we are going to show you how to process fields with multiple values. The most common case is when you have a set of check- boxes allowing a user to select from various choices. Each of the checkboxes is labeled with the same field name, but to differentiate them, each will have a different value associated with a particular checkbox.
+除了上传文件，我们将会展示如何处理具有多值的字段。最常见的情况就是你有一系列的复选框允许用户有多个选择。每个复选框都会标上相同的字段名，但是为了区分它们，会有不同的值与特定的复选框关联。
+
+As you know, the data from the user are sent to the server in key-value pairs during form submission. When more than one checkbox is submitted, you will have multiple values associated with the same key. In these cases, rather  than  being  given  a  single  MiniFieldStorage instance  for  your data, the cgi module will create a list of such instances that you will iterate over to obtain the different values. Not too painful at all.
+正如你所知道的，在表单提交时，数据从用户端以键-值对形式发送到服务器端。当提交不止一个复选框时，就会有多个值对应同一个键。在这种情况下，cgi模块将会建立一个这类实例的列表，你可以遍历获得所有的值，而不是为你的数据指定一个MiniFielStorage实例。总的来说不是很痛苦。
+
+20.7.3  cookie
+20.7.3 cookie
+
+Finally, we will use cookie in our example. If you are not familiar with cook- ies, they are just bits of data information which a server at a Web site will request to be saved on the client side, e.g., the browser.
+最后，我们会在例子中使用cookie。如果你对cookie还不太熟悉的话，可以把它们看成是Web站点服务器要求保存在客户端（例如浏览器）上的二进制数据。
+
+Because HTTP is a “stateless” protocol, information that has to be carried from one page to another can be accomplished by using key-value pairs in the request as you have seen in the GET requests and screens earlier in this chapter. Another way of doing it, as we have also seen before, is using hid- den   form   fields,   such   as   the   action   variable   in   some   of   the   later friends*.py scripts. These variables and their values are managed by the server because the pages they return to the client must embed these in gen- erated pages.
+  由于HTTP是一个“无状态信息”的协议，如你在本章最开始看到的截图一样，是通过GET请求中的键值对来完成信息从一个页面到另一个页面的传递。实现这个功能的另外一种方法如我们以前看到的一样，是使用隐藏的表单字段，如在后期friends.py脚本中对action变量的处理。这些信息必须被嵌入新生成的页面中并返回给客户端，所以这些变量和值由服务器来管理。
+  
+One  alternative  to  maintaining  persistency  in  state  across  multiple  page views  is  to  save  the  data  on  the  client  side  instead.  This  is  where  cookie come  in.  Rather  than  embedding  data  to  be  saved  in  the  returned  Web pages, a server will make a request to the client to save a cookie. The cookie is linked to the domain of the originating server (so a server cannot set or override cookie from other Web sites) and has an expiration date (so your browser doesn’t become cluttered with cookie).
+ 还有一种可以保持对多个页面浏览连续性的方法就是在客户端保存这些数据。这就是引进cookie的原因。服务器可以向客户端发送一个请求来保存cookie，而不必用在返回的Web页面中嵌入数据的方法来保持数据。Cookie连接到最初的服务器的主域上（这样一个服务器就不能设置或者覆盖其他服务器上的cookie）,并且有一定的生存期限（因此你的浏览器不会堆满cookie）。
+ 
+These two characteristics are tied to a cookie along with the key-value pair representing the data item of interest. There are other attributes of cookie such as a domain subpath or a request that a cookie should only be delivered in a secure environment.
+这两个属性是通过有关数据条目的键-值对和cookie联系在一起的。cookie还有一些其他的属性，如域子路径，cookie安全传输请求。
+
+By using cookie, we no longer have to pass the data from page to page to track a user. Although they have been subject to a good amount of controversy over the privacy issue, most Web sites use cookie responsibly. To prepare you for the code, a Web server requests a client store a cookie by sending the “Set- Cookie” header immediately before the requested file.
+有了coockies，我们不再需要为了跟踪用户而将数据从一页传到另一页了。虽然这在隐私问题上也引发了大量的争论，多数Web站点还是合理地使用了cookie。为了准备代码，在客户端获得请求文件前，Web服务器向客户端发送“SetCookie”头文件要求客户端存储cookie
+
+Once cookie are set on the client side, requests to the server will automat- ically have those cookie sent to the server using the  HTTP_COOKIE envi- ronment  variable.  The  cookie  are  delimited  by  semicolons  and  come  in “key=value” pairs. All your application needs to do to access the data values is to  split  the  string  several  times  (i.e.,  using  str.split() or  manual parsing). The cookie are delimited by semicolons ( ; ), and each key-value pair is separated by equal signs ( = ).
+一旦在客户端建立了cookie，HTTP_COOKIE环境变量会将那些cookie自动放到请求中发送给服务器。cookie是以分号分隔的键值对存在的。要访问这些数据，你的应用程序就要多次拆分这些字符串（也就是说，使用str.split()或者手动解析）。cookie以分号（；）分隔，每个键-值对中间都由等号（=）分开。
+
+Like multipart encoding, cookie originated from Netscape, which imple- mented cookie and wrote up the first specification, which is still valid today. You can access this document at the following Web site: http://www.netscape.com/newsref/std/cookie_spec.html
+和multipart编码一样，cookie同样起源于网景，他们实现了cookie并制定出第一个规范并沿用至今，在下边的Web站点中你可以接触这些文档: http://www.netscape.com/newsref/std/cookie_spec.html
+
+Once cookie are standardized and this document finally obsoleted, you will  be  able  to  get  more  current  information  from  Request  for  Comment documents (RFCs). The most current one for cookie at the time of publica- tion is RFC 2109.
+一旦cookie标准化以后，这些文档最终都被废除了，你可以从评论请求文档（RFCs）中获得更多现在的信息。现今发布的最新的cookie的文件是RFC2109.
+
+
+20.7.4 Using Advanced CGI
+20.7.4 使用高级CGI
+
+We  now  present  our  CGI  application,  advcgi.py,  which  has  code  and functionality  not  too  unlike  the  friends3.py script  seen  earlier  in  this chapter. The default first page is a user fill-out form consisting of four main parts: user-set cookie string, name field, checkbox list of programming lan- guages,  and  file  submission  box.  An  image  of  this  screen  can  be  seen  in Figure 20–14.
+现在我们来展示CGI应用程序， advcgi.py,它的代码号功能和本章前部分讲到的friends3.py 的差别不是很大。默认的第一页是用户填写的表单，它由四个主要部分组成：用户设置cookie字符串，姓名字段，编程语言复选框列表，文件提交框。在图20-14中可以看到示图。
+
+Figure  20–15  shows  another  look  at  the  form  from  another  browser. From this form, we can enter our information, such as the sample data given in Figure 20–16. Notice how the text in the button to search for files differs between browsers, i.e., “Browse . . .”, “Choose”, “. . .”, etc.
+图20-15是在另一个浏览器看到的表单效果图，在这个表单中，我们可以输入自己的信息，如图20-16中给的样式。注意查找文件的按钮在不同的浏览器中显示的文字是不同的，如，“Browse...”, “Choose”, “...”等。
+
+The  data  are  submitted  to  the  server  using  multipart  encoding  and retrieved in the same manner on the server side using the  FieldStor- age instance.  The  only  tricky  part  is  in  retrieving  the  uploaded  file.  In our application, we choose to iterate over the file, reading it line by line.  It is also possible to read in the entire contents of the file if you are not wary of its size.
+这些数据以mutipart编码提交到服务器端，在服务器端以同样的方式用FieldStorage实例获取。唯一不同的就是对上传文件的检索。在我们的应用程序中，我们选择的是逐行读取，遍历文件。如果你不介意文件的大小的话，也可以一次读入整个文件。
+
+Since this is the first occasion data are received by the server, it is at this time, when returning the results page back to the client, that we use the “Set- Cookie:” header to cache our data in browser cookie.
+由于这是服务器端第一次接到数据，这时，当我们向客户端返回结果页面时，我们使用“SetCookie:”头文件来捕获浏览器端的cookie。
+
+--------------------------------------------
+Figure  20–14
+--------------------------------------------
+
+Figure  20–14	Upload  and  multivalue  form  page  in  IE5  on MacOS X
+图20-14 上传及多值表单页 IE5浏览器， MacOS X系统
+
+
+In Figure 20–17, you will see the results after submitting our form data.  All the fields the user entered are shown on the page. The given file in the final dialog box was uploaded to the server and displayed as well.
+在图20-17中，你可以看到数据提交后的结果展示。用户输入的所有数据都可以在页面中显示出来。在最后对话框中指定的文件也被上传到了服务器端，并显示出来。
+
+You  will  also  notice  the  link  at  the  bottom  of  the  results  page,  which returns us to the form page, again using the same CGI script.
+你也会注意到在结果页面下方的那个链接，它使用相同的CGI脚本，可以帮我们返回表单页。
+
+If we click on that link at the bottom, no form data is submitted to our script, causing a form page to be displayed. Yet, as you can see from Figure 20–17, what shows up is anything but an empty form! Information previously entered by the user shows up! How did we accomplish this with no form data (either hidden or as query arguments in the URL)? The secret is that the data are stored on the client side in cookie, two in fact.
+如果我们单击下方的那个链接，没有任何表单数据提交给我们的脚本，因此会显示一个表单页面。然而，如你在图20-17中看到的一样，所有的东西都可以显示出来，并非是一个空的表单！我们前边输入的信息都被显示出来了！在没有表单数据的情况下我们是怎样做到这一点的呢（将其隐藏或者作为URL中的请求参数）？实际上秘密是这些数据都被保存在客户端的cookie中了。
+
+The user cookie holds the string of data typed in by the user in the “Enter cookie  value”  form  field,  and  the  user’s  name,  languages  they  are  familiar with, and uploaded files are stored in the info cookie.
+用户的cookie将用户输入表单中的值都保存了起来，用户名，使用的语言，上传文件的信息都会存储在cookie中。
+
+When  the  script  detects  no  form  data,  it  shows  the  form  page,  but before the form page has been created, it grabs the cookie from the client(which are automatically transmitted by the client when the user clicks on the link) and fills out the form accordingly. So when the form is finally dis- played,  all  the  previously  entered  information  appears  to  the  user  like magic (see Figure 20–18).
+当脚本检测到表单没有数据时，它会返回一个表单页面，但是在表单页面建立前，它们从客户端的cookie中抓取了数据（当用户在单击了那个链接的时候将会自动传入）并且相应的将其填入表单中。因此当表单最终显示出来时，先前的输入便会魔术般的显示在用户面前（图20-18）。
+
+--------------------------------------------
+Figure  20–15
+--------------------------------------------
+
+Figure 20–15	The same advanced CGI form but in Netscape4 on Linux
+图20-15 同一个高级CGI在Netscape4浏览器，Linux系统
+
+
+
+
+We are certain you are eager to take a look at this application, so here it is, in Example 20.8.
+我们相信你现在已经迫不及待的想看下这个程序了，详见例子20.8.
+
+advcgi.py looks  strikingly  similar  to  our  friends3.py CGI  scripts seen earlier in this chapter. It has a form, results, and error pages to return. In  addition  to  all  of  the  advanced  CGI  features  that  are  part  of  our  new script,  we  are  also  using  more  of  an  object-oriented  feel  to  our  script  by using a class with methods instead of just a set of functions. The HTML text for our pages is now static data for our class, meaning that they will remain constant  across  all  instances—even  though  there  is  actually  only  one instance in our case.
+ advcgi.py和我们本章前部分提到的CGI脚本friends3.py相当的像。它有表单页、结果页、错误页可以返回。新的脚本中除了有所有的高级CGI特性外，我们还在脚本中增加了更多的面向对象特征：用类和方法代替了一系列的函数。我们页面的HTML文本对我们的类来说都是静态的了，这就意味着它们在实例中都是以常量出现的—虽然我们这里仅有一个实例。
+
+
+--------------------------------------------
+Figure  20–16
+--------------------------------------------
+
+Figure 20–16	Submitting our advanced CGI demo form in Opera8 on Win32
+图20-16 高级CGI提交演示 Opera8 Win32系统
+
+Line-by-Line (Block-by-Block) Explanation
+逐行解释（以块划分）
+
+Lines 1–7
+1-7行
+
+The usual startup and import lines appear here. The only module you may not be familiar with is cStringIO, which we briefly introduced at the end of  Chapter  10  and  also  used  in  Example  20.1.  cStringIO.StringIO() creates a file-like object out of a string so that access to the string is similar to opening a file and using the handle to access the data.
+普通的起始、和模块导入行出现在这里。唯一你可能不太熟悉的模块是cStringIO，我们曾在第10章简单讲解过它并在例20.1中用过。cStringIO.StingIO()会在字符串上创建一个类似文件的对象，所以访问这个字符串与打开一个文件并使用文件句柄去访问数据很相似。
+
+--------------------------------------------
+Figure  20–17
+--------------------------------------------
+
+Figure 20–17	Results page generated and returned by the Web server in Opera4 on
+Win32
+
+
+Lines 9–12
+9-12行
+
+After the AdvCGI class is declared, the header and url (static class) vari- ables are created for use by the methods displaying all the different pages.
+在声明AdvCGI类之后，header和url（静态）变量被创建出来，在显示所有不同页面的方法中会用到这些变量。
+
+Lines 14–80
+14-80行
+
+All the code in this block is used to generate and display the form page. The data  attributes  speak  for  themselves.  getCPPcookie() obtains  cookie information sent by the Web client, and showForm() collates all the infor- mation and sends the form page back to the client.
+所有这个块中的代码都是用来创建、显示表单页面的。那些数据属性都是不言自明的。getCPPcookie()取得Web客户端发来的cookie信息，而showForm()校对所有这些信息并把表单页面返回给客户端。
+
+--------------------------------------------
+Figure  20–18
+--------------------------------------------
+
+Figure 20–18	Form page with data loaded from the Client cookie
+
+Lines 82–91
+82-91行
+
+This block of code is responsible for the error page.
+这个代码块负责错误页面。
+
+Lines 93–144
+93-144行
+
+The results page is created using this block of code. The setCPPcookie() method requests that a client store the cookie for our application, and the
+结果页面的生成使用了本块代码。setCPPcookie()方法要求客户端为我们的应用程序存储cookie，而doResults()方法聚集所有数据并把输出发回客户端。
+
+--------------------------------------------
+Example 20.8  Advanced CGI Application (advcgi.py)
+
+This script has one main class that does everything, AdvCGI. It has methods to show either form, error, or results pages as well as those that read or write cookie from/to the client (a Web browser).
+这个脚本有一个处理所有事情的主函数，AdvCGI， 它有方法显示表单、错误或结果页面，同时也可以从客户端（Web浏览器）读写cookie。
+1	#!/usr/bin/env python
+2
+3	from cgi import FieldStorage
+4	from os import environ
+5	from cStringIO import StringIO
+6	from urllib import quote, unquote
+7	from string import capwords, strip, split, join
+8
+9	class AdvCGI(object):
+10
+11	header = 'Content-Type: text/html\n\n'
+12	url = '/py/advcgi.py'
+13
+14	formhtml = '''<HTML><HEAD><TITLE>
+15    Advanced CGI Demo</TITLE></HEAD>
+16    <BODY><H2>Advanced CGI Demo Form</H2>
+17    <FORM METHOD=post ACTION="%s" ENCTYPE="multipart/form-data">
+18    <H3>My Cookie Setting</H3>
+19    <LI> <CODE><B>CPPuser = %s</B></CODE>
+20    <H3>Enter cookie value<BR>
+21    <INPUT NAME=cookie value="%s"> (<I>optional</I>)</H3>
+22    <H3>Enter your name<BR>
+23    <INPUT NAME=person VALUE="%s"> (<I>required</I>)</H3>
+24    <H3>What languages can you program in?
+25    (<I>at least one required</I>)</H3>
+
+
+28    <INPUT TYPE=file NAME=upfile VALUE="%s" SIZE=45>
+29    <P><INPUT TYPE=submit>
+30    </FORM></BODY></HTML>'''
+31
+
+
+
+34	langItem = \
+'PERL', 'Java', 'C++', 'PHP',
+'JavaScript')
+35	'<INPUT TYPE=checkbox NAME=lang VALUE="%s"%s> %s\n'
+36
+37	def getCPPcookie(self):	# read cookie from client
+
+
+40	split(environ['HTTP_COOKIE'], ';')):
+41	if len(eachCookie) > 6 and \
+42	eachCookie[:3] == 'CPP':
+43	tag = eachCookie[3:7]
+44	try:
+45	self.cookie[tag] = \
+46	eval(unquote(eachCookie[8:]))
+47	except (NameError, SyntaxError):
+48	self.cookie[tag] = \
+49	unquote(eachCookie[8:])
+50	else:
+51	self.cookie['info'] = self.cookie['user'] = ''
+52
+53	if self.cookie['info'] != '':
+54	self.who, langStr, self.fn = \
+
+
+Example 20.8  Advanced CGI Application (advcgi.py) (continued)
+
+55	split(self.cookie['info'], ':')
+56	self.langs = split(langStr, ',')
+57	else:
+58	self.who = self.fn = ' '
+59	self.langs = ['Python']
+60
+61	def showForm(self):	# show fill-out form
+62	self.getCPPcookie()
+63	langStr = ''
+64	for eachLang in AdvCGI.langSet:
+65	if eachLang in self.langs:
+66	langStr += AdvCGI.langItem % \
+67	(eachLang, ' CHECKED', eachLang)
+68	else:
+69	langStr += AdvCGI.langItem % \
+70	(eachLang, '', eachLang)
+71
+72	if not self.cookie.has_key('user') or \
+73	self.cookie['user'] == '':
+74	cookStatus = '<I>(cookie has not been set yet)</I>'
+75	userCook = ''
+76	else:
+77	userCook = cookStatus = self.cookie['user']
+78
+79	print AdvCGI.header + AdvCGI.formhtml % (AdvCGI.url,
+80	cookStatus, userCook, self.who, langStr, self.fn)
+81
+82	errhtml = '''<HTML><HEAD><TITLE>
+83    Advanced CGI Demo</TITLE></HEAD>
+84    <BODY><H3>ERROR</H3>
+
+
+87    ONCLICK="window.history.back()"></FORM>
+88    </BODY></HTML>'''
+89
+90	def showError(self):
+91	print AdvCGI.header + AdvCGI.errhtml % (self.error)
+92
+93	reshtml = '''<HTML><HEAD><TITLE>
+94    Advanced CGI Demo</TITLE></HEAD>
+95    <BODY><H2>Your Uploaded Data</H2>
+96    <H3>Your cookie value is: <B>%s</B></H3>
+97    <H3>Your name is: <B>%s</B></H3>
+98    <H3>You can program in the following languages:</H3>
+99    <UL>%s</UL>
+100  <H3>Your uploaded file...<BR>
+101  Name: <I>%s</I><BR>
+102  Contents:</H3>
+103  <PRE>%s</PRE>
+104  Click <A HREF="%s"><B>here</B></A> to return to form.
+105  </BODY></HTML>'''
+106
+107	def setCPPcookie(self):# tell client to store cookie
+108	for eachCookie in self.cookie.keys():
+109	print 'Set-Cookie: CPP%s=%s; path=/' % \
+110	(eachCookie, quote(self.cookie[eachCookie]))
+111
+Example 20.8  Advanced CGI Application (advcgi.py) (continued)
+
+112	def doResults(self):# display results page
+113	MAXBYTES = 1024
+114	langlist = ''
+115	for eachLang in self.langs:
+116	langlist = langlist + '<LI>%s<BR>' % eachLang
+117
+118	filedata = ''
+119	while len(filedata) < MAXBYTES:# read file chunks
+120	data = self.fp.readline()
+121	if data == '': break
+122	filedata += data
+123	else:	# truncate if too long
+124	filedata += \
+125	'... <B><I>(file truncated due to size)</I></B>'
+126	self.fp.close()
+127	if filedata == '':
+128	filedata = \
+129	<B><I>(file upload error or file not given)</I></B>'
+130	filename = self.fn
+131
+132	if not self.cookie.has_key('user') or \
+133	self.cookie['user'] == '':
+134	cookStatus = '<I>(cookie has not been set yet)</I>'
+135	userCook = ''
+136	else:
+137	userCook = cookStatus = self.cookie['user']
+138
+139	self.cookie['info'] = join([self.who, \
+140	join(self.langs, ','), filename], ':')
+141	self.setCPPcookie()
+142	print AdvCGI.header + AdvCGI.reshtml % \
+143	(cookStatus, self.who, langlist,
+144	filename, filedata, AdvCGI.url)
+145
+
+
+= {}
+''
+# determine which page to return
+149	form = FieldStorage()
+150	if form.keys() == []:
+151	self.showForm()
+152	return
+153
+154	if form.has_key('person'):
+155	self.who = capwords(strip(form['person'].value))
+156	if self.who == '':
+157	self.error = 'Your name is required. (blank)'
+158	else:
+159	self.error = 'Your name is required. (missing)'
+160
+161	if form.has_key('cookie'):
+162	self.cookie['user'] = unquote(strip(\
+163	form['cookie'].value))
+164	else:
+165	self.cookie['user'] = ''
+166
+167	self.langs = []
+
+Example 20.8 Advanced CGI Application (advcgi.py) (continued)
+
+168	if form.has_key('lang'):
+169	langdata = form['lang']
+170	if type(langdata) == type([]):
+171	for eachLang in langdata:
+172	self.langs.append(eachLang.value)
+173	else:
+174	self.langs.append(langdata.value)
+175	else:
+176	self.error = 'At least one language required.'
+177
+178	if form.has_key('upfile'):
+179	upfile = form["upfile"]
+180	self.fn = upfile.filename or ''
+181	if upfile.file:
+182	self.fp = upfile.file
+
+
+185	else:
+186	self.fp = StringIO('(no file)')
+187	self.fn = ''
+188
+189	if not self.error:
+190	self.doResults()
+191	else:
+192	self.showError()
+193
+194	if __name__ == '__main__':
+195	page = AdvCGI()
+196	page.go()
+--------------------------------------------
+
+doResults() method puts together all the data and sends the output back to the client.
+doResults()方法收集所有数据并把输出发回客户端。
+
+
+Lines 146–196
+146-196行
+
+The  script  begins  by  instantiating  an  AdvCGI page  object,  then  calls  its go() method to start the ball rolling, in contrast to a strictly procedural pro- gramming process. The go() method contains the logic that reads all incom- ing data and decides which page to show.
+脚本一开始就实例化了一个AdvCGI页面对象，然后调用它的go()方法让一切运转起来，这和严格的基于过程编写的程序不同。 go()方法中包含读取所有新到的数据并决定显示哪个页面的逻辑。
+
+The error page will be displayed if no name was given or if no languages were checked. The  showForm() method is called to output the form if no  input  data  were  received,  and  the  doResults() method  is  invoked otherwise to display the results page. Error situations are created by set- ting the self.error variable, which serves two purposes. It lets you set an error reason as a string and also serves as a flag to indicate that an error has occurred. If this value is not blank, the user will be forwarded to the error page.
+如果没有给出名字或选定语言，错误页面将会被显示。如果没有收到任何输入数据，将调用showForm()方法来输出表单，否则将调用doResults()方法来显示结果页面。通过设置self.error变量可以创建错误页面，这样做有两个目的。它不但可以让你把错误原因设置在字符串里，并且可以作为一个标记表明有错误发生。如果该变量不为空，用户将会被导向到错误页面。
+
+Handling the person field (lines 154–159) is the same as we have seen in the past, a single key-value pair; however, collecting the language information is  a  bit  trickier  since  we  must  check  for  either  a  (Mini)FieldStorage instance  or  a  list  of  such  instances. We  will  employ  the  familiar  type() built-in function for this purpose. In the end, we will have a list of a single language name or many, depending on the user’s selections.
+处理person字段（第154-159行）的方法和我们先前看到的一样，一个键-值对；然而，在收集语言信息时却需要一点技巧，原因是我们必须检查一个（Mini）FieldStorage对象或一个该对象的列表。我们将使用熟悉的type()内建函数来达到目的。最终，我们会有一个单独或多个语言名的列表，具体依赖于用户的选择情况。
+
+The use of cookie (lines 161–165) to contain data illustrates how they can be used to avoid using any kind of CGI field pass-through. You will notice in the code that obtains such data that no CGI processing is invoked, meaning that  the  data  do  not  come  from  the  FieldStorage object.  The  data  are passed to us by the Web client with each request and the values (user’s cho- sen data as well as information to fill in a succeeding form with pre-existing information) are obtained from cookie.
+使用cookie（第161-165行）来保管数据展示了如何利用它们来避免使用任何类型的CGI字段。你一定注意到了代码里包含这些数据的地方没有调用CGI处理，这意味着数据并非来自FieldStorage对象。这些数据是由Web客户端通过每一次请求和从cookie取得的值（包括用户的选择结果和用来填充后续表单的已有信息）传给我们的。
+
+Because  the  showResults() method  receives  the  new  input  from  the user, it has the responsibility of setting the cookie, i.e., by calling setCPP- cookie().  showForm(),  however,  must  read  in  the  cookie’  values  in order to display a form page with the current user selections. This is done by its invocation of the getCPPcookie() method.
+因为showResults()方法从客户那里取得了新的收入值，所以它负责设置cookie，通过调用setCPPcookie()。而showForm()必须读出cookie中的值才能用表单页显示用户的当前选项。这通过它对getCPPcookie()的调用实现。
+
+Finally, we get to the file upload processing (lines 178–187). Regardless of whether a file was actually uploaded, FieldStorage is given a file handle in the file attribute. On line 180, if there was no filename given, then we just set it to a blank string. If the value attribute is accessed, the entire contents of the file will be placed into value. As a better alternative, you can access the file pointer—the file attribute—and perhaps read only one line at a time or other kind of slower processing.
+最后，我们看看文件上传处理（第178-187行）。不论一个文件是否已经上传，FieldStorage都会从file属性中获得一个文件句柄。在第180行，如果没有指明文件名，那么我们只须把它设成空字符串。如果访问过value属性，那么文件的整个内容都会被放到value里。还有一个更好的做法，你可以去访问文件指针——file属性——并且可以每次只读一行或者其他更慢一些的处理方法。
+
+In our case, file uploads are only part of user submissions, so we simply pass  on  the  file  pointer  to  the  doResults() function  to  extract  the  data from  the  file.  doResults() will  display  only  the  first  1K  of  the  file  for space reasons and to show you that it is not necessary (or necessarily produc- tive/useful) to display a four-megabyte binary file.
+在我们的例子里，文件上传只是用户提交过程的一部分，所以我们可以简单的把文件指针传给doResults()函数，从文件中抽取数据。由于空间限制doResults()将只显示文件的最前1K内容，这也表明显示一个4M的二进制文件是不需要（或未必有效/有用）的。
+
+--------------------------------------------
+20.8 Web (HTTP) Servers
+20.8 Web（HTTP）服务器
+
+Until now, we have been discussing the use of Python in creating Web clients and  performing  tasks  to  aid  Web  servers  in  CGI  request  processing.  We know (and saw earlier in Sections 20.2 and 20.3) that Python can be used to create  both  simple  and  complex  Web  clients.  Complexity  of  CGI  requests goes without saying.
+到现在为止，我们已经讨论了如何使用Python建立Web客户端并用CGI请求处理帮助Web服务器执行了一些工作。我们通过第20.2和20.3的学习知道了Python可以用来建立简单和复杂的Web客户端。而对复杂的CGI请求没有说明。
+
+However, we have yet to explore the creation of Web servers, and that is the focus of this section. If the Firefox, Mozilla, IE, Opera, Netscape, AOL, Safari, Camino, Epiphany, Galeon, and Lynx browsers are among the most popular Web clients, then what are the most common Web servers? They are Apache,  Netscape,  IIS,  thttpd,  Zeus,  and  Zope.  In  situations  where  these servers may be overkill for your desired application, Python can be used to create simple yet useful Web servers.
+然而，我们在这章的焦点是探索建立Web服务器。如果说Firefox， Mozilla， IE， Opera， Netscape， AOL， Safari， Camino， Epiphany， Galeon和Lynx浏览器是最流行的一些Web客户端，那么什么是最常用的Web服务器呢？它们就是Apache，Netscape IIS， thttpd， Zeus，和Zope。由于这些服务器都远远超过了你的应用程序要求，这里我们使用Python建立简单但有用的Web服务器。
+
+20.8.1 Creating Web Servers in Python
+20.8.1 用Python建立Web服务器
+
+Since you have decided on building such an application, you will naturally be creating all the custom stuff, but all the base code you will need is already available  in  the  Python  Standard  Library.  To  create  a  Web  server,  a  base server and a “handler” are required.
+由于已经打算建立这样的一个应用程序，你很自然的就需要创建个人素材，但是你将要用到的所有的基础代码都在Python的标准库中。要建立一个Web服务，一个基本的服务器和一个“处理器”是必备的。
+
+The base (Web) server is a boilerplate item, a must have. Its role is to per- form  the  necessary  HTTP  communication  between  client  and  server.  The base server class is (appropriately) named HTTPServer and is found in the BaseHTTPServer module.
+基础的(Web)服务器是一个必备的模具。它的角色是在客户端和服务器端完成必要HTTP交互。在BaseHTTPServer模块中你可以找到一个名叫HTTPServer的服务器基本类。
+
+The handler is the piece of software that does the majority of the “Web serving.”  It  processes  the  client  request  and  returns  the  appropriate  file, whether static or dynamically generated by CGI. The complexity of the han- dler  determines  the  complexity  of  your  Web  server.  The  Python  standard library provides three different handlers.
+处理器是一些处理主要“Web服务”的简单软件。它们处理客户端的请求，并返回适当的文件，静态的文本或者由CGI生成的动态文件。处理器的复杂性决定了你的Web服务器的复杂程度。Python标准库提供了三种不同的处理器。
+
+The most basic, plain, vanilla handler, named BaseHTTPRequestHandler, is  found  in  the  BaseHTTPServer module,  along  with  the  base  Web  server.  Other than taking a client request, no other handling is implemented at all, so you have to do it all yourself, such as in our myhttpd.py server coming up.
+最基本，最普通的是 vanilla处理器，被命名 BaseHTTPResquestHandler，这个可以在基本Web服务器的BaseHTTPServer模块中找到。除了获得客户端的请求外，不再执行其他的处理工作，因此你必须自己完成它们，这样就导致了出现了myhttpd.py 服务的出现。
+
+The   SimpleHTTPRequestHandler,   available   in   the   SimpleHTTP- Server module,  builds  on  BaseHTTPRequestHandler by  implement- ing the standard GET and HEAD requests in a fairly straightforward manner.  Still nothing sexy, but it gets the simple jobs done.
+用于SimpleHTTPServer模块中的SimpleHTTPRequestHandler，建立在BaseHTTPResquestHandler基础上，直接执行标准的GET和HEAD请求。这虽然还不算完美，但已经可以完成一些简单的功能啦。
+
+Finally, we have the CGIHTTPRequestHandler, available in the CGIHT- TPServer module,  which  takes  the  SimpleHTTPRequestHandler and adds support for POST requests. It has the ability to call CGI scripts to perform the requested processing and can send the generated HTML back to the client.
+最后，我们来看下用于CGIHTTPServer模块中的CGIHTTPRequestHandler处理器，它可以获取SimpleHTTPRequestHandler并为POST请求提供支持。它可以调用CGI脚本完成请求处理过程，也可以将生成的HTML脚本返回给客户端。
+
+The three modules and their classes are summarized in Table 20.6.
+这三个模块和他们的类在表20.6中有描述。
+
+To be able to understand how the more advanced handlers found in the SimpleHTTPServer and   CGIHTTPServer modules   work,   we   will implement  simple  GET  processing  for  a  BaseHTTPRequestHandler.
+为了能理解在SimpleHTTPServer和CGIHTTPServer模块中的其他高级处理器如何工作的，我们将对BaseHTTPRequestHandler实现简单的GET处理功能。
+
+--------------------------------------------
+Table 20.6  Web Server Modules and Classes
+
+Module	Description
+
+BaseHTTPServer	Provides the base Web server and base handler classes, HTTPServer and BaseHTTPRequestHandler, respectively
+
+SimpleHTTPServer	Contains the SimpleHTTPRequestHandler class to perform GET and HEAD requests
+
+CGIHTTPServer	Contains the CGIHTTPRequestHandler class to process POST requests and perform CGI execution
+
+模块			描述
+BaseHTTPServer 		提供基本的Web服务和处理器类，分别是HTTPServer和 BaseHTTPRequestHandler
+SimpleHTTPServer 	包含执行GET和HEAD请求的SimpleHTTPRequestHandler类
+CGIHTTPServer 		包含处理POST请求和执行CGICGIHTTPRequestHandler类
+--------------------------------------------
+
+In  Example  20.9,  we  present  the  code  for  a  fully  working  Web  server, myhttpd.py.
+在例子20.9中，我们展示了一个Web服务器的全部工作代码， myhttpd.py.
+
+This  server  subclasses  BaseHTTPRequestHandler and  consists  of  a single do_GET() method, which is called when the base server receives a GET request. We attempt to open the path passed in by the client and if present, return an “OK” status (200) and forward the downloaded Web page.  If the file was not found, it returns a 404 status.
+这个服务的子类BaseHTTPRequestHandler只包含do_GET()方法在基础服务器接到GET请求时被调用。
+尝试打开客户端传来的路径，如果实现了，将会返回“OK”状态（200），并转发下载的Web页面，否则将会返回404状态。
+
+The  main() function  simply  instantiates  our  Web  server  class  and invokes it to run our familiar infinite server loop, shutting it down if inter- rupted by ^C or similar keystroke. If you have appropriate access and can run this server, you will notice that it displays loggable output, which will look something like this:
+  main()函数只是简单的将Web服务器类实例化，然后启动它进入永不停息的服务循环，如果遇到了^C中断或者类似的键输入则会将其关闭。如果你可以访问并运行这个服务器，你就会发现它会显示出一些类似这样的登录输出：
+  
+# myhttpd.py
+Welcome to the machine... Press ^C once or twice to quit
+localhost - - [26/Aug/2000 03:01:35] "GET /index.html HTTP/1.0" 200 -
+localhost - - [26/Aug/2000 03:01:29] code 404, message File Not Found: /x.html localhost - - [26/Aug/2000 03:01:29] "GET /dummy.html HTTP/1.0" 404 -
+localhost - - [26/Aug/2000 03:02:03] "GET /hotlist.htm HTTP/1.0" 200 -
+
+Of course, our simple little Web server is so simple, it cannot even process plain  text  files.  We  leave  that  as  an  exercise  for  the  reader,  which  can  be found at the end of the chapter.
+当然，我们的小Web服务器是太简单了，它甚至不能处理普通的文本文件。我们将这部分给读者，这部分可以在本章最后的练习题中找到。
+
+As you can see, it doesn’t take much to have a Web server up and running in pure Python. There is plenty more you can do to enhance the handlers to customize it to your specific application. Please review the Library Refer- ence for more information on the modules (and their classes) discussed in this section.
+正如你所看到的一样，建立一个Web服务器并在纯Python脚本中运行并不会花太多时间。为你的特定应用程序定制改进处理器将需要做更多事情。请查看本部分的相关库来获得更多模块及其类的信息。
+
+--------------------------------------------
+Example 20.9  Simple Web Server (myhttpd.py)
+
+This simple Web server can read GET requests, fetch a Web page (.html file) and return it to the calling client. It uses the BaseHTTPRequestHandler found in BaseHTTPServer and implements the do_GET() method to enable processing of GET requests.
+这个简单的Web服务器可以读取GET请求，获取Web页面（.html文件）并将其返回给客户端。它通过使用BaseHTTPServer的BaseHTTPRequestHandler处理器执行do_GET()方法来处理GET请求。
+
+
+-------------------------------
+1   #!/usr/bin/env python
+2
+3	from os import curdir, sep
+4	from BaseHTTPServer import \
+5	BaseHTTPRequestHandler, HTTPServer
+6
+7	class MyHandler(BaseHTTPRequestHandler):
+8
+
+
+11	f = open(curdir + sep + self.path)
+12	self.send_response(200)
+13	self.send_header('Content-type',
+14	'text/html')
+15	self.end_headers()
+16	self.wfile.write(f.read())
+17	f.close()
+18	except IOError:
+19	self.send_error(404,
+20	'File Not Found: %s' % self.path)
+21
+
+
+24	server = HTTPServer(('', 80), MyHandler)
+25	print 'Welcome to the machine...',
+26	print 'Press ^C once or twice to quit.'
+27	server.serve_forever()
+28	except KeyboardInterrupt:
+29	print '^C received, shutting down server'
+30	server.socket.close()
+31
+32   if __name__ == '__main__':
+33	main()
+--------------------------------------------
+
+20.9 Related Modules
+20．9 相关模块
+
+In Table 20.7, we present a list of modules which you may find useful for Web development. You may also wish to look at the Internet Client Program- ming in Chapter 17, as well as the Web services section of Chapter 23 for other modules that may be useful for Web applications.
+在表20.7中，我们列出了对Web开发有用的模块。也许你会想看下第十七章的因特网客户端编程，还有第二十三章的Web服务部分的模块，这些对Web应用都是有用的。
+
+Table 20.7  Web Programming Related Modules
+Web编程相关模块
+
+Module/Package	Description
+模块/包         描述
+
+Web Applications
+Web应用程序
+
+cgi	    Gets Common Gateway Interface (CGI) form data
+cgi     从标准网关接口（CGI）获取数据
+
+cgitbc	Handles CGI tracebacks
+cgitbc  处理CGI返回数据
+
+htmllib	Older HTML parser for simple HTML files; HTML- Parser class extends from sgmllib.SGMLParser
+htmllib 解析HTML文件时用的旧HTML解析器；HTMLParser类扩展自sgmllib.SGMLParser
+
+HTMLparserc	Newer non-SGML-based parser for HTML and XHTML
+HTMLparserc 新的非基于SGML的HTML、XHTML解析器
+
+htmlentitydefs	HTML general entity definitions
+htmlentitydefs  HTML普通实体定义
+
+Cookie	Server-side cookie for HTTP state management
+Cookie  用于HTTP状态管理的服务器端cookie
+
+cookielibe	Cookie-handling classes for HTTP clients
+cookielibe  HTTP客户端的cookie处理类
+
+webbrowserb	Controller: launches Web documents in a browser
+webbrowserb 控制器：向浏览器加载Web文档
+
+sgmllib	Parses simple SGML files
+sgmllib 解析简单的SGML文件
+
+robotparsera	Parses robots.txt files for URL “fetchability” analysis
+robotparsera    解析robots.txt文件作URL的“可获得性”分析
+
+httpliba	Used to create HTTP clients
+httpliba    用来创建HTTP客户端
+
+XML Processing
+XML解析
+
+xmllib	(Outdated/deprecated) original simple XML parser
+xmllib  原始的简单XML解析器（已过时/不推荐使用）
+
+xmlb	XML package featuring various parsers (some below)
+xmlb    包含许多不同XML特点的解析器（见下文）
+
+xml.saxb	Simple API for XML (SAX) SAX2-compliant XML parser
+xml.saxb    简单的适用于SAX2的XML(SAX)解析器
+
+xml.domb	Document Object Model [DOM] XML parser
+xml.domb    文本对象模型（DOM）的XML解析器
+
+xml.etreef	Tree-oriented XML parser based on the Element flexible container object
+xml.etreef  树型的XML解析器，基于Elemnt flexible container对象
+
+xml.parsers.expatb	Interface to the non-validating Expat XML parser
+xml.parsers.expatb	非验证型Expat XML解析器的接口
+
+xmlrpclibc	Client support for XML Remote Procedure Call (RPC) via HTTP
+xmlrpclibc  通过HTTP提供XML远程过程调用（RPC）客户端
+
+Table 20.7  Web Programming Related Modules (continued)
+Web编程相关模块（续）
+
+Module/Package	Description
+模块/包         描述
+
+XML Processing
+XML解析
+
+SimpleXMLRPCServerc    Basic framework for Python XML-RPC servers
+SimpleXMLRPCServerc    Python XML-RPC服务器的基本框架
+
+DocXMLRPCServerd	Framework for self-documenting XML-RPC servers
+DocXMLRPCServerd	自描述XML-RPC服务器的框架
+
+Web Servers
+Web服务器
+
+BaseHTTPServer	Abstract class with which to develop Web servers
+BaseHTTPServer	用来开发Web服务器的抽象类
+
+SimpleHTTPServer	Serve the simplest HTTP requests (HEAD and GET)
+SimpleHTTPServer	处理最简单的HTTP请求（HEAD和GET）
+
+CGIHTTPServer In addition to serving Web files like SimpleHTTPS- ervers, can also process CGI (HTTP POST) requests
+CGIHTTPServer 不但能像SimpleHTTPServers一样处理Web文件，还能处理CGI请求（HTTP POST）
+
+wsgiref Standard interface between Web servers and Python Web applications.
+wsgiref Web服务器和Python Web应用程序间的标准接口
+
+3rd party packages (not in standard library)
+第三方开发包（非标准库）
+
+HTMLgen	CGI helper converts Python objects into valid HTML http://starship.python.net/crew/friedrich/HTMLgen/ html/main.html
+HTMLgen	协助CGI把Python对象转换成可用的HTML http://starship.python.net/crew/friedrich/HTMLgen/ html/main.html
+
+BeautifulSoup	HTML and XML parser and screen-scraper http://crummy.com/software/BeautifulSoup
+BeautifulSoup	HTML、XML解析器及转换器 http://crummy.com/software/BeautifulSoup
+
+Mail Client Protocols
+邮件客户端协议
+
+poplib	Use to create POP3 clients
+poplib	用来创建POP3客户端
+
+imaplib	Use to create IMAP4 clients
+imaplib	用来创建IMAP4客户端
+
+Mail and MIME Processing and Data Encoding Formats
+邮件、MIME处理及数据编码格式
+
+emailc	Package for managing e-mail messages, including MIME and other RFC2822-based message
+emailc  管理e-mail消息的工具包，包括MIME和其它基于RFC2822的消息
+
+mailbox	Classes for mailboxes of e-mail messages
+mailbox	e-mail消息的信箱类
+
+mailcap	Parses mailcap files to obtain MIME application delegations
+mailcap	解析mailcap文件，从中获得MIME应用授权
+
+Table 20.7  Web Programming Related Modules (continued)
+Web编程相关模块（续）
+
+Module/Package	Description
+模块/包         描述
+
+Mail and MIME Processing and Data Encoding Formats
+邮件、MIME处理及数据编码格式
+
+mimetools	Provides functions for manipulating MIME-encoded messages
+mimetools   提供封装MIME编码信息的功能
+
+mimetypes	Provides MIME-type associations
+mimetypes	提供和MIME类型相关的功能
+
+MimeWriter	Generates MIME-encoded multipart files
+MimeWriter	生成MIME编码的多种文件
+
+multifile	Can parse multipart MIME-encoded files
+multipart   可以解析多种MIME编码文件
+
+quopri	En-/decodes data using quoted-printable encoding
+quopri  编解码使用quoted-printable规范的数据
+
+rfc822	Parses RFC822-compliant e-mail headers
+rfc822  解析符合RFC822标准的e-mail头信息
+
+smtplib	Uses to create SMTP (Simple Mail Transfer Protocol) clients
+smtplib	用来创建SMTP（简单邮件传输协议）客户端
+
+base64	En-/decodes data using base64 encoding
+base64	编解码使用base64标准的数据
+
+binascii	En-/decodes data using base64, binhex, or uu (modules)
+binascii	编解码使用base64、binhex、uu（模块）格式的数据
+
+binhex	En-/decodes data using binhex4 encoding
+binhex	编解码使用binhex4标准的数据
+
+uu	En-/decodes data using uuencode encoding
+uu	编解码使用uuencode格式的数据
+
+Internet Protocols
+因特网协议
+
+httpliba	Used to create HTTP clients
+httpliba	用来创建HTTP客户端
+
+ftplib	Used to create FTP (File Transfer Protocol) clients
+ftplib	用来创建FTP(File Transfer Protocol)客户端
+
+gopherlib	Used to create Gopher clients
+gopherlib	用来创建Gopher客户端
+
+telnetlib	Used to create Telnet clients
+telnetlib	用来创建Telnet客户端
+
+nntplib	Used to create NNTP (Network News Transfer Protocol [Usenet]) clients
+nntplib 用来创建NNTP（网络新闻传输协议[Usenet]）客户端
+
+a.	New in Python 1.6.
+a.	Python 1.6中新增。
+
+b.	New in Python 2.0.
+b.	Python 2.0中新增。
+
+c.	New in Python 2.2.
+c.	Python 2.2中新增。
+
+d.	New in Python 2.3.
+d.	Python 2.2中新增。
+
+e.	New in Python 2.4.
+e.	Python 2.4中新增。
+
+f.	New in Python 2.5.
+f.	Python 2.5中新增。
+
+20.10  Exercises
+练习
+
+20–1.   urllib Module and Files. Update the friends3.py script so that it stores names and corresponding number of friends into a two-column text file on disk and continues to add names each time the script is run.  　Extra Credit: Add code to dump the contents of such a file to the Web browser (in HTML format). Additional Extra Credit: Create a link that clears all the names in this file.
+urllib模块及文件。
+请修改friends3.py脚本，把名字和相应的朋友数量存储在一个两列的磁盘文本文件中，以后每次运行脚本都添加名字。附加题：增加一些代码把这种文件的内容转储到Web浏览器里（以HTML格式）。附加题：增加一个链接，用以清空文件中的所有名字。
+
+20–2.   urllib Module. Write a program that takes a user-input URL (either a Web page or an FTP file, i.e., http:// python.org or ftp://ftp.python.org/pub/python/README), and downloads it to your machine with the same filename (or modified name similar to the original if it is invalid on your system). Web pages (HTTP) should be saved as .htm or .html files, and FTP’d files should retain their extension.
+urllib模块。编写一个程序，它接收一个用户输入的URL（可以是一个Web页面或一个FTP文件，例如，http:// python.org或ftp://ftp.python.org/pub/python/README），然后下载它并以相同的文件名（如果你的系统不支持也可以把它改成和原文件相似的名字）存储到电脑上。Web页面（HTTP）应保存成.htm或.html文件，而FTP文件应保持其扩展名。
+
+20–3.   urllib Module. Rewrite the grabWeb.py script of Exam- ple 11.4, which downloads a Web page and displays the first and last non-blank lines of the resulting HTML file so that you use urlopen() instead of urlretrieve() to pro- cess the data directly (as opposed to downloading the entire file first before processing it).
+urllib模块。重写例11.4的grabWeb.py脚本，它会下载一个Web页面，并显示生成的HTML文件的第一个和最后一个非空白行，你应使用urlopen()来代替urlretrieve()来直接处理数据（这样就不必先下载所有文件再处理它了）。
+
+20–4.   URLs and Regular Expressions. Your browser may save your favorite Web site URLs as a “bookmarks” HTML file (Mozilla-flavored browsers do this) or as a set of .URL files in a “favorites” directory (IE does this). Find your browser’s method of recording your “hot links” and the location of where and how they stored. Without altering any of the files, strip the URLs and names of the corresponding Web sites (if given) and produce a two-column list of names and links as output, and storing this data into a disk file. Truncate site names or URLs to keep each line of output within 80 col- umns in size.
+URL和正则表达式。你的浏览器也许会保存你最喜欢的Web站点的URL，以“书签”式的HTML文件（Mozilla发行品的浏览器就是如此）或者以“收藏夹”里一组.URL文件（IE既是如此）的形式保存。查看你的浏览器记录“热门链接”的办法，并定位其所在和存储方式。不去更改任何文件，剔除对应Web站点（如果给定了的话）的URL和名字，生成一个以名字和链接作为输出的双列列表，并把这些数据保存到硬盘文件中。截取站点名和URL，确保每一行的输出不超过80个字符。
+
+20–5.   URLs, urllib Module, Exceptions, and REs. As a follow-up problem to the previous one, add code to your script to test each of your favorite links. Report back a list of dead links (and their names), i.e., Web sites that are no longer active or a Web page that has been removed. Only output and save to disk the still-valid links.
+URL、urllib模块、异常、已编码正则表达式。作为对上一个问题的延伸，给你的脚本增加代码来测试你所喜欢的链接。记录下无效链接（及其名字），包括无效的Web站点和已经被删除的Web页面。只输出并在磁盘中保存依然有效的链接。
+
+20–6.   Error Checking. The friends3.py script reports an error if no radio button was selected to indicate the number of friends. Update the CGI script to also report an error if no name (e.g., blank or whitespace) is entered.  　Extra Credit: We have so far explored only server-side error checking. Explore JavaScript programming and implement client-side error checking by creating JavaScript code to check for both error situations so that these errors are stopped before they reach the server.
+错误检测。friends3.py脚本在没有选择任意一个单选按钮指定好友的数目时会返回一个错误提示。在更新CGI脚本是如果没有输入名字（例如空字符或空白）也会返回一个错误。附加题：目前为止我们探讨的仅是服务器端的错误检测。探索JavaScript编程，并通过创建JavaScript代码来同时检测错误，以确保这些错误在到达服务器前被终止，这样便实现了客户端错误检测。
+
+Problems 20–7 to 20–10 below pertain to Web server access log files and regular expressions. Web servers (and their administrators) generally have to maintain  an  access  log  file  (usually  logs/access_log from  the  main Web, server directory) which tracks requests file. Over a period of time, such files get large and either need to be stored or truncated. Why not save only the pertinent information and delete the files to conserve disk space? The exercises below are designed to give you some exercise with REs and how they can be used to help archive and analyze Web server data.
+下面的问题20-7到20-10涉及Web服务器的访问日志文件和正则表达式。Web服务器（及其管理员）通常需要保存访问日志文件（一般是主Web的server文件夹里的logs/access_log）来跟踪文件请求。一段时间之后，这些逐渐变大的文件需要被保存或删节。为什么不能仅保存有用的信息而删除这些文件来节省磁盘空间呢？通过下面的习题，你会练习正则表达式和如何使用它们进行归档及分析Web服务器数据。
+
+20–7.   Count how many of each type of request (GET versus POST) exist in the log file.
+计算日志文件中有多少种请求（GET vs POST）。
+
+20–8.   Count the successful page/data downloads: Display all links that resulted in a return code of 200 (OK [no error]) and how many times each link was accessed.
+计算成功下载的页面/数据：显示所有返回值为200（OK[没有错误发生]）的链接，以及每个链接被访问的次数。
+
+20–9.   Count the errors: Show all links that resulted in errors (return codes in the 400s or 500s) and how many times each link was accessed.
+计算错误：显示所有产生错误的链接（返回值为400或500）以及每个链接被访问的次数。
+
+20–10.   Track IP addresses: For each IP address, output a list of each page/data downloaded and how many times that link was accessed.
+跟踪IP地址：对每个IP地址，输出每个页面/数据下载情况的列表，以及这些链接被访问的次数。
+
+20–11.   Simple CGI. Create a “Comments” or “Feedback” page for a Web site. Take user feedback via a form, process the data in your script, and return a “thank you” screen.
+简单CGI。为Web站点创建“评论”或“反馈”页面。由表单获得用户反馈，在脚本中处理数据，最后返回一个“thank you”页面。
+
+20–12.   Simple CGI. Create a Web guestbook. Accept a name, an e-mail address, and a journal entry from a user and log it to a file (format of your choice). Like the previous problem, return a “thanks for filling out a guestbook entry” page. Also provide a link that allows users to view guestbooks.
+简单CGI。创建一个Web客户薄。接受用户输入的名字、e-mail地址、日志，并将其保存到文件中（自定义格式）。类似上一个题，返回一个“thanks for filling out a guestbooks entry”页面。同时再给用户提供一个查看客户薄的链接。
+
+20–13.   Web Browser cookie and Web site Registration. Update your solution to Exercise 20–4. So your user-password infor- mation should now pertain to Web site registration instead of a simple text-based menu system.  Extra Credit: familiarize yourself with setting Web browser cookie and maintain a login session for 4 hours from the last successful login.
+Web浏览器Cookie和Web站点注册。更改你对习题20-4的答案。你现在可以使用用户名-密码信息来注册Web站点，而不必只用简单的基于文本的菜单系统。附加题：想办法让自己熟悉Web浏览器cookie，并在最后登录成功后将会话保持4个小时。
+
+20–14.   Web Clients. Port Example 20.1, crawl.py, the Web crawler, to using the HTMLParser module or the BeautifulSoup parsing system.
+Web客户端。移植例20.1的Web爬虫脚本crawler.py，使用HTMLParser模块或BeautifulSoup解析系统。
+
+20–15.   Errors. What happens when a CGI script crashses? How can the cgitb module be helpful?
+错误处理。当一个CGI脚本崩溃时会发生什么？如何用cgitb模块提供帮助？
+
+20–16.   CGI, File Updates, and Zip Files. Create a CGI application that not only saves files to the server’s disk, but also intelli- gently unpacks Zip files (or other archive) into a subdirectory named after the archive file.
+CGI、文件升级、及Zip文件。创建一个不仅能保存文件到服务器磁盘，而且能智能解压Zip文件（或其它压缩档）到同名子文件夹的CGI应用程序。
+
+20–17.   Zope, Plone, TurboGears, Django. Investigate each of these complex Web development platforms and create one simple application in each.
+Zope、Plone、TurboGears、及Django。研究每一个复杂的Web开发平台并分别创建一个简单的应用程序。
+
+20–18.   Web Database Application. Think of a database schema you want to provide as part of a Web database application. For this multi-user application, you want to provide everyone read access to the entire contents of the database, but per- haps only write access to each individual. One example may be an “address book” for your family and relatives. Each fam- ily member, once successfully logged in, is presented with a Web page with several options, add an entry, view my entry, update my entry, remove or delete my entry, and view all entries (entire database).  Design a UserEntry class and create a database entry for each instance of this class. You may use any solution cre- ated for any previous problem to implement the registration framework. Finally, you may use any type of storage mecha- nism for your database, either a relational database such as MySQL or some of the simpler Python persistent storage modules such as anydbm or shelve.
+Web数据库应用程序。思考对你Web数据库应用程序支持的数据库构架。对于多用户的应用程序，你需要支持每个用户对数据库的全部内容的访问，但每个人可能分别输入。一个例子就是你家人及亲属的“地址簿”。每个成员成功登录后，显示出来的页面应该有几个选项 add an entry, view my entry, update my entry, remove or delete my entry, 及view all entries(整个数据库)。
+
+20–19.   Electronic Commerce Engine. Use the classes created for your solution to Exercise 13–11 and add some product inven- tory to create a potential electronic commerce Web site. Be sure your Web application also supports multiple customers and provides registration for each user.
+电子商务引擎。使用你在习题13-11中建立的类，增加一些产品清单建立一个电子商务Web站点。确保你的应用程序支持多个用户，机器每个用户的注册功能。
+
+20–20.   Dictionaries and cgi module. As you know, the cgi.FieldStorage() method returns a dictionary-like object containing the key-value pairs of the submitted CGI variables. You can use methods such as keys() and has_key() for such objects. In Python 1.5, a get() method was added to dictionaries which returned the value of the requested key, or the default value for a non-existent key. FieldStorage objects do not have such a method. Let’s say we grab the form in the usual manner of:
+form = cgi.FieldStorage()
+Add a similar get() method to class definition in cgi.py (you can rename it to mycgi.py or something like that) such that code that looks like this:
+if form.has_key('who'):
+    who = form['who'].value
+else:
+    who = '(no name submitted)'
+. . . can be replaced by a single line which makes forms even more like a dictionary:
+howmany = form.get('who', '(no name submitted)')
+字典及cgi模块 相关。正如你所知道的，cgi.FieldStorage()方法返回一个字典类对象，包括提交的CGI变量的键值对。你可以使用这个对象的keys()和has_key()方法。在Python1.5中，get()方法被添加到字典中，用它可以返回给定键的值，当键不存在时返回一个默认值。FieldStorage对象却没有这个方法。让我们依照用户手册的形式：
+form = cgi.FieldStorage()
+为cgi.py中类的定义添加一个类似的get()方法（你可以把它重命名为mycgi.py或其他你喜欢的名字），以便能像下面这样操作：
+if form.has_key('who'):
+    who = form['who'].value
+else:
+    who = '(no name submitted)'
+. . . 也可以用一行实现，这样就更像字典的形式了：
+howmany = form.get('who', '(no name submitted)')
+
+20–21.   Creating Web Servers. Our code for myhttpd.py in Sec- tion 20.7 is only able to read HTML files and return them to the calling client. Add support for plain text files with the “.txt” ending. Be sure that you return the correct MIME type of “text/plain.” Extra credit: add support for JPEG files ending with either “.jpg” or “.jpeg” and having a MIME type of “image/jpeg.”
+高级Web客户端。在20.7中的myhttpd.py代码只能读取HTML文件并将其返回到客户端。添加对以“.txt”结束的普通的文本的支持。确保返回正确的“text/plain”de MIME类。 附加题: 添加对以“.jpg”及“.jpeg”结束的JPEG文件的支持，并返回“image/jpeg”的MIME类型。
+
+20–22.   Advanced Web Clients. URLs given as input to crawl.py must have the leading “http://” protocol indicator and top-level URLs must contain a trailing slash, i.e., http:// www.prenhallprofessional.com/. Make crawl.py more robust by allowing the user to input just the hostname (without the protocol part [make it assume HTTP]) and also make the trailing slash optional. For example, www.  prenhallprofessional.com should now be acceptable input.
+高级Web客户端。作为crawl.py的输入的URL必须是以“http://”协议指示符开头，高层的URL必须包含一个反斜线，例如: http:// www.prenhallprofessional.com/. 加强crawl.py的功能，允许用户只输入主机名（没有协议部分[确保是HTTP]），反斜线是可选的。例如：www.prenhallprofessional.com 应该是可接受的输入形式。
+
+20–23.   Advanced Web Clients. Update the crawl.py script in Section 20.3 to also download links that use the “ftp:” scheme. All “mailto:” links are ignored by crawl.py. Add support to ensure that it also ignores “telnet:”, “news:”, “gopher:”, and “about:” links.
+高级Web客户端。更改20.3小节中的crawl.py脚本，让它也下载“ftp:”型的链接。所有的“mailto:”都会被crawl.py忽略。增加代码确保它也忽略“telnet:”、“news:”、“gopher:”、和“about:”型的链接。
+
+20–24.   Advanced Web Clients. The crawl.py script in Section 20.3 only downloads .html files via links found in Web pages at the same site and does not handle/save images that are also valid “files” for those pages. It also does not handle servers that are susceptible to URLs that are missing the trailing slash ( / ). Add a pair of classes to crawl.py to deal with these problems.
+高级Web客户端。20.3小节中的crawl.py脚本仅从相同站点内的Web页面中找到链接，下载了.html文件，却不处理/保存图片这类对页面同样有意义的“文件”。对于那些允许URL缺少末端斜线（/）的服务器，这个脚本也不能处理。给crawl.py增添两个类来解决这些问题。
+
+A My404UrlOpener class should subclass urllib.FancyURLOpener and consist of a single method, http_error_404() which determines if a 404 error was reached using a URL without a trailing slash. If so, it adds the slash and retries the request again (and only once). If it still fails, return a real 404 error. You must set urllib._urlopener with an instance of this class so that urllib uses it.
+一个是urllib.FancyURLOpener类的子类My404UrlOpener，它仅包含一个方法，http_error_404()，用该方法来判断收到的404错误中是不是包含缺少末端斜线的URL。如果有，它就添加斜线并从新请求（仅一次）。如果仍然失败，才返回一个真正的404错误。你必须用该类的一个实例来设置urllib._urlopener，这样urllib才能使用它。
+
+Create another class called LinkImageParser, which derives from htmllib.HTMLParser. This class should contain a constructor to call the base class constructor as well as initialize a list for the image files parsed from Web pages. The handle_image() method should be overridden to add image filenames to the image list (instead of discarding them like the current base class method does).
+创建另一个类LinkImageParser，它派生自htmllib.HTMLParser。这个类应有一个构造器用来调用基类的构造器，并且初始化一个列表用来保存从Web页面中解析出的图片文件。应重写handle_image()方法，把图片文件名添加到图片列表中（这样就不会像现在的基类方法那样丢弃它们了）。
+

@@ -1,0 +1,255 @@
+'''Python Standard Library'''
+
+''翻译: Python 江湖群''
+
+2008-03-28 13:33:35
+
+[[TableOfContents]]
+
+----
+
+[index.html 返回首页]
+
+----
+
+= 1. 数据储存 =
+  "Unlike mainstream component programming, scripts usually do not introduce new components but simply 'wire' existing ones. Scripts can be seen as introducing behavior but no new state ... Of course, there is nothing to stop a 'scripting' language from introducing persistent state — it then simply turns into a normal programming language."
+
+  - Clemens Szyperski, in Component Software
+
+----
+
+== 1.1. 概览 ==
+Python 提供了多种相似数据库管理( database manager )的驱动, 它们的模型都基于 Unix 的 {{{dbm}}} 库. 
+这些数据库和普通的字典对象类似, 但这里需要注意的是它只能接受字符串作为键和值. 
+( shelve 模块可以处理任何类型的值)
+
+----
+
+== 1.2. anydbm 模块 ==
+{{{anydbm}}} 模块为简单数据库驱动提供了统一标准的接口. 
+
+当第一次被导入的时候, {{{anydbm}}} 模块会自动寻找一个合适的数据库驱动, 按照 {{{dbhash}}} {{{,}}} gdbm , {{{dbm}}} , 
+或 {{{dumbdbm}}} 的顺序尝试. 如果没有找到任何模块, 它将引发一个 ''ImportError'' 异常.
+
+{{{open}}} 函数用于打开或创建一个数据库(使用导入时找到的数据库驱动), 如 [#eg-10-1 Example 10-1] 所示.
+
+==== 1.2.0.1. Example 10-1. 使用 anydbm 模块 ====
+{{{
+File: anydbm-example-1.py
+
+import anydbm
+
+db = anydbm.open("database", "c")
+db["1"] = "one"
+db["2"] = "two"
+db["3"] = "three"
+db.close()
+
+db = anydbm.open("database", "r")
+for key in db.keys():
+    print repr(key), repr(db[key])
+
+*B*'2' 'two'
+'3' 'three'
+'1' 'one'*b*
+}}}
+
+----
+
+== 1.3. whichdb 模块 ==
+{{{whichdb}}} 模块可以判断给定数据库文件的格式, 如 [#eg-10-2 Example 10-2] 所示.
+
+==== 1.3.0.1. Example 10-2. 使用 whichdb 模块 ====
+{{{
+File: whichdb-example-1.py
+
+import whichdb
+
+filename = "database"
+
+result = whichdb.whichdb(filename)
+
+if result:
+    print "file created by", result
+    handler = _ _import_ _(result)
+    db = handler.open(filename, "r")
+    print db.keys()
+else:
+    # cannot identify data base
+    if result is None:
+        print "cannot read database file", filename
+    else:
+        print "cannot identify database file", filename
+    db = None
+}}}
+
+这个例子中使用了 {{{_ _import_ _}}} 函数来导入对应模块(还记得我们在第一章的例子么?).
+
+----
+
+== 1.4. shelve 模块 ==
+{{{shelve}}} 模块使用数据库驱动实现了字典对象的持久保存. {{{shelve}}} 对象使用字符串作为键, 但值可以是任意类型, 
+所有可以被 pickle 模块处理的对象都可以作为它的值. 如 [#eg-10-3 Example 10-3] 所示.
+
+==== 1.4.0.1. Example 10-3. 使用 shelve 模块 ====
+{{{
+File: shelve-example-1.py
+
+import shelve
+
+db = shelve.open("database", "c")
+db["one"] = 1
+db["two"] = 2
+db["three"] = 3
+db.close()
+
+db = shelve.open("database", "r")
+for key in db.keys():
+    print repr(key), repr(db[key])
+
+*B*'one' 1
+'three' 3
+'two' 2*b*
+}}}
+
+[#eg-10-4 Example 10-4] 展示了如何使用 shelve 处理给定的数据库驱动.
+
+==== 1.4.0.2. Example 10-4. 使用 shelve 模块处理给定数据库 ====
+{{{
+File: shelve-example-3.py
+
+import shelve
+import gdbm
+
+def gdbm_shelve(filename, flag="c"):
+    return shelve.Shelf(gdbm.open(filename, flag))
+
+db = gdbm_shelve("dbfile")
+}}}
+
+----
+
+== 1.5. dbhash 模块 ==
+(可选) {{{dbhash}}} 模块为 {{{bsddb}}} 数据库驱动提供了一个 {{{dbm}}} 兼容的接口. 如 [#eg-10-5 Example 10-5] 所示.
+
+==== 1.5.0.1. Example 10-5. 使用 dbhash 模块 ====
+{{{
+File: dbhash-example-1.py
+
+import dbhash
+
+db = dbhash.open("dbhash", "c")
+db["one"] = "the foot"
+db["two"] = "the shoulder"
+db["three"] = "the other foot"
+db["four"] = "the bridge of the nose"
+db["five"] = "the naughty bits"
+db["six"] = "just above the elbow"
+db["seven"] = "two inches to the right of a very naughty bit indeed"
+db["eight"] = "the kneecap"
+db.close()
+
+db = dbhash.open("dbhash", "r")
+for key in db.keys():
+    print repr(key), repr(db[key])
+}}}
+
+----
+
+== 1.6. dbm 模块 ==
+(可选) {{{dbm}}} 模块提供了一个到 {{{dbm}}} 数据库驱动的接口(在许多 Unix 平台上都可用). 
+如 [#eg-10-6 Example 10-6] 所示.
+
+==== 1.6.0.1. Example 10-6. 使用 dbm 模块 ====
+{{{
+File: dbm-example-1.py
+
+import dbm
+
+db = dbm.open("dbm", "c")
+db["first"] = "bruce"
+db["second"] = "bruce"
+db["third"] = "bruce"
+db["fourth"] = "bruce"
+db["fifth"] = "michael"
+db["fifth"] = "bruce" # overwrite
+db.close()
+
+db = dbm.open("dbm", "r")
+for key in db.keys():
+    print repr(key), repr(db[key])
+
+*B*'first' 'bruce'
+'second' 'bruce'
+'fourth' 'bruce'
+'third' 'bruce'
+'fifth' 'bruce'*b*
+}}}
+
+----
+
+== 1.7. dumbdbm 模块 ==
+{{{dumbdbm}}} 模块是一个简单的数据库实现, 与 {{{dbm}}} 一类相似, 但使用纯 Python 实现. 
+它使用两个文件: 一个二进制文件 (''.dat'') 用于储存数据, 一个文本文件 (''.dir'') 用于数据描述. 
+
+==== 1.7.0.1. Example 10-7. 使用 dumbdbm 模块 ====
+{{{
+File: dumbdbm-example-1.py
+
+import dumbdbm
+
+db = dumbdbm.open("dumbdbm", "c")
+db["first"] = "fear"
+db["second"] = "surprise"
+db["third"] = "ruthless efficiency"
+db["fourth"] = "an almost fanatical devotion to the Pope"
+db["fifth"] = "nice red uniforms"
+db.close()
+
+db = dumbdbm.open("dumbdbm", "r")
+for key in db.keys():
+    print repr(key), repr(db[key])
+
+*B*'first' 'fear'
+'third' 'ruthless efficiency'
+'fifth' 'nice red uniforms'
+'second' 'surprise'
+'fourth' 'an almost fanatical devotion to the Pope'*b*
+}}}
+
+----
+
+== 1.8. gdbm 模块 ==
+(可选) {{{gdbm}}} 模块提供了到 GNU dbm 数据驱动的接口, 如 [#eg-10-8 Example 10-8] 所示.
+
+==== 1.8.0.1. Example 10-8. 使用 gdbm 模块 ====
+{{{
+File: gdbm-example-1.py
+
+import gdbm
+
+db = gdbm.open("gdbm", "c")
+db["1"] = "call"
+db["2"] = "the"
+db["3"] = "next"
+db["4"] = "defendant"
+db.close()
+
+
+db = gdbm.open("gdbm", "r")
+
+keys = db.keys()
+keys.sort()
+for key in keys:
+    print db[key],
+
+*B*call the next defendant*b*
+}}}
+
+----
+
+
+## moin code generated by txt2tags 2.4 (http://txt2tags.sf.net)
+## cmdline: txt2tags -t moin -o moin/chapter10.moin chapter10.t2t
+

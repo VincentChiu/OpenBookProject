@@ -1,0 +1,845 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bookinfo>
+&pubinfo;
+<revhistory>
+<revision>
+<revnumber>5.4b, r2209</revnumber>
+<date>2008-01-27</date>
+<revdescription>
+<itemizedlist>
+<listitem>
+<para><ulink url="http://www.woodpecker.org.cn/moin/DiveIntoPythonZh/2007-12-13"/></para>
+</listitem>
+<listitem>
+<para><ulink url="http://www.woodpecker.org.cn/moin/DiveIntoPythonZh/2008-01-27"/></para>
+</listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+
+<revision>
+<revnumber>5.4b</revnumber>
+<date>2007-09-01</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>XiaQ (xiaqqaix AT gmail DOT com) 进行了 Dive Into Python 中文版的修订工作，重发布为 5.4b 版。可以在 Dive Into Python 中文版的<ulink url="http://wiki.woodpecker.org.cn/moin/DiveIntoPythonZh">项目主页</ulink>上找到一份完整的 (同时也是极其冗长的) 修订清单。注意原英文版不含 5.4b 版。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+
+<revision>
+<revnumber>5.4 中文版</revnumber>
+<date>2006-04-25</date>
+<revdescription>
+参加了 Dive Into Python 中文版 5.4 版翻译的有：
+<itemizedlist>
+<listitem><para>limodou (limodou AT gmail DOT com)</para></listitem>
+<listitem><para>Zoom.Quiet (zoom.quiet AT gmail DOT com)</para></listitem>
+<listitem><para>Jason Xie (jason AT sinoesl DOT org)</para></listitem>
+<listitem><para>YuLin (yulin724 AT gmail DOT com)</para></listitem>
+<listitem><para>Weigang LI (dimens AT gmail DOT com)</para></listitem>
+<listitem><para>wolfg (wolfg1969 AT gmail DOT com)</para></listitem>
+<listitem><para>Osmond (sinosmond AT gmail DOT com)</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+
+<revision>
+<revnumber>5.4</revnumber>
+<date>2004-05-20</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="soap.divein"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soap.install"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soap.firststeps"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soap.debug"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soap.wsdl"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soap.introspection"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soap.google"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soap.troubleshooting"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soap.summary"/>。</para></listitem>
+<listitem><para>修改了 <xref linkend="regression"/> 和 <xref linkend="soundex"/> 中的大量技术评论。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>5.3</revnumber>
+<date>2004-05-12</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>为 <xref linkend="soundex.stage1"/> 添加了 <methodname>isalpha()</methodname> 的示例。感谢你，Paul。</para></listitem>
+<listitem><para>对 <xref linkend="fileinfo"/> 和 <xref linkend="filehandling"/> 进行了大量修改。</para></listitem>
+<listitem><para>修正了 <xref linkend="kgp.segue"/> 中的 URL 地址。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>5.2</revnumber>
+<date>2004-05-09</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>修正了 <xref linkend="roman.stage1"/> 中的一个 URL 地址。</para></listitem>
+<listitem><para>添加了 <xref linkend="soundex.divein"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soundex.timeit"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soundex.stage1"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soundex.stage2"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soundex.stage3"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soundex.stage4"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="soundex.summary"/>。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>5.1</revnumber>
+<date>2004-05-05</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>修订了 <xref linkend="re.tens.example"/> 和 <xref linkend="re.nm.example"/>。</para></listitem>
+<listitem><para>修订了 <xref linkend="re.phone.example"/> 。</para></listitem>
+<listitem><para>修正了 <xref linkend="oa.etags.example.1"/> 中的拼写错误。感谢你，Jesir。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper.list.append.vs.extend"/> 中的拼写错误。感谢你，Daniel。</para></listitem>
+<listitem><para>修改了大量技术评论。</para></listitem>
+<listitem><para>对 <xref linkend="install"/>、<xref linkend="odbchelper"/>、<xref linkend="datatypes"/> 和 <xref linkend="apihelper"/> 进行了大量修改。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>5.0</revnumber>
+<date>2004-04-16</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="oa.divein"/>.</para></listitem>
+<listitem><para>添加了 <xref linkend="oa.review"/>.</para></listitem>
+<listitem><para>添加了 <xref linkend="oa.features"/>.</para></listitem>
+<listitem><para>添加了 <xref linkend="oa.debug"/>.</para></listitem>
+<listitem><para>添加了 <xref linkend="oa.useragent"/>.</para></listitem>
+<listitem><para>添加了 <xref linkend="oa.etags"/>.</para></listitem>
+<listitem><para>添加了 <xref linkend="oa.redirect"/>.</para></listitem>
+<listitem><para>添加了 <xref linkend="oa.gzip"/>.</para></listitem>
+<listitem><para>添加了 <xref linkend="oa.alltogether"/>.</para></listitem>
+<listitem><para>添加了 <xref linkend="oa.summary"/>.</para></listitem>
+<listitem><para>添加了 <xref linkend="odbchelper.list.append.vs.extend"/>.</para></listitem>
+<listitem><para>在 <xref linkend="install"/> 中修改了关于如何下载 &python; 的描述，使其更一般化，且减少了版本依赖性。</para></listitem>
+<listitem><para>在 <xref linkend="odbchelper.divein"/> 和 <xref linkend="odbchelper.objects"/> 中，把术语 <quote>module</quote> (模块) 改为了 <quote>program</quote> (程序)，因为我们此时尚未介绍模块。</para></listitem>
+<listitem><para>在 <xref linkend="odbchelper.objects"/> 中，添加了打开 &python; &ide; 的详细说明，和原来的例子合并在一起。</para></listitem>
+<listitem><para>把所有引用到布尔值 &one; (真) 和 &zero; (假) 分别改为了 &true; 和 &false;。</para></listitem>
+<listitem><para>更新了 <xref linkend="odbchelper.stringformatting.coerce"/> ，以展示 &python; 2.3 所显示的<literal>TypeError</literal> 消息。</para></listitem>
+<listitem><para>修正了 <xref linkend="plural.fib.example"/> 中的拼写错误。</para></listitem>
+<listitem><para>修正了 <xref linkend="re.summary"/> 中的拼写错误。</para></listitem>
+<listitem><para>修正了 <xref linkend="plural.stage4.example.1"/> 中的拼写错误。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>4.9</revnumber>
+<date>2004-03-25</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>完成了 <xref linkend="regression.alltogether"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="regression.summary"/>。</para></listitem>
+<listitem><para>把对单元测试的介绍分成了两章： <xref linkend="roman"/> 和 <xref linkend="roman1.5"/>。</para></listitem>
+<listitem><para>修正了 <xref linkend="plural.finishing.up"/> 中的拼写错误。</para></listitem>
+<listitem><para>修正了 <xref linkend="plural.introducing.generators"/> 中的拼写错误。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>4.8</revnumber>
+<date>2004-03-25</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>完成了 <xref linkend="plural.stage6"/>。</para></listitem>
+<listitem><para>完成了 <xref linkend="plural.summary"/>。</para></listitem>
+<listitem><para>修复了 <xref linkend="furtherreading"/>、<xref linkend="abstracts"/>、<xref linkend="tips"/>和<xref linkend="examples"/>中的失效链接。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>4.7</revnumber>
+<date>2004-03-21</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="plural.divein"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="plural.stage1"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="plural.stage2"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="plural.stage3"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="plural.stage4"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="plural.stage5"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="plural.stage6"/> (未完成)。</para></listitem>
+<listitem><para>添加了 <xref linkend="plural.summary"/> (未完成)。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>4.6</revnumber>
+<date>2004-03-14</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>完成了 <xref linkend="re.nm"/>。</para></listitem>
+<listitem><para>完成了 <xref linkend="re.verbose"/>。</para></listitem>
+<listitem><para>完成了 <xref linkend="re.phone"/>。</para></listitem>
+<listitem><para>扩写了 <xref linkend="re.summary"/>。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>4.5</revnumber>
+<date>2004-03-07</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="re.intro"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="re.nm"/> (未完成)。</para></listitem>
+<listitem><para>添加了 <xref linkend="re.verbose"/> (未完成)。</para></listitem>
+<listitem><para>添加了 <xref linkend="re.phone"/> (未完成)。</para></listitem>
+<listitem><para>添加了 <xref linkend="re.summary"/>。</para></listitem>
+<listitem><para>把 <xref linkend="re.matching"/> 和 <xref linkend="re.roman"/> 移入了正则表达式这一章。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.os.glob.example"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.files.writeandappend"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.userdict.fromdict"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="kgp.stdio.print.example"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="apihelper.getattr.dispatch"/> 和 <xref linkend="apihelper.getattr.default"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="odbchelper.indenting.if"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="odbchelper.stringformatting.numbers"/>。</para></listitem>
+<listitem><para>把 <xref linkend="fileinfo"/> 分成了两章：<xref linkend="fileinfo"/> 和 <xref linkend="filehandling"/>。</para></listitem>
+<listitem><para>把 <xref linkend="kgp"/> 分成了两章：<xref linkend="kgp"/> 和 <xref linkend="streams"/>。</para></listitem>
+<listitem><para>把 <xref linkend="roman"/> 分成了两章：<xref linkend="roman"/> 和 <xref linkend="roman2"/>。</para></listitem>
+<listitem><para>把 <xref linkend="apihelper"/> 中的 <function>help</function> 改名为 <function>info</function>。</para></listitem>
+<listitem><para>修正了 <xref linkend="dialect.locals"/> 中的回向引用。</para></listitem>
+<listitem><para>修复了 <xref linkend="dialect.divein"/> 中失效的示例链接。</para></listitem>
+<listitem><para>修复了 <xref linkend="kgp.divein"/> 示例中丢失的若干行。</para></listitem>
+<listitem><para>修正了 <xref linkend="dialect.sgmllib"/> 中的拼写错误。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>4.4</revnumber>
+<date>2003-10-08</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="install.choosing"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="install.windows"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="install.macosx"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="install.macos9"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="install.redhat"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="install.debian"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="install.source"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="install.summary"/>。</para></listitem>
+<listitem><para>删除了序言。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper.join.example"/> 中的拼写错误。</para></listitem>
+<listitem><para>为 <xref linkend="odbchelper.docstring"/> 添加了指向 PEP 257的链接。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper.multiassign"/> 中指向 &howtothink; 的链接。</para></listitem>
+<listitem><para>添加了 <xref linkend="odbchelper.tuple"/> 中关于隐式断言 (assert) 的评注。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>4.3</revnumber>
+<date>2003-09-28</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="regression.import"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="regression.alltogether"/> (未完成)。</para></listitem>
+<listitem><para>修正了 <xref linkend="about"/> 中的链接。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>4.2.1</revnumber>
+<date>2003-09-17</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>修正了主页中的链接。</para></listitem>
+<listitem><para>修复了语法高亮。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>4.2</revnumber>
+<date>2003-09-12</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>修正了 <xref linkend="regression.map"/>、<xref linkend="regression.filter"/>、<xref linkend="re.matching"/> 和 <xref linkend="kgp.commandline"/> 中的拼写错误。感谢你，Doug。</para></listitem>
+<listitem><para>修正了 <xref linkend="fileinfo.class"/> 中的外部链接。感谢你，Harry。</para></listitem>
+<listitem><para>修改了 <xref linkend="apihelper.filter"/> 结尾的措辞。感谢你，Paul。</para></listitem>
+<listitem><para>为 <xref linkend="roman.failure"/> 添加了几句话，以强调我们正在给 &assertRaises; 传递一个函数，而非函数名称。感谢你，Stephen。</para></listitem>
+<listitem><para>修正了 <xref linkend="dialect.dialectizer"/> 中的拼写错误。感谢你，Wellie。</para></listitem>
+<listitem><para>修正了关于方言示例的若干链接。</para></listitem>
+<listitem><para>修正了关于罗马数字历史的外部链接。感谢世界各地的罗马数字爱好者。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>4.1</revnumber>
+<date>2002-07-28</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="kgp.cache"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="kgp.child"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="kgp.handler"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="kgp.commandline"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="kgp.alltogether"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="kgp.summary"/>。</para></listitem>
+<listitem><para>修正了 <xref linkend="fileinfo.os"/> 中的拼写错误。应该是 <function>os.getcwd()</function>，而不是 <function>os.path.getcwd()</function>。感谢你，Abhishek。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper.join"/> 中的排印错误。当在 &python; &ide; 中求值 (而非打印) 的时候，它会在输出的两侧加上单引号。</para></listitem>
+<listitem><para>修改了 <xref linkend="apihelper.alltogether"/> 中的 &str; 示例，以使用一个用户定义的函数，因为 &python; 2.2 会为内置的字典模块定义一个 &docstring;，从而导致原来那个示例的失效。感谢 Eric。</para></listitem>
+<listitem><para>修正了 <xref linkend="kgp.unicode"/> 中的拼写错误，“anyway”改为“anywhere”。感谢 Frank。</para></listitem>
+<listitem><para>修正了 <xref linkend="roman.sanity"/> 中的拼写错误，我原把“accept”重复了一次。感谢 Ralph.</para></listitem>
+<listitem><para>修正了 <xref linkend="roman.refactoring"/> 中的排印错误，<literal>C?C?C?</literal> 匹配零至三个 <literal>C</literal>，而不是四个。感谢 Ralph。</para></listitem>
+<listitem><para>重写了 <xref linkend="odbchelper.list.slicing.example"/> 中对分片的解说，使之更加清晰。感谢 Petr。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.userdict"/> 中的历史评注。现在 &python; 2.2 支持直接子类化内置数据类型了。</para></listitem>
+<listitem><para>为 <xref linkend="fileinfo.userdict.init.example"/> 添加了对字典的方法 &update; 的解说。感谢 Petr。</para></listitem>
+<listitem><para>在 <xref linkend="fileinfo.userdict"/> 中阐明了 &python; 对重载的不支持。感谢 Petr。</para></listitem>
+<listitem><para>修正了 <xref linkend="dialect.basehtml.intro"/> 中的排印错误。&html; 注释以两个 (而非一个) 横杠和一个括号结束。感谢 Petr。</para></listitem>
+<listitem><para>修改了 <xref linkend="dialect.locals"/> 中关于嵌套作用域的注记。&python; 2.2 已经发布了。感谢 Petr。</para></listitem>
+<listitem><para>修正了 <xref linkend="dialect.unknownstarttag"/>; 中的排印错误：本应该是一连串空格，我误打为一个了。感谢 Petr。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.userdict"/> 的标题以标志基类。感谢 Petr。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.refactoring"/> 中的标题以提示下载 &unittest_module;。感谢 Petr。</para></listitem>
+<listitem><para>修正了 <xref linkend="regression.path.cwd.example"/> 中的排版错误；空格被误打为了制表符；行号也没有对准。感谢 Petr。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper.list"/> 中首字母未大写的错误。应该是 <literal>True</literal> 和 <literal>False</literal>，而非 <literal>true</literal> 和 <literal>false</literal>。感谢所有指出这一点的读者。</para></listitem>
+<listitem><para>修改了 <xref linkend="odbchelper.dict"/>、<xref linkend="odbchelper.list"/> 和 <xref linkend="odbchelper.tuple"/> 的小节标题。“Dictionaries 101”表明这是 Dictionary 的入门教程。美国的大学往往用“101”标示无需知识背景的入门课程，但显然这仅仅是个美国传统，所以没必要让我的国际读者们费劲猜测。――当我一年半前开始写这本书时，从未想到会拥有国际读者。</para></listitem>
+<listitem><para>把样式表升级到 &docbook; &xsl; 1.52 版。</para></listitem>
+<listitem><para>升级到 &saxon; 6.52 版。</para></listitem>
+<listitem><para>调整了样式表的相关部分。</para></listitem>
+<listitem><para>上次修订后，她答应了。婚礼明年春天举行。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>4.0-2</revnumber>
+<date>2002-04-26</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>修正了 <xref linkend="apihelper.andor.intro.example"/> 中的拼写错误。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper.objects.sys.path"/> 中的拼写错误。</para></listitem>
+<listitem><para>修复了 Windows 帮助文件 (样式表的改动引起了目录的丢失)。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>4.0</revnumber>
+<date>2002-04-19</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>扩写了 <xref linkend="odbchelper.objects"/>，详细介绍了导入搜索路径。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper.negative.example"/> 中的拼写错误。感谢 Brian 的校正。</para></listitem>
+<listitem><para>重写了 <xref linkend="odbchelper.list"/> 中关于真值的提示。现在 &python; 有单独的布尔类型了。</para></listitem>
+<listitem><para>修正了 <xref linkend="fileinfo.fromimport"/> 中与 &java; 的语法比较部分的拼写错误。感谢 Rick 的校正。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.userdict"/> 中的注解，说明了子类总是重写基类。</para></listitem>
+<listitem><para>修正了 <xref linkend="fileinfo.classattributes.writeable.example"/> 中的拼写错误。感谢 Kevin 的校正。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.exception"/> 中的注解，说明了可以自己定义异常并触发它。感谢 Rony 的建议。</para></listitem>
+<listitem><para>修正了 <xref linkend="dialect.specifictags.example"/> 中的拼写错误。感谢 Rick 的校正。</para></listitem>
+<listitem><para>添加了 <xref linkend="dialect.dialectizer.example"/> 中的注解，详细说明了返回值。感谢 Howard 的建议。</para></listitem>
+<listitem><para>在 <xref linkend="kgp.openanything.example"/> 中，添加了 &stringio_classname; 初始化式中的 &str; 函数。感谢 Ganesan 的主意。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.romantest"/> 中的链接，解释了为什么测试用例要放在另一个文件中。</para></listitem>
+<listitem><para>修改了 <xref linkend="regression.path"/>，用 &ospathdirname; 代替了 <literal>os.path.split</literal>。感谢 Marc 的主意。</para></listitem>
+<listitem><para>添加了代码示例 (<filename>piglatin.py</filename>、<filename>parsephone.py</filename> 和 <filename>plural.py</filename>)，为正则表达式一章作准备。</para></listitem>
+<listitem><para>更新并扩充了主页上关于 Python 的链接。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>3.9</revnumber>
+<date>2002-01-01</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="kgp.unicode"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="kgp.search"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="kgp.attributes"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="kgp.openanything"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="kgp.stdio"/>。</para></listitem>
+<listitem><para>在 <xref linkend="fileinfo.for"/> 中，为 &for; 循环示例添加了简单计数的例子 (好的用法和不好的用法)。感谢 Kevin 的主意。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper.items"/> 中的排印错误 (<literal>params.values()</literal> 的两个元素被颠倒了)。</para></listitem>
+<listitem><para>修正了 <xref linkend="apihelper.builtin"/> 中关于 &builtins; 模块的错误。感谢 Denis 的校正。</para></listitem>
+<listitem><para>为 <xref linkend="regression.path"/> 添加了更多的示例，展示了如何在当前目录下运行单元测试，而不必进入 &regression_filename; 所在的目录。</para></listitem>
+<listitem><para>在 <xref linkend="odbchelper.negative.example"/> 中，修改了如何由正索引得到负索引的解释。感谢 Renauld 的建议。</para></listitem>
+<listitem><para>更新了主页上 &python; 的下载链接。</para></listitem>
+<listitem><para>为主页添加了指向 Bruce Eckel 的 &thinkinginpython; 初稿的链接。这是一本不可思议的 (也是高阶的) 书，讲述了设计模式以及如何用 &python; 实现它们。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>3.8</revnumber>
+<date>2001-11-18</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="regression.path"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="regression.filter"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="regression.map"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="regression.datacentric"/>。</para></listitem>
+<listitem><para>扩充了 <xref linkend="regression.divein"/> 中的样例输出。</para></listitem>
+<listitem><para>完成了 <xref linkend="kgp.parse"/>。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>3.7</revnumber>
+<date>2001-09-30</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="kgp.packages"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="kgp.parse"/>。</para></listitem>
+<listitem><para>把 <xref linkend="kgp.divein"/> “打扫干净”了。感谢 Matt 的建议。</para></listitem>
+<listitem><para>在 <xref linkend="fileinfo.fromimport"/> 中，添加了关于 &java; 的提示。感谢 Ori 的建议。</para></listitem>
+<listitem><para>修正了 <xref linkend="apihelper.alltogether"/> 中的错误。我曾暗示过，在 &python; 中你不能使用 <literal>is None</literal> 来判断变量是否为 null。实际上可以；而且它比 <literal>== None</literal> 快。感谢 Ori 指出错误。</para></listitem>
+<listitem><para>澄清了 <xref linkend="odbchelper.list"/>：我曾说 <literal>li = li + other</literal> 与 <literal>li.extend(other)</literal> 等价。操作结果的确相同；但 &extend; 更快，因为它不会创建新 list。感谢 Denis 指出。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper.list"/> 中的错误：我曾说 <literal>li += other</literal> 与 <literal>li = li + other</literal> 等价。实际上，它与 <literal>li.extend(other)</literal> 等价，因为它不会创建新 list。感谢 Denis 指出。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper"/> 因我的懒惰而引起的排版错误。当我写这一章时，我没有在字符串字面量的两侧加单引号。它们会被赋予特殊字体，但在这本书的一些编译版本 (如纯文本) 中这不奏效。感谢 Denis 的建议。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper.funcdef"/> 中的错误。我曾说静态类型语言总是显示地要求给出变量的数据类型；事实上并非总是如此。有些静态类型语言会在编译时根据代码确定变量类型。感谢 Tony 指出。</para></listitem>
+<listitem><para>添加了指向 <ulink url="&url_diveintopythones;">西班牙文版</ulink> 的链接。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>3.6.4</revnumber>
+<date>2001-09-06</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>为 &basehtml_classname; 添加处理非 &html; 实体引用的代码，并在 <xref linkend="dialect.basehtml"/> 中添加了关于它的注解。</para></listitem>
+<listitem><para>修改了 <xref linkend="dialect.globals.example"/>，使之在输出中包括 &htmlentitydefs;。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>3.6.3</revnumber>
+<date>2001-09-04</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>修正了 <xref linkend="kgp.divein"/> 中的拼写错误。</para></listitem>
+<listitem><para>添加了指向 <ulink url="&url_kr_read;">韩文版</ulink> 的链接。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>3.6.2</revnumber>
+<date>2001-08-31</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>修正了 <xref linkend="roman.sanity"/> 中的排印错误 (最后一点要求列了两次)。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>3.6</revnumber>
+<date>2001-08-31</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>完成了 <xref linkend="dialect"/>；在其末尾添加了 <xref linkend="dialect.alltogether"/> 和 <xref linkend="dialect.summary"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.postscript"/>。</para></listitem>
+<listitem><para>在 <xref linkend="kgp"/> 开头添加了 <xref linkend="kgp.divein"/>。</para></listitem>
+<listitem><para>在 <xref linkend="regression"/> 开头添加了 <xref linkend="regression.divein"/>。</para></listitem>
+<listitem><para>修正了一个长期存在的 bug：<xref linkend="dialect"/> 中的示例被错误地着色了。</para></listitem>
+<listitem><para>添加了指向 <ulink url="&url_fr_read;">法文版</ulink> 的链接。他们做对了：他们翻译了 &xml; 源文件，这样我的构建脚本得以重用，他们的成果就可以用六种格式发布。</para></listitem>
+<listitem><para>升级到 &docbook; &xsl; 1.43 版的样式表。</para></listitem>
+<listitem><para>升级到 &saxon; 6.43 版。</para></listitem>
+<listitem><para>对样式表进行了大规模翻修：放弃了原来的基于表格的排版，转向层叠样式表。不幸的是， &css; 总是会出兼容性问题，所以在每个页面的首尾部分都保留的表格。编译后的 &html; 版本在 &netscape; 4 看起来更糟糕了；但在大多数现代浏览器中――包括 &netscape; 6、&mozilla;、&msie; 5、&opera; 5、&konqueror; 和 &icab;――中表现良好。在 Lynx 中完全可读。我爱 Lynx！它是我使用的第一个浏览器。你永远不会忘记你的第一次。</para></listitem>
+<listitem><para>迁移到 <ulink url="http://jakarta.apache.org/ant/">&ant;</ulink> 平台上，以便控制进程――我现在可是在六种格式和两种语言中探险。</para></listitem>
+<listitem><para>整理了所有的下载档案；这之前我为每个平台都发布了不同的文件，因为 &python; 的 <filename>zipfile</filename> 模块创建的 .zip 文件不标准，因此不能被 &macos; 上的 &stuffit; 打开。但 &ant; 创建的 .zip 完全标准，兼容性良好。好样的，&ant;！</para></listitem>
+<listitem><para>我们把 &xml; 源、&xsl; 样式表和相关的脚本和库放在了 SourceForge。对于喜欢冒险的人们，当然有 &cvs; 接入。</para></listitem>
+<listitem><para>在与 &gpl; 调和的 <ulink url="http://www.python.org/2.1.1/license.html">Python 2.1.1 license</ulink> 下重新发布了代码。感谢你，Guido；人们确实关心，而它确实要紧。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>3.5</revnumber>
+<date>2001-06-26</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>在 <xref linkend="odbchelper.funcdef"/> 中添加了对 强/弱/静态/动态 数据类型的注解。</para></listitem>
+<listitem><para>添加了 <xref linkend="odbchelper.dict"/> 中关于大小写敏感的示例。</para></listitem>
+<listitem><para>在 <xref linkend="fileinfo"/> 中使用了 <function>os.path.normcase</function>，以兼容对大小写不敏感的糟糕的操作系统。</para></listitem>
+<listitem><para>修正了 &pdf; 版本中代码的缩进问题。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>3.4</revnumber>
+<date>2001-05-31</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="roman.stage5"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.bugs"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.change"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.refactoring"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.summary"/>。</para></listitem>
+<listitem><para>又修正一个样式表 bug ：嵌套的 <sgmltag>&lt;/span></sgmltag> 标记总是丢失。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>3.3</revnumber>
+<date>2001-05-24</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="roman.divein"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.romantest"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.success"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.failure"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.sanity"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.stage1"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.stage2"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.stage3"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="roman.stage4"/>。</para></listitem>
+<listitem><para>在兼容 &netscape;/&mozilla; 的强烈要求下，调整了样式表。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>3.2</revnumber>
+<date>2001-05-03</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="dialect.dialectizer"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="re.matching"/>。</para></listitem>
+<listitem><para>修正了 <function>handle_decl</function> 方法中的 bug：它会产生不正确的声明 (把空格加在的不该出现的地方)。</para></listitem>
+<listitem><para>修正了 <acronym>CSS</acronym> (2.9 介绍过) 中的 bug：背景色丢失了。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>3.1</revnumber>
+<date>2001-04-18</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>为 <link linkend="dialect.divein">&basehtml_filename;</link> 添加处理声明的代码；现在 &python; 2.1 也支持这段代码了。</para></listitem>
+<listitem><para>添加 <xref linkend="dialect.locals"/> 中关于嵌套作用域的注解。</para></listitem>
+<listitem><para>修正了 <xref linkend="dialect.basehtml.listing"/> 中的一个隐秘的 bug：带有字符实体的属性值不会被合适地转义。</para></listitem>
+<listitem><para>对于本书中的示例，现在推荐 (并不要求) &python; 2.1，因为它支持 &sgmllib_filename; 中的声明。</para></listitem>
+<listitem><para>更新了 <ulink url="&url_diveintopython;">主页</ulink> 上的链接，使其指向已经发布的 &python; 2.1。</para></listitem>
+<listitem><para>给文件加上了时间戳，以帮助重发布这本书的人们。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>3.0</revnumber>
+<date>2001-04-16</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>对 <xref linkend="dialect"/> 中的代码修正了几个小错误。</para></listitem>
+<listitem><para>在 <ulink url="&url_diveintopython;">主页</ulink> 上添加了指向中文版的链接。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>2.9</revnumber>
+<date>2001-04-13</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="dialect.locals"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="dialect.dictsub"/>。</para></listitem>
+<listitem><para>紧缩了 <xref linkend="dialect"/> 中的代码，特别是 <classname>ChefDialectizer</classname>，以使用更少、更简单的正则表达式。</para></listitem>
+<listitem><para>修正了一个样式表 bug：它使得生成 &pdf; 版本时插入了不必要的空白页。</para></listitem>
+<listitem><para>修正了一个脚本 bug：它剥除了 <ulink url="&url_diveintopython;">主页</ulink> 上的 <literal>DOCTYPE</literal>。</para></listitem>
+<listitem><para>添加了指向 &pythoncookbook; 的链接，并为 <xref linkend="furtherreading"/> 添加了一些链接。</para></listitem>
+<listitem><para>改用 &google_search; 代理 &diveintopythonorg; 的站内搜索。</para></listitem>
+<listitem><para>升级到 &docbook; &xsl; 样式表 1.36 版――比它所宣称的麻烦多了。可能还有潜伏的 bug。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision><revision>
+<revnumber>2.8</revnumber>
+<date>2001-03-26</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="dialect.extract"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="dialect.basehtml"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="dialect.quoting"/>。</para></listitem>
+<listitem><para>紧缩了 <xref linkend="apihelper"/> 中的代码：使用的内置函数 &callable; 来代替手工检测。</para></listitem>
+<listitem><para>把 <xref linkend="fileinfo.fromimport"/> 从 <xref linkend="apihelper"/> 移到了 <xref linkend="fileinfo"/>。</para></listitem>
+<listitem><para>修正了 <xref linkend="fileinfo.divein"/> 中的排印错误 (补回了冒号)。</para></listitem>
+<listitem><para>添加了几个额外的供下载的样例脚本。</para></listitem>
+<listitem><para>添加了 &winhelp; 输出格式。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>2.7</revnumber>
+<date>2001-03-16</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="dialect.sgmllib"/>。</para></listitem>
+<listitem><para>紧缩了 <xref linkend="dialect"/> 中的代码。</para></listitem>
+<listitem><para>修改了 <xref linkend="odbchelper"/> 中的代码：用了 &items; 方法代替了 &keys;。</para></listitem>
+<listitem><para>把 <xref linkend="odbchelper.multiassign"/> 一节移到了 <xref linkend="odbchelper"/>。</para></listitem>
+<listitem><para>编辑了关于字符串 &join; 方法的评注，提供了 &pythonfaq; 中解释<ulink url="&url_pythonfaqjoin;">why &join; is a string method</ulink> (为什么 &join; 是字符串方法) 而不是 list 方法的这一新条目。</para></listitem>
+<listitem><para>重写了 <xref linkend="apihelper.andor"/>，强调了 &andfunction; 和 &orfunction; 的基本性质；并且不再强调 &andor; 技巧。</para></listitem>
+<listitem><para>把语言比较重新组织为了 <sgmltag>note</sgmltag>。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>2.6</revnumber>
+<date>2001-02-28</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>给 &pdf; 和 <application>Word</application> 版本加入了彩色的示例文本、改进后的目录，以及缩进良好的 <sgmltag>tip</sgmltag> 和 <sgmltag>note</sgmltag>。</para></listitem>
+<listitem><para>现在 <application>Word</application> 版本是正宗的 <application>Word</application> 格式了，与 <application>Word 97</application> 完全兼容。</para></listitem>
+<listitem><para>部分地解决 &pdf; 和纯文本版本中的特殊字符 (像 TM 符号和花括号) 错误的问题。</para></listitem>
+<listitem><para>添加了指向支持 &unix; 的 <application>Word</application> 版本的下载链接――有些小鬼想把它导入到 <application>StarOffice</application> 或其它什么环境中去。</para></listitem>
+<listitem><para>修正了几个丢失标题的 <sgmltag>注记</sgmltag>。</para></listitem>
+<listitem><para>修正了一个 bug：它会导致 &msie; 5 for &macos; 示例中的彩色文字发生字体错乱。(你好？！？Microsoft？好，你倒说说看，到底是 <sgmltag>&lt;pre></sgmltag> 的哪一部分你不懂？)</para></listitem>
+<listitem><para>修复了 &macos; 档案的下载链接。</para></listitem>
+<listitem><para>在每章的第一个示例程序前，都添加了下载示例程序的链接。(我的日志显示人们往往会跳过本可以下载它们的那两个页面 (即： <ulink url="&url_diveintopython;" type="Dive Into Python home page">主页</ulink> 和序言)，然后在阅读时惊慌失措地寻找下载地址。)</para></listitem>
+<listitem><para>进一步紧缩了 <ulink url="&url_diveintopython;" type="Dive Into Python home page">主页</ulink> 和序言――但愿人们不会再因为其杂乱不堪而跳过它们。</para></listitem>
+<listitem><para>但愿早点结束这没完没了的调试，回到写作正轨。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>2.5</revnumber>
+<date>2001-02-23</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="fileinfo.modules"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.os"/>。</para></listitem>
+<listitem><para>把 <xref linkend="splittingpathnames.example"/> 从 <xref linkend="odbchelper.multiassign"/> 移到了 <xref linkend="fileinfo.os"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.alltogether"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.summary"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="dialect.divein"/>。</para></listitem>
+<listitem><para>修正了 <xref linkend="dictionaryiter.example"/> 中的程序清单――少了一个冒号。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>2.4.1</revnumber>
+<date>2001-02-12</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>修改了新闻组链接，使用了 <quote>news:</quote> 协议。<systemitem class="systemname">deja.com</systemitem> 已死。</para></listitem>
+<listitem><para>在下载链接旁标明了文件大小。</para></listitem>
+</itemizedlist>
+</revdescription></revision>
+<revision>
+<revnumber>2.4</revnumber>
+<date>2001-02-12</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>为大多数章节添加了 <quote>进一步阅读</quote>，并在 <xref linkend="furtherreading"/> 中汇总。</para></listitem>
+<listitem><para>在纯文本格式的外部链接旁添加了 &url; 地址。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>2.3</revnumber>
+<date>2001-02-09</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>重写了 <xref linkend="fileinfo"/> 中的部分代码，使用了类的属性，并给出了一个更好的多值赋值的例子。</para></listitem>
+<listitem><para>重新组织了 <xref linkend="fileinfo"/>，把类的部分提前了。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.classattributes"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.exception"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.files"/>。</para></listitem>
+<listitem><para>把 <xref linkend="fileinfo"/> 中的 <quote>回顾</quote> 部分合并到了 <xref linkend="fileinfo.divein"/> 中。</para></listitem>
+<listitem><para>给所有的程序清单和示例选择了配色方案。</para></listitem>
+<listitem><para>修正了 <xref linkend="odbchelper.funcdef"/> 中的重大错误：函数会隐式地返回一个 &none;，所以你 <emphasis>可以</emphasis> 在不触发异常的前提下把它的返回值赋给一个变量。</para></listitem>
+<listitem><para>扩写了 <xref linkend="odbchelper.docstring"/>、<xref linkend="odbchelper.objects"/> 和 <xref linkend="odbchelper.vardef"/>，使之更加清晰。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>2.2</revnumber>
+<date>2001-02-02</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>编辑了 <xref linkend="apihelper.getattr"/>。</para></listitem>
+<listitem><para>为 <sgmltag>xref</sgmltag> 标记添加了标题，所以它们也能显示可爱的提示框了。</para></listitem>
+<listitem><para>修改了修订历史页面的主题风格。</para></listitem>
+<listitem><para>修正了我昨天在我的 &html; 中提到的 bug：后期处理脚本将会导致无效的 &html; 字符引用，甚至让一些浏览器无法显示。</para></listitem>
+<listitem><para>升级到 &docbook; &xsl; 样式表 1.29 版。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>2.1</revnumber>
+<date>2001-02-01</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>重写了 <xref linkend="apihelper"/> 中的示例代码，用 &getattr; 代替了 &exec; 和 &eval;，并重写了相应的解释文字。</para></listitem>
+<listitem><para>在 <xref linkend="odbchelper.list"/> 中添加了列表操作的示例。</para></listitem>
+<listitem><para>在章节末尾的小节部分 (<xref linkend="odbchelper.summary"/> 和 <xref linkend="apihelper.summary"/>) 添加了指向相关内容的链接。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>2.0</revnumber>
+<date>2001-01-31</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>把 <xref linkend="fileinfo.specialmethods"/> 分成了三节： <xref linkend="fileinfo.userdict"/>、<xref linkend="fileinfo.specialmethods"/> 和 <xref linkend="fileinfo.morespecial"/>。</para></listitem>
+<listitem><para>修改了关于 <link linkend="fileinfo.create">垃圾收集</link> 的注解以指出 &python; 2.0 及其后续版本自动处理循环引用，无需手工编码。</para></listitem>
+<listitem><para>修复了 &unix; 下载，使之包括了所有相关文件。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>1.9</revnumber>
+<date>2001-01-15</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>删除了 <xref linkend="odbchelper"/> 的概论。</para></listitem>
+<listitem><para>删除了 <xref linkend="apihelper"/> 的概论。</para></listitem>
+<listitem><para>删除了 <xref linkend="fileinfo"/> 的概论。</para></listitem>
+<listitem><para>大刀阔斧地改动文本。我似乎总是跑题。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>1.8</revnumber>
+<date>2001-01-12</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>为 <xref linkend="odbchelper.multiassign"/> 添加了更多示例。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.class"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.create"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.specialmethods"/>。</para></listitem>
+<listitem><para>一些小的样式表调整，包括为 <sgmltag>link</sgmltag> 标记添加了标题。要是你的浏览器够酷的话，它会用一个可爱的提示框显示链接目标的描述。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>1.71</revnumber>
+<date>2001-01-03</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>对样式表进行了几处修改，提高了对浏览器的兼容性。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>1.7</revnumber>
+<date>2001-01-02</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="odbchelper"/> 的概览。</para></listitem>
+<listitem><para>添加了 <xref linkend="apihelper"/> 的概览。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo"/> 的小结部分[后来删除了]。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.private"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="fileinfo.for"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="odbchelper.multiassign"/>。</para></listitem>
+<listitem><para>编写了把书输出为单个 &html; 文件、&pdf;、&msword; 和纯文本的脚本。</para></listitem>
+<listitem>
+<para>注册了域名 <systemitem class="systemname">diveintopython.org</systemitem> 并把书――在线的和离线的――都移到了那里。</para></listitem>
+<listitem><para>修改了 &xsl; 样式表，以修改在每个页面首尾显示的导航链接。页首加上了域名、版本号，以及跳到章目录、总目录和主页的快速链接。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>1.6</revnumber>
+<date>2000-12-11</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="apihelper.alltogether"/>。</para></listitem>
+<listitem><para>完成了 <xref linkend="apihelper"/>：在结尾添加了 <xref linkend="apihelper.summary"/>。</para></listitem>
+<listitem><para>在 <xref linkend="fileinfo"/> 的开头添加了 <xref linkend="fileinfo.divein"/>。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>1.5</revnumber>
+<date>2000-11-22</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="apihelper.andor"/>。</para></listitem>
+<listitem><para>添加了 <xref linkend="apihelper.lambda"/>。</para></listitem>
+<listitem><para>添加了附录 <link linkend="abstracts">五分钟回顾</link>。</para></listitem>
+<listitem><para>添加了附录 <link linkend="tips">技巧和窍门</link>。</para></listitem>
+<listitem><para>添加了附录 <link linkend="examples">示例清单</link>。</para></listitem>
+<listitem><para>添加了附录 <link linkend="revhistory">修订历史</link>。</para></listitem>
+<listitem><para>扩写了 <xref linkend="odbchelper.map"/> 中映射列表的示例。</para></listitem>
+<listitem><para>把更多的常用术语加入了 XML 实体。</para></listitem>
+<listitem><para>升级到 &docbook; &xsl; 样式表 1.25 版。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>1.4</revnumber>
+<date>2000-11-14</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了 <xref linkend="apihelper.filter"/>。</para></listitem>
+<listitem><para>为 <xref linkend="apihelper.builtin"/> 添加了 <function>dir</function> 文档。</para></listitem>
+<listitem><para>在 <xref linkend="odbchelper.tuple"/> 中，添加了 <function>in</function> 的示例。</para></listitem>
+<listitem><para>添加了 &macpython; 环境下 &if; &name; 技巧的额外说明。</para></listitem>
+<listitem><para>转向了 &saxon;。</para></listitem>
+<listitem><para>升级到 &docbook; &xsl; 样式表 1.24 版。</para></listitem>
+<listitem><para>添加了 db-html 处理的说明：在每个章、节中都加上了显示的文件名，避免在添加或重排节时导致深层链接实效。</para></listitem>
+<listitem><para>把一些常用术语加入了 XML 实体。</para></listitem>
+<listitem><para>把几个 <sgmltag>literal</sgmltag> 标记改为了 <sgmltag>constant</sgmltag>。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>1.3</revnumber>
+<date>2000-11-09</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了关于动态代码执行的部分。</para></listitem>
+<listitem><para>在所有有必要的地方，都添加了对本书其它部分的引用链接。</para></listitem>
+<listitem><para>扩写了 <link linkend="apihelper.divein">第 2 章概览</link>，解释了这个函数的实际作用。</para></listitem>
+<listitem><para>显示地声明示例代码是在 <acronym>GNU</acronym> General Public License 下发布的；添加了该 License 的附录。 [Note 8/16/2001：代码在与 &gpl; 调和的 &python; license 下重新发布了。]</para></listitem>
+<listitem><para>修改了链接，以使用 <sgmltag>xref</sgmltag> 标记――我弄明白怎么使用了这个标记了。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>1.2</revnumber>
+<date>2000-11-06</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>添加了第 2 章的前四部分。</para></listitem>
+<listitem><para>进一步紧缩了了序言，并添加了指向 &python; 的 &macos; 版本的链接。</para></listitem>
+<listitem><para>扩写了“映射列表”和“连接字符串”中的示例，使其更富逻辑性。</para></listitem>
+<listitem><para>添加了第 1 章小结中的输出。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>1.1</revnumber>
+<date>2000-10-31</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>完成了第 1 章关于映射、连接的部分，以及整章小结。</para></listitem>
+<listitem><para>在序言使用了较缓和的措辞，并添加了针对非程序员的入门教程的链接。</para></listitem>
+<listitem><para>修正了几处拼写错误。</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+<revision>
+<revnumber>1.0</revnumber>
+<date>2000-10-30</date>
+<revdescription>
+<itemizedlist>
+<listitem><para>原始发布</para></listitem>
+</itemizedlist>
+</revdescription>
+</revision>
+</revhistory>
+<legalnotice>
+<para>Permission is granted to copy, distribute, and/or modify this document under the terms of the <acronym>GNU</acronym> Free Documentation License, Version 1.1 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A copy of the license is included in <link linkend="gfdl">Appendix G, GNU Free Documentation License</link>.</para>
+<para>允许在 GNU 自由文档协议 (1.1 版，或自由软件基金会出版的任何更新版本) 的许可下复制、发行且/或修改本文档；本文档没有不变部分，没有前封面文本，没有封底文本。该协议的一份中文版参考译文包含在 <xref linkend="gfdl_zh"/> 中。
+</para>
+<para>在这本书中的例程是自由软件。你可以在遵守 &python; 协议 (&python; 软件基金会发布) 条款的规定下，重新发布，且/或修改它们。在 <xref linkend="license"/> 中包含了此协议的一份拷贝。</para>
+<para>本译本由 Zoom.Quiet 负责项目管理。感谢<ulink url="http://www.woodpecker.org.cn">啄木鸟社区</ulink>提供 <ulink url="http://svn.woodpecker.org.cn/woodpecker/zh-translations/trunk/diveintopython/zh-cn/">SVN 项目空间</ulink>和 <ulink url="http://wiki.woodpecker.org.cn/moin/DiveIntoPythonZh">Wiki 协作空间</ulink>。</para>
+<para>本译本由 <ulink url="http://wiki.woodpecker.org.cn/moin/CPUG">啄木鸟/CPUG</ulink> 的 obp 团队完成。可以在<xref linkend="revhistory"/>中找到一个翻译和修订人员的清单。如果您对当前版本的 Dive Into Python 中文版有任何意见和建议，可以到<ulink url="http://wiki.woodpecker.org.cn/moin/DiveIntoPythonZh">本书的 Wiki 协作空间</ulink>中留下你的评论。</para>
+<para>本译文遵守 GFDL 的规定。你可以复制、发行、修改此文档，但请保留此版权信息。</para>
+</legalnotice>
+<!--
+A brief word about the licensing of this book.  This is a free (as in speech)
+book.  If you've heard of free software, this is the same idea, only with a book
+instead of a computer program.  You now own this book, and while
+you can't just do anything you want with it, you have an enormous amount of freedom,
+much more than you would ordinarily expect to get with a book.
+
+You can, for instance, make any number of copies of this book.  Give it to your friends,
+post it on your own web site, publish it in new media formats.  You can even
+add chapters to the book and republish it under a new title without my
+consent or even my awareness.  My work is always copyright to me, and your work is
+always copyright to you, and your new-and-presumably-improved version must be published
+under the same license as this one.  There are a few other obscure details that you
+can read all about in the appendix, but that's the basic idea.
+
+There are already several excellent Python books that have gone out of print,
+because their publishers decided that it was not in their best interest to continue
+publishing them.  That never has to happen to free books.  You have the freedom to keep
+this book alive.  If I choose to stop distributing it, you can distribute it yourself.
+If I move on and this book goes out of date, you can pick up where I left off and keep
+this book current and relevant.
+
+As I write this, the year is 2000, and the Internet is a battleground of intellectual
+property disputes.  Some people would like you to believe that, without proper financial
+incentives, music, literature, and computer software would disappear.  After all,
+who would make music if they can't make money on it?  Who would write?  Who would
+program?  I know the answer.  The answer is that musicians will make music, not because
+they can make money, but because musicians are the people who can't not make music.
+Writers will write because they can't not write.  I've been programming for 16 years,
+writing free software for 8.  I can't imagine not doing this.  If you can imagine yourself
+not doing what you're doing, do something else.  Do whatever it is that you can't not do.
+-->
+</bookinfo>

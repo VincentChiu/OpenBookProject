@@ -1,0 +1,698 @@
+Chapter 16
+Chapter 16
+16Scopes and Arguments
+Chapter 15 introduced basic function definitions and calls. As we saw, Python's basic function model is simple to use. This chapter presents the details behind Python's scopes-the places where variables are defined and looked up-and behind argument passing-the way that objects are sent to functions as inputs.
+Scope Rules
+Now that you're ready to start writing your own functions, we need to get more formal about what names mean in Python. When you use a name in a program, Python creates, changes, or looks up the name in what is known as a namespace-a place where names live. When we talk about the search for a name's value in relation to code, the term scope refers to a namespace: that is, the location of a name's assignment in your code determines the scope of the name's visibility to your code.
+Just about everything related to names, including scope classification, happens at assignment time in Python. As we've seen, names in Python spring into existence when they are first assigned values, and they must be assigned before they are used. Because names are not declared ahead of time, Python uses the location of the assignment of a name to associate it with (i.e., bind it to) a particular namespace. In other words, the place where you assign a name in your source code determines the namespace it will live in, and hence its scope of visibility.
+Besides packaging code, functions add an extra namespace layer to your programs-by default, all names assigned inside a function are associated with that function's namespace, and no other. This means that:
+	*	Names defined inside a def can only be seen by the code within that def. You cannot even refer to such names from outside the function.
+	*	Names defined inside a def do not clash with variables outside the def, even if the same names are used elsewhere. A name X assigned outside a given def (i.e., in a different def or at the top level of a module file) is a completely different variable from a name X assigned inside that def.
+In all cases, the scope of a variable (where it can be used) is always determined by where it is assigned in your source code, and has nothing to do with which functions call which. If a variable is assigned inside a def, it is local to that function; if assigned outside a def, it is global to the entire file. We call this lexical scoping because variable scopes are determined entirely by the locations of the variables in the source code of your program files, not by function calls.
+For example, in the following module file, the X = 99 assignment creates a global variable named X (visible everywhere in this file), but the X = 88 assignment creates a local variable X (visible only within the def statement):
+X = 99
+
+def func(  ):
+    X = 88
+Even though both variables are named X, their scopes make them different. The net effect is that function scopes help to avoid name clashes in your programs, and help to make functions more self-contained program units.
+Python Scope Basics
+Before we started writing functions, all the code we wrote was at the top level of a module (i.e., not nested in a def), so the names we used either lived in the module itself, or were built-ins predefined by Python (e.g., open). Functions provide nested namespaces (scopes) that localize the names they use, such that names inside a function won't clash with those outside it (in a module or another function). Again, functions define a local scope, and modules define a global scope. The two scopes are related as follows:
+	*	The enclosing module is a global scope. Each module is a global scope-that is, a namespace in which variables created (assigned) at the top level of the module file live. Global variables become attributes of a module object to the outside world, but can be used as simple variables within a module file.
+	*	The global scope spans a single file only. Don't be fooled by the word "global" here-names at the top level of a file are only global to code within that single file. There is really no notion of a single, all-encompassing global file-based scope in Python. Instead, names are partitioned into modules, and you must always import a module explicitly if you want to be able to use the names its file defines. When you hear "global" in Python, think "module."
+	*	Each call to a function creates a new local scope. Every time you call a function, you create a new local scope-that is, a namespace in which the names created inside that function will usually live. You can think of each def statement (and lambda expression) as defining a new local scope, but because Python allows functions to call themselves to loop (an advanced technique known as recursion), the local scope in fact technically corresponds to a function call-in other words, each call creates a new local namespace. Recursion is useful when processing structures whose shape can't be predicted ahead of time.
+	*	Assigned names are local unless declared global. By default, all the names assigned inside a function definition are put in the local scope (the namespace associated with the function call). If you need to assign a name that lives at the top level of the module enclosing the function, you can do so by declaring it in a global statement inside the function.
+	*	All other names are enclosing locals, globals, or built-ins. Names not assigned a value in the function definition are assumed to be enclosing scope locals (in an enclosing def), globals (in the enclosing module's namespace), or built-ins (in the predefined _  _builtin_  _ module Python provides).
+Note that any type of assignment within a function classifies a name as local: = statements, imports, defs, argument passing, and so on. Also, notice that in-place changes to objects do not classify names as locals; only actual name assignments do. For instance, if the name L is assigned to a list at the top level of a module, a statement like L.append(X) within a function will not classify L as a local, whereas L = X will. In the former case, L will be found in the global scope as usual, and the statement will change the global list.
+Name Resolution: The LEGB Rule
+If the prior section sounds confusing, it really boils down to three simple rules. With a def statement:
+	*	Name references search at most four scopes: local, then enclosing functions (if any), then global, then built-in.
+	*	Name assignments create or change local names by default.
+	*	Global declarations map assigned names to an enclosing module's scope.
+In other words, all names assigned inside a function def statement (or a lambda, an expression we'll meet later) are locals by default; functions can use names in lexically (i.e., physically) enclosing functions and in the global scope, but they must declare globals to change them. Python's name resolution scheme is sometimes called the LEGB rule, after the scope names:
+	*	When you use an unqualified name inside a function, Python searches up to four scopes-the local (L) scope, then the local scopes of any enclosing (E) defs and lambdas, then the global (G) scope, and then the built-in (B) scope-and stops at the first place the name is found. If the name is not found during this search, Python reports an error. As we learned in Chapter 6, names must be assigned before they can be used.
+	*	When you assign a name in a function (instead of just referring to it in an expression), Python always creates or changes the name in the local scope, unless it's declared to be global in that function.
+	*	When you assign a name outside a function (i.e., at the top level of a module file, or at the interactive prompt), the local scope is the same as the global scope-the module's namespace.
+Figure 16-1 illustrates Python's four scopes. Note that the second E scope lookup layer-the scopes of enclosing defs or lambdas-can technically correspond to more than one lookup layer. It only comes into play when you nest functions within functions.
+
+Figure 16-1
+The LEGB scope lookup rule. When a variable is referenced, Python searches for it in this order: in the local scope, in any enclosing functions' local scopes, in the global scope, and, finally, in the built-in scope. The first occurrence wins. The place in your code where a variable is assigned usually determines its scope.
+
+Also, keep in mind that these rules only apply to simple variable names (such as spam). In Parts V and VI, we'll see that qualified attribute names (such as object.spam) live in particular objects and follow a completely different set of lookup rules than the scope ideas covered here. Attribute references (names following periods) search one or more objects, not scopes, and may invoke something called "inheritance" (discussed in Part VI).
+Scope Example
+Let's look at a larger example that demonstrates scope ideas. Suppose we write the following code in a module file:
+# Global scope
+X = 99                # X and func assigned in module: global
+          
+def func(Y):          # Y and Z assigned in function: locals
+    # Local scope
+    Z = X + Y         # X is a global
+    return Z
+
+func(1)               # func in module: result=100
+This module and the function it contains use a number of names to do their business. Using Python's scope rules, we can classify the names as follows:
+Global names: X, func
+X is global because it's assigned at the top level of the module file; it can be referenced inside the function without being declared global. func is global for the same reason; the def statement assigns a function object to the name func at the top level of the module.
+Local names: Y, Z
+Y and Z are local to the function (and exist only while the function runs) because they are both assigned values in the function definition: Z by virtue of the = statement, and Y because arguments are always passed by assignment.
+The whole point behind this name segregation scheme is that local variables serve as temporary names that you need only while a function is running. For instance, in the preceding example, the argument Y and the addition result Z exist only inside the function; these names don't interfere with the enclosing module's namespace (or any other function, for that matter).
+The local/global distinction also makes functions easier to understand, as most of the names a function uses appear in the function itself, not at some arbitrary place in a module. Also, because you can be sure that local names will not be changed by some remote function in your program, they tend to make programs easier to debug.
+The Built-in Scope
+We've been talking about the built-in scope in the abstract, but it's a bit simpler than you may think. Really, the built-in scope is just a built-in module called _  _builtin_  _, but you have to import _  _builtin_  _ to use built-in because the name builtin is not itself built-in.
+No, I'm serious! The built-in scope is implemented as a standard library module named _  _builtin_  _, but that name itself is not placed in the built-in scope, so you have to import it in order to inspect it. Once you do, you can run a dir call to see which names are predefined:
+>>> import _  _builtin_  _
+>>> dir(_  _builtin_  _)
+['ArithmeticError', 'AssertionError', 'AttributeError', 
+'DeprecationWarning', 'EOFError', 'Ellipsis', 
+    ...many more names omitted...
+'str', 'super', 'tuple', 'type', 'unichr', 'unicode', 
+'vars', 'xrange', 'zip']
+The names in this list constitute the built-in scope in Python; roughly the first half are built-in exceptions, and the second half are built-in functions. Because Python automatically searches this module last in its LEGB lookup rule, you get all the names in this list for free; that is, you can use them without importing any modules. Thus, there are two ways to refer to a built-in function-by taking advantage of the LEGB rule, or by manually importing the _  _builtin_  _ module:
+>>> zip                        # The normal way
+<built-in function zip>
+
+>>> import _  _builtin_  _         # The hard way
+>>> _  _builtin_  _.zip
+<built-in function zip>
+The second of these approaches is sometimes useful in advanced work. The careful reader might also notice that because the LEGB lookup procedure takes the first occurrence of a name that it finds, names in the local scope may override variables of the same name in both the global and built-in scopes, and global names may override built-ins. A function can, for instance, create a local variable called open by assigning to it:
+def hider(  ):
+    open = 'spam'              # Local variable, hides built-in
+    ...
+    open('data.txt')           # This won't open a file now in this scope!
+However, this will hide the built-in function called open that lives in the built-in (outer) scope. It's also usually a bug, and a nasty one at that, because Python will not issue a warning message about it (there are times in advanced programming where you may really want to replace a built-in name by redefining it in your code).
+Functions can similarly hide global variables of the same name with locals:
+X = 88                         # Global X
+
+def func(  ):
+    X = 99                     # Local X: hides global
+
+func(  )
+print X                        # Prints 88: unchanged
+Here, the assignment within the function creates a local X that is a completely different variable from the global X in the module outside the function. Because of this, there is no way to change a name outside a function without adding a global declaration to the def (as described in the next section).
+The global Statement
+The global statement  is the only thing that's remotely like a declaration statement in Python. It's not a type or size declaration, though; it's a namespace declaration. It tells Python that a function plans to change one or more global names-i.e., names that live in the enclosing module's scope (namespace). We've talked about global in passing already. Here's a summary:
+	*	Global names are names at the top level of the enclosing module file.
+	*	Global names must be declared only if they are assigned in a function.
+	*	Global names may be referenced in a function without being declared.
+The global statement consists of the keyword global, followed by one or more names separated by commas. All the listed names will be mapped to the enclosing module's scope when assigned or referenced within the function body. For instance:
+X = 88                         # Global X
+
+def func(  ):
+    global X
+    X = 99                     # Global X: outside def
+
+func(  )
+print X                        # Prints 99
+We've added a global declaration to the example here, such that the X inside the def now refers to the X outside the def; they are the same variable this time. Here is a slightly more involved example of global at work:
+y, z = 1, 2                    # Global variables in module
+
+def all_global(  ):
+    global x                   # Declare globals assigned
+    x = y + z                  # No need to declare y, z: LEGB rule
+Here, x, y, and z are all globals inside the function all_global. y and z are global because they aren't assigned in the function; x is global because it was listed in a global statement to map it to the module's scope explicitly. Without the global here, x would be considered local by virtue of the assignment.
+Notice that y and z are not declared global; Python's LEGB lookup rule finds them in the module automatically. Also, notice that x might not exist in the enclosing module before the function runs; if not, the assignment in the function creates x in the module.
+Minimize Global Variables
+By default, names assigned in functions are locals, so if you want to change names outside functions, you have to write extra code (global statements). This is by design-as is common in Python, you have to say more to do the "wrong" thing. Although there are times when globals are useful, variables assigned in a def are local by default because that is normally the best policy. Changing globals can lead to well-known software engineering problems: because the variables' values are dependent on the order of calls to arbitrarily distant functions, programs can become difficult to debug.
+Consider this module file, for example:
+X = 99
+
+def func1(  ):
+    global X
+    X = 88
+
+def func2(  ):
+    global X 
+    X = 77
+Now, imagine that it is your job to modify or reuse this module file. What will the value of X be here? Really, that question has no meaning unless qualified with a point of reference in time-the value of X is timing-dependent, as it depends on which function was called last (something we can't tell from this file alone). 
+The net effect is that to understand this code, you have to trace the flow of control through the entire program. And, if you need to reuse or modify the code, you have to keep the entire program in your head all at once. In this case, you can't really use one of these functions without bringing along the other. They are dependent (that is, coupled) on the global variable. This is the problem with globals-they generally make code more difficult to understand and use than code consisting of self-contained functions that rely on locals. 
+On the other hand, short of using object-oriented programming and classes, global variables are probably the most straightforward way to retain state information (information that a function needs to remember for use the next time it is called) in Python-local variables disappear when the function returns, but globals do not. Other techniques, such as default mutable arguments and enclosing function scopes, can achieve this, too, but they are more complex than pushing values out to the global scope for retention. 
+Some programs designate a single module to collect globals; as long as this is expected, it is not as harmful. Also, programs that use multithreading to do parallel processing in Python essentially depend on global variables-they become shared memory between functions running in parallel threads, and so act as a communication device (threading is beyond this book's scope; see the follow-up texts mentioned in the Preface for more details).
+For now, though, especially if you are relatively new to programming, avoid the temptation to use globals whenever you can (try to communicate with passed-in arguments and return values instead). Six months from now, both you and your coworkers will be happy you did. 
+Minimize Cross-File Changes
+Here's another scope-related issue: although we can change variables in another file directly, we usually shouldn't. Consider these two module files:
+# first.py
+X = 99
+
+# second.py
+import first
+first.X = 88
+The first defines a variable X, which the second changes by assignment. Notice that we must import the first module into the second file to get to its variable-as we've learned, each module is a self-contained namespace (package of variables), and we must import one module to see inside it from another. Really, in terms of this chapter's topic, the global scope of a module file becomes the attribute namespace of the module object once it is imported-importers automatically have access to all of the file's global variables, so a file's global scope essentially morphs into an object's attribute namespace when it is imported.
+After importing the first module, the second module assigns its variable a new value. The problem with the assignment, however, is that it is too implicit: whoever's charged with maintaining or reusing the first module probably has no clue that some arbitrarily far-removed module on the import chain can change X out from under him. In fact, the second module may be in a completely different directory, and so difficult to find. Again, this sets up too strong a coupling between the two files-because they are both dependent on the value of the variable X, it's difficult to understand or reuse one file without the other.
+Here again, the best prescription is generally not to do this-the best way to communicate across file boundaries is to call functions, passing in arguments, and getting back return values. In this specific case, we would probably be better off coding an accessor function to manage the change:
+# first.py
+X = 99
+
+def setX(new):
+    global X
+    X = new
+
+# second.py
+import first
+first.setX(88)
+This requires more code, but it makes a huge difference in terms of readability and maintainability-when a person reading the first module by itself sees a function, he will know that it is a point of interface, and will expect the change to the variable X. Although we cannot prevent cross-file changes from happening, common sense dictates that they should be minimized unless widely accepted across the program.
+Other Ways to Access Globals
+Interestingly, because global-scope variables morph into the attributes of a loaded module object, we can emulate the global statement by importing the enclosing module and assigning to its attributes, as in the following example module file. Code in this file imports the enclosing module by name, and then by indexing sys.modules, the loaded modules table (more on this table in Chapter 21):
+# thismod.py
+
+var = 99                              # Global variable == module attribute
+
+def local(  ):
+    var = 0                           # Change local var
+    
+def glob1(  ):
+    global var                        # Declare global (normal)
+    var += 1                          # Change global var
+
+def glob2(  ):
+    var = 0                           # Change local var
+    import thismod                    # Import myself
+    thismod.var += 1                  # Change global var
+
+def glob3(  ):
+    var = 0                           # Change local var
+    import sys                        # Import system table
+    glob = sys.modules['thismod']     # Get module object (or use _  _name_  _)
+    glob.var += 1                     # Change global var
+
+def test(  ):
+    print var
+    local(); glob1(); glob2(  ); glob3(  )
+    print var
+When run, this adds 3 to the global variable (only the first function does not impact it):
+>>> import thismod
+>>> thismod.test(  )
+99
+102
+>>> thismod.var
+102
+This works, and it illustrates the equivalence of globals to module attributes, but it's much more work than using the global statement to make your intentions explicit. 
+Scopes and Nested Functions
+So far, I've omitted one part of Python's scope rules (on purpose, because it's relatively rarely encountered in practice). However, it's time to take a deeper look at the letter E in the LEGB lookup rule. The E layer is fairly new (it was added in Python 2.2); it takes the form of the local scopes of any and all enclosing function defs. Enclosing scopes are sometimes also called statically nested scopes. Really, the nesting is a lexical one-nested scopes correspond to physically nested code structures in your program's source code.
+
+In Python 3.0, a proposed nonlocal statement is planned that will allow write access to variables in enclosing function scopes, much like the global statement does today for variables in the enclosing module scope. This statement will look like the global statement syntactically, but will use the word nonlocal instead. This is still a futurism, so see the 3.0 release notes for details.
+Nested Scope Details
+With the addition of nested function scopes, variable lookup rules become slightly more complex. Within a function:
+	*	An assignment (X = value) creates or changes the name X in the current local scope, by default. If X is declared global within the function, it creates or changes the name X in the enclosing module's scope instead.
+	*	A reference (X) looks for the name X first in the current local scope (function); then in the local scopes of any lexically enclosing functions in your source code, from inner to outer; then in the current global scope (the module file); and finally in the built-in scope (the module _  _builtin_  _). global declarations make the search begin in the global (module file) scope instead.
+Notice that the global declaration still maps variables to the enclosing module. When nested functions are present, variables in enclosing functions may only be referenced, not changed. To clarify these points, let's illustrate with some real code.
+Nested Scope Examples
+Here is an example of a nested scope:
+def f1(  ):
+    x = 88
+    def f2(  ):
+        print x
+    f2(  )
+
+f1(  )                                     # Prints 88
+First off, this is legal Python code: the def is simply an executable statement that can appear anywhere any other statement can-including nested in another def. Here, the nested def runs while a call to the function f1 is running; it generates a function, and assigns it to the name f2, a local variable within f1's local scope. In a sense, f2 is a temporary function that only lives during the execution of (and is only visible to code in) the enclosing f1.
+But, notice what happens inside f2: when it prints the variable x, it refers to the x that lives in the enclosing f1 function's local scope. Because functions can access names in all physically enclosing def statements, the x in f2 is automatically mapped to the x in f1, by the LEGB lookup rule.
+This enclosing scope lookup works even if the enclosing function has already returned. For example, the following code defines a function that makes and returns another function:
+def f1(  ):
+    x = 88
+    def f2(  ):
+        print x
+    return f2
+
+action = f1(  )                            # Make, return function
+action(  )                                 # Call it now: prints 88
+In this code, the call to action is really running the function we named f2 when f1 ran. f2 remembers the enclosing scope's x in f1, even though f1 is no longer active. 
+Factory functions
+Depending on whom you ask, this sort of behavior is also sometimes called a closure, or factory function-a function object that remembers values in enclosing scopes, even though those scopes may not be around any more. Although classes (described in Part VI) are usually best at remembering state because they make it explicit with attribute assignments, such functions provide another alternative.
+For instance, factory functions are sometimes used by programs that need to generate event handlers on the fly in response to conditions at runtime (e.g., user inputs that cannot be anticipated). Look at the following function, for example:
+>>> def maker(N):
+...     def action(X):
+...         return X ** N
+... return action
+...
+This defines an outer function that simply generates and returns a nested function, without calling it. If we call the outer function:
+>>> f = maker(2)                         # Pass 2 to N
+>>> f
+<function action at 0x014720B0>
+what we get back is a reference to the generated nested function-the one created by running the nested def. If we now call what we got back from the outer function:
+>>> f(3)                                 # Pass 3 to X, N remembers 2
+9
+>>> f(4)                                 # 4 ** 2
+16
+it invokes the nested function-the one called action within maker. The most unusual part of this, though, is that the nested function remembers integer 2, the value of the variable N in maker, even though maker has returned and exited by the time we call action. In effect, N from the enclosing local scope is retained as state information attached to action, and we get back its argument squared. 
+Now, if we call the outer function again, we get back a new nested function with different state information attached-we get the argument cubed instead of squared, but the original still squares as before:
+>>> g = maker(3)
+>>> g(3)                                 # 3 ** 3
+27
+>>> f(3)                                 # 3 ** 2
+9
+This is a fairly advanced technique that you're unlikely to see very often in practice, except among programmers with backgrounds in functional programming languages (and sometimes in lambdas, as discussed ahead). In general, classes, which we'll discuss later in the book, are better at "memory" like this because they make the state retention explicit. Short of using classes, though, globals, enclosing scope references like these, and default arguments are the main ways that Python functions can retain state information. Coincidentally, defaults are the topic of the next section.
+Retaining enclosing scopes' state with defaults
+In earlier versions of Python, the sort of code in the prior section failed because nested defs did not do anything about scopes-a reference to a variable within f2 would search only the local (f2), then global (the code outside f1), and then built-in scopes. Because it skipped the scopes of enclosing functions, an error would result. To work around this, programmers typically used default argument values to pass in (remember) the objects in an enclosing scope:
+def f1(  ):
+    x = 88
+    def f2(x=x):
+        print x
+    f2(  )
+
+f1(  )                                     # Prints 88
+This code works in all Python releases, and you'll still see this pattern in some existing Python code. We'll discuss defaults in more detail later in this chapter. In short, the syntax arg = val in a def header means that the argument arg will default to the value val if no real value is passed to arg in a call.
+In the modified f2, the x=x means that the argument x will default to the value of x in the enclosing scope-because the second x is evaluated before Python steps into the nested def, it still refers to the x in f1. In effect, the default remembers what x was in f1 (i.e., the object 88).
+All that's fairly complex, and it depends entirely on the timing of default value evaluations. In fact, the nested scope lookup rule was added to Python to make defaults unnecessary for this role-today, Python automatically remembers any values required in the enclosing scope, for use in nested defs.
+Of course, the best prescription is simply to avoid nesting defs within defs, as it will make your programs much simpler. The following is an equivalent of the prior example that banishes the notion of nesting. Notice that it's okay to call a function defined after the one that contains the call, like this, as long as the second def runs before the call of the first function-code inside a def is never evaluated until the function is actually called:
+>>> def f1(  ):
+...     x = 88
+...     f2(x)
+...
+>>> def f2(x):
+...     print x
+...
+>>> f1(  )
+88
+If you avoid nesting this way, you can almost forget about the nested scopes concept in Python, unless you need to code in the factory function style discussed earlier-at least for def statements. lambdas, which almost naturally appear nested in defs, often rely on nested scopes, as the next section explains.
+Nested scopes and lambdas
+While they're rarely used in practice for defs themselves, you are more likely to care about nested function scopes when you start coding lambda expressions. We won't cover lambda in depth until Chapter 17, but, in short, it's an expression that generates a new function to be called later, much like a def statement. Because it's an expression, though, it can be used in places that def cannot, such as within list and dictionary literals.
+Like a def, a lambda expression introduces a new local scope. Thanks to the enclosing scopes lookup layer, lambdas can see all the variables that live in the functions in which they are coded. Thus, the following code works today, but only because the nested scope rules are now applied:
+def func(  ):
+    x = 4
+    action = (lambda n: x ** n)          # x remembered from enclosing def
+    return action
+
+x = func(  )
+print x(2)                               # Prints 16, 4 ** 2
+Prior to the introduction of nested function scopes, programmers used defaults to pass values from an enclosing scope into lambdas, as for defs. For instance, the following works on all Python releases:
+def func(  ):
+    x = 4
+    action = (lambda n, x=x: x ** n)     # Pass x in manually
+Because lambdas are expressions, they naturally (and even normally) nest inside enclosing defs. Hence, they are perhaps the biggest beneficiaries of the addition of enclosing function scopes in the lookup rules; in most cases, it is no longer necessary to pass values into lambdas with defaults. 
+Scopes versus defaults with loop variables
+There is one notable exception to the rule I just gave: if a lambda or def defined within a function is nested inside a loop, and the nested function references an enclosing scope variable that is changed by the loop, all functions generated within that loop will have the same value-the value the referenced variable had in the last loop iteration. 
+For instance, the following attempts to build up a list of functions that each remember the current variable i from the enclosing scope:
+>>> def makeActions(  ):
+...     acts = []
+...     for i in range(5):                   # Tries to remember each i
+...         acts.append(lambda x: i ** x)    # All remember same last i!
+...     return acts
+...
+>>> acts = makeActions(  )
+>>> acts[0]
+<function <lambda> at 0x012B16B0>
+This doesn't quite work, though-because the enclosing variable is looked up when the nested functions are later called, they all effectively remember the same value (the value the loop variable had on the last loop iteration). That is, we get back 4 to the power of 2 for each function in the list because i is the same in all of them:
+>>> acts[0](2)                               # All are 4 ** 2, value of last i
+16
+>>> acts[2](2)                               # This should be 2 ** 2  
+16
+>>> acts[4](2)                               # This should be 4 ** 2
+16
+This is the one case where we still have to explicitly retain enclosing scope values with default arguments, rather than enclosing scope references. That is, to make this sort of code work, we must pass in the current value of the enclosing scope's variable with a default. Because defaults are evaluated when the nested function is created (not when it's later called), each remembers its own value for i:
+>>> def makeActions(  ):
+...     acts = []
+...     for i in range(5):                        # Use defaults instead
+...         acts.append(lambda x, i=i: i ** x)    # Remember current i
+... return acts
+...
+>>> acts = makeActions(  )
+>>> acts[0](2)                               # 0 ** 2
+0
+>>> acts[2](2)                               # 2 ** 2
+4
+>>> acts[4](2)                               # 4 ** 2
+16
+This is a fairly obscure case, but it can come up in practice, especially in code that generates callback handler functions for a number of widgets in a GUI (e.g., button press handlers). We'll talk more about both defaults and lambdas in the next chapter, so you may want to return and review this section later.
+Arbitrary scope nesting
+Before ending this discussion, I should note that scopes nest arbitrarily, but only enclosing functions (not classes, described in Part VI) are searched:
+>>> def f1(  ):
+...     x = 99
+...     def f2(  ):
+...         def f3(  ):
+...             print x                      # Found in f1's local scope!
+...         f3(  )
+...     f2(  )
+...
+>>> f1(  )
+99
+Python will search the local scopes of all enclosing defs, from inner to outer, after the referencing function's local scope, and before the module's global scope. However, this sort of code is unlikely to pop up in practice. In Python, we say flat is better than nested-your life, and the lives of your coworkers, will generally be better if you minimize nested function definitions. 
+Passing Arguments
+Earlier, I noted that arguments are passed by assignment. This has a few ramifications that aren't always obvious to beginners, which I'll expand on in this section. Here is a rundown of the key points in passing arguments to functions:
+	*	Arguments are passed by automatically assigning objects to local names. Function arguments-references to (possibly) shared objects referenced by the caller-are just another instance of Python assignment at work. Because references are implemented as pointers, all arguments are, in effect, passed by pointer. Objects passed as arguments are never automatically copied.
+	*	Assigning to argument names inside a function doesn't affect the caller. Argument names in the function header become new, local names when the function runs, in the scope of the function. There is no aliasing between function argument names and names in the caller.
+	*	Changing a mutable object argument in a function may impact the caller. On the other hand, as arguments are simply assigned to passed-in objects, functions can change passed-in mutable objects, and the results may affect the caller. Mutable arguments can be input and output for functions.
+For more details on references, see Chapter 6; everything we learned there also applies to function arguments, though the assignment to argument names is automatic and implicit. 
+Python's pass-by-assignment scheme isn't quite the same as C++'s reference parameters option, but it turns out to be very similar to the C language's argument-passing model in practice:
+	*	Immutable arguments are passed "by value." Objects such as integers and strings are passed by object reference instead of by copying, but because you can't change immutable objects in-place anyhow, the effect is much like making a copy.
+	*	Mutable arguments are passed "by pointer." Objects such as lists and dictionaries are also passed by object reference, which is similar to the way C passes arrays as pointers-mutable objects can be changed in-place in the function, much like C arrays.
+Of course, if you've never used C, Python's argument-passing mode will seem simpler still-it just involves the assignment of objects to names, and it works the same whether the objects are mutable or not.
+Arguments and Shared References
+Here's an example that illustrates some of these properties at work:
+>>> def changer(a, b):         # Function
+...    a = 2                   # Changes local name's value only
+...    b[0] = 'spam'           # Changes shared object in-place
+...
+>>> X = 1
+>>> L = [1, 2]                 # Caller
+>>> changer(X, L)              # Pass immutable and mutable objects
+>>> X, L                       # X is unchanged, L is different
+(1, ['spam', 2])
+In this code, the changer function assigns values to argument a, and to a component in the object referenced by argument b. The two assignments within the function are only slightly different in syntax, but have radically different results:
+	*	Because a is a local name in the function's scope, the first assignment has no effect on the caller-it simply changes the local variable a, and does not change the binding of the name X in the caller.
+	*	b is a local name, too, but it is passed a mutable object (the list called L in the caller). As the second assignment is an in-place object change, the result of the assignment to b[0] in the function impacts the value of L after the function returns. Really, we aren't changing b, we are changing part of the object that b currently references, and this change impacts the caller.
+Figure 16-2 illustrates the name/object bindings that exist immediately after the function has been called, and before its code has run. 
+
+Figure 16-2
+References: arguments. Because arguments are passed by assignment, argument names may share objects with variables at the call. Hence, in-place changes to mutable arguments in a function can impact the caller. Here, a and b in the function initially reference the objects referenced by variables X and L when the function is first called. Changing the list through variable b makes L appear different after the call returns.
+
+If this example is still confusing, it may help to notice that the effect of the automatic assignments of the passed-in arguments is the same as running a series of simple assignment statements. In terms of the first argument, the assignment has no effect on the caller:
+>>> X = 1
+>>> a = X                  # They share the same object
+>>> a = 2                  # Resets 'a' only, 'X' is still 1
+>>> print X
+1
+But, the assignment through the second argument does affect a variable at the call because it is an in-place object change:
+>>> L = [1, 2]
+>>> b = L                  # They share the same object
+>>> b[0] = 'spam'          # In-place change: 'L' sees the change too
+>>> print L
+['spam', 2]
+If you recall our discussions about shared mutable objects in Chapters 6 and 9, you'll recognize the phenomenon at work: changing a mutable object in-place can impact other references to that object. Here, the effect is to make one of the arguments work like an output of the function.
+Avoiding Mutable Argument Changes
+Arguments are passed to functions by reference (a.k.a. pointer) by default in Python because that is what we normally want-it means we can pass large objects around our programs with making multiple copies along the way, and we can easily update these objects as we go. If we don't want in-place changes within functions to impact objects we pass to them, though, we can simply make explicit copies of mutable objects, as we learned in Chapter 6. For function arguments, we can always copy the list at the point of call:
+L = [1, 2]
+changer(X, L[:])           # Pass a copy, so our 'L' does not change
+We can also copy within the function itself, if we never want to change passed-in objects, regardless of how the function is called:
+def changer(a, b):
+   b = b[:]                # Copy input list so we don't impact caller
+   a = 2
+   b[0] = 'spam'           # Changes our list copy only
+Both of these copying schemes don't stop the function from changing the object-they just prevent those changes from impacting the caller. To really prevent changes, we can always convert to immutable objects to force the issue. Tuples, for example, throw an exception when changes are attempted:
+L = [1, 2]
+changer(X, tuple(L))       # Pass a tuple, so changes are errors
+This scheme uses the built-in tuple function, which builds a new tuple out of all the items in a sequence (really, any iterable). It's also something of an extreme-because it forces the function to be written to never change passed-in arguments, this solution might impose more limitations on the function than it should, and so should generally be avoided. You never know when changing arguments might come in handy for other calls in the future. Using this technique will also make the function lose the ability to call any list-specific methods on the argument, including methods that do not change the object in-place.
+The main point to remember here is that functions might update mutable objects passed into them (e.g., lists and dictionaries). This isn't necessarily a problem, and it often serves useful purposes. But, you do have to be aware of this property-if objects change out from under you unexpectedly, check whether a called function might be responsible, and make copies when objects are passed if needed. 
+Simulating Output Parameters
+We've already discussed the return statement and used it in a few examples. Here's a neat trick: because return can send back any sort of object, it can return multiple values by packaging them in a tuple or other collection type. In fact, although Python doesn't support what some languages label "call-by-reference" argument passing, we can usually simulate it by returning tuples and assigning the results back to the original argument names in the caller:
+>>> def multiple(x, y):
+...     x = 2                    # Changes local names only
+...     y = [3, 4]
+...     return x, y              # Return new values in a tuple
+...
+>>> X = 1
+>>> L = [1, 2]
+>>> X, L = multiple(X, L)        # Assign results to caller's names
+>>> X, L
+(2, [3, 4])
+It looks like the code is returning two values here, but it's really just one-a two-item tuple with the optional surrounding parentheses omitted. After the call returns, we can use tuple assignment to unpack the parts of the returned tuple. (If you've forgotten why this works, flip back to "Tuples" in Chapter 4, and "Assignment Statements" in Chapter 11.) The net effect of this coding pattern is to simulate the output parameters of other languages by explicit assignments. X and L change after the call, but only because the code said so.
+Special Argument-Matching Modes
+As we've just seen, arguments are always passed by assignment in Python; names in the def header are assigned to passed-in objects. On top of this model, though, Python provides additional tools that alter the way the argument objects in a call are matched with argument names in the header prior to assignment. These tools are all optional, but they allow you to write functions that support more flexible calling patterns.
+By default, arguments are matched by position, from left to right, and you must pass exactly as many arguments as there are argument names in the function header. You can also specify matching by name, default values, and collectors for extra arguments.
+Some of this section gets complicated, and before we go into the syntactic details, I'd like to stress that these special modes are optional, and only have to do with matching objects to names; the underlying passing mechanism after the matching takes place is still assignment. In fact, some of these tools are intended more for people writing libraries than for application developers. But because you may stumble across these modes even if you don't code them yourself, here's a synopsis of the available matching modes:
+Positionals: matched from left to right
+The normal case, which we've been using so far, is to match arguments by position.
+Keywords: matched by argument name
+Callers can specify which argument in the function is to receive a value by using the argument's name in the call, with the name=value syntax.
+Defaults: specify values for arguments that aren't passed
+Functions can specify default values for arguments to receive if the call passes too few values, again using the name=value syntax.
+Varargs: collect arbitrarily many positional or keyword arguments
+Functions can use special arguments preceded with * characters to collect an arbitrary number of extra arguments (this feature is often referred to as varargs, after the varargs feature in the C language, which also supports variable-length argument lists). 
+Varargs: pass arbitrarily many positional or keyword arguments
+Callers can also use the * syntax to unpack argument collections into discrete, separate arguments. This is the inverse of a * in a function header-in the header it means collect arbitrarily many arguments, while in the call it means pass arbitrarily many arguments.
+Table 16-1 summarizes the syntax that invokes the special matching modes.
+
+Table 16-1
+Function argument-matching forms 
+Syntax	Location	Interpretation
+func(value)	Caller	Normal argument: matched by position
+func(name=value)	Caller	Keyword argument: matched by name
+func(*name)	Caller	Pass all objects in name as individual positional arguments
+func(**name)	Caller	Pass all key/value pairs in name as individual keyword arguments
+def func(name)	Function	Normal argument: matches any by position or name
+def func(name=value)	Function	Default argument value, if not passed in the call
+def func(*name)	Function	Matches and collects remaining positional arguments (in a tuple)
+def func(**name)	Function	Matches and collects remaining keyword arguments (in a dictionary)
+
+In a call (the first four rows of the table), simple names are matched by position, but using the name=value form tells Python to match by name instead; these are called keyword arguments. Using a * or ** in a call allows us to package up arbitrarily many positional or keyword objects in sequences and dictionaries, respectively.
+In a function header, a simple name is matched by position or name (depending on how the caller passes it), but the name=value form specifies a default value. The *name form collects any extra unmatched positional arguments in a tuple, and the **name form collects extra keyword arguments in a dictionary. 
+Of these, keyword arguments and defaults are probably the most commonly used in Python code. Keywords allow us to label arguments with their names to make calls more meaningful. We met defaults earlier, as a way to pass in values from the enclosing function's scope, but they actually are more general than that-they allow us to make any argument optional, and provide its default value in a function definition.
+Special matching modes let you be fairly liberal about how many arguments must be passed to a function. If a function specifies defaults, they are used if you pass too few arguments. If a function uses the * variable argument list forms, you can pass too many arguments; the * names collect the extra arguments in a data structure.
+Keyword and Default Examples
+This is all simpler in code than the preceding descriptions may imply. Python matches names by position by default like most other languages. For instance, if you define a function that requires three arguments, you must call it with three arguments:
+>>> def f(a, b, c): print a, b, c
+...
+Here, we pass them by position-a is matched to 1, b is matched to 2, and so on:
+>>> f(1, 2, 3)
+1 2 3
+Keywords
+In Python, though, you can be more specific about what goes where when you call a function. Keyword arguments allow us to match by name, instead of by position:
+>>> f(c=3, b=2, a=1)
+1 2 3
+The c=3 in this call, for example, means send 3 to the argument named c. More formally, Python matches the name c in the call to the argument named c in the function definition's header, and then passes the value 3 to that argument. The net effect of this call is the same as that of the prior call, but notice that the left-to-right order of the arguments no longer matters when keywords are used because arguments are matched by name, not by position. It's even possible to combine positional and keyword arguments in a single call. In this case, all positionals are matched first from left to right in the header, before keywords are matched by name:
+>>> f(1, c=3, b=2)
+1 2 3
+When most people see this the first time, they wonder why one would use such a tool. Keywords typically have two roles in Python. First, they make your calls a bit more self-documenting (assuming that you use better argument names than a, b, and c). For example, a call of this form:
+func(name='Bob', age=40, job='dev')
+is much more meaningful than a call with three naked values separated by commas-the keywords serve as labels for the data in the call. The second major use of keywords occurs in conjunction with defaults, which we'll look at next.
+Defaults
+We talked a little about defaults earlier, when discussing nested function scopes. In short, defaults allow us to make selected function arguments optional; if not passed a value, the argument is assigned its default before the function runs. For example, here is a function that requires one argument, and defaults two:
+>>> def f(a, b=2, c=3): print a, b, c
+...
+When we call this function, we must provide a value for a, either by position or by keyword; however, providing values for b and c is optional. If we don't pass values to b and c, they default to 2 and 3, respectively:
+>>> f(1)
+1 2 3
+>>> f(a=1)
+1 2 3
+If we pass two values, only c gets its default, and with three values, no defaults are used:
+>>> f(1, 4)
+1 4 3
+>>> f(1, 4, 5)
+1 4 5
+Finally, here is how the keyword and default features interact. Because they subvert the normal left-to-right positional mapping, keywords allow us to essentially skip over arguments with defaults:
+>>> f(1, c=6)
+1 2 6
+Here, a gets 1 by position, c gets 6 by keyword, and b, in between, defaults to 2. 
+Be careful not to confuse the special name=value syntax in a function header and a function call; in the call, it means a match-by-name keyword argument, and in the header, it specifies a default for an optional argument. In both cases, this is not an assignment statement; it is special syntax for these two contexts, which modifies the default argument-matching mechanics.
+Arbitrary Arguments Examples
+The last two matching extensions, * and **, are designed to support functions that take any number of arguments. Both can appear in either the function definition, or a function call, and they have related purposes in the two locations.
+Collecting arguments
+The first use, in the function definition, collects unmatched positional arguments into a tuple:
+>>> def f(*args): print args
+...
+When this function is called, Python collects all the positional arguments into a new tuple, and assigns the variable args to that tuple. Because it is a normal tuple object, it can be indexed, stepped through with a for loop, and so on:
+>>> f(  )
+(  )
+>>> f(1)
+(1,)
+>>> f(1,2,3,4)
+(1, 2, 3, 4)
+The ** feature is similar, but it only works for keyword arguments-it collects them into a new dictionary, which can then be processed with normal dictionary tools. In a sense, the ** form allows you to convert from keywords to dictionaries, which you can then step through with keys calls, dictionary iterators, and the like:
+>>> def f(**args): print args
+...
+>>> f(  )
+{  }
+>>> f(a=1, b=2)
+{'a': 1, 'b': 2}
+Finally, function headers can combine normal arguments, the *, and the ** to implement wildly flexible call signatures:
+>>> def f(a, *pargs, **kargs): print a, pargs, kargs
+...
+>>> f(1, 2, 3, x=1, y=2)
+1 (2, 3) {'y': 2, 'x': 1}
+In fact, these features can be combined in even more complex ways that may seem ambiguous at first glance-an idea we will revisit later in this chapter. First, though, let's see what happens when * and ** are coded in function calls instead of definitions.
+Unpacking arguments
+In recent Python releases, we can use the * syntax when we call a function, too. In this context, its meaning is the inverse of its meaning in the function definition-it unpacks a collection of arguments, rather than building a collection of arguments. For example, we can pass four arguments to a function in a tuple, and let Python unpack them into individual arguments:
+>>> def func(a, b, c, d): print a, b, c, d
+...
+>>> args = (1, 2)
+>>> args += (3, 4)
+>>> func(*args)
+1 2 3 4
+Similarly, the ** syntax in a function call unpacks a dictionary of key/value pairs into separate keyword arguments:
+>>> args = {'a': 1, 'b': 2, 'c': 3}
+>>> args['d'] = 4
+>>> func(**args)
+1 2 3 4
+Again, we can combine normal, positional, and keyword arguments in the call in very flexible ways:
+>>> func(*(1, 2), **{'d': 4, 'c': 4})
+1 2 4 4
+
+>>> func(1, *(2, 3), **{'d': 4})
+1 2 3 4
+
+>>> func(1, c=3, *(2,), **{'d': 4})
+1 2 3 4
+This sort of code is convenient when you cannot predict the number of arguments to be passed to a function when you write your script; you can build up a collection of arguments at runtime instead, and call the function generically this way. Again, don't confuse the */** syntax in the function header and the function call-in the header, it collects any number of arguments, and in the call, it unpacks any number of arguments.
+We'll revisit this form in the next chapter, when we meet the apply built-in function (a tool that this special call syntax is largely intended to subsume and replace).
+Combining Keywords and Defaults
+Here is a slightly larger example that demonstrates keywords and defaults in action. In the following, the caller must always pass at least two arguments (to match spam and eggs), but the other two are optional. If they are omitted, Python assigns toast and ham to the defaults specified in the header:
+def func(spam, eggs, toast=0, ham=0):   # First 2 required
+    print (spam, eggs, toast, ham)
+
+func(1, 2)                              # Output: (1, 2, 0, 0)
+func(1, ham=1, eggs=0)                  # Output: (1, 0, 0, 1)
+func(spam=1, eggs=0)                    # Output: (1, 0, 0, 0)
+func(toast=1, eggs=2, spam=3)           # Output: (3, 2, 1, 0)
+func(1, 2, 3, 4)                        # Output: (1, 2, 3, 4)
+Notice again that when keyword arguments are used in the call, the order in which the arguments are listed doesn't matter; Python matches by name, not by position. The caller must supply values for spam and eggs, but they can be matched by position or by name. Also, notice that the form name=value means different things in the call and the def (a keyword in the call and a default in the header).
+The min Wakeup Call
+To make this more concrete, let's work through an exercise that demonstrates a practical application of argument-matching tools. Suppose you want to code a function that is able to compute the minimum value from an arbitrary set of arguments and an arbitrary set of object data types. That is, the function should accept zero or more arguments-as many as you wish to pass. Moreover, the function should work for all kinds of Python object types: numbers, strings, lists, lists of dictionaries, files, and even None.
+The first requirement provides a natural example of how the * feature can be put to good use-we can collect arguments into a tuple, and step over each in turn with a simple for loop. The second part of the problem definition is easy: because every object type supports comparisons, we don't have to specialize the function per type (an application of polymorphism); we can simply compare objects blindly, and let Python perform the correct sort of comparison.
+Full credit
+The following file shows three ways to code this operation, at least one of which was suggested by a student at some point along the way:
+	*	The first function fetches the first argument (args is a tuple), and traverses the rest by slicing off the first (there's no point in comparing an object to itself, especially if it might be a large structure).
+	*	The second version lets Python pick off the first and rest of the arguments automatically, and so avoids an index and a slice.
+	*	The third converts from a tuple to a list with the built-in list call, and employs the list sort method.
+The sort method is coded in C, so it can be quicker than the others at times, but the linear scans of the first two techniques will make them faster most of the time. The file mins.py contains the code for all three solutions:
+def min1(*args):
+    res = args[0]
+    for arg in args[1:]:
+        if arg < res:
+            res = arg
+    return res
+
+def min2(first, *rest):
+    for arg in rest:
+        if arg < first:
+            first = arg
+    return first
+
+def min3(*args):
+    tmp = list(args)            # Or, in Python 2.4+: return sorted(args)[0]
+    tmp.sort(  )
+    return tmp[0]
+
+print min1(3,4,1,2)
+print min2("bb", "aa")
+print min3([2,2], [1,1], [3,3])
+All three solutions produce the same result when the file is run. Try typing a few calls interactively to experiment with these on your own:
+% python mins.py
+1
+aa
+[1, 1]
+Notice that none of these three variants tests for the case where no arguments are passed in. They could, but there's no point in doing so here-in all three solutions, Python will automatically raise an exception if no arguments are passed in. The first raises an exception when we try to fetch item 0; the second, when Python detects an argument list mismatch; and the third, when we try to return item 0 at the end.
+This is exactly what we want to happen-because these functions support any data type, there is no valid sentinel value that we could pass back to designate an error. There are exceptions to this rule (e.g., if you have to run expensive actions before you reach the error), but, in general, it's better to assume that arguments will work in your functions' code, and let Python raise errors for you when they do not.
+Bonus points
+Students and readers can get bonus points here for changing these functions to compute the maximum, rather than minimum, values. This one's easy: the first two versions only require changing < to >, and the third simply requires that we return tmp[-1] instead of tmp[0]. For extra points, be sure to set the function name to "max" as well (though this part is strictly optional).
+It's also possible to generalize a single function to compute either a minimum or a maximum value, by evaluating comparison expression strings with a tool like the eval built-in function (see the library manual), or passing in an arbitrary comparison function. The file minmax.py shows how to implement the latter scheme:
+def minmax(test, *args):
+    res = args[0]
+    for arg in args[1:]:
+        if test(arg, res):
+            res = arg
+    return res
+
+def lessthan(x, y): return x < y                # See also: lambda
+def grtrthan(x, y): return x > y
+
+print minmax(lessthan, 4, 2, 1, 5, 6, 3)        # Self-test code
+print minmax(grtrthan, 4, 2, 1, 5, 6, 3)
+
+% python minmax.py
+1
+6
+Functions are another kind of object that can be passed into a function like this one. To make this a max (or other) function, for example, we could simply pass in the right sort of test function. This may seem like extra work, but the main point of generalizing functions this way (instead of cutting and pasting to change just a single character) means we'll only have one version to change in the future, not two.
+The punch line
+Of course, all this was just a coding exercise. There's really no reason to code min or max functions because both are built-ins in Python! The built-in versions work almost exactly like ours, but they're coded in C for optimal speed.
+A More Useful Example: General Set Functions
+Now, let's look at a more useful  example of special argument-matching modes at work. At the end of the prior chapter, we wrote a function that returned the intersection of two sequences (it picked out items that appeared in both). Here is a version that intersects an arbitrary number of sequences (one or more), by using the varargs matching form *args to collect all the passed-in arguments. Because the arguments come in as a tuple, we can process them in a simple for loop. Just for fun, we'll code a union function that also accepts an arbitrary number of arguments to collect items that appear in any of the operands:
+def intersect(*args):
+    res = []
+    for x in args[0]:                  # Scan first sequence
+        for other in args[1:]:         # For all other args
+            if x not in other: break   # Item in each one?
+        else:                          # No: break out of loop
+            res.append(x)              # Yes: add items to end
+    return res
+
+def union(*args):
+    res = []
+    for seq in args:                   # For all args
+        for x in seq:                  # For all nodes
+            if not x in res:
+                res.append(x)          # Add new items to result
+    return res
+Because these are tools worth reusing (and they're too big to retype interactively), we'll store the functions in a module file called inter2.py (more on modules in Part V). In both functions, the arguments passed in at the call come in as the args tuple. As in the original intersect, both work on any kind of sequence. Here, they are processing strings, mixed types, and more than two sequences:
+% python
+>>> from inter2 import intersect, union
+>>> s1, s2, s3 = "SPAM", "SCAM", "SLAM"
+
+>>> intersect(s1, s2), union(s1, s2)           # Two operands
+(['S', 'A', 'M'], ['S', 'P', 'A', 'M', 'C'])
+
+>>> intersect([1,2,3], (1,4))                  # Mixed types 
+[1]
+
+>>> intersect(s1, s2, s3)                      # Three operands
+['S', 'A', 'M']
+
+>>> union(s1, s2, s3)
+['S', 'P', 'A', 'M', 'C', 'L']
+
+I should note that because Python has a new set object type (described in Chapter 5), none of the set processing examples in this book are strictly required anymore; they are included only as demonstrations of coding functions. (Because it is constantly improving, Python has an uncanny way of conspiring to make my book examples obsolete over time!)
+Argument Matching: The Gritty Details
+If you choose to use and combine the special argument-matching modes, Python will ask you to follow these ordering rules:
+	*	In a function call, all nonkeyword arguments (name) must appear first, followed by all keyword arguments (name=value), followed by the *name form, and, finally, the **name form, if used.
+	*	In a function header, arguments must appear in the same order: normal arguments (name), followed by any default arguments (name=value), followed by the *name form if present, followed by **name, if used.
+If you mix arguments in any other order, you will get a syntax error because the combinations can be ambiguous. Python internally carries out the following steps to match arguments before assignment:
+	1.	Assign nonkeyword arguments by position.
+	2.	Assign keyword arguments by matching names.
+	3.	Assign extra nonkeyword arguments to *name tuple.
+	4.	Assign extra keyword arguments to **name dictionary.
+	5.	Assign default values to unassigned arguments in header.
+After this, Python checks to make sure each argument is passed just one value; if not, an error is raised. This is as complicated as it looks, but tracing Python's matching algorithm will help you to understand some convoluted cases, especially when modes are mixed. We'll postpone looking at additional examples of these special matching modes until the exercises at the end of Part IV.
+As you can see, advanced argument-matching modes can be complex. They are also entirely optional; you can get by with just simple positional matching, and it's probably a good idea to do so when you're starting out. However, because some Python tools make use of them, some general knowledge of these modes is important.
+Why You Will Care: Keyword Arguments
+Keyword arguments play an important role in Tkinter, the de facto standard GUI API for Python. We'll meet Tkinter later in this book, but as a preview, keyword arguments set configuration options when GUI components are built. For instance, a call of the form:
+from Tkinter import *
+widget = Button(text="Press me", command=someFunction)
+creates a new button and specifies its text and callback function, using the text and command keyword arguments. Since the number of configuration options for a widget can be large, keyword arguments let you pick and choose. Without them, you might have to either list all the possible options by position or hope for a judicious positional argument defaults protocol that would handle every possible option arrangement.
+
+Chapter Summary
+In this chapter, we studied two key concepts related to functions: scopes (how variables are looked up when used), and arguments (how objects are passed into a function). As we learned, variables are considered local to the function definitions in which they are assigned, unless they are specifically declared global. As we also saw, arguments are passed into a function by assignment, which means by object reference, which really means by pointer. 
+For both scopes and arguments, we also studied some more advanced extensions-nested function scopes, and default and keyword arguments, for example. Finally, we looked at some general design ideas (avoiding globals and cross-file changes), and saw how mutable arguments can exhibit the same behavior as other shared references to objects-unless the object is explicitly copied when it's sent in, changing a passed-in mutable in a function can impact the caller. 
+The next chapter concludes our look at functions by exploring some more advanced function-related ideas: lambdas, generators, iterators, functional tools, such as map, and so on. Many of these concepts stem from the fact that functions are normal objects in Python, and so support some advanced and very flexible processing modes. Before diving into those topics, however, take this chapter's quiz to review what we've studied here.
+Brain Builder
+Chapter Quiz
+	1.	What is the output of the following code, and why?
+>>> X = 'Spam'
+>>> def func(  ):
+...     print X
+...    
+>>> func(  )
+	2.	What is the output of this code, and why?
+>>> X = 'Spam'
+>>> def func(  ):
+...     X = 'NI!'
+...    
+>>> func(  )
+>>> print X
+	3.	What does this code print, and why? 
+>>> X = 'Spam'
+>>> def func(  ):
+...     X = 'NI'
+...     print X
+...    
+>>> func(  )
+>>> print X
+	4.	What output does this code produce; again, why?
+>>> X = 'Spam'
+>>> def func(  ):
+...     global X
+...     X = 'NI'
+...    
+>>> func(  )
+>>> print X
+	5.	What about this code-what's the output, and why?
+>>> X = 'Spam'
+>>> def func(  ):
+...     X = 'NI'
+...     def nested(  ):
+...         print X
+...     nested(  )
+...    
+>>> func(  )
+>>> X
+	6.	One last time: what is the output of this, and why?
+>>> def func(a, b, c=3, d=4): print a, b, c, d
+...    
+>>> func(1, *(5,6))
+	7.	Name three or four ways to retain state information in a Python function.
+	8.	Name three ways that functions can communicate results to a caller.
+Quiz Answers
+	1.	The output here is 'Spam', because the function references a global variable in the enclosing module (because it is not assigned in the function, it is considered global).
+	2.	The output here is 'Spam' again because assigning the variable inside the function makes it a local and effectively hides the global of the same name. The print statement finds the variable unchanged in the global (module) scope.
+	3.	It prints 'NI' on one line, and 'Spam' on another because the reference to the variable within the function finds the assigned local, and the reference in the print finds the global.
+	4.	This time it just prints 'NI' because the global declaration forces the variable assigned inside the function to refer to the variable in the enclosing global scope.
+	5.	The output in this case is again 'NI' on one line, and 'Spam' on another because the print statement in the nested function finds the name in the enclosing function's local scope, and the print at the end finds the variable in the global scope.
+	6.	The output here is "1 5 6 4": 1 matches a by position, 5 and 6 match b and c by *name positionals (6 overrides c's default), and d defaults to 4 because it was not passed a value.
+	7.	Although the values of local variables go away when a function returns, state information can be retained by a Python function by using global variables, enclosing function scope references in nested functions, or default argument values. Another alternative, using OOP with classes, supports state retention better than any of the prior three techniques because it makes it explicit with attribute assignments. 
+	8.	Functions can send back results with return statements, by changing passed-in mutable arguments, and by setting global variables. Globals are generally frowned upon (except for very special cases, like multithreaded programs) because they can make code harder to understand and use. return statements are usually best, but changing mutables is fine, if expected. Functions may also communicate with system devices such as files and sockets, but these are beyond our scope here. 

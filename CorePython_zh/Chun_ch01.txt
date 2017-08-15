@@ -1,0 +1,723 @@
+﻿Welcome to
+Python!
+第一章
+欢迎来到Python世界！
+
+Chapter Topics
+•	What Is Python?
+•	Origins of Python
+•	Python Features
+•	Downloading Python
+•	Installing Python
+•	Running Python
+•	Python Documentation
+•	Comparing Python
+•	Other Implementations
+本章主题
+       什么是Python
+       Python的起源 
+       Python的特点
+       下载Python
+       安装Python
+       运行Python
+       Python文档
+       比较Python（与其它语言的比较）
+       其它实现
+
+
+
+our introductory chapter provides some background on what Python
+is,  where  it  came  from,  and  what  some  of  its  “bullet  points”  are. Once we have stimulated your interest and enthusiasm, we describe
+how you can obtain Python and get it up and running on your system. Finally, the exercises at the end of the chapter will make you comfortable with using Python,  both  in  the  interactive  interpreter  and  also  in  creating  scripts  and executing them.
+开篇将介绍一些Python的背景知识，包括什么是Python、Python的起源和它的一些关健特性。一旦你来了兴致，我们就会向你介绍怎样获得Python以及如何在你的系统上安装并运行它。本章最后的练习将会帮助你非常自如地使用Python，包括使用交互式解释器以及创建并运行脚本程序。
+
+
+1.1  What Is Python?
+
+Python is an elegant and robust programming language that delivers both the power  and  general  applicability  of  traditional  compiled  languages  with  the ease of use (and then some) of simpler scripting and interpreted languages. It allows you to get the job done, and then read what you wrote later. You will be amazed at how quickly you will pick up the language as well as what kind
+of things you can do with Python, not to mention the things that have already
+been done. Your imagination will be the only limit.
+
+1.1     什么是Python
+
+Python是一门优雅而健壮的编程语言，它继承了传统编译语言的强大性和通用性，同时也借鉴了简单脚本和解释语言的易用性。它可以帮你完成工作，而且一段时间以后，你还能看明白自己写的这段代码。你会对自己如此快地学会它和它强大的功能感到十分的惊讶，更不用提你已经完成的工作了！只有你想不到，没有Python做不到
+
+
+1.2  Origins
+
+Work  on  Python  began  in  late  1989  by  Guido  van  Rossum,  then  at  CWI
+(Centrum voor Wiskunde en Informatica, the National Research Institute for Mathematics and Computer Science) in the Netherlands. It was eventually released for public distribution in early 1991. How did it all begin? Like C, C++, Lisp, Java, and Perl, Python came from a research background where the programmer was having a hard time getting the job done with the exist- ing tools at hand, and envisioned and developed a better way.
+At  the  time,  van  Rossum  was  a  researcher  with  considerable  language design  experience  with  the  interpreted  language  ABC,  also  developed  at CWI, but he was unsatisfied with its ability to be developed into something more. Having used and partially developed a higher-level language like ABC, falling back to C was not an attractive possibility. Some of the tools he envi- sioned  were  for  performing  general  system  administration  tasks,  so  he  also wanted  access  to  the  power  of  system  calls  that  were  available  through  the Amoeba distributed operating system. Although van Rossum gave some thought
+to  an  Amoeba-specific  language,  a  generalized  language  made  more  sense, and late in 1989, the seeds of Python were sown.
+1.2	起源
+   贵铎·范·罗萨姆（Guido van Rossum）于1989年底始创了Python，那时，他还在荷兰的CWI（Centrum voor Wiskunde en Informatica，国家数学和计算机科学研究院）。1991年初，Python发布了第一个公开发行版。这一切究竟是如何开始的呢？像C、C++、Lisp、Java和Perl一样，Python 来自于某个研究项目，项目中的那些程序员利用手边现有的工具辛苦的工作着，他们设想并开发出了更好的解决办法。
+   那时范·罗萨姆是一位研究人员，对解释型语言ABC有着丰富的设计经验，这个语言同样也是在CWI开发的。但是他不满足其有限的开发能力。已经使用并参与开发了像 ABC 这样的高级语言后，再退回到C语言显然是不可能的。他所期望的工具有一些是用于完成日常系统管理任务的，而且它还希望能够访问Amoeba分布式操作系统的系统调用。尽管范·罗萨姆也曾想过为Amoeba开发专用语言，但是创造一种通用的程序设计语言显然更加明智，于是在1989年末，Python的种子被播下了。
+
+1.3  Features
+
+Although it has been around for well over fifteen years, some feel that Python
+is  still  relatively  new  to  the  general  software  development  industry.  We should, however, use caution with our use of the word “relatively,” as a few years seem like decades when developing on “Internet time.”
+When people ask, “What is Python?” it is difficult to say any one thing. The tendency is to want to blurt out all the things that you feel Python is in one breath. Python is    (fill-in-the-blanks here)   . Just what are some of those features? For your sanity, we will elucidate each here . . . one at a time.
+
+1.3	特点
+
+   尽管Python已经流行了超过15年，但是一些人仍旧认为相对于通用软件开发产业而言，它还是个新丁。我们应当谨慎地使用“相对”这个词，因为“网络时代”的程序开发，几年看上去就像几十年。
+当人们询问：“什么是Python？”的时候，很难用任何一个具象来描述它。人们更倾向于一口气不加思索地说出他们对Python的所有感觉，Python是___（请填写）__，这些特点究竟又是什么呢？为了让你能知其所以然，我们下面会对这些特点进行逐一地阐释。
+
+1.3.1  High Level
+
+It seems that with every generation of languages, we move to a higher level. Assembly was a godsend for those who struggled with machine code, then came  FORTRAN,  C,  and  Pascal,  which  took  computing  to  another  plane and  created  the  software  development  industry.  Through  C  came  more modern compiled languages, C++ and Java. And further still we climb, with powerful,  system-accessible,  interpreted  scripting  languages  like  Tcl,  Perl, and Python.
+
+Each of these languages has higher-level data structures that reduce the
+“framework”  development  time  that  was  once  required.  Useful  types  like Python’s lists (resizeable arrays) and dictionaries (hash tables) are built into the  language.  Providing  these  crucial  building  blocks  in  the  core  language encourages their use and minimizes development time as well as code size, resulting in more readable code.
+Because there is no one standard library for heterogeneous arrays (lists in Python) and hash tables (Python dictionaries or “dicts” for short) in C, they are  often  reimplemented  and  copied  to  each  new  project.  This  process  is messy and error prone. C++ improves the situation with the standard tem- plate library, but the STL can hardly compare to the simplicity and readabil- ity of Python’s built-in lists and dicts.
+
+1.3.1	高级
+伴随着每一代编程语言的产生，我们会达到一个新的高度。汇编语言是上帝献给那些挣扎在机器代码中的人的礼物，后来有了FORTRAN、 C和 Pascal语言，它们将计算提升到了崭新的高度，并且开创了软件开发行业。伴随着C语言诞生了更多的像C++、Java这样的现代编译语言。我们没有止步于此，于是有了强大的、可以进行系统调用的解释型脚本语言，例如Tcl、Perl和Python。
+
+这些语言都有高级的数据结构，这样就减少了以前“框架”开发需要的时间。像Python中的列表（大小可变的数组）和字典（哈希表）就是内建于语言本身的。在核心语言中提供这些重要的构建单元，可以鼓励人们使用它们，缩短开发时间与代码量，产生出可读性更好的代码。
+在 C 语言中，对于混杂数组（Python中的列表）和哈希表（Python中的字典）还没有相应的标准库，所以它们经常被重复实现，并被复制到每个新项目中去。这个过程混乱而且容易产生错误。C++使用标准模版库改进了这种情况，但是标准模版库是很难与Python内建的列表和字典的简洁和易读相提并论的。
+
+
+1.3.2  Object Oriented
+
+Object-oriented programming (OOP) adds another dimension to structured and procedural languages where data and logic are discrete elements of pro- gramming.  OOP  allows  for  associating  specific  behaviors,  characteristics, and/or capabilities with the data that they execute on or are representative of. Python  is  an  object-oriented  (OO)  language,  all  the  way  down  to  its  core. However, Python is not just an OO language like Java or Ruby. It is actually a pleasant mix of multiple programming paradigms. For instance, it even bor- rows a few things from functional languages like Lisp and Haskell.
+
+1.3.2	面向对象
+
+建议：面向对象编程为数据和逻辑相分离的结构化和过程化编程添加了新的活力。面向对象 编程支持将特定的行为、特性以及和/或功能与它们要处理或所代表的数据结合在一起。Python的面向对象的特性是与生俱来的。然而，Python绝不想Java或Ruby仅仅是一门面向对象语言，事实上它融汇了多种编程风格。例如，它甚至借鉴了一些像Lisp和Haskell这样的函数语言的特性。
+
+
+1.3.3  Scalable
+
+Python is often compared to batch or Unix shell scripting languages. Simple shell scripts handle simple tasks. They may grow (indefinitely) in length, but not truly
+in depth. There is little code-reusability and you are confined to small projects with shell scripts. In fact, even small projects may lead to large and unwieldy scripts.  Not  so  with  Python,  where  you  can  grow  your  code  from  project  to project,  add  other  new  or  existing  Python  elements,  and  reuse  code  at  your whim. Python encourages clean code design, high-level structure, and “packag- ing” of multiple components, all of which deliver the flexibility, consistency, and faster development time required as projects expand in breadth and scope.
+The term “scalable” is most often applied to measuring hardware through- put  and  usually  refers  to  additional  performance  when  new  hardware  is added to a system. We would like to differentiate this comparison with ours here,  which  tries  to  reflect  the  notion  that  Python  provides  basic  building blocks on which you can build an application, and as those needs expand and grow,  Python’s  pluggable  and  modular  architecture  allows  your  project  to flourish as well as maintain manageability.
+
+1.3.3	可升级
+
+大家常常将Python与批处理或Unix系统下的shell相提并论。简单的shell脚本可以用来处理简单的任务，就算它们可以在长度上（无限度的）增长，但是功能总会有所穷尽。Shell脚本的代码重用度很低，因此，你只能止步于小项目。实际上，即使一些小项目也可能导致脚本又臭又长。Python却不是这样，你可以不断地在各个项目中完善你的代码，添加额外的新的或者现存的Python元素，也可以重用您脑海中的代码。Python提倡简洁的代码设计、高级的数据结构和模块化的组件，这些特点可以让你在提升项目的范围和规模的同时，确保灵活性、一致性并缩短必要的调试时间。
+ “可升级”这个术语最经常用于衡量硬件的负载，通常指为系统添加了新的硬件后带来的性能提升。我们乐于在这里对这个引述概念加以区分，我们试图用“可升级”来传达一种观念，这就是：Python提供了基本的开发模块，你可以在它上面开发你的软件，而且当这些需要扩展和增长时，Python的可插入性和模块化架构则能使你的项目生机盎然和易于管理。
+
+1.3.4  Extensible
+
+As the amount of Python code increases in your project, you will still be able
+to organize it logically by separating your code into multiple files, or modules, and be able to access code from one module and attributes from another. And what is even better is that Python’s syntax for accessing modules is the same for all modules, whether you access one from the Python standard library, one you created just a minute ago, or even an extension you wrote in another language! Using this feature, you feel like you have just “extended” the language for your own needs, and you actually have.
+The  most  critical  portions  of  code,  perhaps  those  hotspots  that  always show up in the profiler or areas where performance is absolutely required, are candidates for being rewritten as a Python extension written in C. But again, the interface is exactly the same as for pure Python modules. Access to code and objects occurs in exactly the same way without any code modifica- tion  whatsoever.  The  only  thing  different  about  the  code  now  is  that  you should notice an improvement in performance. Naturally, it all depends on your application and how resource-intensive it is. There are times where it is absolutely advantageous to convert application bottlenecks to compiled code because it will decidedly improve overall performance.
+This type of extensibility in a language provides engineers with the flexibil- ity to add-on or customize their tools to be more productive, and to develop
+in  a  shorter  period  of  time.  Although  this  feature  is  self-evident  in  main- stream third-generation languages (3GLs) such as C, C++, and even Java, the ease of writing extensions to Python in C is a real strength of Python. Fur- thermore, tools like PyRex, which understands a mix of C and Python, make writing extensions even easier as they compile everything to C for you.
+Python extensions can be written in C and C++ for the standard imple- mentation  of  Python  in  C  (also  known  as  CPython).  The  Java  language implementation of Python is called Jython, so extensions would be written using Java. Finally, there is IronPython, the C# implementation for the .NET
+or Mono platforms. You can extend IronPython in C# or Visual Basic.NET.
+可扩展
+就算你的项目中有大量的Python代码，你也依旧可以有条不紊地通过将其分离为多个文件或模块加以组织管理。而且你可以从一个模块中选取代码，而从另一个模块中读取属性。更棒的是，对于所有模块，Python的访问语法都是相同的。不管这个模块是Python标准库中的还是你一分钟之前创造的，哪怕是你用其他语言写的扩展都没问题！借助这些特点，你会感觉自己根据需要“扩展”了这门语言，而且你已经这么做了。
+代码中的瓶颈，可能是在性能分析中总排在前面的那些热门或者一些特别强调性能的地方，可以作为 Python 扩展用 C 重写。 。需要重申的是，这些接口和纯Python模块的接口是一模一样的，乃至代码和对象的访问方法也是如出一辙的。唯一不同的是，这些代码为性能带来了显著的提升。自然，这全部取决你的应用程序以及它对资源的需求情况。很多时候，使用编译型代码重写程序的瓶颈部分绝对是益处多多的，因为它能明显提升整体性能。
+程序设计语言中的这种可扩展性使得工程师能够灵活附加或定制工具，缩短开发周期。虽然像 C、C++乃至 Java 等主流第三代语言（3GL）都拥有该特性，但是这么容易地使用 C 编写扩展确实是 Python 的优势。此外，还有像 PyRex 这样的工具，允许 C 和 Python 混合编程，使编写扩展更加轻而易举，因为它会把所有的代码都转换成 C 语言代码。
+因为 Python 的标准实现是使用 C 语言完成的（也就是 CPython），所以要使用 C 和 C++ 编写 Python 扩展。Python 的 Java 实现被称作 Jython，要使用 Java 编写其扩展。最后，还有 IronPython，这是针对 .NET 或 Mono 平台的 C# 实现。你可以使用 C# 或者 VB.Net 扩展 IronPython。
+
+
+1.3.5  Portable
+
+Python can be found on a wide variety of systems, contributing to its contin- ued rapid growth in today’s computing domain. Because Python is written in C,and because of C’s portability, Python is available on practically every type of
+platform that has an ANSI C compiler. Although there are some platform- specific modules, any general Python application written on one system will run with little or no modification on another. Portability applies across multiple architectures as well as operating systems.
+可移植性
+在各种不同的系统上可以看到Python的身影，这是由于在今天的计算机领域，Python取得了持续快速的成长。因为Python是用C写的，又由于C的可移植性，使得Python可以运行在任何带有ANSI C编译器的平台上。尽管有一些针对不同平台开发的特有模块，但是在任何一个平台上用Python开发的通用软件都可以稍事修改或者原封不动的在其他平台上运行。这种可移植性既适用于不同的架构，也适用于不同的操作系统。
+
+1.3.6  Easy to Learn
+
+Python has relatively few keywords, simple structure, and a clearly defined syntax. This allows the student to pick up the language in a relatively short period of time. What may perhaps be new to beginners is the OO nature of Python. Those who are not fully versed in the ways of OOP may be appre- hensive  about  jumping  straight  into  Python,  but  OOP  is  neither  necessary nor mandatory. Getting started is easy, and you can pick up OOP and use when you are ready to.
+易学
+Python关键字少、结构简单、语法清晰。这样就使得学习者可以在相对更短的时间内轻松上手。对初学者而言，可能感觉比较新鲜的东西可能就是Python的面向对象特点了。那些还未能全部精通OOP（Object Oriented Programming, 面向对象的程序设计）的人对径直使用Python还是有所顾忌的，但是OOP并非必须或者强制的。入门也是很简单的，你可以先稍加涉猎，等到有所准备之后才开始使用。
+
+
+1.3.7  Easy to Read
+
+Conspicuously absent from the Python syntax are the usual mandatory symbols found in other languages for accessing variables, code block definition, and pattern-matching. These include dollar signs ( $ ), semicolons ( ; ), tildes ( ~ ), and so on. Without all these distractions, Python code is much more clearly defined and visible to the eye. In addition, much to many programmers’ dismay
+(and relief ), Python does not give as much flexibility to write obfuscated code compared to other languages, making it easier for others to understand your code faster and vice versa. Readability usually helps make a language easy to learn, as we described above. We would even venture to claim that Python code
+is fairly understandable even to a reader who has never seen a single line  of Python before. Take a look at the examples in the next chapter, “Getting Started,” and let us know how well you fare.
+易读
+Python与其他语言显著的差异是，它没有其他语言通常用来访问变量、定义代码块和进行模式匹配的命令式符号。通常这些符号包括：美元符号（$）、分号（;）、波浪号（~）等等。没有这些分神的家伙，Python代码变得更加定义清晰和易于阅读。让很多程序员沮丧（或者欣慰）的是，不像其他语言，Python 没有给你多少机会使你能够写出晦涩难懂的代码，而是让其他人很快就能理解你写的代码，反之亦然。如前所述，一门语言的可读性让它更易于学习。我们甚至敢冒昧的声称，即使对那些之前连一行 Python 代码都没看过的人来说，那些代码也是相当容易理解的。看看下一章节——“起步”中的例子，然后告诉我们你的进展是多么神速。
+
+
+1.3.8  Easy to Maintain
+
+Maintaining source code is part of the software development lifecycle. Your software usually continues to evolve until it is replaced or obsoleted. Quite often it lasts longer than a programmer’s stay at a company. Much of Python’s success is that source code is fairly easy to maintain, dependent, of course, on  size  and  complexity.  However,  this  conclusion  is  not  difficult  to  draw given  that  Python  is  easy  to  learn  and  easy  to  read.  Another  motivating advantage of Python is that upon reviewing a script you wrote six months ago,you are less likely to get lost or pull out a reference book to get reacquainted with your software.
+易维护
+源代码维护是软件开发生命周期的组成部分。只要不被其他软件取代或者被放弃使用，你的软件通常会保持继续的再开发。这通常可比一个程序员在一家公司的在职时间要长得多了。Python项目的成功很大程度上要归功于其源代码的易于维护，当然这也要视代码长度和复杂度而定。然而，得出这个结论并不难，因为Python本身就是易于学习和阅读的。Python另外一个激动人心的优势就是，当你在阅读自己六个月之前写的脚本程序的时候，不会把自己搞得一头雾水，也不需要借助参考手册才能读懂自己的软件。
+
+1.3.9  Robust
+健壮性
+Nothing  is  more  powerful  than  allowing  a  programmer  to  recognize  error conditions and provide a software handler when such errors occur. Python provides “safe and sane” exits on errors, allowing the programmer to be in the  driver’s  seat.  When  your  Python  crashes  due  to  errors,  the  interpreter dumps out a “stack trace” full of useful information such as why your pro- gram crashed and where in the code (file name, line number, function call, etc.) the error took place. These errors are known as exceptions. Python even gives you the ability to monitor for errors and take an evasive course of action
+if such an error does occur during runtime.
+These exception handlers can take steps such as defusing the problem, redi- recting program flow, perform cleanup or maintenance measures, shutting down the application gracefully, or just ignoring it. In any case, the debugging part of the development cycle is reduced considerably. Python’s robustness is benefi- cial for both the software designer and the user. There is also some account- ability when certain errors occur that are not handled properly. The stack trace that is generated as a result of an error reveals not only the type and location of the error, but also in which module the erroneous code resides.
+没有什么能够比允许程序员在错误发生的时候根据出错条件提供处理机制更有效的了。针对错误，Python提供了“安全合理”的退出机制，让程序员能掌控局面。一旦你的Python由于错误崩溃，解释程序就会转出一个“堆栈跟踪”，那里面有可用到的全部信息，包括你程序崩溃的原因以及是那段代码（文件名、行数、行数调用等等）出错了。这些错误被称为异常。如果在运行时发生这样的错误，Python 使你能够监控这些错误并进行处理。
+这些异常处理可以采取相应的措施，例如解决问题、重定向程序流、执行清除或维护步骤、正常关闭应用程序、亦或干脆忽略掉。无论如何，这都可以有效的缩减开发周期中的调试环节。Python的健壮性对软件设计师和用户而言都是大有助益的。一旦某些错误处理不当，Python 也还能提供一些信息，作为某个错误结果而产生的堆栈追踪不仅可以描述错误的类型和位置，还能指出代码所在模块。
+
+1.3.10  Effective as a Rapid Prototyping Tool
+
+We’ve mentioned before how Python is easy to learn and easy to read. But, you say, so is a language like BASIC. What more can Python do? Unlike self- contained and less flexible languages, Python has so many different interfaces
+to  other  systems  that  it  is  powerful  enough  in  features  and  robust  enough that entire systems can be prototyped completely in Python. Obviously, the same  systems  can  be  completed  in  traditional  compiled  languages,  but Python’s simplicity of engineering allows us to do the same thing and still be home in time for supper. Also, numerous external libraries have already been developed  for  Python,  so  whatever  your  application  is,  someone  may  have traveled  down  that  road  before.  All  you  need  to  do  is  “plug-and-play”
+(some assembly required, as usual). There are Python modules and pack- ages that can do practically anything and everything you can imagine. The Python Standard Library is fairly complete, and if you cannot find what you need there, chances are there is a third-party module or package that can do the job.
+高效的快速原型开发工具
+我们之前已经提到了Python是多么的易学易读。但是，你或许要问了，BASIC也是如此啊，Python有什么出类拔萃的呢？与那些封闭僵化的语言不同，Python有许多面向其他系统的接口，它的功能足够强大，本身也足够强壮，所以完全可以使用 Python 开发整个系统的原型。显然，传统的编译型语言也能实现同样的系统建模，但是Python工程方面的简洁性让我们可以在同样的时间内游刃有余的完成相同的工作。此外，大家已经为Python开发了为数众多的扩展库，所以无论你打算开发什么样的应用程序，都可能找到先行的前辈。你所要做的全部事情，就是来个“即插即用”（当然，也要自行配置一番）！只要你能想得出来，Python模块和包就能帮你实现。Python标准库是很完备的，如果你在其中找不到所需，那么第三方模块或包就会为你完成工作提供可能。
+
+
+1.3.11  A Memory Manager
+
+The biggest pitfall with programming in C or C++ is that the responsibility of memory management is in the hands of the developer. Even if the application has very little to do with memory access, memory modification, and memory management, the programmer must still perform those duties, in addition to the original task at hand. This places an unnecessary burden and responsibility upon the developer and often provides an extended distraction.
+Because  memory  management  is  performed  by  the  Python  interpreter, the application developer is able to steer clear of memory issues and focus on the immediate goal of just creating the application that was planned in the first place. This leads to fewer bugs, a more robust application, and shorter overall development time.
+内存管理器
+C或者C++最大的弊病在于内存管理是由开发者负责的。所以哪怕是对于一个很少访问、修改和管理内存的应用程序，程序员也必须在执行了基本任务之外履行这些职责。这些加诸在开发者身上的没有必要的负担和责任常常会分散精力。
+在Python中，由于内存管理是由Python解释器负责的，所以开发人员就可以从内存事务中解放出来，全神贯注于最直接的目标，仅仅致力于开发计划中首要的应用程序。这会使错误更少、程序更健壮、开发周期更短。
+
+1.3.12  Interpreted and (Byte-) Compiled
+
+Python is classified as an interpreted language, meaning that compile-time is no longer a factor during development. Traditionally, purely interpreted lan- guages are almost always slower than compiled languages because execution does not take place in a system’s native binary language. However, like Java, Python is actually byte-compiled, resulting in an intermediate form closer to machine  language.  This  improves  Python’s  performance,  yet  allows  it  to retain all the advantages of interpreted languages.
+解释性和（字节）编译性
+Python 是一种解释型语言，这意味着开发过程中没有了编译这个环节。一般来说，由于不是以本地机器码运行，纯粹的解释型语言通常比编译型语言运行的慢。然而，类似于Java，Python实际上是字节编译的，其结果就是可以生成一种近似机器语言的中间形式。这不仅改善了Python的性能，还同时使它保持了解释型语言的优点。
+
+
+CORE NOTE: File extensions
+
+Python source files typically end with the .py extension. The source is byte- compiled upon being loaded by the interpreter or by being byte-compiled explicitly. Depending on how you invoke the interpreter, it may leave behind byte-compiled files with a .pyc or .pyo extension. You can find out more
+about file extensions in Chapter 12, “Modules.”
+核心笔记：文件扩展名
+Python源文件通常用.py扩展名。当源文件被解释器加载或者显式地进行字节码编译的时候会被编译成字节码。由于调用解释器的方式不同，源文件会被编译成带有.pyc或.pyo扩展名的文件，你可以在第12章“模块”学到更多的关于扩展名的知识。
+
+
+
+1.4  Downloading and Installing Python
+
+The most obvious place to get all Python-related software is at the main Web site
+at http://python.org. For your convenience, you can also go to the book’s Web site
+at http://corepython.com and click on the “Install Python” link to the left—we have organized a grid with most contemporary versions of Python for the most platforms, with a focus, of course, on the “Big Three.” Unix, Win 32, MacOS X.
+As  we  alluded  to  earlier  in  Section  1.3.5,  Python  is  available  on  a  wide variety  of  platforms.  They  can  be  broken  down  into  these  basic  categories and available platforms:
+下载和安装Python
+得到所有Python相关软件最直接的方法就是去访问它的网站（http://python.org）。为了方便读者，你也可以访问本书的网站（http://corepython.com）并点击左侧的“Download Python”链接——我们在表格中罗列了当前针对大多数平台的Python版本，当然，这还是主要集中在“三巨头”身上：Unix，Win32和MacOS X。
+正如我们在前面1.3.5小节中提到的，Python的可应用平台非常广泛。我们可以将其划分成如下的几大类和可用平台：
+
+•	All Unix flavors (Linux, MacOS X, Solaris, FreeBSD, etc.)
+•	Win32 (Windows NT, 2000, XP, etc.)
+•	Older platforms: MacOS 8/9, Windows 3.x, DOS, OS/2, AIX
+•	Handhelds (PDAs/phones): Nokia Series 60/SymbianOS, Windows CE/Pocket PC, Sharp Zaurus/arm-linux, PalmOS
+•	Gaming consoles: Sony PS2, PSP; Nintendo GameCube
+•	Real-Time platforms: VxWorks, QNX
+•	Alternative implementations: Jython, IronPython, stackless
+•	Others
+所有Unix衍生系统（Linux，MacOS X，Solaris，FreeBSD等等）
+Win32家族（Windows NT，2000，XP等等）
+早期平台：MacOS 8/9，Windows 3.x，DOS，OS/2，AIX
+Handhelds (PDAs/phones): Nokia Series 60/SymbianOS, Windows CE/Pocket PC, Sharp Zaurus/arm-linux, PalmOS
+掌上平台（掌上电脑/移动电话）：Nokia Series 60/SymbianOS，Windows CE/Pocket PC，Sharp Zaurus/arm-linux，PalmOS
+游戏控制台：Sony PS2，PSP，Nintendo GameCube
+实时平台：VxWorks，QNX
+其他实现版本：Jython，IronPython，stackless
+其他
+
+The most recent versions of Python will likely be found only on “the Big Three.” In fact, current versions of Linux and MacOS X already come with Python installed—you’ll have to check to see which Python release it is. Other versions will be older 2.x releases while some have yet to progress beyond 1.5. Some come with binaries to install directly while others require you to build Python manually before installation.
+Python大部分的最近版本都只是针对“三巨头”的。实际上，最新的Linux和MacOS X版本都已经安装好了Python——你只需查看一下是哪个版本。尽管其他平台只能找到相对较早的2.x对应版本，但是就1.5版而言这些版本也有了显著的改进。一些平台有其对应二进制版本，可以直接安装，另外一些则需要在安装前手工编译。
+
+Unix (Linux, MacOS X, Solaris, *BSD, etc.)
+Unix衍生系统（Linux，MacOS X，Solaris，FreeBSD等等）
+As  mentioned  above,  your  Unix-based  system  may  already  have  Python installed. The best way to check is to run Python from the command line and see if it is both in your path and available. Just type:
+正如前文所述，基于 Unix 的系统可能已经安装了 Python。最好的检查方法就是通过命令行运行 Python，查看它是否在搜索路径中而且运行正常。只需输入：
+
+myMac:~ wesley$ python
+Python 2.4 (#4, Mar 19 2005, 03:25:10)
+[GCC 3.3 20030304 (Apple Computer, Inc. build 1671)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+">>>"
+If starting Python fails, it doesn’t mean it’s not installed, just that it’s not in your path. Hunt around for it, and if you’re unsuccessful, try building it manu- ally,  which  isn’t  very  difficult  (see  “Build  It  Yourself”  on  the  next  page).  If you’re using certain versions of Linux, you can get the binary or source RPMs.
+
+
+Windows/DOS
+Windows/DOS系统
+Download the .msi file from python.org or corepython.com as described previ- ously (i.e., python-2.5.msi) and execute it to install Python. If you are plan- ning on doing any kind of Win32 development, such as with COM, MFC,
+or need any of the Win32 libraries, we also strongly suggest that you download
+and install the Python for Windows Extensions. You can then run Python
+from a DOS command window or via one of the IDEs, IDLE, the default Python IDE, or PythonWin, the IDE that comes with the Windows Extensions distribution.
+首先从前文提到的python.org或是 corepython.com网站下载msi文件（例如，python-2.5.msi），之后执行该文件安装Python。如果你打算开发 Win32 程序，例如使用 COM 或 MFC，或者需要 Win32 库，强烈建议下载并安装 Python 的 Windows 扩展。之后你就可以通过DOS命令行窗口或者 IDLE 和 Pythonwin 中的一个来运行Python了，IDLE 是 Python 缺省的 IDE（Integrated Development Environment，集成开发环境），而 Pythonwin 则来自 Windows 扩展模块。
+
+
+Build It Yourself
+自己动手编译Python
+For most other platforms, download the .tgz file,. extract the files, and go to the main directory. Build Python by performing the following:
+对绝大多数其它平台 ， 下载 .tgz 文件， 解压缩这些文件， 然后执行以下操作以编译Python:
+1.    ./configure
+2.    make
+3.    make install
+
+Python is usually installed in a standard location so you can find it rather easily. It has become quite commonplace for systems today to have multiple versions of Python installed. While it is easy to find the binary executable, you also have to deal with where the libraries are installed.
+On Unix machines, the executable is usually installed in /usr/local/bin while the libraries are in /usr/local/lib/python2.x where the 2.x is the version of Python you are using. For MacOS X, Python is installed in /sw/bin and/or /usr/local/bin, and the libraries are in /sw/lib,/usr/local
+/lib, and/or /Library/Frameworks/Python.framework/Versions.
+On Windows, the default installation area is C:\Python2x. Try to avoid
+installing Python in C:\Program Files. Yes, we know it’s the general place
+to  put  installed  programs,  but  DOS  does  not  support  those  types  of  long
+names; it is usually aliased as Progra~1. This may also lead to problems run- ning some programs, so it’s best to avoid it. So, let’s say you installed Python
+in  C:\Python,  then  the  standard  library  files  are  typically  installed  in
+C:\Python\Lib.
+Python通常被安装在固定的位置，所以你很容易就能找到。如今，在系统上安装多种版本的Python已经是司空见惯的事情了。虽然容易找到二进制执行文件，你还是要设置好库文件的安装位置。
+在Unix中，可执行文件通常会将Python安装到/usr/local/bin子目录下，而库文件则通常安装在/usr/local/lib/python2.x子目录下，其中的2.x是你正在使用的版本号。MacOS X系统中，Python则安装在/sw/bin 以及/或者 /usr/local/bin子目录下。而库文件则在/sw/lib,/usr/local/lib, 以及/或者 /Library/Frameworks/Python.framework/Versions子目录下。
+在Windows中，默认的安装地址是C:\Python2x。请避免将其安装在C:\Program Files目录下。是的，我们知道这是通常安装程序的文件夹。但是DOS是不支持“Program Files”这样的长文件名的，它通常会被用“Progra~1”这个别名代替。这有可能给程序运行带来一些麻烦，所以最好尽量避免。所以，听我的，将Python安装在C:\Python目录下，这样标准库文件就会被安装在C:\Python\Lib目录下。
+
+1.5  Running Python
+
+There are three different ways to start Python. The simplest way is by starting the interpreter interactively, entering one line of Python at a time for execu- tion. Another way to start Python is by running a script written in Python. This is accomplished by invoking the interpreter on your script application. Finally, you can run from a graphical user interface (GUI) from within an integrated development environment (IDE). IDEs typically feature additional tools such as an integrated debugger, text editor, and support for a wide range
+of source code control tools such as CVS.
+运行Python
+有三种不同的办法来启动Python。最简单的方式就是交互式的启动解释器，每次输入一行Python代码来执行。另外一种启动Python的方法是运行Python脚本。这样会调用相关的脚本解释器。最后一种办法就是用集成开发环境中的图形用户界面运行Python。集成开发环境通常整合了其他的工具，例如集成的调试器、文本编辑器，而且支持各种像 CVS 这样的源代码版本控制工具。
+
+1.5.1  Interactive Interpreter from the Command Line
+
+You  can  enter  Python  and  start  coding  right  away  in  the  interactive  inter- preter  by  starting  it  from  the  command  line.  You  can  do  this  from  Unix, DOS, or any other system that provides you a command-line interpreter or shell  window.  One  of  the  best  ways  to  start  learning  Python  is  to  run  the interpreter interactively. Interactive mode is also very useful later on when you want to experiment with specific features of Python.
+命令行上的交互式解释器
+在命令行上启动解释器，你马上就可以开始编写Python代码。在Unix, DOS或其它提供命令行解释器或 shell 窗口的系统中，都可以这么做。学习Python的最好方法就是在交互式解释器中练习。在你需要体验Python的一些特性时， 交互式解释器也非常有用。
+
+Unix (Linux, MacOS X, Solaris, *BSD, etc.)
+Unix衍生系统（Linux，MacOS X，Solaris，FreeBSD等等）
+To access Python, you will need to type in the full pathname to its location unless  you  have  added  the  directory  where  Python  resides  to  your  search
+path. Common places where Python is installed include  /usr/bin and
+/usr/local/bin.
+We recommend that you add Python (i.e., the executable file python, or
+jpython if you wish to use the Java version of the interpreter) to your search
+path because you do not want to have to type in the full pathname every time
+you  wish  to  run  interactively.  Once  this  is  accomplished,  you  can  start  the interpreter with just its name.
+To  add  Python  to  your  search  path,  simply  check  your  login  startup scripts and look for a set of directories given to the  set path or PATH= directive. Adding the full path to where your Python interpreter is located
+is all you have to do, followed by refreshing your shell’s path variable. Now
+at  the  Unix  prompt  (% or  $,  depending  on  your  shell),  you  can  start  the interpreter just by invoking the name python (or jpython), as in the fol- lowing.
+
+$ python
+Once Python has started, you’ll see the interpreter startup message indi- cating version and platform and be given the interpreter prompt “>>>” to enter  Python  commands.  Figure  1–1  is  a  screen  shot  of  what  it  looks  like when you start Python in a Unix (MacOS X) environment.
+要访问Python， 除非你已经将Python所在路径添加到系统搜索路径之中， 否则就必须输入Python的完整路径名才可以启动Python。Python一般安装在 /usr/bin 或/usr/local/bin 子目录中。
+我们建议读者把Python(python执行文件，或Jython执行文件——如果你想使用Java版的解释器的话)添加到你的系统搜索路径之中， 这样你只需要输入解释器的名字就可以启动Python解释器了，而不必每次都输入完整路径。
+要将Python添加到搜索路径中， 只需要检查你的登录启动脚本， 找到以 set path  或 PATH= 指令开始，后面跟着一串目录的那行， 然后添加解释器的完整路径。所有事情都做完之后， 更新一下shell路径变量。现在在 Unix 提示符（根据 shell 的不同可能是'%’或 '$')处键入 python(或jython)就可以启动解释器了， 如下所示： 
+Python启动成功之后， 你会看到解释器启动信息，表明Python的版本号及平台信息，最后显示解释器提示符 ">>>"等待你输入Python命令。
+
+Windows/DOS
+Windoes/DOS环境
+To add Python to your search path, you need to edit the C:\autoexec.bat file and add the full path to where your interpreter is installed. It is usually either C:\Python or C:\Program Files \Python (or its short DOS name
+equivalent C:\Progra~1\Python). From a DOS window (either really run-
+ning in DOS or started from Windows), the command to start Python is the
+same as Unix, python (see Figure 1–2). The only difference is the prompt, which is C:\>.
+
+为了把 Python 添加到搜索路径中，你需要编辑 C:\autoexec.bat 文件并将完整的 Python 安装路径添加其中。这通常是C:\Python 或 C:\Program Files \Python ( 或是“Program Files”在DOS下的简写名字C:\Progra~1\Python）
+要想在DOS中将Python添加到搜索路径中去， 需要编辑C:\autoexec.bat文件，把Python的安装目录添加上去。一般是 C:\Python或C:\Program Files\Python(或者它在DOS中的简写名字C:\Progra~1\Python).在一个DOS窗口中（它可以是纯DOS环境或是在Windows中的启动的一个DOS窗口）启动Python的命令与Unix操作系统是一样的 都是 “python”：它们唯一的区别在于提示符不同， DOS中是C:\> 如下图所示：
+
+Figure 1–1   Starting Python in a Unix (MacOS X) window
+图1-1 在一个UNIX（MacOS X）环境中启动Python时的屏幕画面。
+
+
+C:\> python
+
+Command-Line Options
+命令行选项
+
+When  starting  Python  from  the  command-line,  additional  options  may  be provided to the interpreter. Here are some of the options to choose from:
+当从命令行启动Python的时候，可以给解释器一些选项。这里有部分选项可供选择：
+
+-d      Provide debug output
+        提供调试输出
+-O      Generate optimized bytecode (resulting in .pyo files)
+        生成优化的字节码（生成 .pyo 文件）
+-S      Do not run importsite to look for Python paths on startup
+        不导入 site模块以在启动时查找Python路径
+-v      Verbose output (detailed trace on import statements)
+        冗余输出（导入语句详细追踪）
+-m mod  run (library) module as a script
+        将一个模块以脚本形式运行
+-Q opt  division options (see documentation)
+        除法选项（参阅文档）
+-c cmd  Run Python script sent in as cmd string
+        运行以命令行字符串形式提交的 Python 脚本
+file    Run Python script from given file (see later)
+        从给定的文件运行Python脚本（参阅后文）
+
+
+ 
+Figure 1–2   Starting Python in a DOS/command window
+图 1－2 在一个DOS/命令行 窗口启动 Python
+
+1.5.2  As a Script from the Command Line
+从命令行启动脚本
+Unix (Linux, MacOS X, Solaris, *BSD, etc.)
+Unix衍生系统（Linux，MacOS X，Solaris，FreeBSD等等）
+From  any  flavor  of  Unix,  a  Python  script  can  be  executed  by  invoking  the interpreter on your application from the command line, as in the following:
+不管哪种Unix平台， Python脚本都可以象下面这样，在命令行上通过解释器执行：
+
+$ python script.py
+Python scripts end with a file extension of .py, as indicated above.
+It is also possible in Unix to automatically launch the Python interpreter
+without  explicitly  invoking  it  by  name  from  the  command  line.  If  you  are using any Unix-flavored system, you can use the shell-launching (“sh-bang”) first line of your program:
+Python脚本使用扩展名 .py， 上面的例子也说明了这一点。 Unix平台还可以在不明确指定Python解释器的情况下，自动执行Python 解释器。如果你使用的是类Unix平台， 你可以在你的脚本的第一行使用shell魔术字符串(“sh-bang”) ：
+
+#!/usr/local/bin/python
+The file path, the part that follows the #!, is the full path location of the Python interpreter. As we mentioned before, it is usually installed in /usr/ local/bin or /usr/bin. If not, be sure to get the exact pathname correct so that  you  can  run  your  Python  scripts.  Pathnames  that  are  not  correct  will result in the familiar Command not found error message.
+在 #!之后写上Python解释器的完整路径， 我们前面曾经提到，Python解释器通常安装在 /usr/local/bin 或 /usr/bin目录下. 如果Python没有安装到那里， 你就必须确认你的Python解释器确实位于你指定的路径。错误的路径将导致出现类似于”找不到命令“的错误信息
+
+As  a  preferred  alternative,  many  Unix  systems  have  a  command  named
+env, installed in either /bin or /usr/bin, which will look for the Python interpreter in your path. If you have env, your startup line can be changed to something like this:
+有一个更好的方案， 许多Unix系统有一个命令叫 env， 位于 /bin 或 /usr/bin 中。它会帮你在系统搜索路径中找到 python 解释器。 如果你的系统拥有 env, 你的启动行就可以改为下面这样：
+
+#!/usr/bin/env python
+
+or, if your env is located in /bin,
+或者， 如果你的 env 位于 /bin 的话，
+
+#!/bin/env python
+
+env is useful when you either do not know exactly where the Python exe- cutable is located, or if it changes location often, yet still remains available via your directory path. Once you add the proper startup directive to the begin- ning of your script, it becomes directly executable, and when invoked, loads the Python interpreter first, then runs your script. As we mentioned before, Python no longer has to be invoked explicitly from the command. You only need the script name:
+当你不能确定Python的具体路径或者Python的路径经常变化时（但不能挪到系统搜索路径之外）， env 就非常有用。当你在你的脚本首行书写了合适的启动指令之后， 这个脚本就能够直接执行。当调用脚本时， 会先载入Python解释器， 然后运行你的脚本。我们刚才提到， 这样就不必显式的调用 Python 解释器了， 而你只需要键入脚本的文件名：
+
+$ script.py
+
+Be sure the file permission mode allows execution first. There should be an ‘rwx’ permissions getting for the user in the long listing of your file. Check with your system administrator if you require help in finding where Python is installed  or  if  you  need  help  with  file  permissions  or  the  chmod (CHange MODe) command.
+注意， 在键入文件名之前， 必须先将这个文件的属性设置为可以执行。在文件列表中，你的文件应该将它设置为自己拥有 rwx 权限。如果在确定Python安装路径，或者改变文件权限，或使用chmod 命令时遇到困难， 请和系统管理员一道检查一下。
+
+Windows/DOS
+Windows/DOS环境
+
+The  DOS  command  window  does  not  support  the  auto-launching  mecha- nism; however, at least with WinXP, it is able to do the same thing as Win- dows:  it  uses  the  “file  type”  interface.  This  interface  allows  Windows  to recognize file types based on extension names and to invoke a program to handle files of predetermined types. For example, if you install Python with PythonWin, double-clicking on a Python script with the .py extension will invoke Python or PythonWin IDE (if you have it installed) to run your script. Thus, running the following will have the same effect as double-clicking on it:
+DOS命令窗口不支持自动执行机制， 不过至少在WinXP当中， 它能象在Windows 中一样做到通过输入文件名执行脚本： 这就是“文件类型”接口。这个接口允许Windows根据文件扩展名识别文件类型， 从而调用相应的程序来处理这个文件。举例来说， 如果你安装了带有PythonWin的Python， 双击一个带有 .py 扩展名的Python脚本就会自动调用 Python 或 PythonWin IDE(如果你安装了的话）来执行你的脚本。 运行以下命令就和双击它的效果一样：
+
+C:\> script.py
+
+So now both Unix-based and Win32 systems can launch Python scripts with- out naming Python on the command line, but you can always fall back on it if just calling the script leads to an error like “command is not recognized.”
+这样无论是基于 Unix 操作系统还是 Win32 操作系统都可以无需在命令行指定 Python 解释器的情况下运行脚本，但是如果调用脚本时，得到类似“命令无法识别”之类的错误提示信息，你也总能正确处理。
+
+1.5.3  In an Integrated Development
+Environment
+集成开发环境
+
+You can run Python from a graphical user interface (GUI) environment as well. All you need is a GUI application on your system that supports Python. If you have found one, chances are that it is also an IDE (integrated development environment).  IDEs  are  more  than  just  graphical  interfaces.  They  typically have source code editors and trace and debugging facilities.
+你也可以从图形用户界面环境运行Python，你所需要的是支持 Python 的 GUI 程序。如果你已经找到了一个，很有可能它恰好也是集成开发环境。集成开发环境不仅仅是图形接口，通常会带有源代码编辑器、追踪和排错工具。
+
+
+Unix (Linux, MacOS X, Solaris, *BSD, etc.)
+Unix衍生系统（Linux，MacOS X，Solaris，FreeBSD等等）
+
+IDLE is the very first Unix IDE for Python. It was also developed by Guido van Rossum and made its debut in Python 1.5.2. IDLE stands for IDE with a raised “L,” as in Integrated DeveLopment Environment. Suspiciously, IDLE also happens to be the name of a Monty Python troupe member. Hmmm. . . . IDLE is Tkinter-based, thus requiring you to have Tcl/ Tk installed on your system. Current distributions of Python include a minimal subset of the Tcl/ Tk library so that a full install is no longer required.
+IDLE可以说是Unix平台下Python的第一个集成开发环境（IDE）。最初版本的IDLE也是贵铎·范·罗萨姆开发的，在Python1.5.2中， 它首次露面。IDLE代表的就是 IDE， 只不过多了一个“L”。我猜测， IDLE是借用了“蒙提·派森”一个成员的名字 [译注1]...嗯...... IDLE基于Tkinter, 要运行它的话你的系统中必须先安装 Tcl/Tk . 目前的Python发行版都带有一个迷你版的 Tcl/Tk 库， 因此就不再需要 Tcl/Tk 的完整安装了。
+
+Also, if Python was automatically installed on your system or if you have a Python RPM, chances are it does not include IDLE or Tkinter, so look for both before trying to run IDLE. (There is actually a separate Tkinter RPM that you can download along with the Python one if you want it.) If you build Python yourself and Tk libraries are available, then Tkinter will be automati- cally  built  along  with  Python,  and  both  Tkinter  and  IDLE  will  be  installed when Python is.
+如果你已经在系统中安装好了Python， 或者你有一个  Python RPM包， 可是它并没有包含 IDLE或 Tkinter， 那在你尝试 IDLE 之前， 必须先将这两样东西安装好。（如果你需要，确实有一个独立的Tkinter RPM包可以供你下载， 以便和Python一起工作）如果你是自己编译的Python, 而且有Tk库可用， 那Tkinter 会自动编译进Python, 而且Tkinter和IDLE也会随Python的安装而安装。
+
+If you want to run IDLE, you will find it where your standard library is installed: /usr/local/lib/python2.x/idlelib/idle.py. If you build and install Python yourself, you may find a shortcut script called idle in
+/usr/local/bin allowing you to just launch IDLE from your shell com-
+mand-line prompt. A screen shot of IDLE in Unix appears in Figure 1–3.
+MacOS X is very Unix-like (based on the Mach kernel with BSD services). Python is now compiled for MacOS X with the traditional Unix build tools. The MacOS X distributions come with a compiled Python interpreter; how- ever, none of the special Mac-oriented tools (i.e., GNU readline, IDE, etc.) are installed. The same applies for Tkinter and IDLE.
+如果你打算运行 IDLE, 就必须找到你的标准库安装位置： /usr/local/lib/python2.x/idlelib/idle.py. 如果你是自己编译Python, 你会在/usr/local/bin 目录中发现一个名为idle的脚本， 这样你就可以在shell命令行中直接运行idle. 图1－3是类Unix系统下的IDLE界面。MacOS X 是一个非常类似Unix(基于mach内核，BSD服务）的操作系统。 在MacOS X下，Python可以用传统的Unix编译工具编译。MacOS X发行版自带一个编译好的Python解释器， 不过并没有任何一个面向Mac的特殊工具。（比如GNU readline, IDE 等等）。 当然也没有Tkinter和IDLE。
+
+You tend to go download and build your own, but be careful: sometimes it
+is tricky to decouple your new Python install from the Apple factory version. Do your research carefully first. You can also get Python for MacOS X from Fink/FinkCommander and DarwinPorts:
+你可能会打算自己下载并编译一个出来， 不过要小心一点， 有时你新安装的Python会与Apple预装的版本混淆在一起。认真一点没有坏处。你也可以通过 Fink/Finkcommander 和DarwinPorts得到MacOS X版的Python：
+
+http://fink.sourceforge.net/
+http://darwinports.org
+
+For the most up-to-date Mac stuff and information for Python, visit:
+如果要得到最新Mac版Python的组建和信息， 请访问：
+http://undefined.org/python http://pythonmac.org/packages
+
+
+ 
+Figure 1–3   Starting IDLE in Unix
+图1-3 在Unix中启动IDLE
+
+Another option would be to download a MacOS X Universal binary from the
+Python Web site. This disk image (DMG) file requires at least version 10.3.9
+and will run on both PowerPC- and Intel-based Macs.
+另一个选择是从Python站点下载 MacOS X 的通用二进制包。这个磁盘映像文件(DMG)要求操作系统版本至少为10.3.9， 它适用于基于PowerPC和Intel硬件的Mac机器。
+
+Windows
+Windows环境
+
+PythonWin is the first Windows interface for Python and is an IDE with a GUI. Included with the PythonWin distribution are Windows API, and COM (Component  Object  Model,  a.k.a.  OLE  [Object  Linking  and  Embedding] and   ActiveX)   extensions.   PythonWin   itself   was   written   to   the   MFC (Microsoft Foundation Class) libraries, and it can be used as a development environment  to  create  your  own  Windows  applications.  You  can  download and install it from the Web sites shown on the next page.
+ PythonWin 是 Python 的第一个 Windows 接口，并且还是个带有图形用户界面的集成开发环境。PythonWin发行版本中包含Windows API和COM扩展。PythonWin本身是针对MFC库编写的，它可以作为开发环境来开发你自己的Windows应用程序。你可以从下面给出的网页中下载并安装它。
+
+PythonWin is usually installed in the same directory as Python, in its own subdirectory, C:\Python2x\Lib\site-packages\pythonwin as the executable  pythonwin.exe. PythonWin  features  a  color  editor,  a  new  and improved debugger, interactive shell window, COM extensions, and more. A screen  snapshot  of  the  PythonWin  IDE  running  on  a  Windows  machine appears in Figure 1–4.
+PythonWin通常被安装在和Python相同的目录中，在它自己的安装目录C:\Python2x\Lib\site-packages\pythonwin中有可执行的启动文件pythonwin.exe。PythonWin拥有一个带有颜色显示的编辑器、一个新的增强版排错器、交互shell窗口、COM扩展和更多的有用特性。如图1–4就是运行在Windows上的PythonWin集成开发环境的屏幕截图。
+
+ 
+Figure 1–4   PythonWin environment in Windows
+
+
+                    图1–4 Windows环境中的PythonWin
+
+You  can  find  out  more  about  PythonWin  and  the  Python  for  Windows
+Extensions (also known as “win32all”) at the following locations organized by
+Mark Hammond:
+          你可以在下面由马克·哈蒙德（Mark Hammond）维护的网站中找到更多的关于PythonWin和Python针对Windowns的扩展（也被称作“win32all”）：
+   
+
+http://starship.python.net/crew/mhammond/win32/
+http://sourceforge.net/projects/pywin32/
+
+http://starship.python.net/crew/mhammond/win32/
+http://sourceforge.net/projects/pywin32/
+
+
+IDLE is also available on the Windows platform, due to the portability of  Tcl/ Tk  and  Python/ Tkinter.  It  looks  similar  to  its  Unix  counterpart (Figure 1–5).
+IDLE也有Windows平台版本，这是由Tcl/ Tk和Python/ Tkinter的跨平台性特点决定的，它看上去很像Unix平台下的版本，如图1–5所示。
+
+From  Windows,  IDLE  can  be  found  in  the  Lib\idlelib subdirectory where your Python interpreter is found, usually C:\Python2x. To start IDLE from  a  DOS  command  window,  invoke  idle.py.  You  can  also  invoke idle.py from a Windows environment, but that starts an unnecessary DOS window.  Instead,  double-click  on  idle.pyw.  Files  ending  in  .pyw will  not open a DOS command window to run the script in. In fact, your author just creates a shortcut to C:\Python2x\Lib\idlelib\idle.pyw on the desktop that can be double-clicked . . . simple!
+在Windows平台下，IDLE可以在Python编译器通常所在的目录C:\Python2x下的子目录Lib\idlelib中找到。从DOS命令行窗口中启动IDLE，请调用idle.py。你也可以从Windows环境中调用idle.py，但是会启动一个不必要的DOS窗口。取而代之的方法是双击idle.pyw，以.pyw作为扩展名的文件不会通过打开DOS命令行窗口来运行脚本。事实上你可以在桌面上创建一个到C:\Python2x\Lib\idlelib\idle.pyw的快捷方式，然后双击启动就可以了，简单吧！
+
+ 
+Figure 1–5   Starting IDLE in Windows
+图1-5     在Windows中启动IDLE
+
+1.5.4   Other IDEs and Execution Environments
+其它的集成开发环境和执行环境
+
+Many software professionals actually prefer to code in their favorite text editor such as vi(m) or emacs. In addition to these and the IDEs mentioned in the previous  section,  there  are  good  number  of  Open  Source  and  commercial IDEs as well. Here is a short list:
+很多的软件开发专家事实上会选择在他们喜欢的文本编辑器中编写代码，比如vi(m) 或者emacs。除了这些和上面提到到的集成开发环境，还有大量的开源和商业的集成开发环境，下面是个简短的列表：
+
+Open Source
+?       IDLE (comes with Python distribution)
+
+http://python.org/idle/
+
+?       PythonWin + Win32 Extensions http://starship.python.net/crew/skippy/win32
+?       IPython (enhanced Interactive Python)
+
+http://ipython.scipy.org
+
+?       IDE Studio (IDLE+more)
+
+http://starship.python.net/crew/mike/Idle
+
+
+
+?       Eclipse
+ http://pydev.sf.net
+http://eclipse.org/
+
+              开源
+ ?      IDLE (在Python 发行版中自带)
+
+http://python.org/idle/
+
+?       PythonWin + Win32 Extensions http://starship.python.net/crew/skippy/win32
+?       IPython (增强的交互式Python)
+
+http://ipython.scipy.org
+
+?       IDE Studio (IDLE以及更多)
+
+http://starship.python.net/crew/mike/Idle
+
+
+
+?       Eclipse 
+http://pydev.sf.net
+http://eclipse.org/
+
+
+Commercial
+?       WingIDE Python IDE by WingWare http://wingware.com/
+?       Komodo IDE by ActiveState http://activestate.com/Products/Komodo
+商业
+?        WingWare 开发的WingIDE Python集成开发环境 http://wingware.com/
+?       ActiveState 开发的Komodo 集成开发环境http://activestate.com/Products/Komodo
+
+
+General overall IDE list
+
+http://wiki.python.org/moin/IntegratedDevelopmentEnvironments
+通用集成开发环境列表
+
+http://wiki.python.org/moin/IntegratedDevelopmentEnvironments
+
+
+
+CORE TIP: Running the code examples in this book
+
+You will find many example Python scripts and applications in this book, which can be downloaded from the book’s Web site.When you run them, however, bear in mind that they were designed to execute either from the command line (DOS command window or Unix shell) or from an IDE. If you are using a Win32 system and double-click on a Python program, a DOS window opens up but closes when the script completes, so you may miss all of the output. If you encounter this situation, just open up a DOS window normally and run it from the command line or execute the script in an IDE instead. Alternatively, you can add a raw_input() line at the bottom, which keeps the window alive until you press the RETURN key.
+核心提示：运行本书中的代码实例
+在本书中，你会发现很多的Python脚本样例，可以从本书的网站上下载。但是当你运行它们的时候，请记住这些代码是设计用来从命令行（DOS命令行窗口或Unix shell）或者集成开发环境执行的。如果你在使用Win32系统，双击Python程序会打开DOS窗口，但是在脚本执行完毕后就会关闭，所以你可能看不到输出结果。如果你遇到了这种情况，就直接打开DOS窗口，从命令行中运行相关的脚本，或者在集成开发环境中执行脚本。另外一种办法，就是在脚本的最后一行后面添加raw_input()语句，这样就可以保持窗口开着，直到你按下回车键才关闭。
+
+
+
+1.6     Python Documentation
+Python 文档
+
+Python documentation can be found in numerous places. The fastest way to get to it is by viewing the online docs at the Python Web page. If you are not online and use a Win32 system, an offline compressed help file is located at C:\Python2x\Doc\Python2x.chm.   It   uses   an   Internet   Explorer   (IE) interface  so  that  you  are  actually  using  a  Web  browser  to  view  the  docs. Other offline options include Adobe Portable Document Format (PDF) or PostScript  (PS)  files  in  Letter  and  A4  sizes.  Finally,  if  you  download  the Python distribution, you will get the LaTeX source. 
+Python文档可以在很多地方找到。最便捷的方式就是从Python网站查看在线文档。如果你没上网，并且使用的是Win32系统，那么在C:\Python2x\Doc\目录下会找到一个名为Python2x.chm的离线帮助文档。它使用IE接口，所以你实际上是使用网页浏览器来查看文档。其他的离线文档包括PDF和PostScript (PS)文件。最后，如果你下载了Python发行版，你会得到 LaTeX 格式的源文件。
+
+
+At the book’s Web site, we created a page with a grid that has links to the docs for most versions of Python. Just visit http://corepython.com and click on “Documentation” to the left.
+             在本书的网站中，我们创建了一个包括绝大多数Python版本的文档，只要访问http://corepython.com，单击左侧的“Documentation”就可以了。
+
+
+1.7     Comparing Python
+比较Python（Python与其他语言的比较）
+
+Python has been compared with many languages. One reason is that it provides many features found in other languages. Another reason is that Python itself  is  derived  from  many  other  languages,  including  ABC,  Modula-3,  C, C++, Algol-68, SmallTalk, and Unix shell and other scripting languages, to name a few. Python is a virtual “greatest hits”: van Rossum combined the features he admired most in the other languages he had studied and brought them together for our programming sanity.
+Python已经和很多语言比较过了。一个原因就是Python提供了很多其他语言拥有的特性。另外一个原因就是Python本身也是由诸多其他语言发展而来的，这包括ABC、Modula-3、C、C++、Algol-68、SmallTalk、Unix shell和其他的脚本语言等等。Python 就是”浓缩的精华“：范·罗萨姆研究过很多语言，从中吸收了许多觉得不错的特性，并将它们溶于一炉。
+
+However, more often than not, since Python is an interpreted language, you will find that most of the comparisons are with Perl, Java, Tcl, and JavaScript. Perl is another scripting language that goes well beyond the realm of the standard shell scripts. Like Python, Perl gives you the power of a full programming language as well as system call access.
+然而，往往因为Python是一门解释型语言，你会发现大多数的比较是在Perl、Java、Tcl，还有JavaScript之间进行的。Perl是另外一种脚本语言，远远超越了标准的shell脚本。像Python一样，Perl赋予了你所有编程语言的功能特性，还有系统调用能力。
+Perl’s greatest strength is in its string pattern matching ability, providing an   extremely   powerful   regular   expression   matching   engine.   This   has pushed Perl to become the de facto language for string text stream filtering, recognition,  and  extraction,  and  it  is  still  the  most  popular  language  for developing Internet applications through Web servers’ Common Gateway Interface  (CGI).  Python’s  regular  expression  engine  is  based  significantly on Perl’s.
+Perl最大的优势在于它的字符串模式匹配能力，其提供了一个十分强大的正则表达式匹配引擎。这使得Perl实际上成为了一种用于过滤、识别和抽取字符串文本的语言，而且它一直是开发Web 服务器端CGI(common gateway interface,通用网关接口)网络程序的最流行的语言。Python的正则表达式引擎很大程度上是基于Perl的。
+However, Perl’s obscure and overly symbolic syntax is much more difficult
+to  decipher,  resulting  in  a  steep  learning  curve  that  inhibits  the  beginner, frustrating  those  for  whom  grasping  concepts  is  impeded  by  semantics. This, coupled with Perl’s “feature” of providing many ways of accomplishing the  same  task,  introduces  inconsistency  and  factionization  of  developers. Finally, all too often the reference book is required reading to decipher a Perl script that was written just a couple of months back.
+然而，Perl语言的晦涩和对符号语法的过度使用，让解读变得很困难。这些语法令初学者不得精要，为他们的学习带来了不小的阻碍。Perl的这些额外的“特色”使得完成同一个任务会有多个方法，进而引起了开发者之间的分歧和内讧。最后，通常当你想阅读几个月前写的Perl脚本的时候都不得不求助参考书。
+Python  is  often  compared  to  Java  because  of  their  similar  OO  nature and syntax. Java’s syntax, although much simpler than C++’s, can still be fairly  cumbersome,  especially  if  you  want  to  perform  just  a  small  task. Python’s  simplicity  offers  a  much  more  rapid  development  environment than  using  just  pure  Java.  One  major  evolution  in  Python’s  relationship with Java is the development of Jython, a Python interpreter written completely in Java. It is now possible to run Python programs with only the presence  of  a  Java  VM  (virtual  machine).  We  will  mention  more  of Jython’s  advantages  briefly  in  the  following  section,  but  for  now  we  can tell you that in the Jython scripting environment, you can manipulate Java objects,  Java  can  interact  with  Python  objects,  and  you  have  access  to your  normal  Java  class  libraries  as  if  Java  has  always  been  part  of  the Python environment.
+Python也经常被拿来和Java作对比，因为他们都有类似的面向对象的特性和语法。Java的语法尽管比C++简单的多，但是依旧有些繁琐，尤其是当你想完成一个小任务的时候。Python的简洁比纯粹的使用Java提供了更加快速的开发环境。在Python和Java的关系上，一个非常重大的革命就是Jython的开发。Jython是一个完全用Java开发的Python解释器，现在可以在只有Java虚拟机的环境中运行Python程序。我们会在后面的章节中简单讲述Jython的更多优点，但是现在就可以告诉你：在Jython的脚本环境中，你可以熟练地处理Java对象，Java可以和Python对象进行交互，你可以访问自己的Java标准类库，就如同Java一直是Python环境的一部分一样。
+
+Python is now often compared to Ruby as well, due to the popularity of the Rails project. As we mentioned above, Python is a wider mix of multiple programming paradigms. It is not purely OO like Ruby and does not have Smalltalk-like  blocks,  perhaps  Ruby’s  most  distinguishable  feature.  Python does have a byte-code interpreter, where Ruby does not. Python is perhaps more readable, as Ruby can really be thought of as more of an OO Perl. With regard to Rails, Python has several own Web application frameworks, such as Django and Turbogears, to name two.
+现在，由于Rails项目的流行，Python也经常被拿来和Ruby进行比较。就像前面我们提到的，Python是多种编程范式的混合，它不像Ruby那样完全的面向对象，也没有像Smalltalk那样的块，而这正是Ruby最引人注目的特性。Python有一个字节码解释器，而Ruby没有。Python更加易读，而Ruby事实上可以看作是面向对象的Perl。相对于Rails，Python有几个自己的Web应用框架，比如Django 和 Turbogears这两个项目。
+
+Tcl is another scripting language that shares similarities shares Python. Tcl
+is  one  of  the  first  truly  easy-to-use  scripting  languages  to  provide  the  pro- grammer extensibility as well as system call access. Tcl is still popular today and perhaps somewhat more restrictive (due to its limited types) than Python, but it shares Python’s ability to extend past its original design. More impor- tantly, Tcl is often used with its graphical toolkit partner, Tk, in developing graphical user interface (GUI) applications. Due to its popularity, Tk has been ported  to  Perl  (Perl/Tk)  and  Python  (Tkinter).  Also,  it  can  be  argued  that Python’s  classes,  modules,  and  packages  make  writing  large  programs  in Python more pleasant than writing them in Tcl.
+Tcl 是另一种可以与Python相提并论的脚本语言。Tcl是最易于使用的脚本语言之一， 程序员很容易像访问系统调用一样对Tcl语言进行扩展。Tcl直到今天仍然很流行， 与Python相比， 它或许有更多局限性（主要是因为它有限的几种数据类型）， 不过它也拥有和Python一样的通过扩展超越其原始设计的能力。更重要的是， Tcl通常总是和它的图形工具包Tk一起工作， 一起协同开发图形用户界面应用程序。因为它非常流行， 所以Tk已经被移植到Perl(Perl/Tk)和Python(Tkinter)中. 同样有一个有争议的观点，那就是与Tcl相比， 因为Python有类， 模块及包的机制，所以写起大程序来更加得心应手。
+
+Python has some light functional programming (FP) constructs, which likens it to languages such as Lisp or Scheme. Although Python cannot be con- sidered  a  traditional  functional  language,  it  continues  to  borrow  features from languages such as Lisp and Haskell. For instance, list comprehensions were a welcome addition from the Haskell world, and Lisp programmers will feel at home with lambda, map, filter, and reduce.
+Python有一点点函数化编程（functional programming ，FP）结构，这使得它有点类似List或Scheme语言。尽管Python不是传统的函数化编程语言， 但它持续的从Lisp和haskell语言中借用一些有价值的特性。举例来说， 列表解析就是一个广受欢迎的来自Haskell世界的特性， 而Lisp程序员在遇到 lambda, map, filter 和reduce时也会感到异常亲切。
+
+
+JavaScript is another OO language very similar to Python. Any proficient
+JavaScript programmer will have little or no difficulty learning Python. The particularly astute reader will note that JavaScript is based on a prototype sys- tem, whereas Python follows a more traditional OO system that differentiates objects and classes.
+JavaScript 是另外一种非常类似Python的面向对象脚本语言。优秀的JavaScript程序员学起Python来易如反掌。 聪慧的读者会注意到JavaScript是基于原型系统的， 而Python则遵循传统的面向对象系统， 这使得二者的类和对象有一些差异。
+
+Here is a list of some Web pages that have information on comparing or transitioning between Python and other languages:
+下面列出了有关Python与其它语言进行比较的网页：
+
+Perl
+http://www2.linuxjournal.com/article/3882
+http://llama.med.harvard.edu/~fgibbons/PerlPythonPhrasebook.html
+
+
+http://aplawrence.com/Unixart/pythonvsperl.html
+http://pleac.sf.net/pleac_python http://www.garshol.priv.no/download/text/perl.html
+
+
+Java
+http://dirtsimple.org/2004/12/python-is-not-java.html http://twistedmatrix.com/users/glyph/rant/python-vs-java.html http://netpub.cstudies.ubc.ca/oleary/python/python_java_comparison.php
+
+
+Lisp
+http://strout.net/python/pythonvslisp.html http://norvig.com/python-lisp.html
+
+
+Ruby
+http://blog.ianbicking.org/ruby-python-power.html http://www.rexx.com/~oinkoink/Ruby_v_Python.html http://dev.rubycentral.com/faq/rubyfaq-2.html
+
+
+Perl, C++
+http://strombergers.com/python/
+
+
+Perl, Java, C++
+http://furryland.org/~mikec/bench/
+
+
+C++, Java, Ruby
+http://dmh2000.com/cjpr
+
+
+Perl, Java, PHP, Tcl
+http://www-128.ibm.com/developerworks/linux/library/l-python101.html http://www-128.ibm.com/developerworks/linux/library/l-script-survey/
+
+C, C++, Java, Perl, Rexx, Tcl
+http://www.ubka.uni-karlsruhe.de/indexer-vvv/ira/2000/5
+
+You can access a number of other comparisons between Python and other languages at:
+
+http://www.python.org/doc/Comparisons.html
+
+你可以在下面的网址中看到更多Python与其他的语言的比较：
+
+              
+ http://www.python.org/doc/Comparisons.html
+
+1.8     Other Implementations
+其它实现
+
+The “standard” version of Python is C-compiled, aka CPython. There are a few other Python implementations. We will describe some here, but for more on the various Python implementations out there, check out:
+标准版本的Python是用C来编译的， 又叫CPython. 除此之外， 还有一些其它的Python实现。我们将在下面讲述些实现， 除了本书中提到的这些实现以外， 下面的网址还有更多的实现版本：
+
+
+http://python.org/dev/implementations.html
+
+Java
+
+As  we  mentioned  in  the  previous  section,  a  Python  interpreter  completely written in Java, called Jython, is currently available. Although there are still minor  differences  between  the  two  interpreters,  they  are  very  similar  and provide a comparable startup environment.
+What are the advantages of Jython? Jython . . .
+我们在上一节中曾经提到， 还有一个可以用的 Python解释器是完全由Java写成的， 名为 Jython。  尽管两种解释器之间存在一些细微的差别， 但是它们非常接近， 而且启动环境也完全相同。那Jython 又有哪些优势呢？ Jython...
+
+       Can run anywhere a Java virtual machine (JVM) can be found
+只要有Java虚拟机， 就能运行Jython
+       Provides access to Java ackages and class libraries
+拥有访问Java包与类库的能力
+       Furnishes a scripting environment for Java development
+为Java开发环境提供了脚本引擎
+       Enables ease of testing for Java class libraries
+能够很容易的测试Java类库
+       Offers access to Java’s native exception handling ability
+提供访问Java原生异常处理的能力
+       Delivers JavaBeans property and introspection ability
+继承了JavaBeans特性和内省能力
+       Encourages Python-to-Java development (and vice versa)
+鼓励Python到Java的开发（反之亦然）
+       Gives GUI developers access to Java AWT/Swing libraries
+GUI开发人员可以访问 Java 的 AWT/Swing 库
+       Utilizes Java’s native garbage collector (so CPython’s was not implemented)
+利用了Java原生垃圾收集器（CPython未实现此功能）
+
+A full treatment of Jython is beyond the scope of this text, but there is a good amount of information online. Jython is still an ongoing development project, so keep an eye out for new features. You can get more information at the Jython Web site at:
+对 Jython 进行详细论述， 超出了本文的范围。 不过网上有非常多的Jython信息。Jython 目前仍然在不断开发之中， 不时会增加新的特性。你可以通过访问Jython的网站得到更多有用的信息：
+
+http://jython.org
+
+.NET/Mono
+
+There is now a Python implementation completely in C#, called IronPython.
+It  is  targeted  at  the  .NET  and  Mono  environments.  You  can  integrate  an IronPython interpreter in a .NET application that can interact with .NET objects. Extensions to IronPython can be implemented in C# or VisualBasic.NET. In addition, there is another .NET/Mono language that is Python-inspired, and it is called Boo. You can find out more information about IronPython and Boo at:
+现在已经有一个名为 IronPython的Python 实现. 它是用 C# 语言完成的. 它适用的环境是 .NET 和 Mono. 你可以在一个 .NET 应用程序中整合 IronPython 解释器来访问 .NET 对象. IronPython的扩展可以用 C#或VB.NET语言编写. 除此之外, 还有一种名为 Boo 的 .NET/Mono 语言. 你可以在下面的网址获得更多关于 IronPython 和 Boo 语言的信息.
+
+
+
+http://codeplex.com/Wiki/View.aspx?ProjectName=IronPython
+http://boo.codehaus.org/
+
+Stackless
+
+One of the limitations of CPython is that for each Python function call, it results in a C function call. (For the computer science–oriented, we are talking about stack frames here.) This implies restrictions on CPython, most notably a limita- tion on the total number of concurrent function calls. This can make it difficult to implement effective user-level threading libraries or highly recursive applica- tions in Python. If this total is exceeded, then your program will crash. By using a “stackless” implementation, you are freed from this restriction and can have any number of Python stack frames for the one C stack frame. This allows you to have many function calls and supports a very large number of threads. The main stackless implementation of Python is called . . . Stackless (surprise!).
+
+The only problem with Stackless is that it requires significant changes to the  existing  CPython  interpreter,  so  it  is  seen  as  an  independent  fork. Another project called Greenlets that also supports microthreads is available
+as  a  standard  C  extension  and  can  be  used  with  an  unmodified  version  of
+Python. You can read about both of these projects at:
+http://stackless.com http://codespeak.net/py/current/doc/greenlet.html
+CPython的一个局限就是每个Python函数调用都会产生一个C函数调用. (从计算机科学的角度来说, 我们在讨论栈帧). 这意味着同时产生的函数调用是有限制的, 因此Python难以实现用户级的线程库和复杂递归应用. 一旦超越这个限制, 程序就会崩溃. 你可以通过使用一个 “stackless” 的  Python实现来突破这个限制, 一个 C栈帧可以拥有任意数量的 Python 栈帧. 这样你就能够拥有几乎无穷的函数调用, 并能支持巨大数量的线程. 这个Python实现的名字就叫…….Stackless(嘿嘿, 很惊讶吗?!)
+
+Stackless唯一的问题就是它要对现有的 CPython 解释器做重大修改. 所以它几乎是一个独立的分支. 另一个名为 Greenlets 的项目也支持微线程, 它是一个标准的C扩展, 因此不需要对标准Python解释器做任何修改. 通过以下网址你能了解更多信息:
+
+
+1.9  Exercises
+     练习
+
+1–1.   Python Installation. Check if Python is installed on your system.
+If not, download and install it!
+   安装Python。请检查Python是否已经安装到你的系统上，如果没有，请下载并安装它！
+1–2.   Executing Python. How many different ways are there to run
+Python? Which do you prefer and why?
+   执行Python。有多少种运行Python的不同方法？你喜欢哪一种？为什么？
+1–3.   Python Standard Library.
+(a) Find where the Python executables and standard library modules are installed on your system.
+(b) Take a look at some of the standard library files, for example, string.py. It will help you get acclimated to looking at Python scripts.
+ Python标准库。
+(a)请找到系统中Python执行程序的安装位置和标准库模块的安装位置
+(b)看看标准库里的一些文件，比如string.py。这会帮助你适应阅读Python脚本。
+1–4.   Interactive Execution. Start your Python interactive interpreter. You can invoke it by typing in its full pathname or just its name (python or python.exe) if you have installed its location in your search path. (You can use any version or implementation of Python that is convenient to you, e.g., command line, GUI/IDE, Jython, IronPython, or Stackless.) The startup screen should look like the ones depicted in this chapter. When you see the >>>, that means the interpreter is ready to accept your Python commands.
+交互执行。启动你的Python交互解释器。你可以通过输入完整的路径名来启动它。当然，如果你已经在搜索路径中设置了它的位置，那么只输入它的名字（python 或者python.exe）就行了。（你可以任选最适合你的的Python实现方式，例如：命令行、图形用户接口/集成开发环境、Jython、IronPython或者Stackless）启动界面看上去就像本章描述的一样，一旦你看到>>>提示符，就意味着解释器准备好要接受你的Python命令了。
+Try entering the command for the famous Hello World! program by typing print 'Hello World!' (and press RETURN), then exit the interpreter. On Unix systems, ^D will send the EOF signal to terminate the Python interpreter, and on DOS systems, the keypress is ^Z. Exiting from windows in graphical user environments like the Macintosh, PythonWin or IDLE on Windows, or IDLE on Unix can be accomplished by simply closing their respective windows.
+ 试着输入命令print 'Hello World!' (然后按回车键)，完成著名的Hello World!程序，然后退出解释器。在Unix系统中，按下Ctrl+D会发送EOF信号来中止Python解释器，在DOS系统中，使用的组合键是Ctrl+Z。如果要从Macintosh、PythonWin、以及Windows或Unix中的IDLE这样的图形用户环境中退出，只要简单的关闭相关窗口就可以了。
+
+1–5.   Scripting. As a follow-up to Exercise 1–4, create “Hello World!” as a Python script that does exactly the same thing as the interactive exercise above. If you are using the Unix sys tem, try setting up the automatic startup line so that you can run the program without invoking the Python interpreter.
+       编写脚本。作为练习1–4的延续，创建“Hello World!”的Python脚本其实和上面的交互性练习并不是一回事。如果你在使用Unix系统，尝试建立自动运行代码行，这样你就可以在没有调用Pyton解释器的情况下运行程序了。
+1–6.   Scripting. Create a script that displays your name, age, favorite color, and a bit about you (background, interests, hobbies, etc.) to the screen using the print statement.
+
+编写脚本。使用print语句编写脚本在屏幕上显示你名字、年龄、最喜欢的颜色和与你相关的一些事情（背景、兴趣、爱好等等）。
+     
+
+	 译注1：蒙提·派森:Monty Python,也称“蒙地蟒蛇”。是英国的一个六人喜剧团体，其七十年代的电视剧和八十年代的电影作品红极一时。贵铎·范·罗萨姆就是该团体的忠实影剧迷，故而将本语言命名为Python。这里的IDLE指的是其成员艾瑞克·艾多（Eric Idle ）

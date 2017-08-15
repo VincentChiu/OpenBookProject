@@ -1,0 +1,49 @@
+Web框架
+============================================
+从本质来看，一个Web应用包含一些列的程序（或方法），他们在URL被访问的时候，将会被执行。程序的输出结果被返回给用户，并且被浏览器渲染。
+
+两种典型的Web应用开发方法：
+"""""""""""""""""""""""
+
+- 在程序中以字符串型式，直接生成HTML代码。
+- 在一个HTML页面中嵌入一些程序代码。
+
+采用上述第一种方法的一个例子就是早期的公用网关接口（Common Gateway Interface）脚本。遵循第二种方法的例子就是PHP（嵌入的代码类似C语言），ASP（嵌入代码是Visiual Basic），以及JSP（嵌入代码为JAVA语言）。
+
+这里我们举一个PHP程序的例子，在执行的时候，从数据库中获得数据，并在HTML页面中显示选中记录：
+
+::
+
+	<html><body><h1>Records</h1><?
+		mysql_connect(localhost,username,password);
+		@mysql_select_db(database) or die( "Unable to select database");
+		$query="SELECT * FROM contacts";
+		$result=mysql_query($query);
+		mysql_close();
+		$i=0;
+		while ($i < mysql_numrows($result)) {
+			$name=mysql_result($result,$i,"name");
+			$phone=mysql_result($result,$i,"phone");
+			echo "<b>$name</b><br>Phone:$phone<br /><br /><hr /><br />";
+			$i++;
+		}
+	?></body></html>
+
+这种方式的问题是，程序代码嵌入到HTML代码中间，但是这个程序在生成额外的HTML的同时，还要生成SQL语句查询数据库，将应用的不同层次交织在一起，也就使代码变得非常难以阅读，难于维护。采用Ajax技术会使得这种情况变得更糟，并且复杂度随着页面的增加，也成倍增加。
+
+上述例子的功能，在WEB2PY中能够用两行语句来实现：
+
+::
+
+	def index():
+		return HTML(BODY(H1('Records'), db().select(db.contacts.ALL)))
+
+在这个简单的例子中，HTML页面的结构，被BODY以及H1这些对象所表示；数据库DB，被select命令查询；最后，所有结果被串行化成为HTML代码。
+
+这只不过是WEB2PY功能以及内嵌库的一个简单小例子。WEB2PY还能够，自动处理cookie，session，创建数据库表格，数据库修改，表单验证，阻止SQL注入，阻止跨平台脚本注入，以及支持其他很多不可或缺，Web应用开发所需的功能。
+
+Web开发框架通常能被分为两种：一种是“胶水”框架，通过组合（粘合）几个第三方通用组件而组成。另一种是“全功能栈”框架，通过创建协作工作紧密整合的组件而成。
+
+WEB2PY就是全功能栈框架。几乎所有的组建都被设计成在一起协同工作，并且源代码从零开始编写的，当然组建之间的支持和对外的功能一样好。例如，在你用户的Python程序中，WEB2PY框架里的数据库抽象层（Database Abstraction Layer）或模板语言可以被独立使用，使用importing gluon.sql或gluon.template即可实现。
+
+gluon是WEB2PY文件夹的名字，系统库都存放在这个目录之中。一些WEB2PY的库，例如建立和处理数据库表格的库，会依赖其他部分的WEB2PY。WEB2PY还能够同其他第三方Python库配合使用，能够使用其他模板语言及数据抽象层，不过他们之间的整合度没有原配组件那么紧密。

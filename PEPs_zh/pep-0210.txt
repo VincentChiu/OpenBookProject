@@ -1,0 +1,17 @@
+PEP: 210
+Title: Decoupling the Interpreter Loop
+Version: $Revision: 56033 $
+Last-Modified: $Date: 2007-06-19 12:20:07 +0800 (Tue, 19 Jun 2007) $
+Author: davida@activestate.com (David Ascher)
+Status: Rejected
+Type: Standards Track
+Created: 15-Jul-2000
+Python-Version: 2.1
+Post-History:
+
+
+
+Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+End:

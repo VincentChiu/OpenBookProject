@@ -1,0 +1,14 @@
+named backreferences      向回命名引用
+lookahead assertions        向前断言
+backreference skipping     略过向回引用
+non-greedy quantifiers     非贪婪性限定词
+wrapper program              包装函数
+raw strings                        原始字符串
+literal character                 文本字母
+character class                  字符集合
+complement operator        求补算符
+verbose                             详尽/详述
+newline character               新行符
+lookahead assertion           向前断言
+lookbehind assertions        向后断言
+character class                   字符集合比较好啊, 字符类比较混淆

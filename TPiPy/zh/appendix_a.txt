@@ -1,0 +1,1803 @@
+[[TableOfContents]]
+
+大家看到什么翻译错误，格式错误，或是感觉可以有更好的翻译的，欢迎大家直接参与翻译 (如果是修改，你可以在已有翻译的旁边标注一下。)，谢谢 ;-)
+
+
+== 附录 —— python精要 ==
+
+如果你是第一次接触 python 的话，那建议你去看看 Guido van Rossum 写的 Python Tutorial
+，你可以在 http://python.org/ 上下到这本书。
+或者你也可以从那几本优秀的针对 python 初学者的书中选一本来进行学习。
+我在序言里面说过，这本书针对的读者会不太一样。
+
+就像上面说的那样，本书的读者可能只是平时不怎么用 python 而已，
+也可能只是有一段时间没接触 python 了，
+还可能是已经精通好几们其它语言了，
+总之对他们来说只要对 python 语言简要扼要地概括一下就足够了。
+本附录便会简明扼要地谈谈 python 语言每一个重要的组成部分，
+但不会涉及任何库 (甚至包括标准库和本书主要章节中讨论过的常用库)。
+也不会覆盖语法语义的所有细节。
+不过，这篇文章对于理解本书的例子来说应该是足够了。
+
+甚至连那些对 python 已经很熟悉了的读者都有可能会喜欢上这篇文章呢！
+本文的目的与大部分介绍文章都不一样。
+我相信我对语言特色进行的这种分类和解释的方式能为您提供一个新鲜的——也是准确的——看待 python 语言的视角。
+甚至连 python 程序员看完这篇文章后，都可能会对自己经常使用且熟知的那些东西有一些新的看法。
+这篇附录不会刻意去回避一些计算机科学中的抽象术语——如果你对某一术语不熟，大可直接跳过那一段，
+这并不会让你错过太多；
+某些术语在术语表中还会有简短的解释。
+
+=== python 属于哪种类型的语言 ===
+
+python 是一们字节码编译型的语言，它支持多种编程范式。
+由于运行一个 python 程序不需要单独的编译步骤，
+所以有时候 python 也被叫做是解释型语言或是脚本语言；
+用更精确的术语来说，python 是使用一个虚拟机 (就像 Java 或是 Smalltalk 那样)
+来执行一组抽象机器的指令。
+大部分情况下，一个被编译成了字节码的程序会被缓存起来，
+这样以后再运行的话速度就会更快。
+而且不管在什么地方进行的编译过程都是在“幕后”悄悄进行的。
+
+用最宽泛的术语来说，python 是一们命令式的而非声明式 (函数式或逻辑式) 的编程语言。
+python 是动态类型兼强类型的语言，相对大部分语言来说它拥有真正的迟绑定。
+另外 python 还是一们拥有强大内省机制的面向对象语言，
+它是通过约定而非强制机制来进行访问控制和名字的可见性控制的。
+撇开它的面向对象的核心，python 大部分语法都被设计成方便的过程式风格，
+并通过这些语法来展现核心的面向对象机制。
+(?
+虽然 python 允许基本的函数式编程 (FP) 技术，不过边界效应 (side effects) 还是正常的 (norm)，
+求值也总是严格的，而且还不会对尾递归（还有几乎所有其它的东西）进行编译器优化。
+)
+
+python 有一个不大的保留字集合，
+(?
+还有分界块 (delimits blocks)，
+)
+其代码结构仅基于缩进，
+还拥有一组相当丰富的内置数据结构。
+相对其它语言来说 python 很简洁，可读性很强。
+另外 python 的强大很大程度上来源于它的标准库和它灵活的模块系统。
+
+=== 名字空间与绑定 ===
+
+用 python 编程要掌握的一个最重要概念就是名字空间了。
+python 程序中的每一个执行环境 (或者说作用范围) 都拥有一组层次结构的名字空间；
+每一个名字空间都包含着一组名字，每一个名字都绑定到一个对象。
+老版本的 python 使用 “三层范围规则” (内置/全局/局部) 对名字空间进行组织，
+不过从 python 2.1 开始就增加了词法嵌套作用范围。
+不过大部分情况下你并不需要考虑这种微妙的东西，
+况且作用范围工作的方式完全符合我们的直觉。
+(大部分需要用到词法作用范围的特例都是嵌套函数或是嵌套类)
+
+要在当前的名字空间或其它的名字空间中将一个名字绑定到一个对象上去，
+有好几种方法可以用，这些方法有：
+
+==== 赋值和解除引用 ====
+
+像 `x=37` 或 `y="foo"` 这样的 python 表达式干了好几件事：
+首先如果该对象—— 比方说 `37` 或是 `"foo"` ——不存在，python 就会创建这个对象。
+如果该对象已存在，python 就先找到它。
+然后，如果名字 `x` 或 `y` 不存在的话，就先把它们加到当前名字空间中来，
+并将这个名字绑定到相应的对象。
+如果该名字在当前名字空间中已经存在，那它就会被重新绑定。
+多个名字，甚至是处在多个名字空间中的多个名字，都可以绑定到同一个对象。
+
+一个简单的赋值语句就是对当前名字空间中的名字进行绑定，除非该名字已经被定义成 global 了。
+而一个被定义成 global 的名字则被绑定到全局 (也就是模块级的) 名字空间中。
+在赋值语句左边使用 . 号限制的名字会将绑定一个指定的名字空间中的名字——可能是对象的属性，也可能是模块/包的名字空间，
+比如：
+{{{#!python
+>>> x = "foo"              # 将 `x` 绑定到全局名字空间
+>>> def myfunc():          # 将 `myfunc` 绑定到全局名字空间
+...     global x, y        # 为 `x`, `y` 指定名字空间
+...     x = 1              # 将全局名字 `x` 重绑定到对象 1
+...     y = 2              # 创建全局名字 `y` 和对象 2
+...     z = 3              # 创建局部名字 `z` 和对象 3
+...
+>>> import package.module  # 绑定名字 `package.module`
+>>> package.module.w = 4   # 将 `w` 绑定到名字空间 `package.module`
+>>> from mymod import obj  # 将名字 `obj` 导入到全局名字空间
+>>> obj.attr = 5           # 绑定 `obj` 对象的名字空间中的名字 `attr` 
+}}}
+
+无论一个名字(包括用 . 号限制了的)何时出现在赋值语句的右边或是只包含它自己的代码行中，
+该名字都会被解除引用而返回它所引用的对象。
+如果一个名字不处在某个可访问的名字空间里面，它就不能被解除引用；
+试图这样做的话会抛出一个 `NameError` 异常。
+如果名字后面跟着左右两个小括号 (括号中间可能还包含着以逗号分割的表达式)，
+那么对该名字解除引用后，相应的对象会被调用。调用过程中实际干些什么事情可以由 python 对象控制和重写。
+不过通常调用函数或方法会去执行一些代码，而调用 class 则会创建一个实例对象。
+比如：
+{{{#!python
+>>> pkg.subpkg.func()   # 从一个名字空间中调用一个函数
+>>> x = y               # 对 `y` 解除引用并绑定该对象给 `x`
+}}}
+
+==== 函数和类的定义 ====
+
+要描述一个对象并同时将它绑定到一个名字上去的首选方式就是定义一个函数或者是类了。
+其实 `def` 和 `class` 声明语句本质上只是赋值的不同形式罢了。
+对于函数来说，我们还可以在赋值语句的右边使用 `lambda` 运算符，这样可以给名字绑定一个“匿名”函数。
+而类并没有和它等价的便捷技术，但是总得来说类和函数的声明还是很相似的：
+{{{#!python
+>>> add1 = lambda x,y: x+y # 在全局名字空间中给 `add1` 绑定一个函数
+>>> def add2(x, y):        # 在全局名字空间中给 `add2` 绑定一个函数
+...     return x+y
+...
+>>> class Klass:           # 给名字 `Klass` 绑定一个类对象
+...    def meth1(self):    # 给名字空间 `Klass` 中的 `meth1` 绑定一个函数
+...        return `Myself`
+}}}
+
+==== import 表达式 ====
+
+导入——或从某处导入——一个模块或者一个包时，会在当前名字空间中添加或修改一些名字绑定。
+`import` 表达式有两种形式，每一种都有稍微不同的效果。
+
+一种是这样的：
+{{{#!python
+>>> import modname
+>>> import pkg.subpkg.modname
+>>> import pkg.modname as othername
+}}}
+
+它会在当前名字空间中增加一个新的模块对象。
+这些模块对象本身定义有自己的名字空间，你可以绑定值到其中，也可以使用其中的对象。
+
+另一种是这样的：
+{{{#!python
+>>> from modname import foo
+>>> from pkg.subpkg.modname import foo as bar
+}}}
+
+它会向当前名字空间添加名字 `foo` 或 `bar`。
+在这两种 `import` 形式之中，被导入模块中所有的表达式都会被执行——
+区别只在于对当前名字空间产生的效果。
+
+这是 `import` 表达式另一种更特殊的形式： 
+{{{#!python
+>>> from modname import *
+}}}
+
+其中的星号不是 glob 通配符也不是正则模式，它是一个特殊的语法形式。
+"import star" 会将模块名字空间中所有名字全部导入到当前名字空间中来 
+(除了那些以下划线开头的名字，不过它们还是可以被显示地导入)。
+我们不太提倡这种形式的 import ，因为它可能会添加一些你明显并不需要的名字到当前名字空间，
+还有可能会重新绑定已有的名字。
+
+==== for 表达式 ====
+
+虽然 `for` 是用来建立循环的，但实际上它是通过将一个可迭代
+对象中的连续元素不断绑定到(当前名字空间中的)一个名字
+来实现的。以下语句 (几乎) 是等价的：
+{{{#!python
+>>> for x in somelist:  # 用 `for` 进行重复的绑定
+...     print x
+...
+>>> ndx = 0             # 如果 `bdx` 定义过，则重绑定之
+>>> while 1:            # 在 `while` 中重复绑定
+...    x = somelist[ndx]
+...    print x
+...    ndx = ndx+1
+...    if ndx >= len(somelist):
+...        del ndx
+...        break
+}}}
+
+==== except 表达式 ====
+
+`except` 表达式中也可以将一个名字绑定到一个异常参数上：
+{{{#!python
+>>> try:
+...     raise "ThisError", "some message"
+... except "ThisError", x:    # 将 `x` 绑定到异常参数上
+...     print x
+...
+some message
+}}}
+
+=== 数据类型 ===
+
+python 有一组丰富的基本数据类型。所有 python 的 collection 类型
+都可以在其中包含不同类型的元素，甚至其它 collection 类型 (会稍微有点限制)。
+因此，在 python 中构建复杂数据结构变得非常简单。
+
+和许多其他语言都不一样的是，python 的数据类型分为两种：可变的和不可变的。
+所有原子数据类型都是不可变的数据类型，还有 collection 类型 `tuple` 也是属于这一类的。
+而 collection 类型 `list` 和 `dict` 是可变的，还有类、实例也都是属于这一类的。
+所谓数据类型的可变性指的就是该类型的对象是否可以“就地” (in-place) 修改——
+不可变的对象就只能够对它们进行创建和销毁，不可以在它们存在的期间中进行修改。
+这种区别导致的一个结果就是不可变对象可以作为字典的 key，而可变对象则不能。
+导致的另外一个结果就是如果一个数据结构——特别是很大的数据结构——
+需要在程序操作期间经常被修改，那你就应该选择一个可变的数据结构了（通常是一个 list）。
+
+大部分时候，如果你想在不同 python 数据类型之间对值进行转换，
+需要显示地进行转换（或者说编码）调用，
+不过数值类型包含有提升 (promotion) 规则，
+可以允许数值表达式中混合多种类型。
+下面列出所有内置数据类型和相关的讨论。
+内置函数 `type()` 可以用来查看一个对象的类型。
+
+==== 简单类型 ====
+
+ * 布尔类型
+  python 2.3 及其后续版本支持布尔数据类型，只能取 `True` 和 `False` 两个值。
+  在 python 更早期的版本中，这两个值被象征性地叫做 `1` 和 `0`；甚至在 python2.3
+  及其后续版本中，布尔型的值在数值环境中的行为也还是跟数字很像。有一些更早的
+  python micro-releases (比如 2.2.1) 中也包含有名字 `True` 和 `False`，不过它们并不是
+  布尔类型。
+
+ * 整型
+  有符号整数的范围由解释器所处的 CPU/OS 平台的寄存器大小所决定。
+  对于目前大部分平台来说，整数的范围是从负 (2**31)-1 到正 (2**31)-1 的。
+  你可以通过 `sys.maxint` 查看在你的平台上的大小。
+  对于提升 (promotion) 规则来说整数是最基础的数值类型；
+  没有东西可以被提升 (promotion) 为一个整数，而整数有时候可以被提升为其他数值类型。
+  浮点数、长整型，或者字符串都可以通过 `int()` 函数显式地转换成整数。
+
+ * 长整型
+  这是个 (几乎) 没有大小限制的整数。
+  后面跟着一个 `l` 或 `L` 的整数表示一个长整数（比如 `34L`, `9876543210l`）。
+  python 2.2 及其后续版本中，在超过 `sys.maxint` 的整数上进行操作会将该整数自动提升为长整数。
+  整数、浮点数或字符串可以通过 `long()` 函数显式地转换为长整数。
+
+ * 浮点型
+  这是 IEEE754 浮点数。
+  浮点数于整数或长整数在字面上的区别在于包含十进制的小数部分 和/或
+  指数符号（比如 `1.0`, `1e3`, `.453e-12`, `37.`）。
+  一个同时涉及到 整数/长整数 和浮点数的数值表达式会先将所有类型提升为浮点型，然后再进行计算。
+  整数、长整数或字符串都可以通过 `float()` 函数显式转换为浮点数。
+
+ * 复数
+  这是个包含有两个浮点数的对象，分别表示数字中的实数部和虚数部分。
+  同时涉及到 整数/长整数/浮点数 和复数的数值表达式会先将所有类型都提升为复数，
+  然后再进行计算。
+  在 python 中没有用来表达复数的字面量 (literal)，
+  不过像 `1.1+2j` 这样的加法运算常常用来计算一个复数。
+  在一个浮点数后面跟一个 `j` 或 `J` 表示一个虚数。
+  整数、长整数或字符串都可以通过 `complex()` 函数显式转换地为复数。
+  如果给 `complex()` 传递两个浮点型/整型参数，那么第二个将作为虚数部分。
+
+ * 字符串
+  一个不可变的8位字符的序列。
+  和许多其他编程语言不同的是，python 中没有字符型，只有长度为1的字符串。
+  字符串对象有许多方法可以用来修改字符串，
+  不过这些方法总是返回一个新的字符串对象，而不是修改开始的那个对象。
+  内置函数 `chr()` 会返回一个长度为1的字符串，其 ascil 码值为传入的整数。
+  `str()` 函数返回传入对象的字符串表现形式。比如：
+  {{{#!python
+  >>> ord(`a`)
+  97
+  >>> chr(97)
+  `a`
+  >>> str(97)
+  `97`
+  }}}
+
+ * unicode
+  一个不可变的 Unicode 字符序列。
+  没有表达单个 Unicode 字符的数据类型，不过长度为1的 unicode 字符串包含单个字符。
+  Unicode 字符串包含有一组和字符串对象类似的方法，而且和后者一样，
+  unicode的方法也总是返回新的 unicode 对象，而非修改开始那个。
+  第2章和 附录 C 中有更多关于 Unicode 的讨论。
+
+==== 字符串格式替换(Interpolation) ====
+
+字面上的 (Literal) 字符串和 unicode 字符串可以包含内嵌的格式码。
+如果字符串包含有格式码，那么使用 `%` 运算符和一个给出用来替换的值的元组 (tuple)
+或者字典就可以向字符串中插入值。
+
+包含格式码的字符串可以有两种模式。
+简单点的模式是通过这种语法 `%[标记][长度[.精度]]<类型>` 来使用格式码。
+在这种模式下的字符串需要一个 `%` 外加一个相应长度和相应数据类型组成的元组来
+对字符串进行替代。如果只有一个值被替代，你还可以直接给出这个值，
+就不需要写一个长度为1的元组了。比如：
+{{{#!python
+>>> "float %3.1f, int %+d, hex %06x" % (1.234, 1234, 1234)
+'float 1.2, int +1234, hex 0004d2'
+>>> '%e' % 1234
+'1.234000e+03'
+>>> '%e' % (1234,)
+'1.234000e+03'
+}}}
+稍微复杂点的模式是给格式码内嵌一个名字，
+随后它会被作为替代字典的 key。
+这个模式的语法是 `%(key)[标记][长度[.精度]]<类型>`。
+对这种形式的字符串进行替代需要一个 `%` 外加一个字典，
+这个字典的 key 中要包含了所有名字，并且名字对应的值要拥有相应的数据类型。
+比如：
+{{{#!python
+>>> dct = {'ratio':1.234, 'count':1234, 'offset':1234}
+>>> "float %(ratio)3.1f, int %(count)+d, hex %(offset)06x" % dct
+'float 1.2, int +1234, hex 0004d2'
+}}}
+你不能在同一个字符串中混合使用这两种模式。
+
+我刚才提到过数据类型一定要和格式码匹配。
+不同的格式码接受不同范围的数据类型，不过这些规则几乎都和你期望的相同。
+通常来说数值数据在必要的时候会被提升或降级 (demoted)，
+但是字符串和复数类型不能被当做数字来用。
+
+使用字典进行替代的一个有点用处的形式就是：使用全局 和/或 局部名字空间字典。
+在作用范围内正常绑定的名字都可以被替代到字符串中去。
+{{{#!python
+>>> s = "float %(ratio)3.1f, int %(count)+d, hex %(offset)06x"
+>>> ratio = 1.234
+>>> count = 1234
+>>> offset = 1234
+>>> s % globals()
+'float 1.2, int +1234, hex 0004d2'
+}}}
+如果你想要在越过作用范围查找名字，
+你可以创建一个特殊的同时拥有局部和全局变量的字典：
+{{{#!python
+>>> vardct = {}
+>>> vardct.update(globals())
+>>> vardct.update(locals())
+>>> interpolated = somestring % vardct
+}}}
+格式码使用的标记包括：
+{{{
+#*--------------- 格式码标记 ----------------------#
+0  通过在前面加 0 进行长度补齐
+-  在值的长度范围内对值进行左对齐
+_  (空格) 通过在前面加空格进行长度补齐
++  显示出正数的符号
+}}}
+如果指定了长度值，它表示的是替代格式的最小长度。
+超出这个长度的数字就会占据比指定的更多字节了。
+如果指定了精度值，数字右边数字的长度会被包含到总长度里面来：
+{{{#!python
+>>> '[%f]' % 1.234
+'[1.234000]'
+>>> '[%5f]' % 1.234
+'[1.234000]'
+>>> '[%.1f]' % 1.234
+'[1.2]'
+>>> '[%5.1f]' % 1.234
+'[  1.2]'
+>>> '[%05.1f]' % 1.234
+'[001.2]'
+}}}
+格式类型由以下组成：
+{{{
+#*-------------- 格式类型码 -----------------------#
+d  有符号整数
+i  有符号整数
+o  无符号八进制数
+u  无符号十进制数
+x  小写无符号十六进制数
+X  大写无符号十六进制数
+e  小写指数格式浮点数
+E  大写指数格式浮点数
+f  浮点数格式
+g  浮点: 如果 -4 < exp < precision 则用指数格式
+G  大写版本的 `g`
+c  单个字符: 传给 chr(i) 整数 或是 长度为一的字符串
+r  使用 repr() 转换任何 python 对象
+s  使用 str() 转换任何 python 对象
+%  `%` 字符, 比如: '%%%d' % (1) --> '%1'
+}}}
+
+另外还有一种格式码风格，可以在指定长度的地方使用 `*`。在这种情况下，
+用来替代的元组必须另外再提供一个元素来给所有格式码指定长度，
+还是使用元组前面的值来进行格式化。比如：
+{{{#!python
+>>> "%0*d # %0*.2f" % (4, 123, 4, 1.23)
+'0123 # 1.23'
+>>> "%0*d # %0*.2f" % (6, 123, 6, 1.23)
+'000123 # 001.23'
+}}}
+
+==== 打印 ====
+
+在 python 中最原始的 (least-sophisticated) 文本输出形式就是写到文件中去。
+STDOUT 和 STDERR 流还可以通过伪文件对象 (pseudo-files) `sys.stdout` 和
+`sys.stderr` 来进行访问。
+对它们进行写和写其他文件是一样的；比如：
+{{{#!python
+>>> import sys
+>>> try:
+...    # some fragile action
+...    sys.stdout.write('result of action\n')
+... except:
+...    sys.stderr.write('could not complete action\n')
+...
+result of action
+}}}
+
+你不能在 STDOUT 或 STDERR 中定位探针 (seek) ——通常你应该把它们当作是纯粹连续的输出。
+
+向 STDOUT 和 STDERR 里面写东西并不灵活 (inflexible), 
+而且大多数时候使用 `print` 语句可以更灵活地 (flexibly) 达到相同的目的。
+{{{#!python
+>>> print "Pi: %.3f" % 3.1415, 27+11, {3:4,1:2}, (1,2,3)
+Pi: 3.142 38 {1: 2, 3: 4} (1, 2, 3)
+}}}
+
+传递给 `print` 语句的所有参数都会在被打印之前先进行求值，就像传递给函数的参数一样。
+这样才可以打印出对象的规范形式，而非作为参数传递时的形式。
+在我上面那个的例子中，打印出的字典的顺序和它们定义的顺序不太一样，
+而且列表和字典里面的空格也不太一样。
+另外字符串格式替换也被执行了，而且正是按照格式所定义的那样输出的。
+
+使用 `print` 语句时还有几件事情需要注意。
+在所有参数之间都会打印一个空格。
+如果你想要同时打印几个对象而不想在中间夹杂空格，
+你可以使用字符串连接操作或者字符串格式替换。
+{{{#!python
+>>> numerator, denominator = 3, 7
+>>> print repr(numerator)+"/"+repr(denominator)
+3/7
+>>> print "%d/%d" % (numerator, denominator)
+3/7
+}}}
+
+默认情况下，`print` 语句会在输出的末尾添加一个换行符。
+你可以通过在语句的末尾添加一个逗号来去掉这个换行，
+不过这样的话，输出的末尾就会添加一个空格了：
+{{{#!python
+>>> letlist = ('a','B','Z','r','w')
+>>> for c in letlist: print c,   # inserts spaces
+...
+a B Z r w
+}}}
+
+如果连这些空格也不想要，那你就只能用 `sys.stdout.write()`
+或者是先计算出你想要打印的字符串：
+{{{#!python
+>>> for c in letlist+('\n',): # no spaces
+...     sys.stdout.write(c)
+...
+aBZrw
+>>> print ''.join(letlist)
+aBZrw
+}}}
+
+`print` 语句还有一种特殊的形式，它可以将输出重定向到 STDOUT 以外的某个地方。
+`print` 语句本身后面可以跟两个大于号，
+然后是一个可写的文件对象 (file-like object)，然后是一个逗号，
+然后就是其他的 (将被打印) 的参数。比如：
+{{{#!python
+>>> print >> open('test','w'), "Pi: %.3f" % 3.1415, 27+11
+>>> open('test').read()
+'Pi: 3.142 38\n'
+}}}
+
+有些 python 程序员 (包括笔者) 都认为这种特殊的形式过于 "noisy,"
+不过对于快速指定输出目的文件偶尔还是很有用的。
+
+如果你想要一个和 `print` 语句干着相同事情的函数的话，下面这个就是了，
+不过它没有消除末尾的换行符和重定向输出的机制：
+{{{#!python
+#*--------- print 语句的函数版本 --------#
+def print_func(*args):
+    import sys
+    sys.stdout.write(' '.join(map(repr,args))+'\n')
+}}}
+
+您也可以给它增加一些缺失的功能，不过通常来说使用语句形式的 `print` 还是最清晰的方式。
+
+SEE ALSO, `sys.stderr`, `sys.stdout`
+
+==== 容器类型 ====
+
+元组
+
+它是一个不可变的 (不同类型的) 对象序列。
+既然是不可变的，那么元组的成员和长度在创建后都不能修改。
+不过元组的元素和子序列可以通过下标和切片访问到，
+而且可以使用这些元素和切片构建新的元组。
+元组和某些其他编程语言中的记录(records)比较类似。
+
+构造元组的语法是使用逗号分隔一列元素；
+在许多环境中，为了消除与其他东西（比如函数参数）之间的歧义，
+还需要用圆括号括起来，但是构造元组的是逗号而非圆括号。几个例子：
+{{{#!python
+>>> tup = 'spam','eggs','bacon','sausage'
+>>> newtup = tup[1:3] + (1,2,3) + (tup[3],)
+>>> newtup
+('eggs', 'bacon', 1, 2, 3, 'sausage')
+}}}
+
+函数 `tuple()` 还可以使用另一个序列类型（可以是 list 或者子定义的序列类型）来构造元组
+
+SEE ALSO, [tuple]
+
+列表
+
+它是一个可变的对象序列。像元组一样，列表元素也可以通过下标和切片访问到；
+而跟元组不一样的是，列表的方法和对索引和切片赋值会改变列表对象的元素和长度。
+
+构造列表的语法是一对中括号。
+空列表的中括号中可以没有对象；长度为1的列表可以只包含一个对象；
+再长点的列表使用逗号来分隔其中的每一个元素。
+当然，索引和切片也是使用的中括号，不过它们在python文法中的语法上下文并不一样
+( 通常只要有点常识就可以识别出来了 )。比如：
+{{{#!python
+>>> lst = ['spam', (1,2,3), 'eggs', 3.1415]
+>>> lst[:2]
+['spam', (1, 2, 3)]
+}}}
+
+函数 `list()` 还可以使用另一个序列类型 (可以是一个元组或是子定义的序列类型)
+来构造一个列表。
+
+SEE ALSO, [list]
+
+字典
+
+一个在不可变类型的 key 和对象值之间的可变的映射。
+一个 key 最多只能对应一个条目；
+在字典中第二次添加相同的 key 会覆盖掉以前那个条目（很像在名字空间中绑定名字）。
+字典是没有顺序的，并且可以通过把 key 当作索引对条目进行访问；
+或者通过方法 `.keys()`, `.values()`, 和 `.items()` 创建其包含的对象的列表；
+或者——在最近的 python 版本中——还可以使用 `.popitem()` 方法。
+所有这些字典方法都是生成其包含的对象的无序的列表。
+
+字典的构造语法是一对大括号。
+构造空字典时大括号之间可以没有对象。
+字典中的键值对自身使用冒号分隔，
+而连续的键值对之间使用逗号分隔。比如：
+
+>>> dct = {1:2, 3.14:(1+2j), 'spam':'eggs'}
+>>> dct['spam']
+'eggs'
+>>> dct['a'] = 'b'    # add item to dict
+>>> dct.items()
+[('a', 'b'), (1, 2), ('spam', 'eggs'), (3.14, (1+2j))]
+>>> dct.popitem()
+('a', 'b')
+>>> dct
+{1: 2, 'spam': 'eggs', 3.14: (1+2j)}
+
+在 python2.2 及其后续版本中，
+函数 `dict()` 还可以使用一个键值对的序列或者是一个自定义的映射类型来构造字典。
+比如：
+{{{#!python
+>>> d1 = dict([('a','b'), (1,2), ('spam','eggs')])
+>>> d1
+{'a': 'b', 1: 2, 'spam': 'eggs'}
+>>> d2 = dict(zip([1,2,3],['a','b','c']))
+>>> d2
+{1: 'a', 2: 'b', 3: 'c'}
+}}}
+SEE ALSO, [dict]
+
+集合
+
+python 2.3 及其以后的版本中包含了一个实现集合类型的标准模块。
+对于更早的 python 版本，许多开发者已经创建了许多第三方的集合类型的实现。
+如果你有 python2.2 版本，你可以从 http://tinyurl.com/2d31 或者 python cvs
+中下载并使用 sets 模块——不过你需要在你本地的版本中添加`True,False=1,0`。
+
+一个集合是一个可哈希对象的无序集合。
+和列表不同的是，在集合中对象不能重复；
+集合和只有 key 没有 value 的字典很像。
+集合利用位逻辑和布尔语法来执行基本的集合理论中的操作；
+子集测试没有特殊的语法形式，
+而是通过 `.issubset()` 和 `.issuperset()` 方法。
+你也可以无序地遍历集合的成员。
+下面是一些演示该数据类型的例子：
+{{{#!python
+>>> from sets import Set
+>>> x = Set([1,2,3])
+>>> y = Set((3,4,4,6,6,2)) # 使用任何序列初始化
+>>> print x, '//', y       # 保证重复的元素已被移除
+Set([1, 2, 3]) // Set([2, 3, 4, 6])
+>>> print x | y            # 集合的并
+Set([1, 2, 3, 4, 6])
+>>> print x & y            # 集合的交
+Set([2, 3])
+>>> print y-x              # 集合的减
+Set([4, 6])
+>>> print x ^ y            # symmetric difference 集合的对称差集
+Set([1, 4, 6])
+}}}
+
+你还可以对集合成员进行迭代和对成员进行存在性 (membership) 检查：
+{{{#!python
+>>> 4 in y                 # 存在性检查
+1
+>>> x.issubset(y)          # 子集检查
+0
+>>> for i in y:
+...     print i+10,
+...
+12 13 14 16
+>>> from operator import add
+>>> plus_ten = Set(map(add, y, [10]*len(y)))
+>>> plus_ten
+Set([16, 12, 13, 14])
+}}}
+
+`sets.Set` 支持对集合的直接 (in-place) 修改；
+而`sets.ImmutableSet`, 顾名思义，就不支持修改了。
+{{{#!python
+>>> x = Set([1,2,3])
+>>> x |= Set([4,5,6])
+>>> x
+Set([1, 2, 3, 4, 5, 6])
+>>> x &= Set([4,5,6])
+>>> x
+Set([4, 5, 6])
+>>> x ^= Set([4,5])
+>>> x
+Set([6])
+}}}
+
+==== 组合类型 ====
+
+实例对象
+
+每一个实例对象其实都定义了一个名字空间，只不过这个名字空间通常是作为一个数据容器
+（而且是一个知道如何对数据执行一定操作的容器，也就是说，它还拥有方法）而存在的。
+任何一个实例对象（也包括任何的名字空间）在某种意义上说都很像是字典，
+因为它们其实都只是名字与值之间的一个映射。
+我们可以使用 . 号对名字进行限定以达到对实例对象的属性进行存取的目的，
+我们也可以在方法中使用其（隐式传入的）第一个参数对其属性进行存取，
+按照约定我们把这个参数叫做 `self`。比如：
+{{{#!python
+>>> class Klass:
+...     def setfoo(self, val):
+...         self.foo = val
+...
+>>> obj = Klass()
+>>> obj.bar = 'BAR'
+>>> obj.setfoo(['this','that','other'])
+>>> obj.bar, obj.foo
+('BAR', ['this', 'that', 'other'])
+>>> obj.__dict__
+{'foo': ['this', 'that', 'other'], 'bar': 'BAR'}
+}}}
+
+实例对象的属性通常引用着其他的实例对象，这样就可以使用层次结构的名字空间来表达一个数据结构。
+另外实例对象还拥有一些前后都是双下划线的 `magic` 方法，它们为实例对象提供一些可选的约定的语法。
+其中最常用的就是 `.__init__()` 方法, 它用来 (通常是通过传入的参数) 初始化一个实例对象。
+比如：
+
+{{{#!python
+>>> class Klass2:
+...     def __init__(self, *args, **kw):
+...         self.listargs = args
+...         for key, val in kw.items():
+...             setattr(self, key, val)
+...
+>>> obj = Klass2(1, 2, 3, foo='FOO', bar=Klass2(baz='BAZ'))
+>>> obj.bar.blam = 'BLAM'
+>>> obj.listargs, obj.foo, obj.bar.baz, obj.bar.blam
+((1, 2, 3), 'FOO', 'BAZ', 'BLAM')
+}}}
+
+python class 中还可以定义好些个这种 `magic` 方法。
+它们中许多都是为了让实例对象的行为更像基本数据类型 (当然同时还保持着 class
+特殊的行为)。
+比如，`.__str__()` 和 `.__repr__()` 方法控制着一个实例对象的字符串表示形式；
+`.__getitem__()` 和 `.__setitem__()` 方法提供通过索引获取实例对象中的数据的功能
+(可以是类似字典的名字索引，也可以是类似列表的数字索引)；
+而像 `.__add__()`, `.__mul__()`, `.__pow__()`, 和 `.__abs__()`
+这样的方法则让实例对象拥有了类似数值对象的行为。
+_Python Reference Manual_ 详细地讨论了这些 magic 方法。
+
+在 python2.2 及其后的版本中，你还可以通过继承内置类型，
+来让实例对象的行为更像基本数据类型。
+举个例子，假设你需要一个实例对象，它同时包含着一个可变的序列和一个 `.foo` 属性。
+那么你有两种定义该类型的方法：
+{{{#!python
+>>> class FooList(list):        # 只在 python2.2 及其后的版本中有用
+...     def __init__(self, lst=[], foo=None):
+...         list.__init__(self, lst)
+...         self.foo = foo
+...
+>>> foolist = FooList([1,2,3], 'FOO')
+>>> foolist[1], foolist.foo
+(2, 'FOO')
+>>> class OldFooList:           # works in older Pythons
+...     def __init__(self, lst=[], foo=None):
+...         self._lst, self.foo = lst, foo
+...     def append(self, item):
+...         self._lst.append(item)
+...     def __getitem__(self, item):
+...         return self._lst[item]
+...     def __setitem__(self, item, val):
+...         self._lst[item] = val
+...     def __delitem__(self, item):
+...         del self._lst[item]
+...
+>>> foolst2 = OldFooList([1,2,3], 'FOO')
+>>> foolst2[1], foolst2.foo
+(2, 'FOO')
+}}}
+
+如果你需要比基本数据类型更复杂的数据类型，
+or even than an instance whose class has magic methods, ## 甚至可以让某个实例拥有些magic方法, 
+通常我们可以通过将实例对象的属性“链接”到其他实例对象来做到这一点。
+这样的“链接”可以构造出不同的拓扑结构，包括环（如果你要对图进行建模的话）。
+下面是一个简单的例子，你可以使用如下的 node 类来构建一颗二叉树：
+{{{#!python
+>>> class Node:
+...     def __init__(self, left=None, value=None, right=None):
+...         self.left, self.value, self.right = left, value, right
+...     def __repr__(self):
+...         return self.value
+...
+>>> tree = Node(Node(value="Left Leaf"),
+...             "Tree Root",
+...             Node(left=Node(value="RightLeft Leaf"),
+...                  right=Node(value="RightRight Leaf") ))
+>>> tree,tree.left,tree.left.left,tree.right.left,tree.right.right
+(Tree Root, Left Leaf, None, RightLeft Leaf, RightRight Leaf)
+}}}
+
+实际上，你很可能会使用另外的名字来绑定一些中间节点，以便于对树进行修剪 (pruning) 和整理
+(rearrangement)
+
+SEE ALSO, [int], [float], [list], [string], [tuple],
+[UserDict], [UserList], [UserString]
+
+=== 流程控制机制 ===
+
+python 里面大概有半打的流程控制机制，当然这个取决于你怎么数了，
+这些流程控制机制比大部分编程语言中的都要简单。
+而且幸运的是，python 中的这些机制都是经过精心挑选过的，
+它们中间存在着高度的——但并非 obsessively high ——正交性。
+
+从本文的角度来说，异常处理也算得上是 python 的流程控制技术之一了。
+像 java 这样的语言中，如果一个应用程序根本不抛出任何异常，
+那么它很可能就会被认为是好程序，
+但是 python 程序员认为异常其实并不是那么“异常”的 —— 完美的设计应该是
+当且仅当某一个异常被抛出的时候就退出某一段代码。
+
+python 语言还有另外两个特殊的方面 (aspects)，它们通常不会在流程控制中介绍，
+但是理论上说它们还是应该被算其内的就是：列表的函数式操作和布尔快捷方式。
+它们两个本质上说都属于流程控制的范畴。
+
+==== if/then/else 语句 ====
+
+`if` 语句配合其可选的 `elif` 和 `else` 子句可以在不同的代码执行路径之间进行选择。
+一个 `if` 代码块后面可以跟零或多个 `elif` 代码块；
+在该组合语句的结尾，还可以跟零或一个 `else` 代码块。
+`if` 语句后面应该跟一个布尔表达式和一个冒号。
+`else` 语句，如果存在的话，在它后面不应该跟布尔表达式，而应该只有一个冒号。
+每一个语句都会引入一个代码块，该代码块可以包含一条或多条语句
+(这些语句可以是在随后的行中进行缩进，也可以是直接跟在冒号后面)。
+
+在 python 中对于每一个表达式，包括所有对象和字面量，都存在相应的一个布尔值。
+所有空容器 (列表，字典，元组) 都被当作 false；
+空字符串或unicode字符串也是 false。
+任何数值类型表示的数字 0 都是 false。
+同样的，如果一个实例对象的 class 定义了 `.__nonzero__()` 或 `.__len__()` 方法，
+而且它们的返回值会被当作 false，那么它也被当作 false 。
+所有没有这些特殊方法的实例对象都为 true 。
+多数时候，布尔表达式都是由对象之间的比较操作组成，这些比较操作会产生实际的规范对象：`0`
+或 `1`。这些比较操作有：`<`, `>`, `==`, `>=`, `<=`, `<>`, `!=`,
+`is`, `is not`, `in`, 和 `not in`。
+有些时候还可以在这样的表达式的前面加上一元操作符 `not`。
+
+每次经过 `if/elif/else` 组合语句的时候，都只有一个分支被执行——
+如果有多个条件有效的话，选择第一个为 true 的条件执行。比如：
+{{{#!python
+>>> if 2+2 <= 4:
+...   print "Happy math"
+...
+Happy math
+>>> x = 3
+>>> if x > 4: print "More than 4"
+... elif x > 3: print "More than 3"
+... elif x > 2: print "More than 2"
+... else: print "2 or less"
+...
+More than 2
+>>> if isinstance(2, int):
+...     print "2 is an int"     # 2.2+ test
+... else:
+...     print "2 is not an int"
+}}}
+
+python 中没有使用同一个值来和多个候选值进行比较的 `switch` 语句。
+有的时候，在多个 `elif` 行中重复同一个用来比较的表达式确实比较麻烦。
+在这种情况下可以使用这样一个小技巧：使用字典来实现 伪-switch。
+以下示例代码是等价的：
+{{{#!python
+>>> if var.upper() == 'ONE':     val = 1
+... elif var.upper() == 'TWO':   val = 2
+... elif var.upper() == 'THREE': val = 3
+... elif var.upper() == 'FOUR':  val = 4
+... else:                        val = 0
+...
+>>> switch = {'ONE':1, 'TWO':2, 'THREE':3, 'FOUR':4}
+>>> val = switch.get(var.upper(), 0)
+}}}
+
+==== 布尔短路(Bool Shortcutting) ====
+
+布尔操作符 `or` 和 `and` 都是“懒惰”的。也就是说，
+包含有 `or` 或 `and` 的表达式仅为对于取得总结果来说必需的那一部分进行求值。
+具体地说，如果 `or` 表达式的左边部分为 true，那么就不用对其他部分进行求值了，
+这部分的值直接成为整个表达式的值了；如果 `and` 表达式的左边部分为 false，
+那么同样这部分的值也是直接成为整个表达式的值了。
+
+布尔短路是一个很有效的分支的形式，并且有的时候比 `if/elif/else` 语句块更可读
+也更简练。比如：
+{{{#!python
+>>> if this:          # `if` 组合语句
+...     result = this
+... elif that:
+...     result = that
+... else:
+...     result = 0
+...
+>>> result = this or that or 0  # boolean shortcutting
+}}}
+
+我们还可以对布尔短路进行组合，只不过不是那么可读；比如：
+{{{#!python
+>>> (cond1 and func1()) or (cond2 and func2()) or func3()
+}}}
+
+==== for/continue/break 语句 ====
+
+`for` 语句在一个序列的元素上进行循环。python 2.2及其后的版本中，
+循环需要一个迭代器对象 (迭代器可以没有预定的大小) —— 
+而像列表、元组、字符串这样的标准序列在 `for` 语句中会自动地转换成迭代器。
+在 python 更早期的版本中，有少数像 `xreadlines()` 和 `xrange()` 
+这样的特殊函数在行为上和迭代器很像。
+
+`for` 语句的每一次循环，都有一个序列/迭代器的元素被绑定到循环变量上。
+循环变量可以是多个名字的元组，这样在每次循环中都会为这些名字绑定对象。
+比如：
+{{{#!python
+>>> for x,y,z in [(1,2,3),(4,5,6),(7,8,9)]: print x, y, z, '*',
+...
+1 2 3 * 4 5 6 * 7 8 9 *
+}}}
+
+操作字典条目有一个特殊的惯用法就是：
+{{{#!python
+>>> for key,val in dct.items():
+...     print key, val, '*',
+...
+1 2 * 3 4 * 5 6 *
+}}}
+
+如果你想要重复执行某个代码块特定的次数，通常是使用内置函数 `range()` 或 
+`xrange()` 来创建一个指定长度的序列。比如：
+{{{#!python
+>>> for _ in range(10):
+...     print "X",      # `_` 在代码块中从没用过
+...
+X X X X X X X X X X
+}}}
+
+然而，如果你发现你自己在一个数列上重复绑定只是为了重复执行某个代码块，
+这通常意味着你并未真正理解循环。
+通常循环是用来在一组相关事物（这些事物本来需要在循环中显式进行绑定）上执行操作，
+而不仅仅是重复做着完全相同的事情。
+
+如果在 `for` 循环中出现 `continue` 语句，
+则跳过后面的语句而直接执行下一次循环；
+如果在 `for` 循环中出现 `break` 语句，
+则直接跳出循环，不会执行代码块中剩下的语句
+（有一个例外就是 `break` 出现在拥有 `finally` 代码块的 `try` 语句中，这时
+`finally` 代码块仍会被执行）。
+
+==== map(), filter(), reduce(), 和 List Comprehensions
+
+和 `for` 语句一样，内置函数 `map()`, `filter()`, 和 `reduce()` 都是对
+一个序列的每一个元素执行一定的操作。而与 for 循环不同的是，这些函数会返回
+对这些元素操作的结果。这三个函数的第一个参数都是一个函数，而后续
+参数都是一些序列。
+
+`map()` 函数返回一个与输入序列长度相同的列表，其中每一个元素都是对
+输入序列中相应位置的元素的转换的结果。如果你需要对元素进行这种转换，
+那么使用 `map()` 通常都要比等价的 for 循环更简练也更清晰；比如：
+{{{#!python
+>>> nums = (1,2,3,4)
+>>> str_nums = []
+>>> for n in nums:
+...     str_nums.append(str(n))
+...
+>>> str_nums
+['1', '2', '3', '4']
+>>> str_nums = map(str, nums)
+>>> str_nums
+['1', '2', '3', '4']
+}}}
+
+如果传给 `map()`  的函数参数接受多个参数，那么就可以给 map
+传递多个序列。如果这些传进来的序列长度不一，
+那就在短的序列后面补 `None`。函数参数还可以是 None ，
+这样的话就会用序列参数中的元素生成一个元组的序列。
+
+{{{#!python
+>>> nums = (1,2,3,4)
+>>> def add(x, y):
+...     if x is None: x=0
+...     if y is None: y=0
+...     return x+y
+...
+>>> map(add, nums, [5,5,5])
+[6, 7, 8, 4]
+>>> map(None, (1,2,3,4), [5,5,5])
+[(1, 5), (2, 5), (3, 5), (4, None)]
+}}}
+
+`filter()` 函数返回的是输入序列中满足一定条件的元素组成的序列，
+这个条件由传递给 `filter()` 的函数参数决定。该函数参数必须接受
+一个参数，它的返回值会被当作布尔值处理。比如：
+{{{#!python
+>>> nums = (1,2,3,4)
+>>> odds = filter(lambda n: n%2, nums)
+>>> odds
+(1, 3)
+}}}
+
+`map()` 和 `filter()` 的函数参数都可以有边界效应(side effects)，这使得用 `map()` 
+或 `filter()` 函数替代所有的 for 循环称为可能——不过我们并不提倡这种
+做法。比如：
+{{{#!python
+>>> for x in seq:
+...     # bunch of actions
+...     pass
+...
+>>> def actions(x):
+...     # same bunch of actions
+...     return 0
+...
+>>> filter(actions, seq)
+[]
+}}}
+
+不过考虑到循环中变量的作用范围和 `break` `continue` 语句，
+有的时候还是需要循环的。不过总体来说，您还是应该了解这些看起来
+非常不同的技术之间的等价性。
+
+`reduce()` 函数的第一个参数是个函数，该函数必须接受两个参数。
+它的第二个参数是一个序列，`reduce()` 函数还可以接受可选的第三个参数作为初始值。
+对于输入序列中每一个元素，`reduce()` 将前面的累计结果与该元素结合起来，
+直到序列的末尾。`reduce()` 的效果——就像 `map()` 和 `filter()` 一样——
+和循环类似，也是对序列中每一个元素执行操作，它的主要目的是产生某种累计结果，
+累加，或是在许多不确定的元素中进行选择。比如：
+{{{#!python
+>>> from operator import add
+>>> sum = lambda seq: reduce(add, seq)
+>>> sum([4,5,23,12])
+44xe (32-bit Windows)
+  	directpython-0.9.0-py2.5-full.exe   	9579954 	2708 	i386 	
+>>> def tastes_better(x, y):
+...     # 对 x、y 的某种复杂的比较
+...     # 或者返回 x，或者返回 y
+...     # ...
+...
+>>> foods = [spam, eggs, bacon, toast]
+>>> favorite = reduce(tastes_better, foods)
+}}}
+
+List comprehension (listcomps) 是一种由 python2.0 引入的语法形式。
+你可以把 list comprehension 想象成循环与函数`map()`或`filter()`
+之间的交叉。也就是说，和这两个函数一样，list comprehension 也是
+根据输入序列产生一个列表。但它使用 `for` 和 `if` 关键字，这又和循环语句很像。
+另外，通常一个组合的 list comprehension 比相应的嵌套 `map()` 和 `filter()` 函数
+可读性强得多。
+
+比如，考虑下面这个简单的问题：你有一个由数字组成的列表和一个由字符组成的字符串；
+你要构建另一个列表，它的元素就是列表中一个数字和字符串中一个字符的配对，
+而这个字符的 ASCII 码必须比这给数字大。使用传统的命令式 (imperative) 的风格，你可能会这么写：
+{{{#!python
+>>> bigord_pairs = []
+>>> for n in (95,100,105):
+...     for c in 'aei':
+...         if ord(c) > n:
+...             bigord_pairs.append((n,c))
+...
+>>> bigord_pairs
+[(95, 'a'), (95, 'e'), (95, 'i'), (100, 'e'), (100, 'i')]
+}}}
+
+而使用函数式的编程风格你可能会写出类似这样的可读性差的东西：
+{{{#!python
+>>> dupelms=lambda lst,n: reduce(lambda s,t:s+t,
+...                              map(lambda l,n=n: [l]*n, lst))
+>>> combine=lambda xs,ys: map(None,xs*len(ys), dupelms(ys,len(xs)))
+>>> bigord_pairs=lambda ns,cs: filter(lambda (n,c):ord(c)>n,
+...                                   combine(ns,cs))
+>>> bigord_pairs((95,100,105),'aei')
+[(95, 'a'), (95, 'e'), (100, 'e'), (95, 'i'), (100, 'i')]
+}}}
+
+为 FP 方式辩护的人可能会说：它不光完成了它的任务，它还另外提供了一个通用的
+组合函数 `combine()`。但是这个代码实在是太晦涩了。
+
+List comprehension 可以让你写出又简洁有清晰的代码来：
+{{{#!python
+>>> [(n,c) for n in (95,100,105) for c in 'aei' if ord(c)>n]
+[(95, 'a'), (95, 'e'), (95, 'i'), (100, 'e'), (100, 'i')]
+}}}
+
+一旦你拥有了 listcomps ，你几乎不再需要通用 `combine()` 函数，
+因为它只不过是 listcomp 中嵌套 `for` 循环的等价物而已。
+
+稍微再正式一点的说，list comprehension 是由以下部分组成：(1) 两端的方括号
+(就像构造列表的语法一样，其实它就是在构造一个列表)。(2) 一个表达式，它
+通常包含一些在 `for` 子句被绑定的名字。(3) 一个或多个 `for` 子句，
+它们循环地对名字进行绑定 (就像 `for` 循环那样)。(4) 零或多个 `if` 子句，用来
+对结果进行限制。通常 `if` 子句也包含一些在 `for` 子句中被绑定的名字。
+
+List comprehension 之间可以自由嵌套。有时候 listcomp 中的 `for` 子句
+会对另一个 listcomp 定义的列表进行循环；甚至在 listcomp 的表达式或
+`if` 子句中都可以嵌套其他 listcomp 。然而，过度嵌套的 listcomp 几乎和嵌套的 `map()`
+和 `filter()` 函数一样难懂。所以这样的嵌套请慎用。
+
+还值得一提的就是 List comprehension 不像函数式编程风格的调用那么透明。
+确切地说就是，`for` 子句中绑定的名字在它外部的(或是全局的，如果名字是这么定义的话)作用范围内仍然有效。
+这些边界效应给你增加了小小的负担，因为你还得为 listcomps 选择一个不重复的名字。
+
+  TOPIC -- 'while'/'else'/'continue'/'break' Statements 主题 -- 'while'/'else'/'continue'/'break' 语句
+  --------------------------------------------------------------------
+
+  The 'while' statement loops over a block as long as the
+  expression after the 'while' remains true. If an 'else' block is
+  used within a compound 'while' statement, as soon as the
+  expression becomes false, the 'else' block is executed. The
+  'else' block is chosen even if the 'while' expression is
+  initially false.
+  'while'语句, 只要当表达式一直为true时会循环执行语句块. 如果它还有一个'else'语句块,
+  当表达式为false时会执行这个else语句块. 即使在初始的'while'表达式为false时, 这个'else'语句块也会被执行.
+
+  If the 'continue' statement occurs in a 'while' loop, the next
+  loop iteration proceeds without executing later lines in the
+  block. If the 'break' statement occurs in a 'while' loop, control
+  passes past the loop without executing later lines (except the
+  'finally' block if the 'break' occurs in a 'try'). If a 'break'
+  occurs in a 'while' block, the 'else' block is not executed.
+  如果在'while'循环体中遇到'continue', 会跳过剩下的循环体语句而直接开始下一
+  个循环. 如果在'while'循环体中遇到'break', 会立刻跳出循环(如果'break'是在'try'中的话, 则仍会执行'finally'语句). 如果'while'循环体中遇到'break'之后, 'else'块不会被执行.
+
+  If a 'while' statement's expression is to go from being true
+  to being false, typically some name in the expression will be
+  re-bound within the 'while' block.  At times an expression will
+  depend on an external condition, such as a file handle or a
+  socket, or it may involve a call to a function whose Boolean
+  value changes over invocations.  However, probably the most
+  common Python idiom for 'while' statements is to rely on a
+  'break' to terminate a block.  Some examples:
+  如果一个'while'表达式从真变为假, 一般是由于在循环体中, 某个表达式中的变量名被重新
+  绑定了. 如果这个表达式依赖于外部的某个条件, 如文件句柄或一个socket, 或调用了一个在执行过程中会改变布尔值的函数. 然而, 可能最常用的中断'while'循环体执行过程的语句就是'break', 如下例子:
+
+      >>> command = ''
+      >>> while command != 'exit':
+      ...     command = raw_input('Command > ')
+      ...     # if/elif block to dispatch on various commands
+      ...
+      Command > someaction
+      Command > exit
+      >>> while socket.ready():
+      ...     socket.getdata()  # do something with the socket
+      ... else:
+      ...     socket.close()    # cleanup (e.g. close socket)
+      ...
+      >>> while 1:
+      ...     command = raw_input('Command > ')
+      ...     if command == 'exit': break
+      ...     # elif's for other commands
+      ...
+      Command > someaction
+      Command > exit
+
+
+  TOPIC -- Functions, Simple Generators, and the 'yield' Statement 
+  主题 -- 函数, 简单生成器, 和 'yield'语句
+  --------------------------------------------------------------------
+
+  Both functions and object methods allow a kind of nonlocality in
+  terms of program flow, but one that is quite restrictive. A
+  function or method is called from another context, enters at its
+  top, executes any statements encountered, then returns to the
+  calling context as soon as a 'return' statement is reached (or
+  the function body ends). The invocation of a function or method
+  is basically a strictly linear nonlocal flow.
+
+  Python 2.2 introduced a flow control construct, called
+  generators, that enables a new style of nonlocal branching. If a
+  function or method body contains the statement 'yield', then it
+  becomes a -generator function-, and invoking the function returns
+  a -generator iterator- instead of a simple value. A generator
+  iterator is an object that has a '.next()' method that returns
+  values.  Any instance object can have a '.next()' method, but a
+  generator iterator's method is special in having "resumable
+  execution."
+
+  In a standard function, once a 'return' statement is encountered,
+  the Python interpreter discards all information about the
+  function's flow state and local name bindings. The returned value
+  might contain some information about local values, but the flow
+  state is always gone. A generator iterator, in contrast,
+  "remembers" the entire flow state, and all local bindings,
+  between each invocation of its '.next()' method. A value is
+  returned to a calling context each place a 'yield' statement is
+  encountered in the generator function body, but the calling
+  context (or any context with access to the generator iterator) is
+  able to jump back to the flow point where this last 'yield'
+  occurred.
+
+  In the abstract, generators seem complex, but in practice they
+  prove quite simple.  For example:
+
+      >>> from __future__ import generators # not needed in 2.3+
+      >>> def generator_func():
+      ...     for n in [1,2]:
+      ...         yield n
+      ...     print "Two yields in for loop"
+      ...     yield 3
+      ...
+      >>> generator_iter = generator_func()
+      >>> generator_iter.next()
+      1
+      >>> generator_iter.next()
+      2
+      >>> generator_iter.next()
+      Two yields in for loop
+      3
+      >>> generator_iter.next()
+      Traceback (most recent call last):
+        File "<stdin>", line 1, in ?
+      StopIteration
+
+  The object 'generator_iter' in the example can be bound in
+  different scopes, and passed to and returned from functions,
+  just like any other object.  Any context invoking
+  'generator_iter.next()' jumps back into the last flow point
+  where the generator function body yielded.
+
+  In a sense, a generator iterator allows you to perform jumps
+  similar to the "GOTO" statements of some (older) languages, but
+  still retains the advantages of structured programming. The most
+  common usage for generators, however, is simpler than this. Most
+  of the time, generators are used as "iterators" in a loop
+  context; for example:
+
+      >>> for n in generator_func():
+      ...     print n
+      ...
+      1
+      2
+      Two yields in for loop
+      3
+
+  In recent Python versions, the 'StopIteration' exception is used
+  to signal the end of a 'for' loop. The generator iterator's
+  '.next()' method is implicitly called as many times as possible
+  by the 'for' statement.  The name indicated in the 'for'
+  statement is repeatedly re-bound to the values the 'yield'
+  statement(s) return.
+
+  TOPIC -- Raising and Catching Exceptions
+  --------------------------------------------------------------------
+
+  Python uses exceptions quite broadly and probably more naturally
+  than any other programming language. In fact there are certain
+  flow control constructs that are awkward to express by means
+  other than raising and catching exceptions.
+
+  There are two general purposes for exceptions in Python. On the
+  one hand, Python actions can be invalid or disallowed in various
+  ways. You are not allowed to divide by zero; you cannot open (for
+  reading) a filename that does not exist; some functions require
+  arguments of specific types; you cannot use an unbound name on
+  the right side of an assignment; and so on. The exceptions raised
+  by these types of occurrences have names of the form
+  '[A-Z].*Error'. Catching -error- exceptions is often a useful way
+  to recover from a problem condition and restore an application to
+  a "happy" state. Even if such error exceptions are not caught in
+  an application, their occurrence provides debugging clues since
+  they appear in tracebacks.
+
+  The second purpose for exceptions is for circumstances a
+  programmer wishes to flag as "exceptional."  But understand
+  "exceptional" in a weak sense--not as something that indicates
+  a programming or computer error, but simply as something
+  unusual or "not the norm."  For example, Python 2.2+ iterators
+  raise a 'StopIteration' exception when no more items can be
+  generated.  Most such implied sequences are not infinite
+  length, however; it is merely the case that they contain a
+  (large) number of items, and they run out only once at the end.
+  It's not "the norm" for an iterator to run out of items, but it
+  is often expected that this will happen eventually.
+
+  In a sense, raising an exception can be similar to executing a
+  'break' statement--both cause control flow to leave a block.
+  For example, compare:
+
+      >>> n = 0
+      >>> while 1:
+      ...     n = n+1
+      ...     if n > 10: break
+      ...
+      >>> print n
+      11
+      >>> n = 0
+      >>> try:
+      ...     while 1:
+      ...         n = n+1
+      ...         if n > 10: raise "ExitLoop"
+      ... except:
+      ...     print n
+      ...
+      11
+
+  In two closely related ways, exceptions behave differently than
+  do 'break' statements. In the first place, exceptions could be
+  described as having "dynamic scope," which in most contexts is
+  considered a sin akin to "GOTO," but here is quite useful. That
+  is, you never know at compile time exactly where an exception
+  might get caught (if not anywhere else, it is caught by the
+  Python interpreter). It might be caught in the exception's block,
+  or a containing block, and so on; or it might be in the local
+  function, or something that called it, or something that called
+  the caller, and so on. An exception is a -fact- that winds its
+  way through execution contexts until it finds a place to settle.
+  The upward propagation of exceptions is quite opposite to the
+  downward propagation of lexically scoped bindings (or even to the
+  earlier "three-scope rule").
+
+  The corollary of exceptions' dynamic scope is that, unlike
+  'break', they can be used to exit gracefully from deeply nested
+  loops. The "Zen of Python" offers a caveat here: "Flat is better
+  than nested." And indeed it is so, if you find yourself nesting
+  loops -too- deeply, you should probably refactor (e.g., break
+  loops into utility functions). But if you are nesting -just
+  deeply enough-, dynamically scoped exceptions are just the thing
+  for you. Consider the following small problem: A "Fermat triple"
+  is here defined as a triple of integers (i,j,k) such that "i**2 +
+  j**2 == k**2". Suppose that you wish to determine if any Fermat
+  triples exist with all three integers inside a given numeric
+  range. An obvious (but entirely nonoptimal) solution is:
+
+      >>> def fermat_triple(beg, end):
+      ...     class EndLoop(Exception): pass
+      ...     range_ = range(beg, end)
+      ...     try:
+      ...         for i in range_:
+      ...             for j in range_:
+      ...                 for k in range_:
+      ...                     if i**2 + j**2 == k**2:
+      ...                         raise EndLoop, (i,j,k)
+      ...     except EndLoop, triple:
+      ...         # do something with 'triple'
+      ...         return i,j,k
+      ...
+      >>> fermat_triple(1,10)
+      (3, 4, 5)
+      >>> fermat_triple(120,150)
+      >>> fermat_triple(100,150)
+      (100, 105, 145)
+
+  By raising the 'EndLoop' exception in the middle of the nested
+  loops, it is possible to catch it again outside of all the
+  loops.  A simple 'break' in the inner loop would only break out
+  of the most deeply nested block, which is pointless.  One might
+  devise some system for setting a "satisfied" flag and testing
+  for this at every level, but the exception approach is much
+  simpler.  Since the 'except' block does not actually -do-
+  anything extra with the triple, it could have just been
+  returned inside the loops; but in the general case, other
+  actions can be required before a 'return'.
+
+  It is not uncommon to want to leave nested loops when something
+  has "gone wrong" in the sense of a "*Error" exception.
+  Sometimes you might only be in a position to discover a problem
+  condition within nested blocks, but recovery still makes better
+  sense outside the nesting.  Some typical examples are problems
+  in I/O, calculation overflows, missing dictionary keys or list
+  indices, and so on.  Moreover, it is useful to assign 'except'
+  statements to the calling position that really needs to handle
+  the problems, then write support functions as if nothing can go
+  wrong.  For example:
+
+      >>> try:
+      ...     result = complex_file_operation(filename)
+      ... except IOError:
+      ...     print "Cannot open file", filename
+
+  The function 'complex_file_operation()' should not be burdened
+  with trying to figure out what to do if a bad 'filename' is given
+  to it--there is really nothing to be done in that context.
+  Instead, such support functions can simply propagate their
+  exceptions upwards, until some caller takes responsibility for
+  the problem.
+
+  The 'try' statement has two forms. The 'try/except/else' form is
+  more commonly used, but the 'try/finally' form is useful for
+  "cleanup handlers."
+
+  In the first form, a 'try' block must be followed by one or more
+  'except' blocks. Each 'except' may specify an exception or tuple
+  of exceptions to catch; the last 'except' block may omit an
+  exception (tuple), in which case it catches every exception that
+  is not caught by an earlier 'except' block.  After the 'except'
+  blocks, you may optionally specify an 'else' block.  The 'else'
+  block is run only if no exception occurred in the 'try' block.
+  For example:
+
+      >>> def except_test(n):
+      ...     try: x = 1/n
+      ...     except IOError: print "IO Error"
+      ...     except ZeroDivisionError: print "Zero Division"
+      ...     except: print "Some Other Error"
+      ...     else: print "All is Happy"
+      ...
+      >>> except_test(1)
+      All is Happy
+      >>> except_test(0)
+      Zero Division
+      >>> except_test('x')
+      Some Other Error
+
+  An 'except' test will match either the exception actually
+  listed or any descendent of that exception.  It tends to make
+  sense, therefore, in defining your own exceptions to inherit
+  from related ones in the [exceptions] module.  For example:
+
+      >>> class MyException(IOError): pass
+      >>> try:
+      ...    raise MyException
+      ... except IOError:
+      ...    print "got it"
+      ...
+      got it
+
+  In the "try/finally" form of the 'try' statement, the 'finally'
+  statement acts as general cleanup code. If no exception occurs in
+  the 'try' block, the 'finally' block runs, and that is that. If
+  an exception -was- raised in the 'try' block, the 'finally' block
+  still runs, but the original exception is re-raised at the end of
+  the block. However, if a 'return' or 'break' statement is
+  executed in a 'finally' block--or if a new exception is raised in
+  the block (including with the 'raise' statement)--the 'finally'
+  block never reaches its end, and the original exception
+  disappears.
+
+  A 'finally' statement acts as a cleanup block even when its
+  corresponding 'try' block contains a 'return', 'break', or
+  'continue' statement. That is, even though a 'try' block might
+  not run all the way through, 'finally' is still entered to clean
+  up whatever the 'try' -did- accomplish. A typical use of this
+  compound statement opens a file or other external resource at the
+  very start of the 'try' block, then performs several actions that
+  may or may not succeed in the rest of the block; the 'finally' is
+  responsible for making sure the file gets closed, whether or not
+  all the actions on it prove possible.
+
+  The "try/finally" form is never strictly needed since a bare
+  'raise' statement will re-raise the last exception. It is
+  possible, therefore, to have an 'except' block end with the
+  'raise' statement to propagate an error upward after taking some
+  action. However, when a cleanup action is desired whether or not
+  exceptions were encountered, the "try/finally" form can save a
+  few lines and express your intent more clearly. For example:
+
+      >>> def finally_test(x):
+      ...     try:
+      ...         y = 1/x
+      ...         if x > 10:
+      ...             return x
+      ...     finally:
+      ...         print "Cleaning up..."
+      ...     return y
+      ...
+      >>> finally_test(0)
+      Cleaning up...
+      Traceback (most recent call last):
+        File "<stdin>", line 1, in ?
+        File "<stdin>", line 3, in finally_test
+      ZeroDivisionError: integer division or modulo by zero
+      >>> finally_test(3)
+      Cleaning up...
+      0
+      >>> finally_test(100)
+      Cleaning up...
+      100
+
+  TOPIC -- Data as Code
+  --------------------------------------------------------------------
+
+  Unlike in languages in the Lisp family, it is -usually- not a
+  good idea to create Python programs that execute data values. It
+  is -possible-, however, to create and run Python strings during
+  program runtime using several built-in functions. The modules
+  [code], [codeop], [imp], and [new] provide additional
+  capabilities in this direction. In fact, the Python interactive
+  shell itself is an example of a program that dynamically reads
+  strings as user input, then executes them. So clearly, this
+  approach is occasionally useful.
+
+  Other than in providing an interactive environment for advanced
+  users (who themselves know Python), a possible use for the
+  "data as code" model is with applications that themselves
+  generate Python code, either to run later or to communicate
+  with another application.  At a simple level, it is not
+  difficult to write compilable Python programs based on
+  templatized functionality; for this to be useful, of course,
+  you would want a program to contain some customization that was
+  determinable only at runtime.
+
+  eval(s [,globals=globals() [,locals=locals()]])
+      Evaluate the expression in string 's' and return the result
+      of that evaluation.  You may specify optional arguments
+      'globals' and 'locals' to specify the namespaces to use for
+      name lookup.  By default, use the regular global and local
+      namespace dictionaries.  Note that only an expression can
+      be evaluated, not a statement suite.
+
+      Most of the time when a (novice) programmer thinks of
+      using `eval()` it is to compute some value--often
+      numeric--based on data encoded in texts.  For example,
+      suppose that a line in a report file contains a list of
+      dollar amounts, and you would like the sum of these
+      numbers.  A naive approach to the problem uses `eval()`:
+
+      >>> line = "$47  $33  $51  $76"
+      >>> eval("+".join([d.replace('$','') for d in line.split()]))
+      207
+
+      While this approach is generally slow, that is not an
+      important problem.  A more significant issue is that
+      `eval()` runs code that is not known until runtime;
+      potentially 'line' could contain Python code that causes
+      harm to the system it runs on or merely causes an
+      application to malfunction.  Imagine that instead of a
+      dollar figure, your data file contained 'os.rmdir("/")'.  A
+      better approach is to use the safe type coercion functions
+      `int()`, `float()`, and so on.
+
+      >>> nums = [int(d.replace('$','')) for d in line.split()]
+      >>> from operator import add
+      >>> reduce(add, nums)
+      207
+
+  exec
+      The `exec` statement is a more powerful sibling of the
+      `eval()` function.  Any valid Python code may be run if
+      passed to the `exec` statement.  The format of the `exec`
+      statement allows optional namespace specification, as with
+      `eval()`:
+
+      'exec頲ode頪in頶lobals頪,locals]]'
+
+      For example:
+
+      >>> s = "for i in range(10):\n  print i,\n"
+      >>> exec s in globals(), locals()
+      0 1 2 3 4 5 6 7 8 9
+
+      The argument 'code' may be either a string, a code object,
+      or an open file object.  As with `eval()` the security
+      dangers and speed penalties of `exec` usually outweigh any
+      convenience provided.  However, where 'code' is clearly
+      under application control, there are occasionally uses for
+      this statement.
+
+  __import__(s [,globals=globals() [,locals=locals() [,fromlist]]])
+      Import the module named 's', using namespace dictionaries
+      'globals' and 'locals'.  The argument 'fromlist' may be
+      omitted, but if specified as a nonempty list of
+      strings--e.g., '[""]'--the fully qualified subpackage will
+      be imported.  For normal cases, the `import` statement is
+      the way you import modules, but in the special circumstance
+      that the value of 's' is not determined until runtime, use
+      `__import__()`.
+
+      >>> op = __import__('os.path',globals(),locals(),[''])
+      >>> op.basename('/this/that/other')
+      'other'
+
+  input([prompt])
+      Equivalent to 'eval(raw_input(prompt))', along with all the
+      dangers associated with `eval()` generally.  Best practice
+      is to always use `raw_input()`, but you might see `input()`
+      in existing programs.
+
+  raw_input([prompt])
+      Return a string from user input at the terminal.  Used to
+      obtain values interactive in console-based applications.
+
+      >>> s = raw_input('Last Name: ')
+      Last Name: Mertz
+      >>> s
+      'Mertz'
+
+SECTION -- Functional Programming
+--------------------------------------------------------------------
+
+  This section largely recapitulates briefer descriptions
+  elsewhere in this appendix; but a common unfamiliarity with
+  functional programming merits a longer discussion.  Additional
+  material on functional programming in Python--mostly of a
+  somewhat exotic nature--can be found in articles at:
+
+    <http://gnosis.cx/publish/programming/charming_python_13.html>
+
+    <http://gnosis.cx/publish/programming/charming_python_16.html>
+
+    <http://gnosis.cx/publish/programming/charming_python_19.html>.
+
+  It is hard to find any consensus about exactly what functional
+  programming -is-, among either its proponents or detractors. It
+  is not really entirely clear to what extent FP is a feature of
+  languages, and to what extent a feature of programming styles.
+  Since this is a book about Python, we can leave aside discussions
+  of predominantly functional languages like Lisp, Scheme, Haskell,
+  ML, Ocaml, Clean, Mercury, Erlang, and so on, we can focus on
+  what makes a Python program more or less functional.
+
+  Programs that lean towards functional programming, within
+  Python's multiple paradigms, tend to have many of the following
+  features:
+
+  1.  Functions are treated as first-class objects that are
+      passed as arguments to other functions and methods, and
+      returned as values from same.
+
+  2.  Solutions are expressed more in terms of -what- is to be
+      computed than in terms of -how- the computation is
+      performed.
+
+  3.  Side effects, especially rebinding names repeatedly, are
+      minimized.  Functions are referentially transparent (see
+      Glossary).
+
+  4.  Expressions are emphasized over statements; in particular,
+      expressions often describe how a result collection is
+      related to a prior collection--most especially list
+      objects.
+
+  5.  The following Python constructs are used prevalently:  the
+      built-in functions `map()`, `filter()`, `reduce()`,
+      `apply()`, `zip()`, and `enumerate()`; extended call
+      syntax; the `lambda` operator; list comprehensions;
+      and switches expressed as Boolean operators.
+
+  Many experienced Python programmers consider FP constructs to
+  be as much of a wart as a feature.  The main drawback of a
+  functional programming style (in Python, or elsewhere) is that
+  it is easy to write unmaintainable or obfuscated programming
+  code using it.  Too many `map()`, `reduce()` and `filter()`
+  functions nested inside each other lose all the self-evidence
+  of Python's simple statement and indentation style.  Adding
+  unnamed `lambda` functions into the mix makes matters that much
+  worse.  The discussion in Chapter 1 of higher-order functions
+  gives some examples.
+
+  TOPIC -- Emphasizing Expressions using 'lambda'
+  --------------------------------------------------------------------
+
+  The `lambda` operator is used to construct an "anonymous"
+  function. In contrast to the more common 'def' declaration, a
+  function created with `lambda` can only contain a single
+  expression as a result, not a sequence of statements, nested
+  blocks, and so on. There are inelegant ways to emulate statements
+  within a `lambda`, but generally you should think of `lambda` as
+  a less-powerful cousin of 'def' declarations.
+
+  Not all Python programmers are happy with the `lambda`
+  operator.  There is certainly a benefit in readability to
+  giving a function a descriptive name.  For example, the second
+  style below is clearly more readable than the first:
+
+      >>> from math import sqrt
+      >>> print map(lambda (a,b): sqrt(a**2+b**2),((3,4),(7,11),(35,8)))
+      [5.0, 13.038404810405298, 35.902646142032481]
+      >>> sides = ((3,4),(7,11),(35,8))
+      >>> def hypotenuse(ab):
+      ...     a,b = ab[:]
+      ...     return sqrt(a**2+b**2)
+      ...
+      >>> print map(hypotenuse, sides)
+      [5.0, 13.038404810405298, 35.902646142032481]
+
+  By declaring a named function 'hypotenuse()', the intention of
+  the calculation becomes much more clear. Once in a while, though,
+  a function used in `map()` or in a callback (e.g., in [Tkinter],
+  [xml.sax], or [mx.TextTools]) really is such a one-shot thing
+  that a name only adds noise.
+
+  However, you may notice in this book that I fairly commonly use
+  the `lambda` operator to define a name. For example, you might
+  see something like:
+
+      >>> hypotenuse = lambda (a,b): sqrt(a**2+b**2)
+
+  This usage is mostly for documentation. A side matter is that a
+  few characters are saved in assigning an anonymous function to a
+  name, versus a 'def' binding. But conciseness is not particularly
+  important. This function definition form documents explicitly
+  that I do not expect any side effects--like changes to globals
+  and data structures--within the 'hypotenuse()' function. While
+  the 'def' form is also side effect free, that fact is not
+  advertised; you have to look through the (brief) code to
+  establish it. Strictly speaking, there are ways--like calling
+  `setattr()`--to introduce side effects within a `lambda`, but as
+  a convention, I avoid doing so, as should you.
+
+  Moreover, a second documentary goal is served by a `lambda`
+  assignment like the one above. Whenever this form occurs, it is
+  possible to literally substitue the right-hand expression
+  anywhere the left-hand name occurs (you need to add extra
+  surrounding parentheses usually, however). By using this form, I
+  am emphasizing that the name is simply a short-hand for the
+  defined expression. For example:
+
+      >>> hypotenuse = lambda a,b: sqrt(a**2+b**2)
+      >>> (lambda a,b: sqrt(a**2+b**2))(3,4), hypotenuse(3,4)
+      (5.0, 5.0)
+
+  Bindings with 'def', in general, lack substitutability.
+
+  TOPIC -- Special List Functions
+  --------------------------------------------------------------------
+
+  Python has two built-in functions that are strictly operations
+  on sequences, but that are frequently useful in conjunction
+  with the "function-plus-list" built-in functions.
+
+  zip(seq1 [,seq2 [,...]])
+      The `zip()` function, in Python 2.0+, combines multiple
+      sequences into one sequence of tuples.  Think of the teeth
+      of a zipper for an image and the source of the name.
+
+      The function `zip()` is almost the same as 'map(None,...)',
+      but `zip()` truncates when it reaches the end of the
+      shortest sequence. For example:
+
+      >>> map(None, (1,2,3,4), [5,5,5])
+      [(1, 5), (2, 5), (3, 5), (4, None)]
+      >>> zip((1,2,3,4), [5,5,5])
+      [(1, 5), (2, 5), (3, 5)]
+
+      Especially in combination with `apply()`, extended call
+      syntax, or simply tuple unpacking, `zip()` is useful for
+      operating over multiple related sequences at once; for
+      example:
+
+      >>> lefts, tops = (3, 7, 35), (4, 11, 8)
+      >>> map(hypotenuse, zip(lefts, tops))
+      [5.0, 13.038404810405298, 35.902646142032481]
+
+      A little quirk of `zip()` is that it is -almost- its own
+      inverse.  A little use of extended call syntax is needed
+      for inversion, though.  The expression 'zip(*zip(*seq))' is
+      idempotent (as an exercise, play with variations).
+      Consider:
+
+      >>> sides = [(3, 4), (7, 11), (35, 8)]
+      >>> zip(*zip(*sides))
+      [(3, 4), (7, 11), (35, 8)]
+
+  enumerate(collection)
+      Python 2.3 adds the `enumerate()` built-in function for
+      working with a sequence and its index positions at the same
+      time.  Basically, 'enumerate(seq)' is equivalent to
+      'zip(range(len(seq)),seq)', but `enumerate()` is a lazy
+      iterator that need not construct the entire list to loop
+      over.  A typical usage is:
+
+      >>> items = ['a','b']
+      >>> i = 0       # old-style explicit increment
+      >>> for thing in items:
+      ...     print 'index',i,'contains',thing
+      ...     i += 1
+      index 0 contains a
+      index 1 contains b
+      >>> for i,thing in enumerate(items):
+      ...     print 'index',i,'contains',thing
+      ...
+      index 0 contains a
+      index 1 contains b
+
+  TOPIC -- List-Application Functions as Flow Control
+  --------------------------------------------------------------------
+
+  I believe that text processing is one of the areas of Python
+  programming where judicious use of functional programming
+  techniques can greatly aid both clarity and conciseness. A
+  strength of FP style--specifically the Python built-in functions
+  `map()`, `filter()`, and `reduce()`--is that they are not merely
+  about -functions-, but also about -sequences-. In text processing
+  contexts, most loops are ways of iterating over chunks of text,
+  frequently over lines. When you wish to do something to a
+  sequence of similar items, FP style allows the code to focus on
+  the action (and its object) instead of on side issues of loop
+  constructs and transient variables.
+
+  In part, a `map()`, `filter()`, or `reduce()` call is a kind of
+  flow control. Just as a 'for' loop is an instruction to perform
+  an action a number of times, so are these list-application
+  functions. For example:
+
+      #*----------------- Explicit 'for' loop -----------------#
+      for x in range(100):
+          sys.stdout.write(str(x))
+
+  and:
+
+      #*--------------- List-application loop -----------------#
+      filter(sys.stdout.write, map(str, range(100)))
+
+  are just two different ways of calling the 'str()' function 100
+  times (and the 'sys.stdout.write()' method with each result). The
+  two differences are that the FP style does not bother rebinding a
+  name for each iteration, and that each call to a list-application
+  function returns a value--a list for `map()` and `filter()`,
+  potentially any sort of value for `reduce()`. Functions/methods
+  like `sys.stdout.write` that are called wholly for their
+  side effects almost always return 'None'; by using `filter()`
+  rather than `map()` around these, you avoid constructing a
+  throwaway list--or rather you construct just an empty list.
+
+  TOPIC --  Extended Call Syntax and 'apply()'
+  --------------------------------------------------------------------
+
+  To call a function in a dynamic way, it is sometimes useful to
+  build collections of arguments in data structures prior to the
+  call.  Unpacking a sequence containing several positional
+  arguments is awkward, and unpacking a dictionary of keyword
+  arguments simply cannot be done with the Python 1.5.2 standard
+  call syntax.  For example, consider the 'salutation()' function:
+
+      >>> def salutation(title,first,last,use_title=1,prefix='Dear'):
+      ...     print prefix,
+      ...     if use_title: print title,
+      ...     print '%s %s,' % (first, last)
+      ...
+      >>> salutation('Dr.','David','Mertz',prefix='To:')
+      To: Dr. David Mertz,
+
+  Suppose you read names and prefix strings from a text file or
+  database and wish to call 'salutation()' with arguments
+  determined at runtime.  You might use:
+
+      >>> rec = get_next_db_record()
+      >>> opts = calculate_options(rec)
+      >>> salutation(rec[0], rec[1], rec[2],
+      ...            use_title=opts.get('use_title',1),
+      ...            prefix=opts.get('prefix','Dear'))
+
+  This call can be performed more concisely as:
+
+      >>> salutation(*rec, **opts)
+
+  Or as:
+
+      >>> apply(salutation, rec, opts)
+
+  The calls 'func(*args,**keywds)' and 'apply(func,args,keywds)'
+  are equivalent.  The argument 'args' must be a sequence of the
+  same length as the argument list for 'func'.  The (optional)
+  argument 'keywds' is a dictionary that may or may not contain
+  keys matching keyword arguments (if not, it has no effect).
+
+  In most cases, the extended call syntax is more readable, since
+  the call closely resembles the -declaration- syntax of generic
+  positional and keyword arguments.  But in a few
+  cases--particularly in higher-order functions--the older
+  `apply()` built-in function is still useful.  For example,
+  suppose that you have an application that will either perform
+  an action immediately or defer it for later, depending on some
+  condition.  You might program this application as:
+
+      #*----------- apply() as first-class function -----------#
+      defer_list = []
+      if some_runtime_condition():
+          doIt = apply
+      else:
+          doIt = lambda *x: defer_list.append(x)
+      #...do stuff like read records and options...
+      doIt(operation, args, keywds)
+      #...do more stuff...
+      #...carry out deferred actions...
+      map(lambda (f,args,kw): f(*args,**kw), defer_list)
+
+  Since `apply()` is itself a first-class function rather than a
+  syntactic form, you can pass it around--or in the example,
+  bind it to a name.
+

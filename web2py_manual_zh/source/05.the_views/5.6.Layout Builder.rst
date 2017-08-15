@@ -1,0 +1,12 @@
+.. |layoutbuilder_screenshot| image:: ../_static/5.6.layoutbuilder_screenshot.png
+
+使用布局生成器
+============================================
+
+WEB2PY框架提供了一个布局生成器来帮助我们生成心的布局页面。以下是布局生成器的截图：
+
+|layoutbuilder_screenshot|
+
+此功能目前正在beta版本测试中，它的功能暂时有限。感谢Johannes Itten的工作，他是一名Bauhaus的倡导者，同时也是现代颜色理论的奠基人。
+
+这个站点让你可以选择你想要完成的页面布局的基本颜色，以及标题高度等基本信息。然后它会自动生成一个示例（用HTML和嵌入式CSS完成），包含合适的颜色和感觉。你可以直接把它下载下来代替默认的layout.html来作为你的项目的模板页面。

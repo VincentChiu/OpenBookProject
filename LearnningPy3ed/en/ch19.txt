@@ -1,0 +1,297 @@
+Chapter 19
+Chapter 19
+19Module Coding Basics
+Now that we've looked at the larger ideas behind modules, let's turn to a simple example of modules in action. Python modules are easy to create; they're just files of Python program code created with a text editor. You don't need to write special syntax to tell Python you're making a module; almost any text file will do. Because Python handles all the details of finding and loading modules, modules are also easy to use; clients simply import a module, or specific names a module defines, and use the objects they reference.
+Module Creation
+To define a module, simply use your text editor to type some Python code into a text file, and save it with a ".py" extension; any such file is automatically considered a Python module. All the names assigned at the top level of the module become its attributes (names associated with the module object), and are exported for clients to use. 
+For instance, if you type the following def into a file called module1.py and import it, you create a module object with one attribute-the name printer, which happens to be a reference to a function object:
+def printer(x):                   # Module attribute
+    print x
+Before we go on, I should say a few more words about module filenames. You can call modules just about anything you like, but module filenames should end in a .py suffix if you plan to import them. The .py is technically optional for top-level files that will be run but not imported, but adding it in all cases makes your files' types more obvious and allows you to import any of your files in the future.
+Because module names become variable names inside a Python program (without the .py), they should also follow the normal variable name rules outlined in Chapter 11. For instance, you can create a module file named if.py, but you cannot import it because if is a reserved word-when you try to run import if, you'll get a syntax error. In fact, both the names of module files and the names of directories used in package imports (discussed in the next chapter) must conform to the rules for variable names presented in Chapter 11; they may, for instance, contain only letters, digits, and underscores. Package directories also cannot contain platform-specific syntax such as spaces in their names.
+When a module is imported, Python maps the internal module name to an external filename by adding directory paths in the module search path to the front, and a .py or other extension at the end. For instance, a module named M ultimately maps to some external file <directory>\M.<extension> that contains the module's code.
+As mentioned in the preceding chapter, it also possible to create a Python module by writing code in an external language such as C or C++ (or Java, in the Jython implementation of the language). Such modules are called extension modules, and they are generally used to wrap up external libraries for use in Python scripts. When imported by Python code, extension modules look and feel the same as modules coded as Python source code files-they are accessed with import statements, and provide functions and objects as module attributes. Extension modules are beyond the scope of this book; see Python's standard manuals, or advanced texts such as Programming Python for more details.
+Module Usage
+Clients can use the simple module file we just wrote by running import or from statements. Both statements find, compile, and run a module file's code, if it hasn't yet been loaded. The chief difference is that import fetches the module as a whole, so you must qualify to fetch its names; in contrast, from fetches (or copies) specific names out of the module.
+Let's see what this means in terms of code. All of the following examples wind up calling the printer function defined in the external module file module1.py, but in different ways.
+The import Statement
+In the first example, the name module1 serves two different purposes-it identifies an external file to be loaded, and it becomes a variable in the script, which references the module object after the file is loaded:
+>>> import module1                    # Get module as a whole
+>>> module1.printer('Hello world!')   # Qualify to get names
+Hello world!
+Because import gives a name that refers to the whole module object, we must go through the module name to fetch its attributes (e.g., module1.printer).
+The from statement
+By contrast, because from also copies names from one file over to another scope, it allows us to use the copied names directly in the script without going through the module (e.g., printer):
+>>> from module1 import printer       # Copy out one variable
+>>> printer('Hello world!')           # No need to qualify name
+Hello world!
+This has the same effect as the prior example, but because the imported name is copied into the scope where the from statement appears, using that name in the script requires less typing: we can use it directly instead of naming the enclosing module.
+As you'll see in more detail later, the from statement is really just a minor extension to the import statement-it imports the module file as usual, but adds an extra step that copies one or more names out of the file.
+The from * Statement
+Finally, the next example uses a special form of from: when we use a *, we get copies of all the names assigned at the top level of the referenced module. Here again, we can then use the copied name printer in our script without going through the module name:
+>>> from module1 import *             # Copy out all variables
+>>> printer('Hello world!')
+Hello world!
+Technically, both import and from statements invoke the same import operation; the from * form simply adds an extra step that copies all the names in the module into the importing scope. It essentially collapses one module's namespace into another; again, the net effect is less typing for us.
+And that's it-modules really are simple to use. To give you a better understanding of what really happens when you define and use modules, though, let's move on to look at some of their properties in more detail.
+Imports Happen Only Once
+One of the most common questions beginners seem to ask when using modules is, "Why won't my imports keep working?" They often report that the first import works fine, but later imports during an interactive session (or program run) seem to have no effect. In fact, they're not supposed to, and here's why.
+Modules are loaded and run on the first import or from, and only the first. This is on purpose-because this is an expensive operation, by default, Python does it just once per file, per process. Later import operations simply fetch the already loaded module object.
+As one consequence, because top-level code in a module file is usually executed only once, you can use it to initialize variables. Consider the file simple.py, for example:
+print 'hello'
+spam = 1                   # Initialize variable
+In this example, the print and = statements run the first time the module is imported, and the variable spam is initialized at import time:
+% python
+>>> import simple          # First import: loads and runs file's code
+hello
+>>> simple.spam            # Assignment makes an attribute
+1
+Second and later imports don't rerun the module's code; they just fetch the already created module object from Python's internal modules table. Thus, the variable spam is not reinitialized:
+>>> simple.spam = 2        # Change attribute in module
+>>> import simple          # Just fetches already loaded module
+>>> simple.spam            # Code wasn't rerun: attribute unchanged
+2
+Of course, sometimes you really want a module's code to be rerun on a subsequent import. We'll see how to do this with the reload built-in function later in this chapter.
+import and from Are Assignments
+Just like def, import and from are executable statements, not compile-time declarations. They may be nested in if tests, appear in function defs, and so on, and they are not resolved or run until Python reaches them while executing your program. In other words, imported modules and names are not available until their associated import or from statements run. Also, like def, import and from are implicit assignments:
+	*	import assigns an entire module object to a single name.
+	*	from assigns one or more names to objects of the same names in another module.
+All the things we've already discussed about assignment apply to module access, too. For instance, names copied with a from become references to shared objects; as with function arguments, reassigning a fetched name has no effect on the module from which it was copied, but changing a fetched mutable object can change it in the module from which it was imported. To illustrate, consider the following file, small.py:
+x = 1
+y = [1, 2]
+
+% python
+>>> from small import x, y          # Copy two names out
+>>> x = 42                          # Changes local x only
+>>> y[0] = 42                       # Changes shared mutable in-place
+Here, x is not a shared mutable object, but y is. The name y in the importer and the importee reference the same list object, so changing it from one place changes it in the other:
+>>> import small                    # Get module name (from doesn't)
+>>> small.x                         # Small's x is not my x
+1
+>>> small.y                         # But we share a changed mutable
+[42, 2]
+For a graphical picture of what from assignments do with references, flip back to Figure 16-2 (function argument passing), and mentally replace "caller" and "function" with "imported" and "importer." The effect is the same, except that here we're dealing with names in modules, not functions. Assignment works the same everywhere in Python.
+Cross-File Name Changes
+Recall from the prior example that the assignment to x in the interactive session changed the name x in that scope only, not the x in the file-there is no link from a name copied with from back to the file it came from. To really change a global name in another file, you must use import:
+% python
+>>> from small import x, y          # Copy two names out
+>>> x = 42                          # Changes my x only
+  
+>>> import small                    # Get module name
+>>> small.x = 42                    # Changes x in other module
+This phenomenon was introduced in Chapter 16. Because changing variables in other modules like this is a common source of confusion (and often a bad design choice), we'll revisit this technique again later in this part of the book. Note that the change to y[0] in the prior session is different; it changes an object, not a name.
+import and from Equivalence
+Notice in the prior example that we have to execute an import statement after the from to access the small module name at all; from only copies names from one module to another, and does not assign the module name itself. At least conceptually, a from statement like this one:
+from module import name1, name2     # Copy these two names out (only)
+is equivalent to this statement sequence:
+import module                       # Fetch the module object
+name1 = module.name1                # Copy names out by assignment
+name2 = module.name2
+del module                          # Get rid of the module name
+Like all assignments, the from statement creates new variables in the importer, which initially refer to objects of the same names in the imported file. Only the names are copied out, though, not the module itself. When we use the from * form of this statement (from module import *), the equivalence is the same, but all the top-level names in the module are copied over to the importing scope this way.
+Notice that the first step of the from runs a normal import operation. Because of this, the from always imports the entire module into memory if it has not yet been imported, regardless of how many names it copies out of the file. There is no way to load just part of a module file (e.g., just one function), but because modules are byte code in Python instead of machine code, the performance implications are generally negligible.
+Potential Pitfalls of the from Statement
+Because the from statement makes the location of a variable more implicit and obscure (name is less meaningful to the reader than module.name), some Python users recommend using import instead of from most of the time. I'm not sure this advice is warranted, though; from is commonly and widely used, without too many dire consequences. In practice, in realistic programs, it's often convenient not to have to type a module's name every time you wish to use one of its tools. This is especially true for large modules that provide many attributes-the standard library's Tkinter GUI module, for example.
+It is true that the from statement has the potential to corrupt namespaces, at least in principle-if you use it to import variables that happen to have the same names as existing variables in your scope, your variables will be silently overwritten. This problem doesn't occur with the simple import statement because you must always go through a module's name to get to its contents (module.attr will not clash with a variable named attr in your scope). As long as you understand and expect that this can happen when using from, though, this isn't a major concern in practice, especially if you list the imported names explicitly (e.g., from module import x, y, z).
+On the other hand, the from statement has more serious issues when used in conjunction with the reload call, as imported names might reference prior versions of objects. Moreover, the from module import * form really can corrupt namespaces and make names difficult to understand, especially when applied to more than one file-in this case, there is no way to tell which module a name came from, short of searching the external source files. In effect, the from * form collapses one namespace into another, and so defeats the namespace partitioning feature of modules. We will explore these issues in more detail in the "Module Gotchas" section at the end of this part of the book (see Chapter 21).
+Probably the best real-world advice here is to generally prefer import to from for simple modules, to explicitly list the variables you want in most from statements, and to limit the from * form to just one import per file. That way, any undefined names can be assumed to live in the module referenced with the from *. Some care is required when using the from statement, but armed with a little knowledge, most programmers find it to be a convenient way to access modules.
+When import is required
+The only time you really must use import instead of from is when you must use the same name defined in two different modules. For example, if two files define the same name differently:
+# M.py
+
+def func(  ):
+    ...do something...
+
+# N.py
+
+def func(  ):
+    ...do something else...
+and you must use both versions of the name in your program, the from statement will fail-you can only have one assignment to the name in your scope:
+# O.py
+
+from M import func
+from N import func        # This overwites the one we got from M
+func(  )                  # Calls N.func only
+An import will work here, though, because including the name of the enclosing module makes the two names unique:
+# O.py
+
+import M, N                # Get the whole modules, not their names
+M.func(  )                 # We can call both names now
+N.func(  )                 # The module names make them unique
+This case is unusual enough that you're unlikely to encounter it very often in practice. 
+Module Namespaces
+Modules are probably best understood as simply packages of names-i.e., places to define names you want to make visible to the rest of a system. Technically, modules usually correspond to files, and Python creates a module object to contain all the names assigned in a module file. But, in simple terms, modules are just namespaces (places where names are created), and the names that live in a module are called its attributes. We'll explore how all this works in this section.
+Files Generate Namespaces
+So, how do files morph into namespaces? The short story is that every name that is assigned a value at the top level of a module file (i.e., not nested in a function or class body) becomes an attribute of that module.
+For instance, given an assignment statement such as X = 1 at the top level of a module file M.py, the name X becomes an attribute of M, which we can refer to from outside the module as M.X. The name X also becomes a global variable to other code inside M.py, but we need to explain the notion of module loading and scopes a bit more formally to understand why:
+	*	Module statements run on the first import. The first time a module is imported anywhere in a system, Python creates an empty module object, and executes the statements in the module file one after another, from the top of the file to the bottom.
+	*	Top-level assignments create module attributes. During an import, statements at the top level of the file not nested in a def or class that assign names (e.g., =, def) create attributes of the module object; assigned names are stored in the module's namespace.
+	*	Module namespaces can be accessed via the attribute _  _dict_  _ or dir(M). Module namespaces created by imports are dictionaries; they may be accessed through the built-in _  _dict_  _ attribute associated with module objects and may be inspected with the dir function. The dir function is roughly equivalent to the sorted keys list of an object's _  _dict_  _ attribute, but it includes inherited names for classes, may not be complete, and is prone to changing from release to release.
+	*	Modules are a single scope (local is global). As we saw in Chapter 16, names at the top level of a module follow the same reference/assignment rules as names in a function, but the local and global scopes are the same (more formally, they follow the LEGB scope rule we met in Chapter 16, but without the L and E lookup layers). But, in modules, the module scope becomes an attribute dictionary of a module object after the module has been loaded. Unlike with functions (where the local namespace exists only while the function runs), a module file's scope becomes a module object's attribute namespace and lives on after the import.
+Here's a demonstration of these ideas. Suppose we create the following module file in a text editor and call it module2.py:
+print 'starting to load...'
+
+import sys
+name = 42
+
+def func(  ): pass
+
+class klass: pass
+
+print 'done loading.'
+The first time this module is imported (or run as a program), Python executes its statements from top to bottom. Some statements create names in the module's namespace as a side effect, but others may do actual work while the import is going on. For instance, the two print statements in this file execute at import time:
+>>> import module2
+starting to load...
+done loading.
+But once the module is loaded, its scope becomes an attribute namespace in the module object we get back from import. We can then access attributes in this namespace by qualifying them with the name of the enclosing module:
+>>> module2.sys
+<module 'sys' (built-in)>
+
+>>> module2.name
+42
+
+>>> module2.func
+<function func at 0x012B1830>
+
+>>> module2.klass
+<class module2.klass at 0x011C0BA0>
+Here, sys, name, func, and klass were all assigned while the module's statements were being run, so they are attributes after the import. We'll talk about classes in Part VI, but notice the sys attribute-import statements really assign module objects to names, and any type of assignment to a name at the top level of a file generates a module attribute. 
+Internally, module namespaces are stored as dictionary objects. These are just normal dictionary objects with the usual methods. We can access a module's namespace dictionary through the module's _  _dict_  _ attribute:
+>>> module2._  _dict_  _.keys(  )
+['__file__', 'name', '__name__', 'sys', '__doc__', '_  _builtins_  _', 
+'klass', 'func']
+The names we assigned in the module file become dictionary keys internally, so most of the names here reflect top-level assignments in our file. However, Python also adds some names in the module's namespace for us; for instance, _  _file_  _ gives the name of the file the module was loaded from, and _  _name_  _ gives its name as known to importers (without the .py extension and directory path). 
+Attribute Name Qualification
+Now that you're becoming more familiar with modules, we should look at the notion of  name qualification in more depth. In Python, you can access the attributes of any object that has attributes using the qualification syntax object.attribute.
+Qualification is really an expression that returns the value assigned to an attribute name associated with an object. For example, the expression module2.sys in the previous example fetches the value assigned to sys in module2. Similarly, if we have a built-in list object L, L.append returns the append method object associated with that list.
+So, what does attribute qualification do to the scope rules we studied in Chapter 16? Nothing, really: it's an independent concept. When you use qualification to access names, you give Python an explicit object from which to fetch the specified names. The LEGB rule applies only to bare, unqualified names. Here are the rules:
+Simple variables
+X means search for the name X in the current scopes (following the LEGB rule).
+Qualification
+X.Y means find X in the current scopes, then search for the attribute Y in the object X (not in scopes).
+Qualification paths
+X.Y.Z means look up the name Y in the object X, then look up Z in the object X.Y.
+Generality
+Qualification works on all objects with attributes: modules, classes, C extension types, etc.
+In Part VI, we'll see that qualification means a bit more for classes (it's also the place where something called inheritance happens), but, in general, the rules outlined here apply to all names in Python.
+Imports Versus Scopes
+As we've learned, it is never possible to access names defined in another module file without first importing that file. That is, you never automatically get to see names in another file, regardless of the structure of imports or function calls in your program. A variable's meaning is always determined by the locations of assignments in your source code, and attributes are always requested of an object explicitly.
+For example, consider the following two simple modules. The first, moda.py, defines a variable X global to code in its file only, along with a function that changes the global X in this file:
+X = 88                        # My X: global to this file only
+
+def f(  ):
+    global X                  # Change this file's X
+    X = 99                    # Cannot see names in other modules
+The second module, modb.py, defines its own global variable X, and imports and calls the function in the first module:
+X = 11                         # My X: global to this file only
+
+import moda                   # Gain access to names in moda
+moda.f(  )                         # Sets moda.X, not this file's X
+print X, moda.X
+When run, moda.f changes the X in moda, not the X in modb. The global scope for moda.f is always the file enclosing it, regardless of which module it is ultimately called from:
+% python modb.py
+11 99
+In other words, import operations never give upward visibility to code in imported files-an imported file cannot see names in the importing file. More formally:
+	*	Functions can never see names in other functions, unless they are physically enclosing.
+	*	Module code can never see names in other modules, unless they are explicitly imported.
+Such behavior is part of the lexical scoping notion-in Python, the scopes surrounding a piece of code are completely determined by the code's physical position in your file. Scopes are never influenced by function calls or module imports.
+Namespace Nesting
+In some sense, although imports do not nest namespaces upward, they do nest downward. Using attribute qualification paths, it's possible to descend into arbitrarily nested modules and access their attributes. For example, consider the next three files. mod3.py defines a single global name and attribute by assignment:
+X = 3
+mod2.py in turn defines is own X, then imports mod3 and uses qualification to access the imported module's attribute:
+X = 2
+import mod3
+
+print X,                      # My global X
+print mod3.X                  # mod3's X
+mod1.py also defines its own X, then imports mod2, and fetches attributes in both the first and second files:
+X = 1
+import mod2
+
+print X,                      # My global X
+print mod2.X,                 # mod2's X
+print mod2.mod3.X             # Nested mod3's X
+Really, when mod1 imports mod2 here, it sets up a two-level namespace nesting. By using the path of names mod2.mod3.X, it can descend into mod3, which is nested in the imported mod2. The net effect is that mod1 can see the Xs in all three files, and hence has access to all three global scopes:
+% python mod1.py
+2 3
+1 2 3
+The reverse, however, is not true: mod3 cannot see names in mod2, and mod2 cannot see names in mod1. This example may be easier to grasp if you don't think in terms of namespaces and scopes, but instead focus on the objects involved. Within mod1, mod2 is just a name that refers to an object with attributes, some of which may refer to other objects with attributes (import is an assignment). For paths like mod2.mod3.X, Python simply evaluates from left to right, fetching attributes from objects along the way.
+Note that mod1 can say import mod2, and then mod2.mod3.X, but it cannot say import mod2.mod3-this syntax invokes something called package (directory) imports, described in the next chapter. Package imports also create module namespace nesting, but their import statements are taken to reflect directory trees, not simple import chains.
+Reloading Modules
+As we've seen, a module's code is run only once per process by default. To force a module's code to be reloaded and rerun, you need to ask Python to do so explicitly by calling the reload built-in function. In this section, we'll explore how to use reloads to make your systems more dynamic. In a nutshell:
+	*	Imports (via both import and from statements) load and run a module's code only the first time the module is imported in a process.
+	*	Later imports use the already loaded module object without reloading or rerunning the file's code.
+	*	The reload function forces an already loaded module's code to be reloaded and rerun. Assignments in the file's new code change the existing module object in-place.
+Why all the fuss about reloading modules? The reload function allows parts of a program to be changed without stopping the whole program. With reload, therefore, the effects of changes in components can be observed immediately. Reloading doesn't help in every situation, but where it does, it makes for a much shorter development cycle. For instance, imagine a database program that must connect to a server on startup; because program changes or customizations can be tested immediately after reloads, you need to connect only once while debugging.
+Because Python is interpreted (more or less), it already gets rid of the compile/link steps you need to go through to get a C program to run: modules are loaded dynamically when imported by a running program. Reloading offers a further performance advantage by allowing you to also change parts of running programs without stopping. Note that reload currently only works on modules written in Python; compiled extension modules coded in a language such as C can be dynamically loaded at runtime, too, but they can't be reloaded.
+reload Basics
+Unlike import and from:
+	*	reload is a built-in function in Python, not a statement.
+	*	reload is passed an existing module object, not a name.
+Because reload expects an object, a module must have been previously imported successfully before you can reload it (if the import was unsuccessful, due to a syntax or other error, you may need to repeat it before you can reload the module). Furthermore, the syntax of import statements and reload calls differs: reloads require parentheses, but imports do not. Reloading looks like this:
+import module                     # Initial import
+...use module.attributes...
+...                               # Now, go change the module file
+... 
+reload(module)                    # Get updated exports
+...use module.attributes...
+The typical usage pattern is that you import a module, then change its source code in a text editor, and then reload it. When you call reload, Python rereads the module file's source code, and reruns its top-level statements. Perhaps the most important thing to know about reload is that it changes a module object in-place; it does not delete and re-create the module object. Because of that, every reference to a module object anywhere in your program is automatically affected by a reload. Here are the details:
+	*	reload runs a module file's new code in the module's current namespace. Rerunning a module file's code overwrites its existing namespace, rather than deleting and re-creating it.
+	*	Top-level assignments in the file replace names with new values. For instance, rerunning a def statement replaces the prior version of the function in the module's namespace by reassigning the function name.
+	*	Reloads impact all clients that use import to fetch modules. Because clients that use import qualify to fetch attributes, they'll find new values in the module object after a reload.
+	*	Reloads impact future from clients only. Clients that used from to fetch attributes in the past won't be affected by a reload; they'll still have references to the old objects fetched before the reload.
+reload Example
+Here's a more concrete example of reload in action. In the following example, we'll change and reload a module file without stopping the interactive Python session. Reloads are used in many other scenarios, too (see the sidebar "Why You Will Care: Module Reloads"), but we'll keep things simple for illustration here. First, in the text editor of your choice, write a module file named changer.py with the following contents:
+message = "First version"
+
+def printer(  ):
+    print message
+This module creates and exports two names-one bound to a string, and another to a function. Now, start the Python interpreter, import the module, and call the function it exports. The function will print the value of the global message variable:
+% python
+>>> import changer
+>>> changer.printer(  )
+First version
+Keeping the interpreter active, now edit the module file in another window:
+...modify changer.py without stopping Python...
+% vi changer.py
+Change the global message variable, as well as the printer function body:
+message = "After editing"
+
+def printer(  ):
+    print 'reloaded:', message
+Then, return to the Python window, and reload the module to fetch the new code. Notice in the following interaction that importing the module again has no effect; we get the original message, even though the file's been changed. We have to call reload in order to get the new version:
+...back to the Python interpreter/program...
+
+>>> import changer
+>>> changer.printer(  )      # No effect: uses loaded module
+First version
+
+>>> reload(changer)          # Forces new code to load/run
+<module 'changer'>
+>>> changer.printer(  )      # Runs the new version now
+reloaded: After editing
+Notice that reload actually returns the module object for us-its result is usually ignored, but because expression results are printed at the interactive prompt, Python shows a default <module 'name'> representation.
+Why You Will Care: Module Reloads
+Besides allowing you to reload (and hence rerun) modules at the interactive prompt, module reloads are also useful in larger systems, especially when the cost of restarting the entire application is prohibitive. For instance, systems that must connect to servers over a network on startup are prime candidates for dynamic reloads.
+They're also useful in GUI work (a widget's callback action can be changed while the GUI remains active), and when Python is used as an embedded language in a C or C++ program (the enclosing program can request a reload of the Python code it runs, without having to stop). See Programming Python for more on reloading GUI callbacks and embedded Python code.
+More generally, reloads allow programs to provide highly dynamic interfaces. For instance, Python is often used as a customization language for larger systems-users can customize products by coding bits of Python code on-site, without having to recompile the entire product (or even having its source code at all). In such worlds, the Python code already adds a dynamic flavor by itself.
+To be even more dynamic, though, such systems can automatically reload the Python customization code periodically at runtime. That way, users' changes are picked up while the system is running; there is no need to stop and restart each time the Python code is modified. Not all systems require such a dynamic approach, but for those that do, module reloads provide an easy-to-use dynamic customization tool.
+
+Chapter Summary
+This chapter delved into the basics of module coding tools-the import and from statements, and the reload call. We learned how the from statement simply adds an extra step that copies names out of a file after it has been imported, and how reload forces a file to be imported again with stopping and restarting Python. We also surveyed namespace concepts, saw what happens when imports are nested, explored the way files become module namespaces, and learned about some potential pitfalls of the from statement.
+Although we've already seen enough to handle module files in our programs, the next chapter extends our coverage of the import model by presenting package imports-a way for our import statements to specify part of the directory path leading to the desired module. As we'll see, package imports give us a hierarchy that is useful in larger systems, and allow us to break conflicts between same-named modules. Before we move on, though, here's a quick quiz on the concepts presented here.
+Brain Builder
+Chapter Quiz
+	1.	How do you make a module?
+	2.	How is the from statement related to the import statement?
+	3.	How is the reload function related to imports?
+	4.	When must you use import instead of from?
+	5.	Name three potential pitfalls of the from statement.
+	6.	What is the airspeed velocity of an unladen swallow?
+Quiz Answers
+	1.	To create a module, you just write a text file containing Python statements; every source code file is automatically a module, and there is no syntax for declaring one. Import operations load module files into module objects in memory. You can also make a module by writing code in an external language like C or Java, but such extension modules are beyond the scope of this book.
+	2.	The from statement imports an entire module, like the import statement, but as an extra step, it also copies one or more variables from the imported module into the scope where the from appears. This enables you to use the imported names directly (name) instead of having to go though the module (module.name).
+	3.	By default, a module is imported only once per process. The reload function forces a module to be imported again. It is mostly used to pick up new versions of a module's source code during development, and in dynamic customization scenarios.
+	4.	You must use import instead of from only when you need to access the same name in two different modules; because you'll have to specify the names of the enclosing modules, the two names will be unique.
+	5.	The from statement can obscure the meaning of a variable (which module it is defined in), can have problems with the reload call (names may reference prior versions of objects), and can corrupt namespaces (it might silently overwrite names you are using in your scope). The from * form is worse in most regards-it can seriously corrupt namespaces, and obscure the meaning of variables; it is probably best used sparingly.
+	6.	What do you mean? An African or European swallow?

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appendix id="furtherreading">
+<?dbhtml filename="appendix/furtherreading.html"?>
+<title>进一步阅读</title>
+<para>
+</para>
+</appendix>
+<appendix id="abstracts">
+<?dbhtml filename="appendix/abstracts.html"?>
+<title>五分钟回顾</title>
+<para>
+</para>
+</appendix>
+<appendix id="tips">
+<?dbhtml filename="appendix/tips.html"?>
+<title>技巧和窍门</title>
+<para>
+</para>
+</appendix>
+<appendix id="examples">
+<?dbhtml filename="appendix/examples.html"?>
+<title>示例清单</title>
+<para>
+</para>
+</appendix>
+<appendix id="revhistory">
+<?dbhtml filename="appendix/history.html"?>
+<title>修订历史</title>
+<para>
+</para>
+</appendix>
+<appendix id="about">
+<?dbhtml filename="appendix/about.html"?>
+<title>关于本书</title>
+<para>
+本书的英文版是用 <ulink url="&url_emacs;" type="The One True Editor">&emacs;</ulink> 以 <ulink url="&url_docbook;" type="DocBook home page">&docbook; &xml;</ulink> 格式写成的, 使用 
+<ulink url="&url_docbookxsl;" type="DocBook XSL home page">由 Norman Walsh 编制的 &xsl; 样式表</ulink> 的经过客户化的版本由 <ulink url="&url_saxon;" type="SAXON home page">&saxon;</ulink> 转化为 &html;。在此基础上, 使用 <ulink url="&url_htmldoc;" type="HTMLDOC home page">&htmldoc;</ulink> 将其转化为 &pdf;; 使用 <ulink url="&url_w3m;" type="w3m home page">&w3m;</ulink> 将其转化为无格式文本 (plain text)。(本书的简体中文版是使用译者习惯使用的编辑器对 &xml; 源代码进行翻译, 并使用原书作者提供的创建脚本输出了 html 版和 htmlflat 版，使用 HTML Help Workshop 生成了chm版本。)程序清单和例子使用了由 Just van Rossum 编写的 <filename class="headerfile">pyfontify.py</filename> 程序的改进版本进行了语法着色, 此程序包含在示例脚本中。 </para>
+<para>
+如果您对学习用 &docbook; 进行技术方面的写作感兴趣, 可以 <ulink url="&url_diveintopython;&url_dip_xml;" type="Download XML source files">下载本书的 &xml; 源代码</ulink> 和 <ulink url="&url_diveintopython;&url_dip_common;" type="Download build scripts and auxiliary files">创建脚本</ulink>, 它包含了用于创建本书各种输出格式的经过客户化的 &xsl; 样式表。您还应该阅读权威著作, <ulink url="&url_docbook_tdg;" type="Read DocBook: TDG online"><citetitle pubwork="book">&docbook;: The Definitive Guide</citetitle></ulink>。如果您打算用 &docbook; 进行任何正式的写作, 我建议您订阅 <ulink url="&url_docbook_lists;" type="Subscribe to DocBook and/or DocBook-Apps">&docbook; 邮件列表</ulink>。</para>
+</appendix>

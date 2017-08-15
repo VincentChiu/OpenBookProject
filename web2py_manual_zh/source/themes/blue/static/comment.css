@@ -1,0 +1,59 @@
+div.comment a {
+    cursor: pointer;
+    color: white;
+    text-decoration:none;
+}
+div.comment a div {
+    height: 16px;
+    width: 16px;
+}
+div.comment a.comment_link div {
+    background: #2D4877 url(../_static/i/comment_white_yellow.gif) no-repeat -16px 0;
+}
+div.comment a.email_link div {
+    background: #2D4877 url(../_static/i/email.gif) no-repeat -16px 0;
+}
+div.comment a div:hover{
+    background-position:0 0;
+}
+div.comment {
+    position:absolute;
+}
+div.commentbox {
+    padding: 5px 0;
+}
+div.commentbox textarea, div.commentbox input {
+    border:1px solid #2777C2;
+}
+div.commentbox input.comment_send {
+    margin: 0 5px;
+}
+div.commentbox p {
+    margin: 0.2em 0;
+}
+div.commentbox p span.error {
+    color: red;
+    font-size: 80%;
+    margin-left: 20px;
+}
+div#loading {
+    -moz-border-radius-bottomleft:2px;
+    -moz-border-radius-bottomright:2px;
+    background-color:#FFE9F6;
+    padding:2px 8px;
+    position:fixed;
+    top:0;
+}
+div.commentbox hr {
+    margin:0;
+    border:1px dashed #AABBCC;
+}
+div.commentbox dl {
+    margin: 10px auto;
+}
+div.commentbox dd {
+    margin:3px auto 3px 30px;
+    
+}
+
+

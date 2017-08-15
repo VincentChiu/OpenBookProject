@@ -1,0 +1,164 @@
+基本语法
+===================
+
+和Django等其他Python框架的模板语言不同，WEB2PY的模板语言支持所有的Python的控制结构。下面我们介绍其中的一部分，他们可以根据你的需要在程序里随时调用。
+
+for...in
+"""""""""""""
+
+在模板里面，你可以用该语句来循环访问一个可迭代对象：
+
+::
+
+    {{items=['a','b','c']}}
+    <ul>{{for item in items:}}<li>{{=item}}</li>{{pass}}
+    </ul>
+
+以上代码实际生成的HTML如下：
+
+::
+
+    <ul>
+    <li>a</li>
+    <li>b</li>
+    <li>c</li>
+    </ul>
+
+在这个代码当中，items（译者注：原文为item）可以是任意的一种可迭代对象，比如Python list，Python tuple，或者Rows 对象，或者其他任何实现了“__iter__”接口的对象。需要注意的是，那些将来会在页面上显示的对象会被优先序列化并转义成合适的HTML代码。
+
+while
+"""""""""""""
+
+当然，WEB2PY模板语言同样支持while循环：
+
+::
+
+    {{k=3}}
+    <ul>{{while k > 0:}}<li>{{=k}}{{k = k - 1}}</li>{{pass}}
+    </ul>
+    
+以上代码生成如下HTML：
+
+::
+
+    <ul>
+    <li>3</li>
+    <li>2</li>
+    <li>1</li>
+    </ul>
+
+if...elif...else
+""""""""""""""""""""""""
+
+除了循环，分支语句当然必不可少：
+
+::
+    {{
+    import random
+    k = random.randint(0,100)
+    }}
+    <h2>
+    {{=k}}
+    {{if k % 2:}}is odd{{else:}}is even{{pass}}
+    </h2>
+
+以上代码生成如下HTML：
+
+::
+    
+    <h2>
+    45 is odd
+    </h2>
+
+因为在这个地方，else语句很明显的可以和if语句块区分开，所以就不需要在if语句块的末尾加上一个pass。如果你加上了，那么程序反而会报错。当然，因为没有明显的语句来区分else的语句块和正常的HTML，所以你需要在else块的末尾加上一个pass用来表示结束。
+
+下面给出一个多重判断的例子，用的是elif语句：
+
+::
+
+    {{
+    import random
+    k=random.randint(0,100)
+    }}
+    <h2>
+    {{=k}}
+    {{if k % 4 == 0:}}is divisible by 4
+    {{elif k % 2 == 0:}}is even
+    {{else:}}is odd
+    {{pass}}
+    </h2>
+
+以上代码生成如下HTML：
+
+::
+
+    <h2>
+    64 is divisible by 4
+    </h2>
+
+try...except...else...finally
+""""""""""""""""""""""""""""""""""""""""
+
+除了结构控制语句以外，模板语言同样提供了异常处理语句：
+
+::
+
+    {{try:}} 
+    Hello {{= 1 / 0}} 
+    {{except:}} 
+    division by zero 
+    {{else:}} 
+    nodivisionbyzero 
+    {{finally}}
+    <br/> 
+    {{pass}}
+
+以上代码产生如下HTML：
+
+::
+
+    Hello
+    division by zero
+    <br />
+
+从这个例子我们可以看出，所有在异常发生以前的代码都被处理并渲染成HTML了（包括处理异常时产生的输出）。“Hello”被输出成HTML就是因为它的位置在发生异常的代码之前。
+
+def...return
+"""""""""""""""""""""
+
+WEB2PY模板语言甚至还允许开发人员在模板里面定义函数。要求就是，这样的函数必须返回Python对象，或者一段HTML字符串。下面给出一个具体例子：
+
+::
+
+    {{def itemize1(link):return LI(A(link,_href="http://"+link))}}
+    <ul> 
+    {{=itemize1('www.google.com')}} 
+    </ul>
+
+以上代码产生如下HTML：
+
+::
+
+    <ul>
+    <li><a href="http://www.google.com">www.google.com</a></li>
+    </ul>
+
+itemize1函数会返回一个辅助对象，它生成的HTML代码被插入在itemize1对象被调用的地方。
+
+我们再来看一段代码：
+
+::
+
+    {{def itemize2(link):}} 
+    <li><a href="http://{{=link}}">{{=link}}</a></li> 
+    {{return}} 
+    <ul> 
+    {{itemize2('www.google.com')}} 
+    </ul>
+
+这段代码和上面那段代码产生同样的输出。itemize2的作用和itemize1类似同样是产生了一段HTML代码。但是需要注意，它在itemize2调用的地方并没有“=”。少了这个“=”的原因是，itemize2并没有返回一个字符串，而是直接把字符串写在HTTP返回值里面。
+
+需要格外注意的是：在显示层里面定义的函数必须以return语句结束，否则WEB2PY的自动缩进功能就会失败，导致程序不能正常执行。
+
+
+

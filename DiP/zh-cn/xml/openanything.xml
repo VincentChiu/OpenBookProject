@@ -1,0 +1,1051 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chapter id="oa">
+<?dbhtml filename="http_web_services/index.html"?>
+<title>HTTP Web 服务</title>
+<titleabbrev id="oa.numberonly">第 11 章</titleabbrev>
+<section id="oa.divein">
+<title>概览</title>
+<abstract>
+<title/>
+<para> 在讲解<link linkend="dialect.extract.urllib">如何下载 web 页</link>和<link linkend="kgp.openanything.urllib">如何从 URL 解析 XML</link>时，你已经学习了关于 <link linkend="dialect">HTML 处理</link>和 <link linkend="kgp">XML 处理</link>，接下来让我们来更全面地探讨有关 HTTP web 服务的主题。</para>
+</abstract>
+<para>简单地讲，HTTP web 服务是指以编程的方式直接使用 HTTP 操作从远程服务器发送和接收数据。如果你要从服务器获取数据，直接使用 HTTP GET；如果您想发送新数据到服务器，使用 HTTP POST。(一些较高级的 HTTP web 服务 API 也定义了使用 HTTP PUT 和 HTTP DELETE 修改和删除现有数据的方法。) 换句话说，构建在 HTTP 协议中的 <quote>verbs (动作)</quote> (GET, POST, PUT 和 DELETE) 直接映射为接收、发送、修改和删除等应用级别的操作。</para>
+<para>这种方法的主要优点是简单，并且许多不同的站点充分印证了这样的简单性是受欢迎的。数据 (通常是 XML 数据) 能静态创建和存储，或通过服务器端脚本和所有主流计算机语言 (包括用于下载数据的 HTTP 库) 动态生成。调试也很简单，因为您可以在任意浏览器中调用网络服务来查看这些原始数据。现代浏览器甚至可以为您进行良好的格式化并漂亮地打印这些 XML 数据，以便让您快速地浏览。</para>
+<para>HTTP web 服务上的纯 XML 应用举例：</para>
+<itemizedlist>
+<listitem><para><ulink url="http://www.amazon.com/webservices">Amazon API</ulink> 允许您从 Amazon.com 在线商店获取产品信息。</para></listitem>
+<listitem><para><ulink url="http://www.nws.noaa.gov/alerts/">National Weather Service</ulink> (美国) 和 <ulink url="http://demo.xml.weather.gov.hk/">Hong Kong Observatory</ulink> (香港) 通过 web 服务提供天气警报。</para></listitem>
+<listitem><para><ulink url="http://atomenabled.org/">Atom API</ulink> 用来管理基于 web 的内容。</para></listitem>
+<listitem><para><ulink url="http://syndic8.com/">Syndicated feeds</ulink> 应用于 weblogs 和新闻站点中带给您来自众多站点的最新消息。</para></listitem>
+</itemizedlist>
+<para>在后面的几章里，我们将探索使用 HTTP 进行数据发送和接收传输的 API，但是不会将应用语义映射到潜在的 HTTP 语义。(所有这些都是通过 HTTP POST 这个管道完成的。) 但是本章将关注使用 HTTP GET 从远程服务器获取数据，并且将探索几个由纯 HTTP web 服务带来最大利益的 HTTP 特性。</para>
+<para>如下所示为<link linkend="streams">上一章</link>曾经看到过的 <filename class="headerfile">openanything</filename> 模块的更高级版本：</para>
+<example>
+<title>&openanything_filename;</title>
+&para_download;
+<programlisting>
+&oa_import;
+&oa_importstringio;
+
+&oa_useragent;
+
+&oa_smartredirect;
+&oa_301_def;
+&oa_301_result;
+&oa_301_result2;
+&oa_301_status;
+&oa_301_return;
+
+&oa_302_def;
+&oa_302_result;
+&oa_302_result2;
+&oa_302_status;
+&oa_302_return;
+
+&oa_defaulthandler;
+&oa_default_def;
+&oa_default_result;
+&oa_default_result2;
+&oa_default_status;
+&oa_default_return2;
+
+&oa_def;
+&oa_doc;
+
+&oa_hasattr;
+&oa_hasattr_return;
+
+&oa_stdin;
+&oa_stdin_return;
+
+&oa_urlparse;
+&oa_urlparse_comment;
+&oa_request;
+&oa_add_useragent;
+&oa_if_etag;
+&oa_add_etag;
+&of_if_lastmodified;
+&oa_add_lastmodified;
+&oa_add_gzip;
+&oa_build_opener;
+&oa_open_open;
+    
+&oa_local_comment;
+&oa_local_try;
+&oa_local_return;
+&oa_local_except;
+&oa_local_pass;
+
+&oa_string_comment;
+&oa_string_return;
+
+&oa_fetch_def;
+&oa_fetch_doc;
+&oa_fetch_result;
+&oa_fetch_openanything;
+&oa_fetch_read;
+&oa_fetch_headers;
+&oa_fetch_save_etag_comment;
+&oa_fetch_get_etag;
+&oa_fetch_lastmodified_comment;
+&oa_fetch_get_lastmodified;
+&oa_fetch_if_gzip;
+&oa_fetch_gzip_comment;
+&oa_fetch_gzip;
+&oa_fetch_if_url;
+&oa_fetch_save_url;
+&oa_fetch_default_status;
+&oa_fetch_if_status;
+&oa_fetch_save_status;
+&oa_fetch_close;
+&oa_fetch_return;
+</programlisting>
+</example>
+<itemizedlist role="furtherreading">
+<title>进一步阅读</title>
+<listitem><para>Paul Prescod 认为<ulink url="http://webservices.xml.com/pub/a/ws/2002/02/06/rest.html">纯 HTTP web 服务是 Internet 的未来</ulink>。</para></listitem>
+</itemizedlist>
+</section>
+<section id="oa.review">
+<?dbhtml filename="http_web_services/review.html"?>
+<title>避免通过 HTTP 重复地获取数据</title>
+<abstract>
+<title/>
+<para>假如说你想用 HTTP 下载资源，例如一个 Atom feed 汇聚。你不仅仅想下载一次；而是想一次又一次地下载它，如每小时一次，从提供 news feed 的站点获得最新的消息。让我们首先用一种直接而原始的方法来实现它，然后看看如何改进它。
+</para>
+</abstract>
+<example>
+<title>用直接而原始的方法下载 feed</title>
+<screen>
+&prompt;<userinput>import urllib</userinput>
+&prompt;<userinput>data = urllib.urlopen('http://diveintomark.org/xml/atom.xml').read()</userinput>    <co id="oa.review.1.1"/>
+&prompt;<userinput>print data</userinput>
+<computeroutput>&lt;?xml version="1.0" encoding="iso-8859-1"?>
+&lt;feed version="0.3"
+  xmlns="http://purl.org/atom/ns#"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xml:lang="en">
+  &lt;title mode="escaped">dive into mark&lt;/title>
+  &lt;link rel="alternate" type="text/html" href="http://diveintomark.org/"/>
+  &lt;-- rest of feed omitted for brevity --></computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.review.1.1">
+<para>使用 &python; 通过 HTTP 下载任何东西都简单得令人难以置信；实际上，只需要一行代码。&urllib; 模块有一个便利的 &urlopen; 函数，它接受您所要获取的页面地址，然后返回一个类文件对象，您仅仅使用 <function>read()</function> 便可获得页面的全部内容。这再简单不过了。
+</para>
+</callout>
+</calloutlist>
+</example>
+<para>那么这种方法有何不妥之处吗？当然，在测试或开发中一次性的使用没有什么不妥。我经常这样。我想要 feed 汇聚的内容，我就获取 feed 的内容。这种方法对其他 web 页面同样有效。但是一旦你开始按照 web 服务的方式去思考有规则的访问需求时 (记住，你说你计划每小时一次地重复获取这样的 feed ) 就会发现这样的做法效率实在是太低了，并且对服务器来说也太笨了。
+</para>
+<para>下面先谈论一些 HTTP 的基本特性。</para>
+</section>
+
+<section id="oa.features">
+<?dbhtml filename="http_web_services/http_features.html"?>
+<title>HTTP 的特性</title>
+<abstract>
+<title/>
+<para>这里有五个你必须关注的 HTTP 重要特性。</para>
+</abstract>
+<section>
+<title>用户代理 (&useragent;)</title>
+<para>&useragent; 是一种客户端告知服务器谁在什么时候通过 HTTP 请求了一个 web 页、feed 汇聚或其他类型的 web 服务的简单途径。当客户端请求一个资源时，应该尽可能明确发起请求的是谁，以便当产生异常错误时，允许服务器端的管理员与客户端的开发者取得联系。
+</para>
+<para>默认情况下 &python; 发送一个通用的 &useragent;：<literal>Python-urllib/1.15</literal>。下一节，您将看到更加有针对性的 &useragent;。</para>
+</section>
+<section>
+<title>重定向 (Redirects)</title>
+<para>有时资源移来移去。Web 站点重组内容，页面移动到了新的地址。甚至是 web 服务重组。原来位于 <literal>http://example.com/index.xml</literal> 的 feed 汇聚可能被移动到 <literal>http://example.com/xml/atom.xml</literal>。或者因为一个机构的扩展或重组，整个域被迁移。例如，<literal>http://www.example.com/index.xml</literal> 可能被重定向到 <literal>http://server-farm-1.example.com/index.xml</literal>。</para>
+<para>您每次从 HTTP 服务器请求任何类型的资源时，服务器的响应中均包含一个状态代码。状态代码 <literal>200</literal> 的意思是 <quote>一切正常，这就是您请求的页面</quote>。状态代码 <literal>404</literal> 的意思是 <quote>页面没找到</quote>。 (当浏览 web 时，你可能看到过 404 errors。)</para>
+<para>HTTP 有两种不同的方法表示资源已经被移动。状态代码 <literal>302</literal> 表示<emphasis>临时重定向</emphasis>；这意味着 <quote>哎呀，访问内容被临时移动</quote> (然后在 <literal>Location:</literal> 头信息中给出临时地址)。状态代码 <literal>301</literal> 表示<emphasis>永久重定向</emphasis>；这意味着 <quote>哎呀，访问内容被永久移动</quote> (然后在 <literal>Location:</literal> 头信息中给出新地址)。如果您获得了一个 <literal>302</literal> 状态代码和一个新地址，HTTP 规范说您应该使用新地址获取您的请求，但是下次您要访问同一资源时，应该使用原地址重试。但是如果您获得了一个 <literal>301</literal> 状态代码和一个新地址，您应该从此使用新地址。</para>
+<para>当从 HTTP 服务器接受到一个适当的状态代码时，<function>urllib.urlopen</function> 将自动 <quote>跟踪</quote> 重定向，但不幸的是，当它做了重定向时不会告诉你。
+你将最终获得所请求的数据，却丝毫不会察觉到在这个过程中一个潜在的库 <quote>帮助</quote> 你做了一次重定向操作。因此你将继续不断地使用旧地址，并且每次都将获得被重定向的新地址。这一过程要往返两次而不是一次：太没效率了！本章的后面，您将看到如何改进这一点，从而适当地且有效率地处理永久重定向。</para>
+</section>
+<section>
+<title>&lastmodified;/&ifmodifiedsince;</title>
+<para>有些数据随时都在变化。CNN.com 的主页经常几分钟就更新。另一方面，Google.com 的主页几个星期才更新一次 (当他们上传特殊的假日 logo，或为一个新服务作广告时)。
+Web 服务是不变的：通常服务器知道你所请求的数据的最后修改时间，并且 HTTP 为服务器提供了一种将最近修改数据连同你请求的数据一同发送的方法。</para>
+<para>如果你第二次 (或第三次，或第四次) 请求相同的数据，你可以告诉服务器你上一次获得的最后修改日期：在你的请求中发送一个 <literal>If-Modified-Since</literal> 头信息，它包含了上一次从服务器连同数据所获得的日期。如果数据从那时起没有改变，服务器将返回一个特殊的 HTTP 状态代码 <literal>304</literal>，这意味着 <quote>从上一次请求后这个数据没有改变</quote>。这一点有何进步呢？当服务器发送状态编码 <literal>304</literal> 时，<emphasis>不再重新发送数据</emphasis>。您仅仅获得了这个状态代码。所以当数据没有更新时，你不需要一次又一次地下载相同的数据；服务器假定你有本地的缓存数据。</para>
+<para>所有现代的浏览器都支持最近修改 (last-modified) 的数据检查。如果你曾经访问过某页，一天后重新访问相同的页时发现它没有变化，并奇怪第二次访问时页面加载得如此之快——这就是原因所在。你的浏览器首次访问时会在本地缓存页面内容，当你第二次访问，浏览器自动发送首次访问时从服务器获得的最近修改日期。服务器简单地返回 <literal>304: Not Modified</literal> (没有修改)，因此浏览器就会知道从本地缓存加载页面。在这一点上，Web 服务也如此智能。</para>
+<para>&python; 的 URL 库没有提供内置的最近修改数据检查支持，但是你可以为每一个请求添加任意的头信息并在每一个响应中读取任意头信息，从而自己添加这种支持。</para>
+</section>
+<section>
+<title>&etag;/&ifnonematch;</title>
+<para>ETag 是实现与最近修改数据检查同样的功能的另一种方法：没有变化时不重新下载数据。其工作方式是：服务器发送你所请求的数据的同时，发送某种数据的 hash (在 <literal>ETag</literal> 头信息中给出)。hash 的确定完全取决于服务器。当第二次请求相同的数据时，你需要在 <literal>If-None-Match:</literal> 头信息中包含 ETag hash，如果数据没有改变，服务器将返回 <literal>304</literal> 状态代码。与最近修改数据检查相同，服务器<emphasis>仅仅</emphasis> 发送 <literal>304</literal> 状态代码；第二次将不为你发送相同的数据。在第二次请求时，通过包含 ETag hash，你告诉服务器：如果 hash 仍旧匹配就没有必要重新发送相同的数据，因为你还有上一次访问过的数据。</para>
+<para>&python; 的 URL 库没有对 ETag 的内置支持，但是在本章后面你将看到如何添加这种支持。</para>
+</section>
+<section>
+<title>压缩 (Compression)</title>
+<para>最后一个重要的 HTTP 特性是 gzip 压缩。
+关于 HTTP web 服务的主题几乎总是会涉及在网络线路上传输的 XML。XML 是文本，而且还是相当冗长的文本，而文本通常可以被很好地压缩。当你通过 HTTP 请求一个资源时，可以告诉服务器，如果它有任何新数据要发送给我时，请以压缩的格式发送。在你的请求中包含 <literal>Accept-encoding: gzip</literal> 头信息，如果服务器支持压缩，它将返回由 gzip 压缩的数据并且使用 <literal>Content-encoding: gzip</literal> 头信息标记。</para>
+<para>&python; 的 URL 库本身没有内置对 gzip 压缩的支持，但是你能为请求添加任意的头信息。&python; 还提供了一个独立的 &gzip; 模块，它提供了对数据进行解压缩的功能。</para>
+<para>注意我们用于下载 feed 汇聚的<link linkend="oa.review">小单行脚本</link>并不支持任何这些 HTTP 特性。让我们来看看如何改善它。</para>
+</section>
+</section>
+
+<section id="oa.debug">
+<?dbhtml filename="http_web_services/debugging.html"?>
+<title>调试 HTTP web 服务</title>
+<abstract>
+<title/>
+<para>首先，让我们开启 &python; HTTP 库的调试特性并查看网络线路上的传输过程。这对本章的全部内容都很有用，因为你将添加越来越多的特性。</para>
+</abstract>
+<example>
+<title>调试 HTTP</title>
+<screen>
+&prompt;<userinput>import httplib</userinput>
+&prompt;<userinput>httplib.HTTPConnection.debuglevel = 1</userinput>             <co id="oa.debug.1.1"/>
+&prompt;<userinput>import urllib</userinput>
+&prompt;<userinput>feeddata = urllib.urlopen('http://diveintomark.org/xml/atom.xml').read()</userinput>
+<computeroutput>connect: (diveintomark.org, 80)</computeroutput>                       <co id="oa.debug.1.2"/>
+<computeroutput>send: '</computeroutput>
+<computeroutput>GET /xml/atom.xml HTTP/1.0</computeroutput>                            <co id="oa.debug.1.3"/>
+<computeroutput>Host: diveintomark.org</computeroutput>                                <co id="oa.debug.1.4"/>
+<computeroutput>User-agent: Python-urllib/1.15</computeroutput>                        <co id="oa.debug.1.5"/>
+<computeroutput>'</computeroutput>
+<computeroutput>reply: 'HTTP/1.1 200 OK\r\n'</computeroutput>                          <co id="oa.debug.1.6"/>
+<computeroutput>header: Date: Wed, 14 Apr 2004 22:27:30 GMT</computeroutput>
+<computeroutput>header: Server: Apache/2.0.49 (Debian GNU/Linux)</computeroutput>
+<computeroutput>header: Content-Type: application/atom+xml</computeroutput>
+<computeroutput>header: Last-Modified: Wed, 14 Apr 2004 22:14:38 GMT</computeroutput>  <co id="oa.debug.1.7"/>
+<computeroutput>header: ETag: "e8284-68e0-4de30f80"</computeroutput>                   <co id="oa.debug.1.8"/>
+<computeroutput>header: Accept-Ranges: bytes</computeroutput>
+<computeroutput>header: Content-Length: 26848</computeroutput>
+<computeroutput>header: Connection: close</computeroutput>
+</screen>
+</example>
+<calloutlist>
+<callout arearefs="oa.debug.1.1">
+<para>&urllib; 依赖于另一个 &python; 的标准库，&httplib;。通常你不必显式地给出 <literal>import httplib</literal> (&urllib; 会自动导入)，但是你可以为 <classname>HTTPConnection</classname> 类 (&urllib; 在内部使用它来访问 HTTP 服务器) 设置调试标记。这是一种令人难以置信的有用技术。&python; 其他的一些库也有类似的调试标记，但是没有命名和开启它们的特殊标准；如果有类似的特性可用，你需要阅读每一个库的文档来查看使用方法。</para>
+</callout>
+<callout arearefs="oa.debug.1.2">
+<para>既然已经设置了调试标记，HTTP 的请求和响应信息会实时地被打印出来。首先告诉你的是你连接服务器 <literal>diveintomark.org</literal> 的 80 端口，这是 HTTP 的标准端口。</para>
+</callout>
+<callout arearefs="oa.debug.1.3">
+<para>当你请求 Atom feed 时，&urllib; 向服务器发送三行信息。第一行指出你使用的 HTTP verb 和资源的路径 (除去域名)。在本章中所有的请求都将使用 <literal>GET</literal>，但是在下一章的 &soap; 中，你会看到所有的请求都使用 <literal>POST</literal> 。除了请求的动词不同之外，基本的语法是相同的。</para>
+</callout>
+<callout arearefs="oa.debug.1.4">
+<para>第二行是 <literal>Host</literal> 头信息，它指出你所访问的服务的域名。这一点很重要，因为一个独立的 HTTP 服务器可以服务于多个不同的域。当前我的服务器服务于 12 个域；其他的服务器可以服务于成百乃至上千个域。</para>
+</callout>
+<callout arearefs="oa.debug.1.5">
+<para>第三行是 &useragent; 头信息。在此你看到的是由 &urllib; 库默认添加的普通的 &useragent; 。在下一节，你会看到如何自定义它的更多细节。</para>
+</callout>
+<callout arearefs="oa.debug.1.6">
+<para>服务器用状态代码和一系列的头信息答复 (其中一些数据可能会被存储到 <varname>feeddata</varname> 变量中)。这里的状态代码是 <literal>200</literal>，意味着 <quote>一切正常，这就是您请求的数据</quote>。服务器也会告诉你响应请求的数据、一些有关服务器自身的信息，以及传给你的数据的内容类型。根据你的应用不同，这或许有用，或许没用。这充分确认了你所请求的是一个 Atom feed，瞧，你获得了 Atom feed (<literal>application/atom+xml</literal>，它是已经注册的有关 Atom feeds 的内容类型)。</para>
+</callout>
+<callout arearefs="oa.debug.1.7">
+<para>当此 Atom feed 有最近的修改，服务器会告诉你 (本例中，大约发生在 13 分钟之前)。当下次请求同样的 feed 时，你可以这个日期再发送给服务器，服务器将做最近修改数据检查。</para>
+</callout>
+<callout arearefs="oa.debug.1.8">
+<para>服务器也会告诉你这个 Atom feed 有一个值为 <literal>"e8284-68e0-4de30f80"</literal> 的 ETag hash。这个 hash 自身没有任何意义；除了在下次访问相同的 feed 时将它送还给服务器之外，你也不需要用它做什么。然后服务器使用它告诉你修改日期是否被改变了。</para>
+</callout>
+</calloutlist>
+</section>
+
+<section id="oa.useragent">
+<?dbhtml filename="http_web_services/user_agent.html"?>
+<title>设置 <literal>User-Agent</literal></title>
+<abstract>
+<title/>
+<para>改善你的 HTTP web 服务客户端的第一步就是用 &useragent; 适当地鉴别你自己。为了做到这一点，你需要远离基本的 &urllib; 而深入到 &urllib2;。</para>
+</abstract>
+<example>
+<title>&urllib2; 介绍</title>
+<screen>
+&prompt;<userinput>import httplib</userinput>
+&prompt;<userinput>httplib.HTTPConnection.debuglevel = 1</userinput>                             <co id="oa.useragent.1.1"/>
+&prompt;<userinput>import urllib2</userinput>
+&prompt;<userinput>request = urllib2.Request('http://diveintomark.org/xml/atom.xml')</userinput> <co id="oa.useragent.1.2"/>
+&prompt;<userinput>opener = urllib2.build_opener()</userinput>                                   <co id="oa.useragent.1.3"/>
+&prompt;<userinput>feeddata = opener.open(request).read()</userinput>                            <co id="oa.useragent.1.4"/>
+<computeroutput>connect: (diveintomark.org, 80)</computeroutput>
+<computeroutput>send: '</computeroutput>
+<computeroutput>GET /xml/atom.xml HTTP/1.0</computeroutput>
+<computeroutput>Host: diveintomark.org</computeroutput>
+<computeroutput>User-agent: Python-urllib/2.1</computeroutput>
+<computeroutput>'</computeroutput>
+<computeroutput>reply: 'HTTP/1.1 200 OK\r\n'</computeroutput>
+<computeroutput>header: Date: Wed, 14 Apr 2004 23:23:12 GMT</computeroutput>
+<computeroutput>header: Server: Apache/2.0.49 (Debian GNU/Linux)</computeroutput>
+<computeroutput>header: Content-Type: application/atom+xml</computeroutput>
+<computeroutput>header: Last-Modified: Wed, 14 Apr 2004 22:14:38 GMT</computeroutput>
+<computeroutput>header: ETag: "e8284-68e0-4de30f80"</computeroutput>
+<computeroutput>header: Accept-Ranges: bytes</computeroutput>
+<computeroutput>header: Content-Length: 26848</computeroutput>
+<computeroutput>header: Connection: close</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.useragent.1.1">
+<para>如果你的 &python; &ide; 仍旧为上一节的例子而打开着，你可以略过这一步，在开启 <link linkend="oa.debug">HTTP 调试</link>时你能看到网络线路上的实际传输过程。</para>
+</callout>
+<callout arearefs="oa.useragent.1.2">
+<para>使用 &urllib2; 获取 HTTP 资源包括三个处理步骤，这会有助于你理解这一过程。
+第一步是创建 <classname>Request</classname> 对象，它接受一个你最终想要获取资源的 URL。注意这一步实际上还不能获取任何东西。</para>
+</callout>
+<callout arearefs="oa.useragent.1.3">
+<para>第二步是创建一个 URL 开启器 (opener)。它可以接受任何数量的处理器来控制响应的处理。但你也可以创建一个没有任何自定义处理器的开启器，在这儿你就是这么做的。你将在本章后面探究重定向的部分看到如何定义和使用自定义处理器的内容。</para>
+</callout>
+<callout arearefs="oa.useragent.1.4">
+<para>最后一个步骤是，使用你创建的 <classname>Request</classname> 对象告诉开启器打开 URL。因为你能从获得的信息中看到所有调试信息，这个步骤实际上获得了资源并且把返回数据存储在了 <varname>feeddata</varname> 中。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>给 <classname>Request</classname> 添加头信息</title>
+<screen>
+&prompt;<userinput>request</userinput>                                                <co id="oa.useragent.2.1"/>
+<computeroutput>&lt;urllib2.Request instance at 0x00250AA8></computeroutput>
+&prompt;<userinput>request.get_full_url()</userinput>
+<computeroutput>http://diveintomark.org/xml/atom.xml</computeroutput>
+&prompt;<userinput>request.add_header('User-Agent',
+&continuationprompt;'OpenAnything/1.0 +http://diveintopython.org/')</userinput>    <co id="oa.useragent.2.2"/>
+&prompt;<userinput>feeddata = opener.open(request).read()</userinput>                 <co id="oa.useragent.2.3"/>
+<computeroutput>connect: (diveintomark.org, 80)</computeroutput>
+<computeroutput>send: '</computeroutput>
+<computeroutput>GET /xml/atom.xml HTTP/1.0</computeroutput>
+<computeroutput>Host: diveintomark.org</computeroutput>
+<computeroutput>User-agent: OpenAnything/1.0 +http://diveintopython.org/</computeroutput>   <co id="oa.useragent.2.4"/>
+<computeroutput>'</computeroutput>
+<computeroutput>reply: 'HTTP/1.1 200 OK\r\n'</computeroutput>
+<computeroutput>header: Date: Wed, 14 Apr 2004 23:45:17 GMT</computeroutput>
+<computeroutput>header: Server: Apache/2.0.49 (Debian GNU/Linux)</computeroutput>
+<computeroutput>header: Content-Type: application/atom+xml</computeroutput>
+<computeroutput>header: Last-Modified: Wed, 14 Apr 2004 22:14:38 GMT</computeroutput>
+<computeroutput>header: ETag: "e8284-68e0-4de30f80"</computeroutput>
+<computeroutput>header: Accept-Ranges: bytes</computeroutput>
+<computeroutput>header: Content-Length: 26848</computeroutput>
+<computeroutput>header: Connection: close</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.useragent.2.1">
+<para>继续前面的例子；你已经用你要访问的 URL 创建了 <classname>Request</classname> 。</para>
+</callout>
+<callout arearefs="oa.useragent.2.2">
+<para>使用<classname>Request</classname> 对象的 <function>add_header</function> 方法，你能向请求中添加任意的 HTTP 头信息。第一个参数是头信息，第二个参数是头信息的值。&useragent; 的约定格式是：应用名，跟一个斜线，跟版本号。剩下的是自由的格式，你将看到许多疯狂的变化，但通常这里应该包含你的应用的 URL。和你的请求的其他信息一样，&useragent; 会被服务器纪录下来，其中包含你的应用的 URL。如果发生错误，服务器管理员就能通过查看他们的访问日志与你联系。</para>
+</callout>
+<callout arearefs="oa.useragent.2.3">
+<para>之前你创建的<varname>opener</varname> 对象也可以再生，且它将再次获得相同的 feed，但这次使用了你自定义的 &useragent; 头信息。</para>
+</callout>
+<callout arearefs="oa.useragent.2.4">
+<para>这就是你发送的自定义的 &useragent;，代替了 &python; 默认发送的一般的 &useragent;。若你继续看，会注意到你定义的是 <literal>User-Agent</literal> 头信息，但实际上发送的是 <literal>User-agent</literal> 头信息。看看有何不同？&urllib2; 改变了大小写所以只有首字母是大写的。这没问题，因为 HTTP 规定头信息的字段名是大小写无关的。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+
+<section id="oa.etags">
+<?dbhtml filename="http_web_services/etags.html"?>
+<title>处理 &lastmodified; 和 &etag;</title>
+<abstract>
+<title/>
+<para>既然你知道如何在你的 web 服务请求中添加自定义的 HTTP 头信息，接下来看看如何添加 &lastmodified; 和 &etag; 头信息的支持。</para>
+</abstract>
+<para>下面的这些例子将以调试标记置为关闭的状态来显示输出结果。如果你还停留在上一部分的开启状态，可以使用 <literal>httplib.HTTPConnection.debuglevel = 0</literal> 将其设置为关闭状态。或者，如果你认为有帮助也可以保持为开启状态。</para>
+<example id="oa.etags.example.1">
+<title>测试 &lastmodified;</title>
+<screen>
+&prompt;<userinput>import urllib2</userinput>
+&prompt;<userinput>request = urllib2.Request('http://diveintomark.org/xml/atom.xml')</userinput>
+&prompt;<userinput>opener = urllib2.build_opener()</userinput>
+&prompt;<userinput>firstdatastream = opener.open(request)</userinput>
+&prompt;<userinput>firstdatastream.headers.dict</userinput>                       <co id="oa.etags.1.1"/>
+<computeroutput>{'date': 'Thu, 15 Apr 2004 20:42:41 GMT', 
+ 'server': 'Apache/2.0.49 (Debian GNU/Linux)', 
+ 'content-type': 'application/atom+xml',
+ 'last-modified': 'Thu, 15 Apr 2004 19:45:21 GMT', 
+ 'etag': '"e842a-3e53-55d97640"',
+ 'content-length': '15955', 
+ 'accept-ranges': 'bytes', 
+ 'connection': 'close'}</computeroutput>
+&prompt;<userinput>request.add_header('If-Modified-Since',</userinput>
+&continuationprompt;<userinput>firstdatastream.headers.get('Last-Modified'))</userinput>  <co id="oa.etags.1.2"/>
+&prompt;<userinput>seconddatastream = opener.open(request)</userinput>            <co id="oa.etags.1.3"/>
+<computeroutput role="traceback">Traceback (most recent call last):
+  File "&lt;stdin>", line 1, in ?
+  File "c:\python23\lib\urllib2.py", line 326, in open
+    '_open', req)
+  File "c:\python23\lib\urllib2.py", line 306, in _call_chain
+    result = func(*args)
+  File "c:\python23\lib\urllib2.py", line 901, in http_open
+    return self.do_open(httplib.HTTP, req)
+  File "c:\python23\lib\urllib2.py", line 895, in do_open
+    return self.parent.error('http', req, fp, code, msg, hdrs)
+  File "c:\python23\lib\urllib2.py", line 352, in error
+    return self._call_chain(*args)
+  File "c:\python23\lib\urllib2.py", line 306, in _call_chain
+    result = func(*args)
+  File "c:\python23\lib\urllib2.py", line 412, in http_error_default
+    raise HTTPError(req.get_full_url(), code, msg, hdrs, fp)
+urllib2.HTTPError: HTTP Error 304: Not Modified</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.etags.1.1">
+<para>还记得当调试标记设置为开启时所有那些你看到的 HTTP 头信息打印输出吗？
+这里便是用编程方式访问它们的方法：
+
+<varname>firstdatastream.headers</varname> 是<link linkend="fileinfo.userdict">一个类似 dictionary 行为的对象</link>并且允许你获得任何个别的从 HTTP 服务器返回的头信息。</para>
+</callout>
+<callout arearefs="oa.etags.1.2">
+<para>在第二次请求时，你用第一次请求获得的最近修改时间添加了 &ifmodifiedsince; 头信息。如果数据没被改变，服务器应该返回一个 <literal>304</literal> 状态代码。</para>
+</callout>
+<callout arearefs="oa.etags.1.3">
+<para>毫无疑问，数据没被改变。你可以从跟踪返回结果看到 &urllib2; 抛出了一个特殊异常，<classname>HTTPError</classname>，以响应 <literal>304</literal> 状态代码。这有点不寻常，并且完全没有任何帮助。毕竟，它不是个错误；你明确地询问服务器如果没有变化就不要发送任何数据，并且数据没有变化，所以服务器告诉你它没有为你发送任何数据。那不是个错误；实际上也正是你所期望的。</para>
+</callout>
+</calloutlist>
+</example>
+<para>&urllib2; 也为你认为是错误的其他条件引发 <classname>HTTPError</classname> 异常，比如 <literal>404</literal> (page not found)。实际上，它将为<emphasis>任何</emphasis> 除了状态代码 <literal>200</literal> (OK)、<literal>301</literal> (permanent redirect)或 <literal>302</literal> (temporary redirect) 之外的状态引发 <classname>HTTPError</classname>。捕获状态代码并简单返回它，而不是抛出异常，这应该对你很有帮助。为了实现它，你将需要自定义一个 URL 处理器。</para>
+<example>
+<title>定义 URL 处理器</title>
+<para>这个自定义的 URL 处理器是 &openanything_filename; 的一部分。</para>
+<programlisting>
+&oa_defaulthandler; <co id="oa.etags.2.1"/>
+&oa_default_def; <co id="oa.etags.2.2"/>
+&oa_default_result;
+&oa_default_result2;
+&oa_default_status; <co id="oa.etags.2.3"/>
+&oa_default_return2;
+</programlisting>
+<calloutlist>
+<callout arearefs="oa.etags.2.1">
+<para>&urllib2; 是围绕 URL 处理器而设计的。每一个处理器就是一个能定义任意数量方法的类。当某事件发生时——比如一个 HTTP 错误，甚至是 <literal>304</literal> 代码——&urllib2; 审视用于处理它的 一系列已定义的处理器方法。在此要用到自省，与 <xref linkend="kgp"/>中为不同节点类型定义不同处理器类似。但是 &urllib2; 是很灵活的，还可以内省为当前请求所定义的所有处理器。
+</para>
+</callout>
+<callout arearefs="oa.etags.2.2">
+<para>当从服务器接收到一个 <literal>304</literal> 状态代码时，&urllib2; 查找定义的操作并调用 <methodname>http_error_default</methodname> 方法。通过定义一个自定义的错误处理，你可以阻止 &urllib2; 引发异常。取而代之的是，你创建 <classname>HTTPError</classname> 对象，返回它而不是引发异常。</para>
+</callout>
+<callout arearefs="oa.etags.2.3">
+<para>这是关键部分：返回之前，你保存从 HTTP 服务器返回的状态代码。这将使你从主调程序轻而易举地访问它。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>使用自定义 URL 处理器</title>
+<screen>
+&prompt;<userinput>request.headers</userinput>                           <co id="oa.etags.3.1"/>
+<computeroutput>{'If-modified-since': 'Thu, 15 Apr 2004 19:45:21 GMT'}</computeroutput>
+&prompt;<userinput>import openanything</userinput>
+&prompt;<userinput>opener = urllib2.build_opener(</userinput>
+&continuationprompt;<userinput>openanything.DefaultErrorHandler())</userinput>   <co id="oa.etags.3.2"/>
+&prompt;<userinput>seconddatastream = opener.open(request)</userinput>
+&prompt;<userinput>seconddatastream.status</userinput>                   <co id="oa.etags.3.3"/>
+<computeroutput>304</computeroutput>
+&prompt;<userinput>seconddatastream.read()</userinput>                   <co id="oa.etags.3.4"/>
+<computeroutput>''</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.etags.3.1">
+<para>继续前面的例子，<classname>Request</classname> 对象已经被设置，并且你已经添加了 &ifmodifiedsince; 头信息。</para>
+</callout>
+<callout arearefs="oa.etags.3.2">
+<para>这是关键所在：既然已经定义了你的自定义 URL 处理器，你需要告诉 &urllib2; 来使用它。还记得我怎么说 &urllib2; 将一个 HTTP 资源的访问过程分解为三个步骤的正当理由吗？这便是为什么构建 HTTP 开启器是其步骤之一，因为你能用你自定义的 URL 操作覆盖 &urllib2; 的默认行为来创建它。</para>
+</callout>
+<callout arearefs="oa.etags.3.3">
+<para>现在你可以快速地打开一个资源，返回给你的对象既包括常规头信息 (使用 <varname>seconddatastream.headers.dict</varname> 访问它们)，也包括 HTTP 状态代码。在此，正如你所期望的，状态代码是 <literal>304</literal>，意味着此数据自从上次请求后没有被修改。</para>
+</callout>
+<callout arearefs="oa.etags.3.4">
+<para>注意当服务器返回 <literal>304</literal> 状态代码时，并没有重新发送数据。这就是全部的关键：没有重新下载未修改的数据，从而节省了带宽。因此若你确实想要那个数据，你需要在首次获得它时在本地缓存数据。</para>
+</callout>
+</calloutlist>
+</example>
+<para>处理 &etag; 的工作也非常相似，只不过不是检查 &lastmodified; 并发送 &ifmodifiedsince;，而是检查 &etag; 并发送 &ifnonematch;。让我们打开一个新的 &ide; 会话。</para>
+<example id="oa.etags.example">
+<title>支持 &etag;/&ifnonematch;</title>
+<screen>
+&prompt;<userinput>import urllib2, openanything</userinput>
+&prompt;<userinput>request = urllib2.Request('http://diveintomark.org/xml/atom.xml')</userinput>
+&prompt;<userinput>opener = urllib2.build_opener(</userinput>
+&continuationprompt;<userinput>openanything.DefaultErrorHandler())</userinput>
+&prompt;<userinput>firstdatastream = opener.open(request)</userinput>
+&prompt;<userinput>firstdatastream.headers.get('ETag')</userinput>        <co id="oa.etags.4.1"/>
+<computeroutput>'"e842a-3e53-55d97640"'</computeroutput>
+&prompt;<userinput>firstdata = firstdatastream.read()</userinput>
+&prompt;<userinput>print firstdata</userinput>                            <co id="oa.etags.4.2"/>
+<computeroutput>&lt;?xml version="1.0" encoding="iso-8859-1"?>
+&lt;feed version="0.3"
+  xmlns="http://purl.org/atom/ns#"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xml:lang="en">
+  &lt;title mode="escaped">dive into mark&lt;/title>
+  &lt;link rel="alternate" type="text/html" href="http://diveintomark.org/"/>
+  &lt;-- rest of feed omitted for brevity --></computeroutput>
+&prompt;<userinput>request.add_header('If-None-Match',</userinput>
+&continuationprompt;<userinput>firstdatastream.headers.get('ETag'))</userinput>   <co id="oa.etags.4.3"/>
+&prompt;<userinput>seconddatastream = opener.open(request)</userinput>
+&prompt;<userinput>seconddatastream.status</userinput>                    <co id="oa.etags.4.4"/>
+<computeroutput>304</computeroutput>
+&prompt;<userinput>seconddatastream.read()</userinput>                    <co id="oa.etags.4.5"/>
+<computeroutput>''</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.etags.4.1">
+<para>使用 <varname>firstdatastream.headers</varname> 伪字典，你可以获得从服务器返回的 &etag;  (如果服务器没有返回 &etag; 会发生什么？答案是，这一行代码将返回 &none;。)</para>
+</callout>
+<callout arearefs="oa.etags.4.2">
+<para>OK，你获得了数据。</para>
+</callout>
+<callout arearefs="oa.etags.4.3">
+<para>现在进行第二次调用，将 &ifnonematch; 头信息设置为你第一次调用获得的 &etag;。</para>
+</callout>
+<callout arearefs="oa.etags.4.4">
+<para>第二次调用静静地成功了 (没有出现任何的异常)，并且你又一次看到了从服务器返回的 <literal>304</literal> 状态代码。你第二次基于 &etag; 发送请求，服务器知道数据没有被改变。</para>
+</callout>
+<callout arearefs="oa.etags.4.5">
+<para>无论 <literal>304</literal> 是被 &lastmodified; 数据检查还是 &etag; hash 匹配触发的，获得 <literal>304</literal> 的同时都不会下载数据。这就是重点所在。</para>
+</callout>
+</calloutlist>
+</example>
+<note id="tip.etag.vs.lastmodified">
+<title>支持 &lastmodified; <emphasis>和</emphasis> &etag;</title>
+<para>在这些例子中，HTTP 服务器同时支持 &lastmodified; 和 &etag; 头信息，但并非所有的服务器皆如此。作为一个 web 服务的客户端，你应该为支持两种头信息做准备，但是你的程序也应该为服务器仅支持其中一种头信息或两种头信息都不支持而做准备。</para>
+</note>
+</section>
+
+<section id="oa.redirect">
+<?dbhtml filename="http_web_services/redirects.html"?>
+<title>处理重定向</title>
+<abstract>
+<title/>
+<para>你可以使用两种不同的自定义 URL 处理器来处理永久重定向和临时重定向。</para>
+</abstract>
+<para>首先，让我们来看看重定向处理的必要性。</para>
+<example>
+<title>没有重定向处理的情况下，访问 web 服务 </title>
+<screen>
+&prompt;<userinput>import urllib2, httplib</userinput>
+&prompt;<userinput>httplib.HTTPConnection.debuglevel = 1</userinput>           <co id="oa.redirect.1.0"/>
+&prompt;<userinput>request = urllib2.Request(</userinput>
+&continuationprompt;<userinput>'http://diveintomark.org/redir/example301.xml')</userinput> <co id="oa.redirect.1.1"/>
+&prompt;<userinput>opener = urllib2.build_opener()</userinput>
+&prompt;<userinput>f = opener.open(request)</userinput>
+<computeroutput>connect: (diveintomark.org, 80)
+send: '
+GET /redir/example301.xml HTTP/1.0
+Host: diveintomark.org
+User-agent: Python-urllib/2.1
+'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'</computeroutput>             <co id="oa.redirect.1.2"/>
+<computeroutput>header: Date: Thu, 15 Apr 2004 22:06:25 GMT
+header: Server: Apache/2.0.49 (Debian GNU/Linux)
+header: Location: http://diveintomark.org/xml/atom.xml</computeroutput>  <co id="oa.redirect.1.3"/>
+<computeroutput>header: Content-Length: 338
+header: Connection: close
+header: Content-Type: text/html; charset=iso-8859-1
+connect: (diveintomark.org, 80)
+send: '
+GET /xml/atom.xml HTTP/1.0</computeroutput>                              <co id="oa.redirect.1.4"/>
+<computeroutput>Host: diveintomark.org
+User-agent: Python-urllib/2.1
+'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Thu, 15 Apr 2004 22:06:25 GMT
+header: Server: Apache/2.0.49 (Debian GNU/Linux)
+header: Last-Modified: Thu, 15 Apr 2004 19:45:21 GMT
+header: ETag: "e842a-3e53-55d97640"
+header: Accept-Ranges: bytes
+header: Content-Length: 15955
+header: Connection: close
+header: Content-Type: application/atom+xml</computeroutput>
+&prompt;<userinput>f.url</userinput>                                               <co id="oa.redirect.1.5"/>
+<computeroutput>'http://diveintomark.org/xml/atom.xml'</computeroutput>
+&prompt;<userinput>f.headers.dict</userinput>
+<computeroutput>{'content-length': '15955', 
+'accept-ranges': 'bytes', 
+'server': 'Apache/2.0.49 (Debian GNU/Linux)', 
+'last-modified': 'Thu, 15 Apr 2004 19:45:21 GMT', 
+'connection': 'close', 
+'etag': '"e842a-3e53-55d97640"', 
+'date': 'Thu, 15 Apr 2004 22:06:25 GMT', 
+'content-type': 'application/atom+xml'}</computeroutput>
+&prompt;<userinput>f.status</userinput>
+<computeroutput role="traceback">Traceback (most recent call last):
+  File "&lt;stdin>", line 1, in ?
+AttributeError: addinfourl instance has no attribute 'status'</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.redirect.1.0">
+<para>你最好开启调试状态，看看发生了什么。</para>
+</callout>
+<callout arearefs="oa.redirect.1.1">
+<para>这是一个我已经设置了永久重定向到我的 Atom feed <literal>http://diveintomark.org/xml/atom.xml</literal> 的 URL。</para>
+</callout>
+<callout arearefs="oa.redirect.1.2">
+<para>毫无疑问，当你试图从那个地址下载数据时，服务器会返回 <literal>301</literal> 状态代码，告诉你你访问的资源已经被永久移动了。</para>
+</callout>
+<callout arearefs="oa.redirect.1.3">
+<para>服务器同时返回 <literal>Location:</literal> 头信息，它给出了这个数据的新地址。</para>
+</callout>
+<callout arearefs="oa.redirect.1.4">
+<para>&urllib2; 注意到了重定向状态代码并会自动从<literal>Location:</literal> 头信息中给出的新地址获取数据。</para>
+</callout>
+<callout arearefs="oa.redirect.1.5">
+<para>从 <varname>opener</varname> 返回的对象包括新的永久地址和第二次请求获得的所有头信息 (从一个新的永久地址获得)。但是状态代码不见了，因此你无从知晓重定向到底是永久重定向还是临时重定向。这是至关重要的：如果这是临时重定向，那么你应该继续使用旧地址访问数据。但是如果是永久重定向 (正如本例)，你应该从现在起使用新地址访问数据。</para>
+</callout>
+</calloutlist>
+</example>
+<para>这不太理想，但很容易改进。实际上当 &urllib2; 遇到 <literal>301</literal> 或 <literal>302</literal> 时的行为并不是我们所期望的，所以让我们来覆盖这些行为。如何实现呢？用一个自定义的处理器，<link linkend="oa.etags">正如你处理 <literal>304</literal> 代码所做的</link>。</para>
+<example>
+<title>定义重定向处理器</title>
+<para>这个类定义在 &openanything_filename;。</para>
+<programlisting>
+&oa_smartredirect; <co id="oa.redirect.2.1"/>
+&oa_301_def;
+&oa_301_result; <co id="oa.redirect.2.2"/>
+&oa_301_result2;
+&oa_301_status; <co id="oa.redirect.2.3"/>
+&oa_301_return;
+
+&oa_302_def; <co id="oa.redirect.2.4"/>
+&oa_302_result;
+&oa_302_result2;
+&oa_302_status;
+&oa_302_return;
+</programlisting>
+<calloutlist>
+<callout arearefs="oa.redirect.2.1">
+<para>重定向行为定义在 &urllib2; 的一个叫做 <classname>HTTPRedirectHandler</classname> 的类中。我们不想完全地覆盖这些行为，只想做点扩展，所以我们子类化 <classname>HTTPRedirectHandler</classname>，从而我们仍然可以调用祖先类来实现所有原来的功能。</para>
+</callout>
+<callout arearefs="oa.redirect.2.2">
+<para>当从服务器获得 <literal>301</literal> 状态代码，&urllib2; 将搜索处理器并调用 <methodname>http_error_301</methodname> 方法。我们首先要做的就是在祖先中调用 <methodname>http_error_301</methodname> 方法，它将处理查找 <literal>Location:</literal> 头信息的工作并跟踪重定向到新地址。</para>
+</callout>
+<callout arearefs="oa.redirect.2.3">
+<para>这是关键：返回之前，你存储了状态代码 (<literal>301</literal>)，所以主调程序稍后就可以访问它了。</para>
+</callout>
+<callout arearefs="oa.redirect.2.4">
+<para>临时重定向 (状态代码 <literal>302</literal>) 以相同的方式工作：覆盖 <literal>http_error_302</literal> 方法，调用祖先，并在返回之前保存状态代码。</para>
+</callout>
+</calloutlist>
+</example>
+<para>这将为我们带来什么？现在你可以用自定义重定向处理器构造一个的 URL 开启器，并且它依然能自动跟踪重定向，也能展示出重定向状态代码。</para>
+<example>
+<title>使用重定向处理器检查永久重定向</title>
+<screen>
+&prompt;<userinput>request = urllib2.Request('http://diveintomark.org/redir/example301.xml')</userinput>
+&prompt;<userinput>import openanything, httplib</userinput>
+&prompt;<userinput>httplib.HTTPConnection.debuglevel = 1</userinput>
+&prompt;<userinput>opener = urllib2.build_opener(</userinput>
+&continuationprompt;<userinput>openanything.SmartRedirectHandler())</userinput>           <co id="oa.redirect.3.1"/>
+&prompt;<userinput>f = opener.open(request)</userinput>
+<computeroutput>connect: (diveintomark.org, 80)
+send: 'GET /redir/example301.xml HTTP/1.0
+Host: diveintomark.org
+User-agent: Python-urllib/2.1
+'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'</computeroutput>            <co id="oa.redirect.3.2"/>
+<computeroutput>header: Date: Thu, 15 Apr 2004 22:13:21 GMT
+header: Server: Apache/2.0.49 (Debian GNU/Linux)
+header: Location: http://diveintomark.org/xml/atom.xml
+header: Content-Length: 338
+header: Connection: close
+header: Content-Type: text/html; charset=iso-8859-1
+connect: (diveintomark.org, 80)
+send: '
+GET /xml/atom.xml HTTP/1.0
+Host: diveintomark.org
+User-agent: Python-urllib/2.1
+'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Thu, 15 Apr 2004 22:13:21 GMT
+header: Server: Apache/2.0.49 (Debian GNU/Linux)
+header: Last-Modified: Thu, 15 Apr 2004 19:45:21 GMT
+header: ETag: "e842a-3e53-55d97640"
+header: Accept-Ranges: bytes
+header: Content-Length: 15955
+header: Connection: close
+header: Content-Type: application/atom+xml
+</computeroutput>
+&prompt;<userinput>f.status</userinput>                                           <co id="oa.redirect.3.3"/>
+<computeroutput>301</computeroutput>
+&prompt;<userinput>f.url</userinput>
+<computeroutput>'http://diveintomark.org/xml/atom.xml'</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.redirect.3.1">
+<para>首先，用刚刚定义的重定向处理器创建一个 URL 开启器。</para>
+</callout>
+<callout arearefs="oa.redirect.3.2">
+<para>你发送了一个请求，并在响应中获得了 <literal>301</literal> 状态代码。
+如此一来，<methodname>http_error_301</methodname> 方法就被调用了。你调用了祖先类，跟踪了重定向并且发送了一个新地址 (<literal>http://diveintomark.org/xml/atom.xml</literal>) 请求。</para>
+</callout>
+<callout arearefs="oa.redirect.3.3">
+<para>这是决定性的一步：现在，你不仅做到了访问一个新 URL，而且获得了重定向的状态代码，所以你可以断定这是一个永久重定向。下一次你请求这个数据时，就应该使用 <varname>f.url</varname> 指定的新地址 (<literal>http://diveintomark.org/xml/atom.xml</literal>)。如果你已经在配置文件或数据库中存储了这个地址，就需要更新旧地址而不是反复地使用旧地址请求服务。现在是更新你的地址簿的时候了。</para>
+</callout>
+</calloutlist>
+</example>
+<para>同样的重定向处理也可以告诉你<emphasis>不该</emphasis> 更新你的地址簿。</para>
+<example>
+<title>使用重定向处理器检查临时重定向</title>
+<screen>
+&prompt;<userinput>request = urllib2.Request(</userinput>
+&continuationprompt;<userinput>'http://diveintomark.org/redir/example302.xml')</userinput>   <co id="oa.redirect.4.1"/>
+&prompt;<userinput>f = opener.open(request)</userinput>
+<computeroutput>connect: (diveintomark.org, 80)
+send: '
+GET /redir/example302.xml HTTP/1.0
+Host: diveintomark.org
+User-agent: Python-urllib/2.1
+'
+reply: 'HTTP/1.1 302 Found\r\n'</computeroutput>                           <co id="oa.redirect.4.2"/>
+<computeroutput>header: Date: Thu, 15 Apr 2004 22:18:21 GMT
+header: Server: Apache/2.0.49 (Debian GNU/Linux)
+header: Location: http://diveintomark.org/xml/atom.xml
+header: Content-Length: 314
+header: Connection: close
+header: Content-Type: text/html; charset=iso-8859-1
+connect: (diveintomark.org, 80)
+send: '
+GET /xml/atom.xml HTTP/1.0</computeroutput>                                <co id="oa.redirect.4.3"/>
+<computeroutput>Host: diveintomark.org
+User-agent: Python-urllib/2.1
+'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Thu, 15 Apr 2004 22:18:21 GMT
+header: Server: Apache/2.0.49 (Debian GNU/Linux)
+header: Last-Modified: Thu, 15 Apr 2004 19:45:21 GMT
+header: ETag: "e842a-3e53-55d97640"
+header: Accept-Ranges: bytes
+header: Content-Length: 15955
+header: Connection: close
+header: Content-Type: application/atom+xml</computeroutput>
+&prompt;<userinput>f.status</userinput>                                              <co id="oa.redirect.4.4"/>
+<computeroutput>302</computeroutput>
+&prompt;<userinput>f.url</userinput>
+<computeroutput>http://diveintomark.org/xml/atom.xml</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.redirect.4.1">
+<para>这是一个 URL，我已经设置了它，让它告诉客户端<emphasis>临时</emphasis> 重定向到 <literal>http://diveintomark.org/xml/atom.xml</literal>。</para>
+</callout>
+<callout arearefs="oa.redirect.4.2">
+<para>服务器返回 <literal>302</literal> 状态代码，标识出一个临时重定向。数据的临时新地址在 <literal>Location:</literal> 头信息中给出。</para>
+</callout>
+<callout arearefs="oa.redirect.4.3">
+<para>&urllib2; 调用你的 <methodname>http_error_302</methodname> 方法，它调用了 <classname>urllib2.HTTPRedirectHandler</classname> 中的同名的祖先方法，跟踪重定向到一个新地址。然后你的 <methodname>http_error_302</methodname> 方法存储状态代码 (<literal>302</literal>) 使主调程序在稍后可以获得它。</para>
+</callout>
+<callout arearefs="oa.redirect.4.4">
+<para>此时，已经成功追踪重定向到 <literal>http://diveintomark.org/xml/atom.xml</literal>。<varname>f.status</varname> 告诉你这是一个临时重定向，这意味着你应该继续使用原来的地址 (<literal>http://diveintomark.org/redir/example302.xml</literal>) 请求数据。也许下一次它仍然被重定向，也许不会。也许会重定向到不同的地址。这也不好说。服务器说这个重定向仅仅是临时的，你应该尊重它。并且现在你获得了能使主调程序尊重它的充分信息。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+
+<section id="oa.gzip">
+<?dbhtml filename="http_web_services/gzip_compression.html"?>
+<title>处理压缩数据</title>
+<abstract>
+<title/>
+<para>你要支持的最后一个重要的 HTTP 特性是压缩。许多 web 服务具有发送压缩数据的能力，这可以将网络线路上传输的大量数据消减 60% 以上。这尤其适用于 XML web 服务，因为 XML 数据 的压缩率可以很高。</para>
+</abstract>
+<para>服务器不会为你发送压缩数据，除非你告诉服务器你可以处理压缩数据。</para>
+<example>
+<title>告诉服务器你想获得压缩数据</title>
+<screen>
+&prompt;<userinput>import urllib2, httplib</userinput>
+&prompt;<userinput>httplib.HTTPConnection.debuglevel = 1</userinput>
+&prompt;<userinput>request = urllib2.Request('http://diveintomark.org/xml/atom.xml')</userinput>
+&prompt;<userinput>request.add_header('Accept-encoding', 'gzip')</userinput>        <co id="oa.gzip.1.1"/>
+&prompt;<userinput>opener = urllib2.build_opener()</userinput>
+&prompt;<userinput>f = opener.open(request)</userinput>
+<computeroutput>connect: (diveintomark.org, 80)
+send: '
+GET /xml/atom.xml HTTP/1.0
+Host: diveintomark.org
+User-agent: Python-urllib/2.1
+Accept-encoding: gzip</computeroutput>                                    <co id="oa.gzip.1.2"/>
+<computeroutput>'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Thu, 15 Apr 2004 22:24:39 GMT
+header: Server: Apache/2.0.49 (Debian GNU/Linux)
+header: Last-Modified: Thu, 15 Apr 2004 19:45:21 GMT
+header: ETag: "e842a-3e53-55d97640"
+header: Accept-Ranges: bytes
+header: Vary: Accept-Encoding
+header: Content-Encoding: gzip</computeroutput>                           <co id="oa.gzip.1.3"/>
+<computeroutput>header: Content-Length: 6289</computeroutput>                             <co id="oa.gzip.1.4"/>
+<computeroutput>header: Connection: close
+header: Content-Type: application/atom+xml</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.gzip.1.1">
+<para>这是关键：一创建了 <classname>Request</classname> 对象，就添加一个 <literal>Accept-encoding</literal> 头信息告诉服务器你能接受 gzip 压缩数据。<literal>gzip</literal> 是你使用的压缩算法的名称。理论上你可以使用其它的压缩算法，但是 <literal>gzip</literal> 是 web 服务器上使用率高达 99% 的一种。</para>
+</callout>
+<callout arearefs="oa.gzip.1.2">
+<para>这是你的头信息传越网络线路的过程。</para>
+</callout>
+<callout arearefs="oa.gzip.1.3">
+<para>这是服务器的返回信息：<literal>Content-Encoding: gzip</literal> 头信息意味着你要回得的数据已经被 gzip 压缩了。</para>
+</callout>
+<callout arearefs="oa.gzip.1.4">
+<para><literal>Content-Length</literal> 头信息是已压缩数据的长度，并非解压缩数据的长度。一会儿你会看到，实际的解压缩数据长度为 15955，因此 gzip 压缩节省了 60% 以上的网络带宽！</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>解压缩数据</title>
+<screen>
+&prompt;<userinput>compresseddata = f.read()</userinput>                              <co id="oa.gzip.2.1"/>
+&prompt;<userinput>len(compresseddata)</userinput>
+<computeroutput>6289</computeroutput>
+&prompt;<userinput>import StringIO</userinput>
+&prompt;<userinput>compressedstream = StringIO.StringIO(compresseddata)</userinput>   <co id="oa.gzip.2.2"/>
+&prompt;<userinput>import gzip</userinput>
+&prompt;<userinput>gzipper = gzip.GzipFile(fileobj=compressedstream)</userinput>      <co id="oa.gzip.2.3"/>
+&prompt;<userinput>data = gzipper.read()</userinput>                                  <co id="oa.gzip.2.4"/>
+&prompt;<userinput>print data</userinput>                                             <co id="oa.gzip.2.5"/>
+<computeroutput>&lt;?xml version="1.0" encoding="iso-8859-1"?>
+&lt;feed version="0.3"
+  xmlns="http://purl.org/atom/ns#"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xml:lang="en">
+  &lt;title mode="escaped">dive into mark&lt;/title>
+  &lt;link rel="alternate" type="text/html" href="http://diveintomark.org/"/>
+  &lt;-- rest of feed omitted for brevity --></computeroutput>
+&prompt;<userinput>len(data)</userinput>
+<computeroutput>15955</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.gzip.2.1">
+<para>继续上面的例子，<varname>f</varname> 是一个从 URL 开启器返回的类文件对象。使用它的 <methodname>read()</methodname> 方法将正常地获得非压缩数据，但是因为这个数据已经被 gzip 压缩过，所以这只是获得你想要的最终数据的第一步。</para>
+</callout>
+<callout arearefs="oa.gzip.2.2">
+<para>好吧，只是先得有点儿凌乱的步骤。&python; 有一个 &gzip; 模块，它能读取 (当然也能写入) 磁盘上的 gzip 压缩文件。但是磁盘上还没有文件，只在内存里有一个 gzip 压缩缓冲区，并且你不想仅仅为了解压缩而写出一个临时文件。那么怎么做来从内存数据 (<varname>compresseddata</varname>) 创建类文件对象呢？这需要使用 &stringio_modulename; 模块。你首次看到 &stringio_modulename; 模块是在<link linkend="kgp.openanything.stringio.example">上一章</link>，但现在你会发现它的另一种用法。</para>
+</callout>
+<callout arearefs="oa.gzip.2.3">
+<para>现在你可以创建 <classname>GzipFile</classname> 的一个实例，并且告诉它其中的 <quote>文件</quote> 是一个类文件对象 <varname>compressedstream</varname>。</para>
+</callout>
+<callout arearefs="oa.gzip.2.4">
+<para>这是做所有工作的一行：从 <classname>GzipFile</classname> 中 <quote>读取</quote> 将会解压缩数据。感到奇妙吗？是的，它确实解压缩了数据。<varname>gzipper</varname> 是一个类文件对象，它代表一个 gzip 压缩文件。尽管这个 <quote>文件</quote> 并非一个磁盘上的真实文件；但 <varname>gzipper</varname> 还是从你用 &stringio_modulename; 包装了压缩数据的类文件对象中 <quote>读取</quote> 数据，而它仅仅是内存中的变量 <varname>compresseddata</varname>。压缩的数据来自哪呢？最初你从远程 HTTP 服务器下载它，通过从用 <function>urllib2.build_opener</function> 创建的类文件对象中 <quote>读取</quote>。令人吃惊吧，这就是所有的步骤。链条上的每一步都完全不知道上一步在造假。</para>
+</callout>
+<callout arearefs="oa.gzip.2.5">
+<para>看看吧，实际的数据 (实际为 15955 bytes)。</para>
+</callout>
+</calloutlist>
+</example>
+<para><quote>等等!</quote> 我听见你在叫。<quote>还能更简单吗！</quote> 我知道你在想什么。你在，既然 <varname>opener.open</varname> 返回一个类文件对象，那么为什么不抛弃中间件 &stringio_modulename; 而通过 <varname>f</varname> 直接访问 <methodname>GzipFile</methodname> 呢？OK，或许你没想到，但是别为此担心，因为那样无法工作。</para>
+<example>
+<title>从服务器直接解压缩数据</title>
+<screen>
+&prompt;<userinput>f = opener.open(request)</userinput>                  <co id="oa.gzip.3.1"/>
+&prompt;<userinput>f.headers.get('Content-Encoding')</userinput>         <co id="oa.gzip.3.2"/>
+<computeroutput>'gzip'</computeroutput>
+&prompt;<userinput>data = gzip.GzipFile(fileobj=f).read()</userinput>    <co id="oa.gzip.3.3"/>
+<computeroutput role="traceback">Traceback (most recent call last):
+  File "&lt;stdin>", line 1, in ?
+  File "c:\python23\lib\gzip.py", line 217, in read
+    self._read(readsize)
+  File "c:\python23\lib\gzip.py", line 252, in _read
+    pos = self.fileobj.tell()   # Save current position
+AttributeError: addinfourl instance has no attribute 'tell'</computeroutput>
+</screen>
+<calloutlist>
+<callout arearefs="oa.gzip.3.1">
+<para>继续前面的例子，你已经有一个设置了 <literal>Accept-encoding: gzip</literal> 头信息的 <classname>Request</classname> 对象。</para>
+</callout>
+<callout arearefs="oa.gzip.3.2">
+<para>简单地打开请求将获得你的头信息 (虽然还没下载任何数据)。正如你从 <literal>Content-Encoding</literal> 头信息所看到的，这个数据被要求用 gzip 压缩发送。</para>
+</callout>
+<callout arearefs="oa.gzip.3.3">
+<para>从 <methodname>opener.open</methodname> 返回了一个类文件对象，从头信息中你可以获知，你将获得 gzip 压缩数据。为什么不简单地通过那个类文件对象直接访问 <classname>GzipFile</classname> 呢？当你从 <classname>GzipFile</classname> 实例 <quote>读取</quote> 时，它将从远程 HTTP 服务器 <quote>读取</quote> 被压缩的数据并且立即解压缩。这是个好主意，但是不行。由 gzip 压缩的工作方式所致，<classname>GzipFile</classname> 需要存储其位置并在压缩文件上往返游走。当 <quote>文件</quote> 是来自远程服务器的字节流时无法工作；你能用它做的所有工作就是一次返回一个字节流，而不是在字节流上往返。所以使用 &stringio_modulename; 这种看上去不太优雅的手段是最好的解决方案：下载压缩的数据，用 &stringio_modulename; 创建一个类文件对象，并从中解压缩数据。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+
+<section id="oa.alltogether">
+<?dbhtml filename="http_web_services/alltogether.html"?>
+<title>全部放在一起</title>
+<abstract>
+<title/>
+<para>你已经看到了构造一个智能的 HTTP web 客户端的所有片断。现在让我们看看如何将它们整合到一起。</para>
+</abstract>
+<example>
+<title><function>openanything</function> 函数</title>
+<para>这个函数定义在 &openanything_filename; 中。</para>
+<programlisting>
+&oa_def;
+    # non-HTTP code omitted for brevity
+&oa_urlparse; <co id="oa.alltogether.1.1"/>
+&oa_urlparse_comment;
+&oa_request;
+&oa_add_useragent; <co id="oa.alltogether.1.2"/>
+&oa_if_etag;
+&oa_add_etag; <co id="oa.alltogether.1.3"/>
+&of_if_lastmodified;
+&oa_add_lastmodified; <co id="oa.alltogether.1.4"/>
+&oa_add_gzip; <co id="oa.alltogether.1.5"/>
+&oa_build_opener; <co id="oa.alltogether.1.6"/>
+&oa_open_open; <co id="oa.alltogether.1.7"/>
+</programlisting>
+<calloutlist>
+<callout arearefs="oa.alltogether.1.1">
+<para>&urlparse; 是一个解析 URL 的便捷的工具模块。它的主要函数也叫 <function>urlparse</function>，接受一个 URL 并将其拆分为 tuple (scheme (协议), domain (域名), path (路径), params (参数), query string parameters (请求字符串参数), fragment identifier (片段效验符))。当然，你唯一需要注意的就是 scheme，确认你处理的是一个 HTTP URL (&urllib2; 才能处理)。</para>
+</callout>
+<callout arearefs="oa.alltogether.1.2">
+<para>通过调用函数使用 &useragent; 向 HTTP 服务器确定你的身份。如果没有 &useragent; 被指定，你会使用一个默认的，就是定义在早期的 &openanything_filename; 模块中的那个。你从来不会使用到默认的定义在 &urllib2; 中的那个。</para>
+</callout>
+<callout arearefs="oa.alltogether.1.3">
+<para>如果给出了 &etag;，要在 &ifnonematch; 头信息中发送它。</para>
+</callout>
+<callout arearefs="oa.alltogether.1.4">
+<para>如果给出了最近修改日期，要在 &ifmodifiedsince; 头信息中发送它。</para>
+</callout>
+<callout arearefs="oa.alltogether.1.5">
+<para>如果可能要告诉服务器你要获取压缩数据。</para>
+</callout>
+<callout arearefs="oa.alltogether.1.6">
+<para>使用<emphasis>两个</emphasis> 自定义 URL 处理器创建一个 URL 开启器：<classname>SmartRedirectHandler</classname> 终于处理 <literal>301</literal> 和 <literal>302</literal> 重定向，而 <classname>DefaultErrorHandler</classname> 用于处理 <literal>304</literal>, <literal>404</literal> 以及其它的错误条件。</para>
+</callout>
+<callout arearefs="oa.alltogether.1.7">
+<para>就是这样！打开 URL 并返回一个类文件对象给调用者。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title><function>fetch</function> 函数</title>
+<para>这个函数定义在 &openanything_filename; 中。</para>
+<programlisting>
+&oa_fetch_def;
+&oa_fetch_doc;
+&oa_fetch_result;
+&oa_fetch_openanything; <co id="oa.alltogether.2.1"/>
+&oa_fetch_read; <co id="oa.alltogether.2.2"/>
+&oa_fetch_headers;
+&oa_fetch_save_etag_comment;
+&oa_fetch_get_etag; <co id="oa.alltogether.2.3"/>
+&oa_fetch_lastmodified_comment;
+&oa_fetch_get_lastmodified; <co id="oa.alltogether.2.4"/>
+&oa_fetch_if_gzip; <co id="oa.alltogether.2.5"/>
+&oa_fetch_gzip_comment;
+&oa_fetch_gzip;
+&oa_fetch_if_url; <co id="oa.alltogether.2.6"/>
+&oa_fetch_save_url;
+&oa_fetch_default_status;
+&oa_fetch_if_status; <co id="oa.alltogether.2.7"/>
+&oa_fetch_save_status;
+&oa_fetch_close;
+&oa_fetch_return;
+</programlisting>
+<calloutlist>
+<callout arearefs="oa.alltogether.2.1">
+<para>首先，你用 URL、&etag; hash、&lastmodified; 日期和 &useragent; 调用 <function>openAnything</function> 函数。</para>
+</callout>
+<callout arearefs="oa.alltogether.2.2">
+<para>读取从服务器返回的真实数据。这可能是被压缩的；如果是，将在后面进行解压缩。</para>
+</callout>
+<callout arearefs="oa.alltogether.2.3">
+<para>保存从服务器返回的 &etag; hash，这样主调程序下一次就能把它传递给你，然后再传递给 <function>openAnything</function>，放到 &ifnonematch; 头信息里发送给远程服务器。</para>
+</callout>
+<callout arearefs="oa.alltogether.2.4">
+<para>也要保存 &lastmodified; 数据。</para>
+</callout>
+<callout arearefs="oa.alltogether.2.5">
+<para>如果服务器说它发送的是压缩数据，就执行解压缩。</para>
+</callout>
+<callout arearefs="oa.alltogether.2.6">
+<para>如果你的服务器返回一个 URL 就保存它，并在查明之前假定状态代码为 <literal>200</literal>。</para>
+</callout>
+<callout arearefs="oa.alltogether.2.7">
+<para>如果其中一个自定义 URL 处理器捕获了一个状态代码，也要保存下来。</para>
+</callout>
+</calloutlist>
+</example>
+<example>
+<title>使用 &openanything_filename;</title>
+<screen>
+&prompt;<userinput>import openanything</userinput>
+&prompt;<userinput>useragent = 'MyHTTPWebServicesApp/1.0'</userinput>
+&prompt;<userinput>url = 'http://diveintopython.org/redir/example301.xml'</userinput>
+&prompt;<userinput>params = openanything.fetch(url, agent=useragent)</userinput>              <co id="oa.alltogether.3.1"/>
+&prompt;<userinput>params</userinput>                                                         <co id="oa.alltogether.3.2"/>
+<computeroutput>{'url': 'http://diveintomark.org/xml/atom.xml', 
+'lastmodified': 'Thu, 15 Apr 2004 19:45:21 GMT', 
+'etag': '"e842a-3e53-55d97640"', 
+'status': 301,
+'data': '&lt;?xml version="1.0" encoding="iso-8859-1"?>
+&lt;feed version="0.3"
+&lt;-- rest of data omitted for brevity -->'}</computeroutput>
+&prompt;<userinput>if params['status'] == 301:</userinput>                                    <co id="oa.alltogether.3.3"/>
+&continuationprompt;<userinput>url = params['url']</userinput>
+&prompt;<userinput>newparams = openanything.fetch(</userinput>
+&continuationprompt;<userinput>url, params['etag'], params['lastmodified'], useragent)</userinput>    <co id="oa.alltogether.3.4"/>
+&prompt;<userinput>newparams</userinput>
+<computeroutput>{'url': 'http://diveintomark.org/xml/atom.xml', 
+'lastmodified': None, 
+'etag': '"e842a-3e53-55d97640"', 
+'status': 304,
+'data': ''}</computeroutput>                                                        <co id="oa.alltogether.3.5"/>
+</screen>
+<calloutlist>
+<callout arearefs="oa.alltogether.3.1">
+<para>第一次获取资源时，你没有 &etag; hash 或 &lastmodified; 日期，所以你不用使用这些参数。 (它们是<link linkend="apihelper.optional">可选参数</link>。)</para>
+</callout>
+<callout arearefs="oa.alltogether.3.2">
+<para>你获得了一个 dictionary，它包括几个有用的头信息、HTTP 状态代码和从服务器返回的真实数据。&openanything_module; 在内部处理 gzip 压缩；在本级别上你不必关心它。</para>
+</callout>
+<callout arearefs="oa.alltogether.3.3">
+<para>如果你得到一个 <literal>301</literal> 状态代码，表示是个永久重定向，你需要把你的 URL 更新为新地址。</para>
+</callout>
+<callout arearefs="oa.alltogether.3.4">
+<para>第二次获取相同的资源时，你已经从以往获得了各种信息：URL (可能被更新了)、从上一次访问获得的 &etag;、从上一次访问获得的 &lastmodified; 日期，当然还有 &useragent;。</para>
+</callout>
+<callout arearefs="oa.alltogether.3.5">
+<para>你重新获取了这个 dictionary，但是数据没有改变，所以你得到了一个 <literal>304</literal> 状态代码而没有数据。</para>
+</callout>
+</calloutlist>
+</example>
+</section>
+
+<section id="oa.summary">
+<?dbhtml filename="http_web_services/summary.html"?>
+<title>小结</title>
+<abstract>
+<title/>
+<para>&openanything_filename; 及其函数现在可以完美地工作了。</para>
+</abstract>
+<para>每个客户端都应该支持 HTTP web 服务的以下 5 个重要特性：</para>
+<itemizedlist>
+<listitem><para><link linkend="oa.useragent">通过设置适当的 &useragent;</link> 识别你的应用。</para></listitem>
+<listitem><para>适当地处理<link linkend="oa.redirect">永久重定向</link>。</para></listitem>
+<listitem><para>支持 <link linkend="oa.etags">&lastmodified; 日期检查</link>从而避免在数据未改变的情况下重新下载数据。</para></listitem>
+<listitem><para>支持 <link linkend="oa.etags.example">&etag; hash</link> 从而避免在数据未改变的情况下重新下载数据。</para></listitem>
+<listitem><para>支持 <link linkend="oa.gzip">gzip 压缩</link>从而在数据<emphasis>已经</emphasis> 改变的情况下尽可能地减少传输带宽。</para></listitem>
+</itemizedlist>
+</section>
+</chapter>
+<!--
+- basic grabbing of a URL (review)
+  - so what's wrong with that?
+  - not thoughtful
+  - HTTP has a lot of features that most programs ignore
+  - you can do better
+- features of HTTP
+  - User-Agent
+  X Referer (referrer)
+  - redirects
+    - temporary (302)
+    - permanent (301)
+    X multiple choices (300/307)
+  - ETag/If-None-Match (304)
+  - Last-Modified/If-Modified-Since (304)
+  - gzip compression (Accept-encoding/Content-encoding)
+- setting User-Agent and Referer
+- handling etag and last-modified
+  - getting headers out of response
+  - adding headers back to next request
+  X how to construct dates with time.strftime
+  X and why you can't do that here
+  X date parsing with rfc822
+- handling redirects
+  - custom URL handlers
+  - exposing HTTP status codes
+  - 301/302
+  - other redirects (all other 3xx codes except 304)
+  - errors (404, etc.)
+- other custom URL handlers
+  - HTTP authentication
+  - proxies
+- handling gzip compression
+- putting it all together
+- summary
+-->
+

@@ -1,0 +1,20 @@
+div.comment a {
+    cursor: pointer;
+    color: white;
+    text-decoration:none;
+}
+div.comment a div {
+    height: 16px;
+    width: 16px;
+}
+div.comment a.email_link div {
+    background: transparent url(../_static/i/comment_white_yellow.gif) no-repeat -16px 0;
+}
+div.comment a div:hover{
+    background-position:0 0;
+}
+div.comment {
+    position:absolute;
+}
+
+

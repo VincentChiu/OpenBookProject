@@ -1,0 +1,942 @@
+Chapter 24
+Chapter 24
+24Class Coding Details
+If you did not understand all of Chapter 23, don't worry; now that we've had a quick tour, we're going to dig a bit deeper and study the concepts introduced earlier in further detail. In this chapter, we'll take another look at classes and methods, inheritance, and operator overloading, formalizing and expanding on some of the class coding ideas introduced in Chapter 23. Because the class is our last namespace tool, we'll summarize the concepts of namespaces in Python here as well. This chapter will also present some larger and more realistic classes than those we have seen so far, including a final example that ties together much of what we've learned about OOP.
+The class Statement
+Although the Python class statement may seem similar to tools in other OOP languages on the surface, on closer inspection, it is quite different from what some programmers are used to. For example, as in C++, the class statement is Python's main OOP tool, but unlike in C++, Python's class is not a declaration. Like a def, a class statement is an object builder, and an implicit assignment-when run, it generates a class object, and stores a reference to it in the name used in the header. Also, like a def, a class statement is true executable code-your class doesn't exist until Python reaches and runs the class statement that defines it (typically while importing the module it is coded in, but not before).
+General Form
+class is a compound statement, with a body of indented statements typically appearing under the header. In the header, superclasses are listed in parentheses after the class name, separated by commas. Listing more than one superclass leads to multiple inheritance (which we'll discuss further in the next chapter). Here is the statement's general form:
+class <name>(superclass,...):         # Assign to name
+    data = value                      # Shared class data
+    def method(self,...):             # Methods
+        self.member = value           # Per-instance data
+Within the class statement, any assignments generate class attributes, and specially named methods overload operators; for instance, a function called _  _init_  _ is called at instance object construction time, if defined.
+Example
+As we've seen, classes are mostly just namespaces-that is, tools for defining names (i.e., attributes) that export data and logic to clients. So, how do you get from the class statement to a namespace?
+Here's how. Just like in a module file, the statements nested in a class statement body create its attributes. When Python executes a class statement (not a call to a class), it runs all the statements in its body, from top to bottom. Assignments that happen during this process create names in the class' local scope, which become attributes in the associated class object. Because of this, classes resemble both modules and functions:
+	*	Like functions, class statements are local scopes where names created by nested assignments live.
+	*	Like names in a module, names assigned in a class statement become attributes in a class object.
+The main distinction for classes is that their namespaces are also the basis of inheritance in Python; reference attributes that are not found in a class or instance object are fetched from other classes.
+Because class is a compound statement, any sort of statement can be nested inside its body-print, =, if, def, and so on. All the statements inside the class statement run when the class statement itself runs (not when the class is later called to make an instance). Assigning names inside the class statement makes class attributes, and nested defs make class methods, but other assignments make attributes, too.
+For example, assignments of simple nonfunction objects to class attributes produce data attributes, shared by all instances:
+>>> class SharedData:
+...     spam = 42                        # Generates a class data attribute
+...
+>>> x = SharedData(  )                  # Make two instances
+>>> y = SharedData(  )
+>>> x.spam, y.spam                     # They inherit and share spam
+(42, 42)
+Here, because the name spam is assigned at the top level of a class statement, it is attached to the class, and so will be shared by all instances. We can change it by going through the class name, and refer to it through either instances or the class.
+>>> SharedData.spam = 99
+>>> x.spam, y.spam, SharedData.spam
+(99, 99, 99)
+Such class attributes can be used to manage information that spans all the instances-a counter of the number of instances generated, for example (we'll expand on this idea in Chapter 26). Now, watch what happens if we assign the name spam through an instance instead of the class:
+>>> x.spam = 88
+>>> x.spam, y.spam, SharedData.spam
+(88, 99, 99)
+Assignments to instance attributes create or change the names in the instance, rather than in the shared class. More generally, inheritance searches occur only on attribute references, not on assignment: assigning to an object's attribute always changes that object, and no other. For example, y.spam is looked up in the class by inheritance, but the assignment to x.spam attaches a name to x itself.
+Here's a more comprehensive example of this behavior that stores the same name in two places. Suppose we run the following class:
+class MixedNames:                            # Define class
+    data = 'spam'                            # Assign class attr
+    def _  _init_  _(self, value):                # Assign method name
+        self.data = value                   # Assign instance attr
+    def display(self):
+        print self.data, MixedNames.data    # Instance attr, class attr
+This class contains two defs, which bind class attributes to method functions. It also contains an = assignment statement; because this assignment assigns the name data inside the class, it lives in the class' local scope, and becomes an attribute of the class object. Like all class attributes, this data is inherited, and shared by all instances of the class that don't have data attributes of their own.
+When we make instances of this class, the name data is attached to those instances by the assignment to self.data in the constructor method:
+>>> x = MixedNames(1)           # Make two instance objects
+>>> y = MixedNames(2)           # Each has its own data
+>>> x.display(  ); y.display(  )      # self.data differs, Subclass.data is the same
+1 spam
+2 spam
+The net result is that data lives in two places: in the instance objects (created by the self.data assignment in _  _init_  _), and in the class from which they inherit names (created by the data assignment in the class). The class' display method prints both versions, by first qualifying the self instance, and then the class.
+By using these techniques to store attributes in different objects, we determine their scope of visibility. When attached to classes, names are shared; in instances, names record per-instance data, not shared behavior or data. Although inheritance searches look up names for us, we can always get to an attribute anywhere in a tree by accessing the desired object directly.
+In the preceding example, for instance, specifying x.data or self.data will return an instance name, which normally hides the same name in the class; however, MixedNames.data grabs the class name explicitly. We'll see various roles for such coding patterns later; the next section describes one of the most common.
+Methods
+Because you already know about functions, you also know about methods in classes. Methods are just function objects created by def statements nested in a class statement's body. From an abstract perspective, methods provide behavior for instance objects to inherit. From a programming perspective, methods work in exactly the same way as simple functions, with one crucial exception: a method's first argument always receives the instance object that is the implied subject of the method call.
+In other words, Python automatically maps instance method calls to class method functions as follows. Method calls made through an instance, like this:
+instance.method(args...)
+are automatically translated to class method function calls of this form:
+class.method(instance, args...)
+where the class is determined by locating the method name using Python's inheritance search procedure. In fact, both call forms are valid in Python.
+Besides the normal inheritance of method attribute names, the special first argument is the only real magic behind method calls. In a class method, the first argument is usually called self by convention (technically, only its position is significant, not its name). This argument provides methods with a hook back to the instance that is the subject of the call-because classes generate many instance objects, they need to use this argument to manage data that varies per instance.
+C++ programmers may recognize Python's self argument as being similar to C++'s this pointer. In Python, though, self is always explicit in your code: methods must always go through self to fetch or change attributes of the instance being processed by the current method call. This explicit nature of self is by design-the presence of this name makes it obvious that you are using instance attribute names in your script, not names in the local or global scope.
+Example
+To clarify these concepts, let's turn to an example. Suppose we define the following class:
+class NextClass:                            # Define class
+    def printer(self, text):                # Define method
+        self.message = text                 # Change instance
+        print self.message                  # Access instance
+The name printer references a function object; because it's assigned in the class statement's scope, it becomes a class object attribute, and is inherited by every instance made from the class. Normally, because methods like printer are designed to process instances, we call them through instances:
+>>> x = NextClass(  )                         # Make instance
+
+>>> x.printer('instance call')                # Call its method
+instance call
+
+>>> x.message                                 # Instance changed
+'instance call'
+When we call it by qualifying an instance like this, printer is first located by inheritance, and then its self argument is automatically assigned the instance object (x); the text argument gets the string passed at the call ('instance call'). Notice that because Python automatically passes the first argument to self for us, we only actually have to pass in one argument. Inside printer, the name self is used to access or set per-instance data because it refers back to the instance currently being processed.
+Methods may be called in one of two ways-through an instance, or through the class itself. For example, we can also call printer by going through the class name, provided we pass an instance to the self argument explicitly:
+>>> NextClass.printer(x, 'class call')      # Direct class call
+class call
+
+>>> x.message                               # Instance changed again
+'class call'
+Calls routed through the instance and the class have the exact same effect, as long as we pass the same instance object ourselves in the class form. By default, in fact, you get an error message if you try to call a method without any instance:
+>>> NextClass.printer('bad call')
+TypeError: unbound method printer(  ) must be called with NextClass instance...
+Calling Superclass Constructors
+Methods are normally called through instances. Calls to methods through the class, though, do show up in a variety of special roles. One common scenario involves the constructor method. The _  _init_  _ method, like all attributes, is looked up by inheritance. This means that at construction time, Python locates and calls just one _  _init_  _. If subclass constructors need to guarantee that superclass construction-time logic runs, too, they generally must call the superclass's _  _init_  _ method explicitly through the class:
+class Super:
+    def _  _init_  _(self, x): 
+        ...default code...
+
+class Sub(Super):
+    def _  _init_  _(self, x, y):
+        Super.__init__(self, x)             # Run superclass _  _init_  _
+        ...custom code...                   # Do my init actions
+
+I = Sub(1, 2)
+This is one of the few contexts in which your code is likely to call an operator overloading method directly. Naturally, you should only call the superclass constructor this way if you really want it to run-without the call, the subclass replaces it completely. For a more realistic illustration of this technique in action, stay tuned for the final example in this chapter.
+Other Method Call Possibilities
+This pattern of calling methods through a class is the general basis of extending (instead of completely replacing) inherited method behavior. In Chapter 26, we'll also meet a new option added in Python 2.2, static methods, that allow you to code methods that do not expect instance objects in their first arguments. Such methods can act like simple instanceless functions, with names that are local to the classes in which they are coded. This is an advanced and optional extension, though; normally, you must always pass an instance to a method, whether it is called through an instance or a class.
+Inheritance
+The whole point of a namespace tool like the class statement is to support name inheritance. This section expands on some of the mechanisms and roles of attribute inheritance in Python.
+In Python, inheritance happens when an object is qualified, and it involves searching an attribute definition tree (one or more namespaces). Every time you use an expression of the form object.attr (where object is an instance or class object), Python searches the namespace tree from top to bottom, beginning with object, looking for the first attr it can find. This includes references to self attributes in your methods. Because lower definitions in the tree override higher ones, inheritance forms the basis of specialization.
+Attribute Tree Construction
+Figure 24-1 summarizes the way namespace trees are constructed and populated with names. Generally:
+	*	Instance attributes are generated by assignments to self attributes in methods.
+	*	Class attributes are created by statements (assignments) in class statements.
+	*	Superclass links are made by listing classes in parentheses in a class statement header.
+
+Figure 24-1
+Program code creates a tree of objects in memory to be searched by attribute inheritance. Calling a class creates a new instance that remembers its class, running a class statement creates a new class, and superclasses are listed in parentheses in the class statement header. Each attribute reference triggers a new bottom-up tree search-even self attributes within a class' methods.
+
+The net result is a tree of attribute namespaces that leads from an instance, to the class it was generated from, to all the superclasses listed in the class header. Python searches upward in this tree, from instances to superclasses, each time you use qualification to fetch an attribute name from an instance object.
+Specializing Inherited Methods
+The tree-searching model of inheritance just described turns out to be a great way to specialize systems. Because inheritance finds names in subclasses before it checks superclasses, subclasses can replace default behavior by redefining their superclasses' attributes. In fact, you can build entire systems as hierarchies of classes, which are extended by adding new external subclasses rather than changing existing logic in-place.
+The idea of redefining inherited names leads to a variety of specialization techniques. For instance, subclasses may replace inherited attributes completely, provide attributes that a superclass expects to find, and extend superclass methods by calling back to the superclass from an overridden method. We've already seen replacement in action. Here's an example that shows how extension works:
+>>> class Super:
+...     def method(self):
+...         print 'in Super.method'
+... 
+>>> class Sub(Super):
+...     def method(self):                       # Override method
+...         print 'starting Sub.method'         # Add actions here
+...         Super.method(self)                  # Run default action
+...         print 'ending Sub.method'
+...
+Direct superclass method calls are the crux of the matter here. The Sub class replaces Super's method function with its own specialized version. But, within the replacement, Sub calls back to the version exported by Super to carry out the default behavior. In other words, Sub.method just extends Super.method's behavior, rather than replacing it completely:
+>>> x = Super(  )            # Make a Super instance
+>>> x.method(  )             # Runs Super.method
+in Super.method
+
+>>> x = Sub(  )              # Make a Sub instance
+>>> x.method(  )             # Runs Sub.method, which calls Super.method
+starting Sub.method
+in Super.method
+ending Sub.method
+This extension coding pattern is also commonly used with constructors; see the earlier section, "Methods," for an example.
+Class Interface Techniques
+Extension is only one way to interface with a superclass. The file shown below, specialize.py, defines multiple classes that illustrate a variety of common techniques:
+Super
+Defines a method function and a delegate that expects an action in a subclass.
+Inheritor
+Doesn't provide any new names, so it gets everything defined in Super.
+Replacer
+Overrides Super's method with a version of its own.
+Extender
+Customizes Super's method by overriding and calling back to run the default.
+Provider
+Implements the action method expected by Super's delegate method.
+Study each of these subclasses to get a feel for the various ways they customize their common superclass. Here's the file:
+class Super:
+    def method(self):
+        print 'in Super.method'             # Default behavior
+    def delegate(self):
+        self.action(  )                          # Expected to be defined
+
+class Inheritor(Super):                    # Inherit method verbatim
+    pass
+
+class Replacer(Super):                     # Replace method completely
+    def method(self):
+        print 'in Replacer.method'
+
+class Extender(Super):                     # Extend method behavior
+    def method(self):
+        print 'starting Extender.method'
+        Super.method(self)
+        print 'ending Extender.method'
+
+class Provider(Super):                     # Fill in a required method
+    def action(self):
+        print 'in Provider.action'
+
+if __name__ == '_  _main_  _':
+    for klass in (Inheritor, Replacer, Extender):
+        print '\n' + klass._  _name_  _ + '...'
+        klass(  ).method(  )
+
+    print '\nProvider...'
+    x = Provider(  )
+    x.delegate(  )
+A few things are worth pointing out here. First, the self-test code at the end of this example creates instances of three different classes in a for loop. Because classes are objects, you can put them in a tuple, and create instances generically (more on this idea later). Classes also have the special _  _name_  _ attribute, like modules; it's preset to a string containing the name in the class header. Here's what happens when we run the file:
+% python specialize.py
+
+Inheritor...
+in Super.method
+
+Replacer...
+in Replacer.method
+
+Extender...
+starting Extender.method
+in Super.method
+ending Extender.method
+
+Provider...
+in Provider.action
+Abstract Superclasses
+Notice how the Provider class in the prior example works. When we call the delegate method through a Provider instance, two independent inheritance searches occur:
+	1.	On the initial x.delegate call, Python finds the delegate method in Super by searching the Provider instance and above. The instance x is passed into the method's self argument as usual.
+	2.	Inside the Super.delegate method, self.action invokes a new, independent inheritance search of self and above. Because self references a Provider instance, the action method is located in the Provider subclass.
+This "filling in the blanks" sort of coding structure is typical of OOP frameworks. At least in terms of the delegate method, the superclass in this example is what is sometimes called an abstract superclass-a class that expects parts of its behavior to be provided by its subclasses. If an expected method is not defined in a subclass, Python raises an undefined name exception when the inheritance search fails. Class coders sometimes make such subclass requirements more obvious with assert statements, or by raising the built-in NotImplementedError exception:
+class Super:
+    def method(self):
+        print 'in Super.method'
+    def delegate(self):
+        self.action(  )
+    def action(self):
+        assert 0, 'action must be defined!'
+We'll meet assert in Chapter 27; in short, if its expression evaluates to false, it raises an exception with an error message. Here, the expression is always false (0) so as to trigger an error message if a method is not redefined, and inheritance locates the version here. Alternatively, some classes simply raise a NotImplemented exception directly in such method stubs. We'll study the raise statement in Chapter 27.
+For a somewhat more realistic example of this section's concepts in action, see exercise 8 at the end of Chapter 26, and its solution in "Part VI, Classes and OOP" (in Appendix B). Such taxonomies are a traditional way to introduce OOP, but they're a bit removed from most developers' job descriptions.
+Operator Overloading
+We looked briefly at operator overloading in the prior chapter; here, we'll fill in more details, and look at a few commonly used overloading methods. Here's a review of the key ideas behind overloading:
+	*	Operator overloading lets classes intercept normal Python operations.
+	*	Classes can overload all Python expression operators.
+	*	Classes can also overload operations such as printing, function calls, attribute qualifications, etc.
+	*	Overloading makes class instances act more like built-in types.
+	*	Overloading is implemented by providing specially named class methods.
+Let's look at a simple example of overloading at work. If certain specially named methods are provided in a class, Python automatically calls them when instances of the class appear in expressions related to the associated operations. For instance, the Number class in the following file, number.py, provides a method to intercept instance construction (_  _init_  _), as well as one for catching subtraction expressions (_  _sub_  _). Special methods such as these are the hooks that let you tie into built-in operations:
+class Number:
+    def _  _init_  _(self, start):                # On Number(start)
+        self.data = start
+    def _  _sub_  _(self, other):                 # On instance - other
+        return Number(self.data - other)    # Result is a new instance
+
+>>> from number import Number               # Fetch class from module
+>>> X = Number(5)                           # Number._  _init_  _(X, 5)
+>>> Y = X - 2                               # Number._  _sub_  _(X, 2)
+>>> Y.data                                  # Y is new Number instance
+3
+As discussed previously, the _  _init_  _ constructor method seen in this code is the most commonly used operator overloading method in Python; it's present in most classes. In this section, we will sample some of the other tools available in this domain, and look at example code that applies them in common use cases.
+Common Operator Overloading Methods
+Just about everything you can do to built-in objects such as integers and lists has a corresponding specially named method for overloading in classes. Table 24-1 lists a few of the most common; there are many more. In fact, many overloading methods come in multiple versions (e.g., _  _add_  _, _  _radd_  _, and _  _iadd_  _ for addition). See other Python books, or the Python language reference manual, for an exhaustive list of the special method names available.
+
+Table 24-1
+Common operator overloading methods 
+Method	Overloads	Called for
+_  _init_  _	Constructor	Object creation: X = Class(  )
+_  _del_  _	Destructor	Object reclamation
+_  _add_  _ 	Operator +	X + Y, X += Y
+_  _or_  _	Operator | (bitwise OR)	X | Y, X |= Y
+_  _repr_  _,_  _str_  _	Printing, conversions	print X, repr(X), str(X)
+_  _call_  _	Function calls	X(  )
+_  _getattr_  _	Qualification	X.undefined
+_  _setattr_  _	Attribute assignment	X.any = value
+_  _getitem_  _	Indexing	X[key], for loops and other iterations if no _  _iter_  _
+_  _setitem_  _	Index assignment	X[key] = value
+_  _len_  _	Length	len(X), truth tests
+_  _cmp_  _	Comparison	X == Y, X < Y
+_  _lt_  _	Specific comparison	X < Y (or else _  _cmp_  _)
+_  _eq_  _	Specific comparison	X == Y (or else _  _cmp_  _)
+_  _radd_  _	Right-side operator +	Noninstance + X
+_  _iadd_  _	In-place (augmented) addition	X += Y (or else _  _add_  _)
+_  _iter_  _	Iteration contexts	for loops, in tests, list comprehensions, map, others
+
+All overloading methods have names that start and end with two underscores to keep them distinct from other names you define in your classes. The mappings from special method names to expressions or operations are predefined by the Python language (and documented in the standard language manual). For example, the name _  _add_  _ always maps to + expressions by Python language definition, regardless of what an _  _add_  _ method's code actually does.
+All operator overloading methods are optional-if you don't code one, that operation is simply unsupported by your class (and may raise an exception if attempted). Most overloading methods are used only in advanced programs that require objects to behave like built-ins; the _  _init_  _ constructor tends to appear in most classes, however. We've already met the _  _init_  _ initialization-time constructor method, and a few of the others in Table 24-1. Let's explore some of the additional methods in the table by example.
+_  _getitem_  _ Intercepts Index References
+The _  _getitem_  _ method intercepts instance-indexing operations. When an instance X appears in an indexing expression like X[i], Python calls the _  _getitem_  _ method inherited by the instance (if any), passing X to the first argument, and the index in brackets to the second argument. For instance, the following class returns the square of an index value:
+>>> class indexer:
+...     def _  _getitem_  _(self, index):
+...         return index ** 2
+...
+>>> X = indexer(  )
+>>> X[2]                              # X[i] calls _  _getitem_  _(X, i).4
+>>> for i in range(5): 
+...     print X[i], 
+...
+0 1 4 9 16
+_  _getitem_  _ and _  _iter_  _ Implement Iteration
+Here's a trick that isn't always obvious to beginners, but turns out to be incredibly useful. The for statement works by repeatedly indexing a sequence from zero to higher indexes, until an out-of-bounds exception is detected. Because of that, _  _getitem_  _ also turns out to be one way to overload iteration in Python-if this method is defined, for loops call the class' _  _getitem_  _ each time through, with successively higher offsets. It's a case of "buy one, get one free"-any built-in or user-defined object that responds to indexing also responds to iteration:
+>>> class stepper:
+...     def _  _getitem_  _(self, i):
+...         return self.data[i]
+...
+>>> X = stepper(  )                     # X is a stepper object
+>>> X.data = "Spam"
+>>>
+>>> X[1]                              # Indexing calls _  _getitem_  _
+'p'
+>>> for item in X:                    # for loops call _  _getitem_  _
+...     print item,                   # for indexes items 0..N
+...
+S p a m
+In fact, it's really a case of "buy one, get a bunch free." Any class that supports for loops automatically supports all iteration contexts in Python, many of which we've seen in earlier chapters (see Chapter 13 for other iteration contexts). For example, the in membership test, list comprehensions, the map built-in, list and tuple assignments, and type constructors will also call _  _getitem_  _ automatically, if it's defined:
+>>> 'p' in X                          # All call _  _getitem_  _ too
+1
+
+>>> [c for c in X]                    # List comprehension
+['S', 'p', 'a', 'm']
+
+>>> map(None, X)                      # map calls
+['S', 'p', 'a', 'm']
+
+>>> (a, b, c, d) = X                  # Sequence assignments
+>>> a, c, d
+('S', 'a', 'm')
+
+>>> list(X), tuple(X), ''.join(X)
+(['S', 'p', 'a', 'm'], ('S', 'p', 'a', 'm'), 'Spam')
+
+>>> X
+<_  _main_  _.stepper instance at 0x00A8D5D0>
+In practice, this technique can be used to create objects that provide a sequence interface and to add logic to built-in sequence type operations; we'll revisit this idea when extending built-in types in Chapter 26.
+User-Defined Iterators
+Today, all iteration contexts in Python will try the _  _iter_  _ method first, before trying _  _getitem_  _. That is, they prefer the iteration protocol we learned about in Chapter 13 to repeatedly indexing an object; if the object does not support the iteration protocol, indexing is attempted instead.
+Technically, iteration contexts work by calling the iter built-in function to try to find an _  _iter_  _ method, which is expected to return an iterator object. If it's provided, Python then repeatedly calls this iterator object's next method to produce items until a StopIteration exception is raised. If no such _  _iter_  _ method is found, Python falls back on the _  _getitem_  _ scheme, and repeatedly indexes by offsets as before, until an IndexError exception is raised.
+In the new scheme, classes implement user-defined iterators by simply implementing the iterator protocol introduced in Chapters 13 and 17 (refer back to those chapters for more background details on iterators). For example, the following file, iters.py, defines a user-defined iterator class that generates squares:
+class Squares:
+    def _  _init_  _(self, start, stop):  # Save state when created
+        self.value = start - 1
+        self.stop  = stop
+    def _  _iter_  _(self):                 # Get iterator object on iter(  )
+        return self
+    def next(self):                   # Return a square on each iteration
+        if self.value == self.stop:
+            raise StopIteration
+        self.value += 1
+        return self.value ** 2
+
+% python
+>>> from iters import Squares
+>>> for i in Squares(1, 5):           # for calls iter(  ), which calls _  _iter_  _(  )
+...     print i,                      # Each iteration calls next(  )
+...
+1 4 9 16 25
+Here, the iterator object is simply the instance self because the next method is part of this class. In more complex scenarios, the iterator object may be defined as a separate class and object with its own state information to support multiple active iterations over the same data (we'll see an example of this in a moment). The end of the iteration is signaled with a Python raise statement (more on raising exceptions in the next part of this book).
+An equivalent coding with _  _getitem_  _ might be less natural because the for would then iterate through all offsets zero and higher; the offsets passed in would be only indirectly related to the range of values produced (0..N would need to map to start..stop). Because _  _iter_  _ objects retain explicitly managed state between next calls, they can be more general than _  _getitem_  _.
+On the other hand, _  _iter_  _-based iterators can sometimes be more complex and less convenient than _  _getitem_  _. They are really designed for iteration, not random indexing-in fact, they don't overload the indexing expression at all:
+>>> X = Squares(1, 5)
+>>> X[1]
+AttributeError: Squares instance has no attribute '_  _getitem_  _'
+The _  _iter_  _ scheme is also the implementation for all the other iteration contexts we saw in action for _  _getitem_  _ (membership tests, type constructors, sequence assignment, and so on). However, unlike _  _getitem_  _, _  _iter_  _ is designed for a single traversal, not many. For example, the Squares class is a one-shot iteration; once iterated, it's empty. You need to make a new iterator object for each new iteration:
+>>> X = Squares(1, 5)
+>>> [n for n in X]                        # Exhausts items
+[1, 4, 9, 16, 25]
+>>> [n for n in X]                        # Now it's empty
+[]
+>>> [n for n in Squares(1, 5)]            # Make a new iterator object
+[1, 4, 9, 16, 25]
+>>> list(Squares(1, 3))
+[1, 4, 9]
+Notice that this example would probably be simpler if coded with generator functions (a topic introduced in Chapter 17 and related to iterators):
+>>> from _  _future_  _ import generators     # Needed in Python 2.2, but not later
+>>>
+>>> def gsquares(start, stop):
+...     for i in range(start, stop+1):
+...         yield i ** 2
+...
+>>> for i in gsquares(1, 5):
+...     print i,
+...
+1 4 9 16 25
+Unlike the class, the function automatically saves its state between iterations. Of course, for this artificial example, you could, in fact, skip both techniques and simply use a for loop, map, or list comprehension to build the list all at once. The best and fastest way to accomplish a task in Python is often also the simplest:
+>>> [x ** 2 for x in range(1, 6)]
+[1, 4, 9, 16, 25]
+However, classes may be better at modeling more complex iterations, especially when they can benefit from state information and inheritance hierarchies. The next section explores one such use case.
+Multiple iterators on one object
+Earlier, I mentioned that the iterator object may be defined as a separate class with its own state information to support multiple active iterations over the same data. Consider what happens when we step across a built-in type like a string:
+>>> S = 'ace'
+>>> for x in S:
+...     for y in S:
+...         print x + y,
+...        
+aa ac ae ca cc ce ea ec ee
+Here, the outer loop grabs an iterator from the string by calling iter, and each nested loop does the same to get an independent iterator. Because each active iterator has its own state information, each loop can maintain its own position in the string, regardless of any other active loops. To achieve the same effect with user-defined iterators, _  _iter_  _ simply needs to define a new stateful object for the iterator, instead of returning self. 
+The following, for instance, defines an iterator class that skips every other item on iterations; because the iterator object is created anew for each iteration, it supports multiple active loops:
+class SkipIterator:
+    def _  _init_  _(self, wrapped):
+        self.wrapped = wrapped                    # Iterator state information
+        self.offset  = 0
+    def next(self):
+        if self.offset >= len(self.wrapped):      # Terminate iterations
+            raise StopIteration
+        else:
+            item = self.wrapped[self.offset]      # else return and skip
+            self.offset += 2
+            return item
+
+class SkipObject:
+    def _  _init_  _(self, wrapped):                    # Save item to be used
+        self.wrapped = wrapped
+    def _  _iter_  _(self):
+        return SkipIterator(self.wrapped)         # New iterator each time
+
+if _  _name_  _ == '_  _main_  _':
+    alpha = 'abcdef'
+    skipper = SkipObject(alpha)                   # Make container object
+    I = iter(skipper)                             # Make an iterator on it
+    print I.next(), I.next(  ), I.next(  )              # Visit offsets 0, 2, 4
+    
+    for x in skipper:               # for calls _  _iter_  _ automatically
+        for y in skipper:           # Nested fors call _  _iter_  _ again each time
+            print x + y,            # Each iterator has its own state, offset
+When run, this example works like the nested loops with built-in strings-each active loop has its own position in the string because each obtains an independent iterator object that records its own state information:
+% python skipper.py
+a c e
+aa ac ae ca cc ce ea ec ee
+By contrast, our earlier Squares example supports just one active iteration, unless we call Squares again in nested loops to obtain new objects. Here, there is just one SkipObject, with multiple iterator objects created from it. 
+As before, we could achieve similar results with built-in tools-for example, slicing with a third bound to skip items:
+>>> S = 'abcdef'
+>>> for x in S[::2]:
+...     for y in S[::2]:            # New objects on each iteration
+...         print x + y,
+...        
+aa ac ae ca cc ce ea ec ee
+This isn't quite the same, though, for two reasons. First, each slice expression here will physically store the result list all at once in memory; iterators, on the other hand, produce just one value at a time, which can save substantial space for large result lists. Second, slices produce new objects, so we're not really iterating over the same object in multiple places here. To be closer to the class, we would need to make a single object to step across by slicing ahead of time:
+>>> S = 'abcdef'
+>>> S = S[::2]
+>>> S
+'ace'
+>>> for x in S:
+...     for y in S:                 # Same object, new iterators
+...         print x + y,
+...        
+aa ac ae ca cc ce ea ec ee
+This is more similar to our class-based solution, but it still stores the slice result in memory all at once (there is no generator form of slicing today), and it's only equivalent for this particular case of skipping every other item. 
+Because iterators can do anything a class can do, they are much more general than this example may imply. Whether our applications require such generality, user-defined iterators are a powerful tool-they allow us to make arbitrary objects look and feel like the other sequences and iterables we have met in this book. We could use this technique with a database object, for example, to make iterations to database fetches, with multiple cursors into the same query result.
+_  _getattr_  _ and _  _setattr_  _ Catch Attribute References
+The _  _getattr_  _ method intercepts attribute qualifications. More specifically, it's called with the attribute name as a string whenever you try to qualify an instance with an undefined (nonexistent) attribute name. It is not called if Python can find the attribute using its inheritance tree search procedure. Because of its behavior, _  _getattr_  _ is useful as a hook for responding to attribute requests in a generic fashion. For example:
+>>> class empty:
+...     def _  _getattr_  _(self, attrname):
+...         if attrname == "age":
+...             return 40
+...         else:
+...             raise AttributeError, attrname
+...
+>>> X = empty(  )
+>>> X.age
+40
+>>> X.name
+...error text omitted...
+AttributeError: name
+Here, the empty class and its instance X have no real attributes of their own, so the access to X.age gets routed to the _  _getattr_  _ method; self is assigned the instance (X), and attrname is assigned the undefined attribute name string ("age"). The class makes age look like a real attribute by returning a real value as the result of the X.age qualification expression (40). In effect, age becomes a dynamically computed attribute.
+For attributes that the class doesn't know how to handle, this _  _getattr_  _ raises the built-in AttributeError exception to tell Python that these are bona fide undefined names; asking for X.name triggers the error. You'll see _  _getattr_  _ again when we see delegation and properties at work in the next two chapters, and I'll say more about exceptions in Part VII.
+A related overloading method, _  _setattr_  _, intercepts all attribute assignments. If this method is defined, self.attr = value becomes self._  _setattr_  _('attr', value). This is a bit trickier to use because assigning to any self attributes within _  _setattr_  _ calls _  _setattr_  _ again, causing an infinite recursion loop (and eventually, a stack overflow exception!). If you want to use this method, be sure that it assigns any instance attributes by indexing the attribute dictionary, discussed in the next section. Use self._  _dict_  _['name'] = x, not self.name = x:
+>>> class accesscontrol:
+...     def _  _setattr_  _(self, attr, value):
+...         if attr == 'age':
+...             self._  _dict_  _[attr] = value
+...         else:
+...             raise AttributeError, attr + ' not allowed'
+...
+>>> X = accesscontrol(  )
+>>> X.age = 40                                   # Calls _  _setattr_  _
+>>> X.age
+40
+>>> X.name = 'mel'
+...text omitted...
+AttributeError: name not allowed
+These two attribute-access overloading methods allow you to control or specialize access to attributes in your objects. They tend to play highly specialized roles, some of which we'll explore later in this book.
+Emulating Privacy for Instance Attributes
+The following code generalizes the previous example, to allow each subclass to have its own list of private names that cannot be assigned to its instances: 
+class PrivateExc(Exception): pass                   # More on exceptions later
+
+class Privacy:
+    def _  _setattr_  _(self, attrname, value):      # On self.attrname = value
+        if attrname in self.privates:
+            raise PrivateExc(attrname, self)
+        else:
+            self._  _dict_  _[attrname] = value      # Self.attrname = value loops!
+
+class Test1(Privacy):
+    privates = ['age']
+
+class Test2(Privacy):
+    privates = ['name', 'pay']
+    def _  _init_  _(self):
+        self._  _dict_  _['name'] = 'Tom'
+
+x = Test1(  )
+y = Test2(  )
+
+x.name = 'Bob'
+y.name = 'Sue'   # <== fails
+
+y.age  = 30
+x.age  = 40      # <== fails
+In fact, this is first-cut solution for an implementation of attribute privacy in Python (i.e., disallowing changes to attribute names outside a class). Although Python doesn't support private declarations per se, techniques like this can emulate much of their purpose. This is a partial solution, though; to make it more effective, it must be augmented to allow subclasses to set private attributes too and to use _  _getattr_  _ and a wrapper (sometimes called a proxy) class to check for private attribute fetches. 
+I'll leave the complete solution as a suggested exercise, because even though privacy can be emulated this way, it almost never is in practice. Python programmers are able to write large OOP frameworks and applications without private declarations-an interesting finding about access controls in general that is beyond the scope of our purposes here. 
+Catching attribute references and assignments is generally a useful technique; it supports delegation, a design technique that allows controller objects to wrap up embedded objects, add new behaviors, and route other operations back to the wrapped objects (more on delegation and wrapper classes in the next chapter).
+_  _repr_  _ and _  _str_  _ Return String Representations
+The next example exercises the _  _init_  _ constructor, and the _  _add_  _ overload method we've already seen, but also defines a _  _repr_  _ method that returns a  string representation for instances. String formatting is used to convert the managed self.data object to a string. If defined, _  _repr_  _ (or its sibling, _  _str_  _) is called automatically when class instances are printed or converted to strings. These methods allow you to define a better display format for your objects than the default instance display:
+>>> class adder:
+...     def _  _init_  _(self, value=0):
+...         self.data = value                    # Initialize data
+...     def _  _add_  _(self, other):
+...         self.data += other                   # Add other in-place
+...
+>>> class addrepr(adder):                        # Inherit _  _init_  _, _  _add_  _
+...     def _  _repr_  _(self):                        # Add string representation
+...         return 'addrepr(%s)' % self.data     # Convert to string as code
+...
+>>> x = addrepr(2)                               # Runs _  _init_  _
+>>> x + 1                                        # Runs _  _add_  _
+>>> x                                            # Runs _  _repr_  _
+addrepr(3)
+>>> print x                                      # Runs _  _repr_  _
+addrepr(3)
+>>> str(x), repr(x)                              # Runs _  _repr_  _
+('addrepr(3)', 'addrepr(3)')
+So why two display methods? Roughly, _  _str_  _ is tried first for user-friendly displays, such as the print statement, and the str built-in function. The _  _repr_  _ method should in principle return a string that could be used as executable code to re-create the object; it's used for interactive prompt echoes, and the repr function. If no _  _str_  _ is present, Python falls back on _  _repr_  _ (but not vice versa):
+>>> class addstr(adder):            
+...     def _  _str_  _(self):                         # _  _str_  _ but no _  _repr_  _
+...         return '[Value: %s]' % self.data     # Convert to nice string
+...
+>>> x = addstr(3)
+>>> x + 1
+>>> x                                            # Default repr
+<_  _main_  _.addstr instance at 0x00B35EF0>
+>>> print x                                      # Runs _  _str_  _
+[Value: 4]
+>>> str(x), repr(x)
+('[Value: 4]', '<_  _main_  _.addstr instance at 0x00B35EF0>')
+Because of this, _  _repr_  _ may be best if you want a single display for all contexts. By defining both methods, though, you can support different displays in different contexts-for example, an end-user display with _  _str_  _, and a low-level display for programmers to use during development with _  _repr_  _:
+>>> class addboth(adder):
+...     def _  _str_  _(self):
+...         return '[Value: %s]' % self.data     # User-friendly string
+...     def _  _repr_  _(self):
+...         return 'addboth(%s)' % self.data     # As-code string
+...
+>>> x = addboth(4)
+>>> x + 1
+>>> x                                            # Runs _  _repr_  _
+addboth(5)
+>>> print x                                      # Runs _  _str_  _
+[Value: 5]
+>>> str(x), repr(x)
+('[Value: 5]', 'addboth(5)')
+In practice, _  _str_  _ (or its low-level relative, _  _repr_  _) seems to be the second most commonly used operator overloading method in Python scripts, behind _  _init_  _; any time you can print an object and see a custom display, one of these two tools is probably in use.
+_  _radd_  _ Handles Right-Side Addition
+Technically, the _  _add_  _ method that appeared in the prior example does not support the use of instance objects on the right side of the + operator. To implement such expressions, and hence support commutative-style operators, code the _  _radd_  _ method as well. Python calls _  _radd_  _ only when the object on the right side of the + is your class instance, but the object on the left is not an instance of your class. The _  _add_  _ method for the object on the left is called instead in all other cases:
+>>> class Commuter:
+...     def _  _init_  _(self, val):
+...         self.val = val
+...     def _  _add_  _(self, other):
+...         print 'add', self.val, other
+...     def _  _radd_  _(self, other):
+...         print 'radd', self.val, other
+...
+>>> x = Commuter(88)
+>>> y = Commuter(99)
+>>> x + 1                         # _  _add_  _: instance + noninstance
+add 88 1
+>>> 1 + y                         # _  _radd_  _: noninstance + instance
+radd 99 1
+>>> x + y                         # _  _add_  _: instance + instance
+add 88 <_  _main_  _.Commuter instance at 0x0086C3D8>
+Notice how the order is reversed in _  _radd_  _: self is really on the right of the +, and other is on the left. Every binary operator has a similar right-side overloading method (e.g., _  _mul_  _ and _  _rmul_  _). Typically, a right-side method like _  _radd_  _ just converts if needed, and reruns a + to trigger _  _add_  _, where the main logic is coded. Also, note that x and y are instances of the same class here; when instances of different classes appear mixed in an expression, Python prefers the class of the one on the left.
+Right-side methods are an advanced topic, and tend to be fairly rarely used in practice; you only code them when you need operators to be commutative, and then only if you need to support operators at all. For instance, a Vector class may use these tools, but an Employee or Button class probably would not.
+_  _call_  _ Intercepts Calls
+The _  _call_  _ method is called when your  instance is called. No, this isn't a circular definition-if defined, Python runs a _  _call_  _ method for function call expressions applied to your instances. This allows class instances to emulate the look and feel of things like functions:
+>>> class Prod:
+...     def _  _init_  _(self, value):
+...         self.value = value
+...     def _  _call_  _(self, other):
+...         return self.value * other
+...
+>>> x = Prod(2)
+>>> x(3)
+6
+>>> x(4)
+8
+In this example, the _  _call_  _ may seem a bit gratuitous. A simple method provides similar utility:
+>>> class Prod:
+...     def _  _init_  _(self, value):
+...         self.value = value
+...     def comp(self, other):
+...         return self.value * other
+...
+>>> x = Prod(3)
+>>> x.comp(3)
+9
+>>> x.comp(4)
+12
+However, _  _call_  _ can become more useful when interfacing with APIs that expect functions-it allows us to code objects that conform to an expected function call interface, but also retain state information. In fact, it's probably the third most commonly used operator overloading method, behind the _  _init_  _ constructor, and the _  _str_  _ and _  _repr_  _ display-format alternatives.
+Function Interfaces and Callback-Based Code
+As an example, the Tkinter GUI toolkit, which we'll meet later in this book, allows you to register functions as event handlers (a.k.a. callbacks); when events occur, Tkinter calls the registered objects. If you want an event handler to retain state between events, you can register either a class' bound method, or an instance that conforms to the expected interface with _  _call_  _. In this section's code, both x.comp from the second example, and x from the first, can pass as function-like objects this way. 
+I'll have more to say about bound methods in the next chapter, but for now, here's a hypothetical example of _  _call_  _ applied to the GUI domain. The following class defines an object that supports a function-call interface, but also has state information that remembers the color a button should change to when it is later pressed:
+class Callback:
+    def _  _init_  _(self, color):               # Function + state information
+        self.color = color
+    def _  _call_  _(self):                      # Support calls with no arguments
+        print 'turn', self.color
+Now, in the context of a GUI, we can register instances of this class as event handlers for buttons, even though the GUI expects to be able to invoke event handlers as simple functions with no arguments:
+cb1 = Callback('blue')                       # 'Remember' blue
+cb2 = Callback('green')
+
+B1 = Button(command=cb1)                     # Register handlers
+B2 = Button(command=cb2)                     # Register handlers
+When the button is later pressed, the instance object is called as a simple function, exactly like in the following calls. Because it retains state as instance attributes, though, it remembers what to do:
+cb1(  )                                        # On events: prints 'blue'
+cb2(  )                                        # Prints 'green'
+In fact, this is probably the best way to retain state information in the Python language-better than the techniques discussed earlier for functions (global variables, enclosing-function scope references, and default mutable arguments). With OOP, the state remembered is made explicit with attribute assignments.
+Before we move on, there are two other ways that Python programmers sometimes tie information to a callback function like this. One option is to use default arguments in lambda functions:
+cb3 = (lambda color='red': 'turn ' + color)  # Or: defaults
+print cb3(  )
+The other is to use bound methods of a class-a kind of object that remembers the self instance and the referenced function, such that it may be called as a simple function without an instance later:
+class Callback:
+    def _  _init_  _(self, color):                 # Class with state information
+        self.color = color
+    def changeColor(self):                   # A normal named method
+        print 'turn', self.color
+
+cb1 = Callback('blue')
+cb2 = Callback('yellow')
+
+B1 = Button(command=cb1.changeColor)         # Reference, but don't call 
+B2 = Button(command=cb2.changeColor)         # Remembers function+self 
+When this button is later pressed, it's as if the GUI does this, which invokes the changeColor method to process the object's state information:
+object = Callback('blue')
+cb = object.changeColor                        # Registered event handler
+cb(  )                                         # On event prints 'blue'
+This technique is simpler, but less general than overloading calls with _  _call_  _; again, watch for more about bound methods in the next chapter. 
+You'll also see another _  _call_  _ example in Chapter 26, where we will use it to implement something known as a function decorator-a callable object that adds a layer of logic on top of an embedded function. Because _  _call_  _ allows us to attach state information to a callable object, it's a natural implementation technique for a function that must remember and call another function.
+_  _del_  _ Is a Destructor
+The _  _init_  _ constructor is called whenever an instance is generated. Its counterpart, the destructor method _  _del_  _, is run automatically when an instance's space is being reclaimed (i.e., at "garbage collection" time):
+>>> class Life:
+...     def _  _init_  _(self, name='unknown'):
+...         print 'Hello', name
+...         self.name = name
+...     def _  _del_  _(self):
+...         print 'Goodbye', self.name
+...
+>>> brian = Life('Brian')
+Hello Brian
+>>> brian = 'loretta'
+Goodbye Brian
+Here, when brian is assigned a string, we lose the last reference to the Life instance, and so trigger its destructor method. This works, and it may be useful for implementing some cleanup activities (such as terminating server connections). However, destructors are not as commonly used in Python as in some OOP languages, for a number of reasons.
+For one thing, because Python automatically reclaims all space held by an instance when the instance is reclaimed, destructors are not necessary for space management. For another, because you cannot always easily predict when an instance will be reclaimed, it's often better to code termination activities in an explicitly called method (or try/finally statement, described in the next part of the book); in some cases, there may be lingering references to your objects in system tables that prevent destructors from running.
+That's as many overloading examples as we have space for here. Most of the other operator overloading methods work similarly to the ones we've explored, and all are just hooks for intercepting built-in type operations; some overloading methods, for example, have unique argument lists or return values. You'll see a few others in action later in the book, but for complete coverage, I'll defer to other documentation sources.
+Namespaces: The Whole Story
+Now that we've examined class and instance objects, the Python  namespace story is complete. For reference, I'll quickly summarize all the rules used to resolve names here. The first things you need to remember are that qualified and unqualified names are treated differently, and that some scopes serve to initialize object namespaces:
+	*	Unqualified names (e.g., X) deal with scopes.
+	*	Qualified attribute names (e.g., object.X) use object namespaces.
+	*	Some scopes initialize object namespaces (for modules and classes).
+Simple Names: Global Unless Assigned
+Unqualified simple names follow the LEGB lexical scoping rule outlined for functions in Chapter 16:
+Assignment (X = value)
+Makes names local: creates or changes the name X in the current local scope, unless declared global.
+Reference (X)
+Looks for the name X in the current local scope, then any and all enclosing functions, then the current global scope, then the built-in scope.
+Attribute Names: Object Namespaces
+Qualified attribute names refer to attributes of specific objects, and obey the rules for modules and classes. For class and instance objects, the reference rules are augmented to include the inheritance search procedure:
+Assignment (object.X = value)
+Creates or alters the attribute name X in the namespace of the object being qualified, and none other. Inheritance-tree climbing happens only on attribute reference, not on attribute assignment.
+Reference (object.X)
+For class-based objects, searches for the attribute name X in object, then in all accessible classes above it, using the inheritance search procedure. For nonclass objects such as modules, fetches X from object directly.
+The "Zen" of Python Namespaces: Assignments Classify Names
+With distinct search procedures for qualified and unqualified names, and multiple lookup layers for both, it can sometimes be difficult to tell where a name will wind up going. In Python, the place where you assign a name is crucial-it fully determines the scope or object in which a name will reside. The file manynames.py illustrates how this principle translates to code, and summarizes the namespace ideas we have seen throughout this book:
+# manynames.py
+
+X = 11                     # Global (module) name/attribute (X, or manynames.X)
+
+def f(  ):
+    print X                # Access global X (11)
+
+def g(  ):
+    X = 22                 # Local (function) variable (X, hides module X)
+    print X
+
+class C:
+    X = 33                 # Class attribute (C.X)
+    def m(self):
+        X = 44             # Local variable in method (X)
+        self.X = 55        # Instance attribute (instance.X)
+This file assigns the same name, X, five times. Because this name is assigned in five different locations, though, all five Xs in this program are completely different variables. From top to bottom, the assignments to X here generate: a module attribute (11), a local variable in a function (22), a class attribute (33), a local variable in a method (44), and an instance attribute (55). Although all five are named X, the fact that they are all assigned at different places in the source code or to different objects makes all of these unique variables. 
+You should take the time to study this example carefully because it collects ideas we've been exploring throughout the last few parts of this book. When it makes sense to you, you will have achieved a sort of Python namespace nirvana. Of course, an alternative route to nirvana is to simply run the program and see what happens. Here's the remainder of this source file, which makes an instance, and prints all the Xs that it can fetch:
+# manynames.py, continued
+
+if __name__ == '_  _main_  _':
+    print X                  # 11: module (a.k.a. manynames.X outside file)
+    f(  )                    # 11: global
+    g(  )                    # 22: local
+    print X                  # 11: module name unchanged
+
+    obj = C(  )              # Make instance
+    print obj.X              # 33: class name inherited by instance
+
+    obj.m(  )                    # Attach attribute name X to instance now
+    print obj.X            # 55: instance
+    print C.X              # 33: class (a.k.a. obj.X if no X in instance)
+
+    #print c.m.X           # FAILS: only visible in method
+    #print f.X             # FAILS: only visible in function
+The outputs that are printed when the file is run are noted in the comments in the code; trace through them to see which variable named X is being accessed each time. Notice in particular that we can go through the class to fetch its attribute (C.X), but we can never fetch local variables in functions, or methods from outside their def statements. Locals are only visible to other code within the def, and, in fact, only live in memory while a call to the function or method is executing. 
+Some of the names defined by this file are visible outside the file to other modules, but recall that we must always import before we can access names in another file-that is the main point of modules, after all:
+# otherfile.py
+
+import manynames
+
+X = 66
+print X                    # 66: the global here
+print manynames.X          # 11: globals become attributes after imports
+
+manynames.f(  )              # 11: manynames's X, not the one here!
+manynames.g(  )              # 22: local in other file's function
+
+print manynames.C.X        # 33: attribute of class in other module
+I = manynames.C(  )
+print I.X                  # 33: still from class here
+I.m(  )
+print I.X                  # 55: now from instance!
+Notice here how manynames.f(  ) prints the X in manynames, not the X assigned in this file-scopes are always determined by the position of assignments in your source code (i.e., lexically), and are never influenced by what imports what, or who imports whom. Also, notice that the instance's own X is not created until we call I.m(  )-attributes, like all variables, spring into existence when assigned, and not before. Normally we create instance attributes by assigning them in class _  _init_  _ constructor methods, but this isn't the only option. 
+You generally shouldn't use the same name for every variable in your script, of course! But as this example demonstrates, even if you do, Python's namespaces will work to keep names used in one context from accidentally clashing with those used in another. 
+Namespace Dictionaries
+In Chapter 19, we learned that module namespaces are actually implemented as dictionaries, and exposed with the built-in _  _dict_  _ attribute. The same holds for class and instance objects: attribute qualification is really a dictionary indexing operation internally, and attribute inheritance is just a matter of searching linked dictionaries. In fact, instance and class objects are mostly just dictionaries with links inside Python. Python exposes these dictionaries, as well as the links between them, for use in advanced roles (e.g., for coding tools).
+To help you understand how attributes work internally, let's work through an interactive session that traces the way namespace dictionaries grow when classes are involved. First, let's define a superclass and a subclass with methods that will store data in their instances:
+>>> class super:
+...     def hello(self):
+...         self.data1 = 'spam'
+...
+>>> class sub(super):
+...     def hola(self):
+...         self.data2 = 'eggs'
+...
+When we make an instance of the subclass, the instance starts out with an empty namespace dictionary, but has links back to the class for the inheritance search to follow. In fact, the inheritance tree is explicitly available in special attributes, which you can inspect. Instances have a _  _class_  _ attribute that links to their class, and classes have a _  _bases_  _ attribute that is a tuple containing links to higher superclasses:
+>>> X = sub(  )
+>>> X._  _dict_  _
+{  }
+
+>>> X._  _class_  _
+<class _  _main_  _.sub at 0x00A48448>
+
+>>> sub._  _bases_  _
+(<class _  _main_  _.super at 0x00A3E1C8>,)
+
+>>> super._  _bases_  _
+(  )
+As classes assign to self attributes, they populate the instance objects-that is, attributes wind up in the instances' attribute namespace dictionaries, not in the classes'. An instance object's namespace records data that can vary from instance to instance, and self is a hook into that namespace:
+>>> Y = sub(  )
+
+>>> X.hello(  )
+>>> X._  _dict_  _
+{'data1': 'spam'}
+
+>>> X.hola(  )
+>>> X._  _dict_  _
+{'data1': 'spam', 'data2': 'eggs'}
+ 
+>>> sub._  _dict_  _
+{'_  _module_  _': '_  _main_  _', '_  _doc_  _': None, 'hola': <function hola at
+ 0x00A47048>}
+
+>>> super._  _dict_  _
+{'_  _module_  _': '_  _main_  _', 'hello': <function hello at 0x00A3C5A8>,
+ '_  _doc_  _': None}
+
+>>> sub.__dict__.keys(  ), super._  _dict_  _.keys(  )
+(['_  _module_  _', '_  _doc_  _', 'hola'], ['_  _module_  _', 'hello', '_  _doc_  _'])
+
+>>> Y._  _dict_  _
+{  }
+Notice the extra underscore names in the class dictionaries; Python sets these automatically. Most are not used in typical programs, but there are tools that use some of them (e.g., _  _doc_  _ holds the docstrings discussed in Chapter 14).
+Also, observe that Y, a second instance made at the start of this series, still has an empty namespace dictionary at the end, even though X's dictionary has been populated by assignments in methods. Again, each instance has an independent namespace dictionary, which starts out empty, and can record completely different attributes than those recorded by the namespace dictionaries of other instances of the same class.
+Because attributes are actually dictionary keys inside Python, there are really two ways to fetch and assign their values-by qualification, or by key indexing:
+>>> X.data1, X._  _dict_  _['data1']
+('spam', 'spam')
+
+>>> X.data3 = 'toast'
+>>> X._  _dict_  _
+{'data1': 'spam', 'data3': 'toast', 'data2': 'eggs'}
+
+>>> X._  _dict_  _['data3'] = 'ham'
+>>> X.data3
+'ham'
+This equivalence applies only to attributes actually attached to the instance, though. Because attribute qualification also performs an inheritance search, it can access attributes that namespace dictionary indexing cannot. The inherited attribute X.hello, for instance, cannot be accessed by X._  _dict_  _['hello'].
+Finally, here is the built-in dir function we met in Chapters 4 and 14 at work on class and instance objects. This function works on anything with attributes: dir(object) is similar to an object._  _dict_  _.keys(  ) call. Notice, though, that dir sorts its list and includes some system attributes-as of Python 2.2, dir also collects inherited attributes automatically:
+>>> X._  _dict_  _
+{'data1': 'spam', 'data3': 'ham', 'data2': 'eggs'}
+>>> X._  _dict_  _.keys(  )
+['data1', 'data3', 'data2']
+
+>>>> dir(X)
+['_  _doc_  _', '_  _module_  _', 'data1', 'data2', 'data3', 'hello', 'hola']
+>>> dir(sub)
+['_  _doc_  _', '_  _module_  _', 'hello', 'hola']
+>>> dir(super)
+['_  _doc_  _', '_  _module_  _', 'hello']
+Experiment with these special attributes on your own to get a better feel for how namespaces actually do their attribute business. Even if you will never use these in the kinds of programs you write, seeing that they are just normal dictionaries will help demystify the notion of namespaces in general.
+Namespace Links
+The prior section introduced the special _  _class_  _ and _  _bases_  _ instance and class attributes, without really explaining why you might care about them. In short, these attributes allow you to inspect inheritance hierarchies within your own code. For example, they can be used to display a class tree, as in the following example:
+# classtree.py
+
+def classtree(cls, indent):
+    print '.'*indent, cls._  _name_  _        # Print class name here
+    for supercls in cls._  _bases_  _:        # Recur to all superclasses
+        classtree(supercls, indent+3)         # May visit super > once
+
+def instancetree(inst):
+    print 'Tree of', inst                     # Show instance
+    classtree(inst._  _class_  _, 3)          # Climb to its class
+
+def selftest(  ):
+    class A: pass
+    class B(A): pass
+    class C(A): pass
+    class D(B,C): pass
+    class E: pass
+    class F(D,E): pass
+    instancetree(B(  ))
+    instancetree(F(  ))
+    
+if __name__ == '_  _main_  _': selftest(  )
+The classtree function in this script is recursive-it prints a class' name using _  _name_  _, and then climbs up to the superclasses by calling itself. This allows the function to traverse arbitrarily shaped class trees; the recursion climbs to the top, and stops at root superclasses that have empty _  _bases_  _ attributes. Most of this file is self-test code; when run standalone, it builds an empty class tree, makes two instances from it, and prints their class tree structures:
+% python classtree.py
+Tree of <_  _main_  _.B instance at 0x00ACB438>
+... B
+...... A
+Tree of <_  _main_  _.F instance at 0x00AC4DA8>
+... F
+...... D
+......... B
+............ A
+......... C
+............ A
+...... E
+Here, indentation marked by periods is used to denote class tree height. Of course, we could improve on this output format, and perhaps even sketch it in a GUI display.
+We can import these functions anywhere we want a quick class tree display:
+>>> class Emp: pass
+...
+>>> class Person(Emp): pass
+...
+>>> bob = Person(  )
+>>> import classtree
+>>> classtree.instancetree(bob)
+Tree of <_  _main_  _.Person instance at 0x00AD34E8>
+... Person
+...... Emp
+Whether you will ever code or use such tools, this example demonstrates one of the many ways that you can make use of special attributes that expose interpreter internals. You'll see another when we code a general-purpose attribute-listing class in the "Multiple Inheritance" section of Chapter 25.
+A More Realistic Example
+Most of the examples we've looked at so far have been artificial and self-contained to help you focus on the basics. However, we'll close out this chapter with a larger example that pulls together much of what we've studied here. I'm including this mostly as a self-study exercise-try to trace through this example's code to see how method calls are resolved. 
+In short, the following module, person.py, defines three classes:
+	*	GenericDisplay is a mix-in class that provides a generic _  _str_  _ method; for any class that inherits from it, this method returns a string giving the name of the class from which the instance was created, as well as "name=value" pairs for every attribute in the instance. It uses the _  _dict_  _ attribute namespace dictionary to build up the list of "name=value" pairs for each attribute in the class instance and the built-in _  _name_  _ of an instance's built-in _  _class_  _ to determine the class name. Because the print statement triggers _  _str_  _, this class' result is the custom print format displayed for all instances that derive from the class. It's a generic tool.
+	*	Person records general information about people, and provides two processing methods to use and change instance object state information; it also inherits the custom print format logic from its superclass. A person object has two attributes and two methods managed by this class.
+	*	Employee is a customization of Person that inherits the last-name extraction and custom print format, but adds a new method for giving a raise, and redefines the birthday operation to customize it (apparently, employees age faster than other people). Notice how the superclass constructor is invoked manually; we need to run the superclass version above in order to fill out the name and age. 
+As you study this module's code, you'll see that each instance has its own state information. Notice how inheritance is used to mix in and customize behavior, and how operator overloading is used to initialize and print instances:
+# person.py 
+
+class GenericDisplay:
+    def gatherAttrs(self):
+        attrs = '\n'
+        for key in self._  _dict_  _:
+            attrs += '\t%s=%s\n' % (key, self._  _dict_  _[key])
+        return attrs
+    def _  _str_  _(self):
+        return '<%s: %s>' % (self._  _class_  _._  _name_  _, self.gatherAttrs(  ))
+
+class Person(GenericDisplay):
+    def _  _init_  _(self, name, age):
+        self.name = name
+        self.age  = age
+    def lastName(self):
+        return self.name.split(  )[-1]
+    def birthDay(self):
+        self.age += 1
+
+class Employee(Person):
+    def _  _init_  _(self, name, age, job=None, pay=0):
+        Person._  _init_  _(self, name, age)
+        self.job  = job
+        self.pay  = pay
+    def birthDay(self):
+        self.age += 2
+    def giveRaise(self, percent):
+        self.pay *= (1.0 + percent)
+
+if _  _name_  _ == '_  _main_  _':
+    bob = Person('Bob Smith', 40)
+    print bob
+    print bob.lastName(  )
+    bob.birthDay(  )
+    print bob
+    
+    sue = Employee('Sue Jones', 44, job='dev', pay=100000)
+    print sue
+    print sue.lastName(  )
+    sue.birthDay(  )
+    sue.giveRaise(.10)
+    print sue
+To test the code, we can import the module and make instances interactively. Here, for example, is the Person class in action. Creating an instance triggers _  _init_  _, calling a named method uses or changes instance state information (attributes), and printing an instance invokes the inherited _  _str_  _ to print all attributes generically: 
+>>> from person import Person
+>>> ann = Person('Ann Smith', 45)
+>>> ann.lastName(  )
+'Smith'
+>>> ann.birthDay(  )
+>>> ann.age
+46
+>>> print ann
+<Person: 
+    age=46
+    name=Ann Smith
+>
+Finally, here is the output of the file's self-test logic (the code at the bottom, under the _  _name_  _ test), which creates a person and an employee, and changes each of them. As usual, this self-test code is run only when the file is run as a top-level script, not when it is being imported as a library module. Notice how employees inherit print formats and last-name extraction, have more state information, have an extra method for getting a raise, and run a customized version of the birthday method (they age by two!): 
+% python person.py
+<Person: 
+    age=40
+    name=Bob Smith
+>
+Smith
+<Person: 
+    age=41
+    name=Bob Smith
+>
+<Employee: 
+    job=dev
+    pay=100000
+    age=44
+    name=Sue Jones
+>
+Jones
+<Employee: 
+    job=dev
+    pay=110000.0
+    age=46
+    name=Sue Jones
+>
+Trace through the code in this example to see how this output reflects method calls; it summarizes most of the ideas behind the mechanisms of OOP in Python. 
+Now that you know about Python classes, you can probably appreciate the fact that the classes used here are not much more than packages of functions, which embed and manage built-in objects attached to instance attributes as state information. When the lastName method splits and indexes, for example, it is simply applying built-in string and list processing operations to an object managed by the class. 
+Operator overloading and inheritance-the automatic lookup of attributes in the implied class tree-are the main tools OOP adds to the picture. Ultimately, this allows the Employee class at the bottom of the tree to obtain quite a bit of behavior "for free"-which is, at the end of the day, the main idea behind OOP.
+Chapter Summary
+This chapter took us on a second, more in-depth tour of the OOP mechanisms of the Python language. We learned more about classes and methods, inheritance, and additional operator overloading methods; we also wrapped up the namespace story in Python by extending it to cover its application to classes. Along the way, we looked at some more advanced concepts, such as abstract superclasses, class data attributes, and manual calls to superclass methods and constructors. Finally, we studied a larger example that tied together much of what we've learned about OOP so far.
+Now that we've learned all about the mechanics of coding classes in Python, the next chapter turns to common design patterns-some of the ways that classes are commonly used and combined to optimize code reuse. Some of the material in the next chapter is not specific to the Python language, but is important for using classes well. Before you read on, though, be sure to work though the usual chapter quiz to review what we've covered here.
+Brain Builder
+Chapter Quiz
+	1.	What is an abstract superclass?
+	2.	What two operator overloading methods can you use to support iteration in your classes?
+	3.	What happens when a simple assignment statement appears at the top level of a class statement?
+	4.	Why might a class need to manually call the _  _init_  _ method in a superclass?
+	5.	How can you augment, instead of completely replacing, an inherited method?
+	6.	In this chapter's final example, what methods are run when the sue Employee instance is printed? 
+	7.	What . . . was the capital of Assyria?
+Quiz Answers
+	1.	An abstract superclass is a class that calls a method, but does not inherit or define it-it expects the method to be filled in by a subclass. This is often used as a way to generalize classes when behavior cannot be predicted until a more specific subclass is coded. OOP frameworks also use this as a way to dispatch to client-defined, customizable operations.
+	2.	Classes can support iteration by defining (or inheriting)  _  _getitem_  _ or _  _iter_  _. In all iteration contexts, Python tries to use _  _iter_  _ (which returns an object that supports the iteration protocol with a next method) first: if no _  _iter_  _ is found by inheritance search, Python falls back on the _  _getitem_  _ indexing method (which is called repeatedly, with successively higher indexes).
+	3.	When a simple assignment statement (X = Y) appears at the top level of a class statement, it attaches a data attribute to the class (Class,X). Like all class attributes, this will be shared by all instances; data attributes are not callable method functions, though.
+	4.	A class must manually call the _  _init_  _ method in a superclass if it defines an _  _init_  _ constructor of its own, but must still kick off the superclass' construction code. Python itself automatically runs just one constructor-the lowest one in the tree. Superclass constructors are called through the class name, passing in the self instance manually: Superclass._  _init_  _(self, ...).
+	5.	To augment instead of completely replacing an inherited method, redefine it in a subclass, but call back to the superclass' version of the method manually from the new version of the method in the subclass. That is, pass the self instance to the superclass' version of the method manually: Superclass.method(self, ...).
+	6.	Printing sue ultimately runs the GenericDisplay._  _str_  _ method and the GenericDisplay.gatherAttrs method it calls. In more detail, to print sue, the print statement converts her to her user-friendly display string by passing her to the built-in str function. In a class, this means look for a _  _str_  _ operator overloading method by inheritance search, and run it if it is found. sue's class, Employee, does not have a _  _str_  _ method; Person is searched next, and eventually _  _str_  _ is found in the GenericDisplay class. 
+	7.	Ashur (or Qalat Sherqat), Calah (or Nimrud), the short-lived Dur Sharrukin (or Khorsabad), and finally Nineveh.

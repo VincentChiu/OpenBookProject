@@ -1,0 +1,339 @@
+'''Python Standard Library'''
+
+''翻译: Python 江湖群''
+
+2008-03-28 13:33:36
+
+[[TableOfContents]]
+
+----
+
+[index.html 返回首页]
+
+----
+
+= 1. 工具和实用程序 =
+标准库中有一些模块既可用作模块又可以作为命令行实用程序.
+
+----
+
+== 1.1. dis 模块 ==
+{{{dis}}} 模块是 Python 的反汇编器. 它可以把字节码转换为更容易让人看懂的格式.
+
+你可以从命令行调用反汇编器. 它会编译给定的脚本并把反汇编后的字节代码输出到终端上: 
+
+{{{
+$ dis.py hello.py
+
+          0 SET_LINENO              0
+
+          3 SET_LINENO              1
+          6 LOAD_CONST              0 ('hello again, and welcome to the show')
+          9 PRINT_ITEM
+         10 PRINT_NEWLINE
+         11 LOAD_CONST              1 (None)
+         14 RETURN_VALUE
+}}}
+
+当然 {{{dis}}} 也可以作为模块使用. {{{dis}}} 函数接受一个类, 方法, 函数, 或者 code 对象
+作为单个参数. 如 [#eg-11-1 Example 11-1] 所示.
+
+==== 1.1.0.1. Example 11-1. 使用 dis 模块 ====
+{{{
+File: dis-example-1.py
+
+import dis
+
+def procedure():
+    print 'hello'
+
+dis.dis(procedure)
+
+*B*          0 SET_LINENO          3
+
+          3 SET_LINENO          4
+          6 LOAD_CONST          1 ('hello')
+          9 PRINT_ITEM
+         10 PRINT_NEWLINE
+         11 LOAD_CONST          0 (None)
+         14 RETURN_VALUE*b*
+}}}
+
+----
+
+== 1.2. pdb 模块 ==
+{{{pdb}}} 模块是标准 Python 调试器( debugger ). 它基于 {{{bdb}}} 调试器框架.
+
+你可以从命令行调用调试器 (键入 n [next 或] 进入下一行代码, 
+键入 help 获得可用命令列表):
+
+{{{
+$ pdb.py hello.py
+> hello.py(0)?()
+(Pdb) n
+> hello.py()
+(Pdb) n
+hello again, and welcome to the show
+--Return--
+> hello.py(1)?()->None
+(Pdb)
+}}}
+
+[#eg-11-2 Example 11-2] 展示了如何从程序中启动调试器.
+
+==== 1.2.0.1. Example 11-2. 使用 pdb 模块 ====
+{{{
+File: pdb-example-1.py
+
+import pdb
+
+def test(n):
+    j = 0
+    for i in range(n):
+        j = j + i
+    return n
+
+db = pdb.Pdb()
+db.runcall(test, 1)
+
+*B*> pdb-example-1.py(3)test()
+-> def test(n):
+(Pdb) s
+> pdb-example-1.py(4)test()
+-> j = 0
+(Pdb) s
+> pdb-example-1.py(5)test()
+-> for i in range(n):
+...*b*
+}}}
+
+----
+
+== 1.3. bdb 模块 ==
+{{{bdb}}} 模块为提供了一个调试器框架. 你可以使用它来创建自定义的调试器, 
+如 [#eg-11-3 Example 11-3] 所示.
+
+你需要做的只是继承 ''Bdb'' 类, 覆盖它的 {{{user}}} 方法(在每次调试器停止的时候被调用). 
+使用各种各样的 {{{set}}} 方法可以控制调试器.
+
+==== 1.3.0.1. Example 11-3. 使用 bdb 模块 ====
+{{{
+File: bdb-example-1.py
+
+import bdb
+import time
+
+def spam(n):
+    j = 0
+    for i in range(n):
+        j = j + i
+    return n
+
+def egg(n):
+    spam(n)
+    spam(n)
+    spam(n)
+    spam(n)
+
+def test(n):
+    egg(n)
+
+class myDebugger(bdb.Bdb):
+
+    run = 0
+
+    def user_call(self, frame, args):
+        name = frame.f_code.co_name or "<unknown>"
+        print "call", name, args
+        self.set_continue() # continue
+
+    def user_line(self, frame):
+        if self.run:
+            self.run = 0
+            self.set_trace() # start tracing
+        else:
+            # arrived at breakpoint
+            name = frame.f_code.co_name or "<unknown>"
+            filename = self.canonic(frame.f_code.co_filename)
+            print "break at", filename, frame.f_lineno, "in", name
+        print "continue..."
+        self.set_continue() # continue to next breakpoint
+
+    def user_return(self, frame, value):
+        name = frame.f_code.co_name or "<unknown>"
+        print "return from", name, value
+        print "continue..."
+        self.set_continue() # continue
+
+    def user_exception(self, frame, exception):
+        name = frame.f_code.co_name or "<unknown>"
+        print "exception in", name, exception
+        print "continue..."
+        self.set_continue() # continue
+
+db = myDebugger()
+db.run = 1
+db.set_break("bdb-example-1.py", 7)
+db.runcall(test, 1)
+
+*B*continue...
+call egg None
+call spam None
+break at C:\ematter\librarybook\bdb-example-1.py 7 in spam
+continue...
+call spam None
+break at C:\ematter\librarybook\bdb-example-1.py 7 in spam
+continue...
+call spam None
+break at C:\ematter\librarybook\bdb-example-1.py 7 in spam
+continue...
+call spam None
+break at C:\ematter\librarybook\bdb-example-1.py 7 in spam
+continue...*b*
+}}}
+
+----
+
+== 1.4. profile 模块 ==
+{{{profile}}} 模块是标准 Python 分析器.
+
+和反汇编器, 调试器相同, 你可以从命令行调用分析器:
+
+{{{
+$ profile.py hello.py
+
+hello again, and welcome to the show
+
+         3 function calls in 0.785 CPU seconds
+
+  Ordered by: standard name
+
+  ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       1  0.001    0.001    0.002    0.002 <string>:1(?)
+       1  0.001    0.001    0.001    0.001 hello.py:1(?)
+       1  0.783    0.783    0.785    0.785 profile:0(execfile('hello.py'))
+       0  0.000             0.000          profile:0(profiler)
+}}}
+
+如 [#eg-11-4 Example 11-4] 所示, 我们还可以从程序中调用 {{{profile}}} 来对程序性能做分析.
+
+==== 1.4.0.1. Example 11-4. U使用 profile 模块 ====
+{{{
+File: profile-example-1.py
+
+import profile
+
+def func1():
+    for i in range(1000):
+        pass
+
+def func2():
+    for i in range(1000):
+        func1()
+
+profile.run("func2()")
+
+*B*        1003 function calls in 2.380 CPU seconds
+
+  Ordered by: standard name
+
+  ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       1  0.000    0.000    2.040    2.040 <string>:1(?)
+    1000  1.950    0.002    1.950    0.002 profile-example-1.py:3(func1)
+       1  0.090    0.090    2.040    2.040 profile-example-1.py:7(func2)
+       1  0.340    0.340    2.380    2.380 profile:0(func2())
+       0  0.000             0.000          profile:0(profiler)*b*
+}}}
+
+你可以使用 {{{pstats}}} 模块来修改结果报告的形式.
+
+----
+
+== 1.5. pstats 模块 ==
+{{{pstats}}} 模块用于分析 Python 分析器收集的数据. 如 [#eg-11-5 Example 11-5] 所示.
+
+==== 1.5.0.1. Example 11-5. 使用 pstats 模块 ====
+{{{
+File: pstats-example-1.py
+
+import pstats
+import profile
+
+def func1():
+    for i in range(1000):
+        pass
+
+def func2():
+    for i in range(1000):
+        func1()
+
+p = profile.Profile()
+p.run("func2()")
+
+s = pstats.Stats(p)
+s.sort_stats("time", "name").print_stats()
+
+*B*         1003 function calls in 1.574 CPU seconds
+
+   Ordered by: internal time, function name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     1000    1.522    0.002    1.522    0.002 pstats-example-1.py:4(func1)
+        1    0.051    0.051    1.573    1.573 pstats-example-1.py:8(func2)
+        1    0.001    0.001    1.574    1.574 profile:0(func2())
+        1    0.000    0.000    1.573    1.573 <string>:1(?)
+        0    0.000             0.000          profile:0(profiler)*b*
+}}}
+
+----
+
+== 1.6. tabnanny 模块 ==
+(2.0 新增) {{{tabnanny}}} 模块用于检查 Python 源文件中的含糊的缩进. 
+当文件混合了 tab 和空格两种缩进时候, nanny (保姆)会立即给出提示.
+
+在下边使用的 {{{badtabs.py}}} 文件中, if 语句后的第一行使用 4 个空格和 1 个 tab . 
+第二行只使用了空格.
+
+{{{
+$ tabnanny.py -v samples/badtabs.py
+';samples/badtabs.py': *** Line 3: trouble in tab city! ***
+offending line:         print "world"
+
+indent not equal e.g. at tab sizes 1, 2, 3, 5, 6, 7, 9
+}}}
+
+因为 Python 解释器把 tab 作为 8 个空格来处理, 所以这个脚本可以正常运行. 
+在所有符合代码标准(一个 tab 为 8 个空格)的编辑器中它也会正常显示. 
+当然, 这些都骗不过 nanny .
+
+[#eg-11-6 Example 11-6] 展示了如何在你自己的程序中使用 {{{tabnanny}}} .
+
+==== 1.6.0.1. Example 11-6. 使用 tabnanny 模块 ====
+{{{
+File: tabnanny-example-1.py
+
+import tabnanny
+
+FILE = "samples/badtabs.py"
+
+file = open(FILE)
+for line in file.readlines():
+    print repr(line)
+
+# let tabnanny look at it
+tabnanny.check(FILE)
+
+*B*'if 1:\012'
+'    \011print "hello"\012'
+'        print "world"\012'
+samples/badtabs.py 3 '        print "world"'\012'*b*
+}}}
+
+将 {{{sys.stdout}}} 重定向到一个 {{{StringIO}}} 对象就可以捕获输出.
+
+----
+
+
+## moin code generated by txt2tags 2.4 (http://txt2tags.sf.net)
+## cmdline: txt2tags -t moin -o moin/chapter11.moin chapter11.t2t
+
